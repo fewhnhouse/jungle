@@ -4,9 +4,14 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "db": "prisma studio --experimental",
+    "db-save": "prisma migrate save --experimental",
+    "db-up": "prisma migrate up --experimental",
+    "update": "prisma generate"
   },
   "dependencies": {
+    "@prisma/client": "^2.0.0",
     "apollo-server-micro": "2.11.0",
     "graphql": "14.6.0",
     "next": "latest",
@@ -14,5 +19,10 @@
     "react-dom": "16.13.1",
     "swr": "0.1.18"
   },
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@prisma/cli": "^2.0.0",
+    "@types/react": "^16.9.36",
+    "typescript": "^3.9.5"
+  }
 }
