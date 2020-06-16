@@ -12,7 +12,7 @@ const fetcher = (query) =>
     .then((res) => res.json())
     .then((json) => json.data)
 
-export default function Index({ songs }: {songs: Song[]) {
+export default function Index({ songs }: {songs: Song[]}) {
   const { data, error } = useSWR('{ users { name } }', fetcher)
 
   if (error) return <div>Failed to load</div>
