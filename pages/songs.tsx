@@ -18,7 +18,16 @@ export default ({
     <Container>
       <ul>
         {songs.map((song) => (
-          <li key={song.id}>{song.name}</li>
+          <li key={song.id}>
+            {song.name}{' '}
+            <button
+              onClick={() => {
+                console.log('remove song')
+              }}
+            >
+              Remove
+            </button>
+          </li>
         ))}
       </ul>
     </Container>

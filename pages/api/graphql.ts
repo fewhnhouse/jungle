@@ -1,18 +1,31 @@
 import { ApolloServer, gql } from 'apollo-server-micro'
+import { PrismaClient } from '@prisma/client'
 
 const typeDefs = gql`
   type Query {
-    users: [User!]!
+    songs: [Song!]!
+    artists: [Artist!]!
   }
-  type User {
+
+  type Song {
+    id: Int       
     name: String
+    artist: Artist
+    artistId: Int
+  }
+  
+  type Artist {
+    id: Int
+    name: String
+    songs: [Song!]!
   }
 `
+const prisma = new PrismaClient()
 
 const resolvers = {
   Query: {
-    users(parent, args, context) {
-      return [{ name: 'Nextjs' }]
+    songs(parent, args, context) {
+      return prisma.song.findMany()
     },
   },
 }
