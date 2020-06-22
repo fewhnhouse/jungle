@@ -1,18 +1,14 @@
-import useSWR from 'swr'
+import Link from 'next/link'
 
-export default function Index() {
-    const { data, error } = useSWR('{ songs { name } }')
-    console.log(data, error)
-    if (error) return <div>Failed to load</div>
-    if (!data) return <div>Loading...</div>
-
-    const { songs } = data
+const Home = () => {
     return (
         <div>
-            <h1>Test</h1>
-            {songs.map((song, i) => (
-                <div key={i}>{song.name}</div>
-            ))}
+            <h1>Home</h1>
+            <Link href="/projects">
+                <a>Projects</a>
+            </Link>
         </div>
     )
 }
+
+export default Home
