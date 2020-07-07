@@ -1,4 +1,5 @@
 [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/fewhnhouse/next-graphql)
+[![Run on Repl.it](https://repl.it/badge/github/fewhnhouse/next-graphql)](https://repl.it/github/fewhnhouse/next-graphql)
 
 # API routes with GraphQL server
 
