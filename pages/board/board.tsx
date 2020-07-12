@@ -16,14 +16,14 @@ const Container = styled.div`
     display: inline-flex;
 `
 
-
 type Props = {
+    id: string
     data: Issue[]
     columns: string[]
     withScrollableColumns?: boolean
 }
 
-const Board = ({ data, columns, withScrollableColumns }: Props) => {
+const Board = ({ id, data, columns, withScrollableColumns }: Props) => {
     /* eslint-disable react/sort-comp */
     const [issues, setColumns] = useState(data)
     const [ordered, setOrdered] = useState(columns)
@@ -71,7 +71,7 @@ const Board = ({ data, columns, withScrollableColumns }: Props) => {
         <>
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable
-                    droppableId="board"
+                    droppableId={id}
                     type="COLUMN"
                     direction="horizontal"
                 >

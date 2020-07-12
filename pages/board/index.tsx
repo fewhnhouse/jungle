@@ -12,8 +12,8 @@ const ParentContainer = styled.div`
 export default () => {
     return (
         <ParentContainer>
-            <Board data={sprint} columns={columns} />
-            <Board data={sprint} columns={columns} />
+            <Board id="board-1" data={sprint} columns={columns} />
+            <Board id="board-2" data={sprint} columns={columns} />
         </ParentContainer>
     )
 }
