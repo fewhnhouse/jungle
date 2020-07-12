@@ -3,3 +3,6 @@ html, body {
     padding: 0;
     font-family: Avenir, sans-serif;
 } 
+.ReactCollapse--collapse {
+    transition: height 300ms;
+  }

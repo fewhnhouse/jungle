@@ -10,6 +10,9 @@ import {
 } from 'react-beautiful-dnd'
 import styled from 'styled-components'
 import { Issue } from '../../interfaces/Issue'
+import Down from '@ant-design/icons/DownOutlined'
+import Up from '@ant-design/icons/UpOutlined'
+import { Collapse } from 'react-collapse'
 
 const Container = styled.div`
     min-width: 100vw;
@@ -30,6 +33,17 @@ const StoryHeader = styled.div`
     padding: 0px 10px;
     background-color: #ecf0f1;
     border-radius: 4px;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+    &:hover,
+    &:active {
+        background-color: #bdc3c7;
+    }
+`
+
+const StoryTitle = styled.h4`
+    margin: 0;
+    padding: 0px 10px;
 `
 
 type Props = {
@@ -41,7 +55,7 @@ type Props = {
 
 const Board = ({ id, data, columns, withScrollableColumns }: Props) => {
     /* eslint-disable react/sort-comp */
-
+    const [expanded, setExpanded] = useState(true)
     const [issues, setColumns] = useState(data)
     const [ordered, setOrdered] = useState(columns)
 
@@ -84,38 +98,50 @@ const Board = ({ id, data, columns, withScrollableColumns }: Props) => {
         setColumns(data.issueMap)
     }
 
+    const toggleVisibility = () => setExpanded((expanded) => !expanded)
+
     return (
         <>
-            <StoryHeader>Story</StoryHeader>
-            <BoardContainer>
-                <DragDropContext onDragEnd={onDragEnd}>
-                    <Droppable
-                        droppableId={id}
-                        type="COLUMN"
-                        direction="horizontal"
-                    >
-                        {(provided: DroppableProvided) => (
-                            <Container
-                                ref={provided.innerRef}
-                                {...provided.droppableProps}
-                            >
-                                {ordered.map((key: string, index: number) => (
-                                    <Column
-                                        key={key}
-                                        index={index}
-                                        title={key}
-                                        issues={issues.filter(
-                                            (data) => data.status === key
-                                        )}
-                                        isScrollable={withScrollableColumns}
-                                    />
-                                ))}
-                                {provided.placeholder}
-                            </Container>
-                        )}
-                    </Droppable>
-                </DragDropContext>
-            </BoardContainer>
+            <StoryHeader onClick={toggleVisibility}>
+                {expanded ? <Up /> : <Down />}
+                <StoryTitle>Story</StoryTitle>
+            </StoryHeader>
+            <Collapse isOpened={expanded}>
+                <BoardContainer>
+                    <DragDropContext onDragEnd={onDragEnd}>
+                        <Droppable
+                            droppableId={id}
+                            type="COLUMN"
+                            direction="horizontal"
+                        >
+                            {(provided: DroppableProvided) => (
+                                <Container
+                                    ref={provided.innerRef}
+                                    {...provided.droppableProps}
+                                >
+                                    {ordered.map(
+                                        (key: string, index: number) => (
+                                            <Column
+                                                key={key}
+                                                index={index}
+                                                title={key}
+                                                issues={issues.filter(
+                                                    (data) =>
+                                                        data.status === key
+                                                )}
+                                                isScrollable={
+                                                    withScrollableColumns
+                                                }
+                                            />
+                                        )
+                                    )}
+                                    {provided.placeholder}
+                                </Container>
+                            )}
+                        </Droppable>
+                    </DragDropContext>
+                </BoardContainer>
+            </Collapse>
         </>
     )
 }
