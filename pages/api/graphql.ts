@@ -7,6 +7,10 @@ const typeDefs = gql`
     artists: [Artist!]!
   }
 
+  type Mutation {
+    removeSong: Song
+  }
+
   type Song {
     id: Int       
     name: String
@@ -20,6 +24,7 @@ const typeDefs = gql`
     songs: [Song!]!
   }
 `
+
 const prisma = new PrismaClient()
 
 const resolvers = {
@@ -28,6 +33,13 @@ const resolvers = {
       return prisma.song.findMany()
     },
   },
+  Mutation: {
+    removeSong(parent, args, context) {
+      const { id } = args
+      console.log(args)
+      return prisma.song.delete({ where: { id } })
+    }
+  }
 }
 
 const apolloServer = new ApolloServer({ typeDefs, resolvers })
