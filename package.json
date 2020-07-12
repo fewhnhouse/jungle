@@ -11,7 +11,8 @@
     "update": "prisma generate"
   },
   "dependencies": {
-    "@ant-design/icons": "^4.2.1",
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
     "@prisma/client": "^2.0.0",
     "@types/react-beautiful-dnd": "^13.0.0",
     "apollo-server-micro": "2.11.0",
@@ -22,6 +23,7 @@
     "react-collapse": "^5.0.1",
     "react-cool-inview": "^1.1.2",
     "react-dom": "16.13.1",
+    "react-spring": "^8.0.27",
     "styled-components": "^5.1.1",
     "swr": "0.1.18"
   },

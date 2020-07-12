@@ -10,8 +10,8 @@ import {
 } from 'react-beautiful-dnd'
 import styled from 'styled-components'
 import { Issue } from '../../interfaces/Issue'
-import Down from '@ant-design/icons/DownOutlined'
-import Up from '@ant-design/icons/UpOutlined'
+import ExpandLessIcon from '@material-ui/icons/ExpandLess'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { Collapse } from 'react-collapse'
 
 const Container = styled.div`
@@ -103,7 +103,7 @@ const Board = ({ id, data, columns, withScrollableColumns }: Props) => {
     return (
         <>
             <StoryHeader onClick={toggleVisibility}>
-                {expanded ? <Up /> : <Down />}
+                {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                 <StoryTitle>Story</StoryTitle>
             </StoryHeader>
             <Collapse isOpened={expanded}>

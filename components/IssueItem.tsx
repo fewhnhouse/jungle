@@ -1,7 +1,8 @@
 import styled from 'styled-components'
-import React from 'react'
+import React, { useState } from 'react'
 import type { DraggableProvided } from 'react-beautiful-dnd'
 import { Issue } from '../interfaces/Issue'
+import IssueModal from './IssueModal'
 
 type AuthorColors = any
 
@@ -35,25 +36,23 @@ const getBorderColor = (isDragging: boolean, authorColors: AuthorColors) =>
 
 const imageSize: number = 40
 
-const Container = styled.a`
+interface IContainerProps {
+    isDragging: boolean
+    isGroupedOver: boolean
+    colors: AuthorColors
+}
+const Container = styled.div`
     border-radius: 4px;
     border: 2px solid transparent;
-    border-color: ${(props: {
-        isDragging: boolean
-        isGroupedOver: boolean
-        colors: AuthorColors
-    }) => getBorderColor(props.isDragging, props.colors)};
-    background-color: ${(props: {
-        isDragging: boolean
-        isGroupedOver: boolean
-        colors: AuthorColors
-    }) =>
+    border-color: ${(props: IContainerProps) =>
+        getBorderColor(props.isDragging, props.colors)};
+    background-color: ${(props: IContainerProps) =>
         getBackgroundColor(
             props.isDragging,
             props.isGroupedOver,
             props.colors
         )};
-    box-shadow: ${({ isDragging }) =>
+    box-shadow: ${({ isDragging }: IContainerProps) =>
         isDragging ? `box-shadow: 0px 0px 10px 0px black` : 'none'};
     box-sizing: border-box;
     padding: 4px;
@@ -163,32 +162,40 @@ function IssueItem({
     style,
     index,
 }: Props) {
+    const [expanded, setExpanded] = useState(false)
+
+    const handleClick = () => setExpanded(true)
+    const handleClose = () => setExpanded(false)
+    
     return (
-        <Container
-            href={issue.author.url}
-            isDragging={isDragging}
-            isGroupedOver={isGroupedOver}
-            colors={issue.author.colors}
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-            style={getStyle(provided, style)}
-            data-is-dragging={isDragging}
-            data-testid={issue.id}
-            data-index={index}
-            aria-label={`${issue.author.name} quote ${issue.content}`}
-        >
-            <Avatar src={issue.author.avatarUrl} alt={issue.author.name} />
-            <Content>
-                <BlockQuote>{issue.content}</BlockQuote>
-                <Footer>
-                    <Author colors={issue.author.colors}>
-                        {issue.author.name}
-                    </Author>
-                    <QuoteId>{issue.id}</QuoteId>
-                </Footer>
-            </Content>
-        </Container>
+        <>
+            <Container
+                onClick={handleClick}
+                isDragging={isDragging}
+                isGroupedOver={isGroupedOver}
+                colors={issue.author.colors}
+                ref={provided.innerRef}
+                {...provided.draggableProps}
+                {...provided.dragHandleProps}
+                style={getStyle(provided, style)}
+                data-is-dragging={isDragging}
+                data-testid={issue.id}
+                data-index={index}
+                aria-label={`${issue.author.name} quote ${issue.content}`}
+            >
+                <Avatar src={issue.author.avatarUrl} alt={issue.author.name} />
+                <Content>
+                    <BlockQuote>{issue.content}</BlockQuote>
+                    <Footer>
+                        <Author colors={issue.author.colors}>
+                            {issue.author.name}
+                        </Author>
+                        <QuoteId>{issue.id}</QuoteId>
+                    </Footer>
+                </Content>
+            </Container>
+            <IssueModal open={expanded} onClose={handleClose} />
+        </>
     )
 }
 
