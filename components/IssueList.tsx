@@ -12,7 +12,6 @@ import IssueItem from './IssueItem'
 import Title from './Title'
 import { Issue } from '../interfaces/Issue'
 
-
 export const getBackgroundColor = (
     isDraggingOver: boolean,
     isDraggingFrom: boolean
@@ -92,23 +91,29 @@ type IssueListProps = {
     issues: Issue[]
 }
 
-const InnerQuoteList = React.memo((props: IssueListProps) => {
-    return props.issues.map((issue: Issue, index: number) => (
-        <Draggable key={issue.id} draggableId={issue.id} index={index}>
-            {(
-                dragProvided: DraggableProvided,
-                dragSnapshot: DraggableStateSnapshot
-            ) => (
-                <IssueItem
-                    key={issue.id}
-                    issue={issue}
-                    isDragging={dragSnapshot.isDragging}
-                    isGroupedOver={Boolean(dragSnapshot.combineTargetFor)}
-                    provided={dragProvided}
-                />
-            )}
-        </Draggable>
-    ))
+const InnerQuoteList = React.memo(({ issues }: IssueListProps) => {
+    return (
+        <>
+            {issues.map((issue: Issue, index: number) => (
+                <Draggable key={issue.id} draggableId={issue.id} index={index}>
+                    {(
+                        dragProvided: DraggableProvided,
+                        dragSnapshot: DraggableStateSnapshot
+                    ) => (
+                        <IssueItem
+                            key={issue.id}
+                            issue={issue}
+                            isDragging={dragSnapshot.isDragging}
+                            isGroupedOver={Boolean(
+                                dragSnapshot.combineTargetFor
+                            )}
+                            provided={dragProvided}
+                        />
+                    )}
+                </Draggable>
+            ))}
+        </>
+    )
 })
 
 type InnerListProps = {
