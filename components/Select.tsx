@@ -24,13 +24,13 @@ const customStyles = {
     }),
     control: (provided) => ({
         ...provided,
-        height: 44,
+        height: 42,
         background: '#e9ecef',
         '&:hover': {
             background: '#dadfe4',
         },
         border: 'none',
-        width: 140,
+        width: 100,
     }),
     indicatorSeparator: () => ({
         visibility: 'none',
