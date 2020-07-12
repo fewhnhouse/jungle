@@ -13,6 +13,8 @@ import {
     Select,
     MenuItem,
 } from '@material-ui/core'
+import { Breadcrumb, BreadcrumbItem } from 'shards-react'
+
 import { useSpring, animated } from 'react-spring'
 import styled from 'styled-components'
 import CloseIcon from '@material-ui/icons/Close'
@@ -29,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         formControl: {
             margin: '10px',
-        }
+        },
     })
 )
 
@@ -130,20 +132,12 @@ export default function IssueModal({
             <Fade in={open}>
                 <ModalContainer>
                     <Header>
-                        <Breadcrumbs aria-label="breadcrumb">
-                            <Link color="inherit" href="/">
-                                Material-UI
-                            </Link>
-                            <Link
-                                color="inherit"
-                                href="/getting-started/installation/"
-                            >
-                                Core
-                            </Link>
-                            <Typography color="textPrimary">
-                                Breadcrumb
-                            </Typography>
-                        </Breadcrumbs>
+                        <Breadcrumb>
+                            <BreadcrumbItem>
+                                <a href="#">Home 1</a>
+                            </BreadcrumbItem>
+                            <BreadcrumbItem active>Library</BreadcrumbItem>
+                        </Breadcrumb>
 
                         <Button onClick={onClose}>
                             <CloseIcon />
