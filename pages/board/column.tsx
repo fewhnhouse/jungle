@@ -6,6 +6,7 @@ import {
 } from 'react-beautiful-dnd'
 import IssueList from '../../components/IssueList'
 import Title from '../../components/Title'
+import { Issue } from '../../interfaces/Issue'
 
 const Container = styled.div`
     margin: 10px;
@@ -27,8 +28,6 @@ const Header = styled.div`
     }
 `
 
-type Issue = any
-
 type Props = {
     title: string
     issues: Issue[]
@@ -48,7 +47,6 @@ const Column = ({ title, issues, index, isScrollable }: Props) => {
                 <Container ref={provided.innerRef} {...provided.draggableProps}>
                     <Header isDragging={snapshot.isDragging}>
                         <Title
-                            isDragging={snapshot.isDragging}
                             {...provided.dragHandleProps}
                             aria-label={`${title} quote list`}
                         >

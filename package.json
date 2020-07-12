@@ -1,41 +1,54 @@
 {
-  "name": "api-routes-graphql",
-  "version": "1.0.0",
-  "scripts": {
-    "dev": "next",
-    "build": "next build",
-    "start": "next start",
-    "db": "prisma studio --experimental",
-    "db-save": "prisma migrate save --experimental",
-    "db-up": "prisma migrate up --experimental",
-    "update": "prisma generate"
-  },
-  "dependencies": {
-    "@material-ui/core": "^4.11.0",
-    "@material-ui/icons": "^4.9.1",
-    "@prisma/client": "^2.0.0",
-    "@types/react-beautiful-dnd": "^13.0.0",
-    "apollo-server-micro": "2.11.0",
-    "graphql": "14.6.0",
-    "next": "latest",
-    "react": "16.13.1",
-    "react-beautiful-dnd": "^13.0.0",
-    "react-collapse": "^5.0.1",
-    "react-cool-inview": "^1.1.2",
-    "react-dom": "16.13.1",
-    "react-spring": "^8.0.27",
-    "styled-components": "^5.1.1",
-    "swr": "0.1.18"
-  },
-  "license": "ISC",
-  "devDependencies": {
-    "@prisma/cli": "^2.0.0",
-    "@types/react": "^16.9.36",
-    "@types/styled-components": "^5.1.0",
-    "@typescript-eslint/eslint-plugin": "^3.6.0",
-    "@typescript-eslint/parser": "^3.6.0",
-    "eslint": "^7.4.0",
-    "eslint-plugin-react": "^7.20.3",
-    "typescript": "^3.9.5"
-  }
+    "name": "api-routes-graphql",
+    "version": "1.0.0",
+    "scripts": {
+        "dev": "next",
+        "build": "next build",
+        "start": "next start",
+        "db": "prisma studio --experimental",
+        "db-save": "prisma migrate save --experimental",
+        "db-up": "prisma migrate up --experimental",
+        "update": "prisma generate"
+    },
+    "dependencies": {
+        "@material-ui/core": "^4.11.0",
+        "@material-ui/icons": "^4.9.1",
+        "@prisma/client": "^2.0.0",
+        "@types/react-beautiful-dnd": "^13.0.0",
+        "apollo-server-micro": "2.11.0",
+        "graphql": "14.6.0",
+        "next": "latest",
+        "react": "16.13.1",
+        "react-beautiful-dnd": "^13.0.0",
+        "react-collapse": "^5.0.1",
+        "react-cool-inview": "^1.1.2",
+        "react-dom": "16.13.1",
+        "react-spring": "^8.0.27",
+        "styled-components": "^5.1.1",
+        "swr": "0.1.18"
+    },
+    "license": "ISC",
+    "devDependencies": {
+        "@prisma/cli": "^2.0.0",
+        "@types/react": "^16.9.36",
+        "@types/styled-components": "^5.1.0",
+        "@typescript-eslint/eslint-plugin": "^3.6.0",
+        "@typescript-eslint/parser": "^3.6.0",
+        "eslint": "^7.4.0",
+        "eslint-plugin-react": "^7.20.3",
+        "husky": "^4.2.5",
+        "lint-staged": "^10.2.11",
+        "typescript": "^3.9.5"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
+    },
+    "lint-staged": {
+        "./src/*.{js,jsx,ts,tsx}": [
+            "npx prettier --write",
+            "eslint src/*.js --fix-dry-run"
+        ]
+    }
 }

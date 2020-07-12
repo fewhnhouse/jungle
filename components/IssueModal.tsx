@@ -8,7 +8,6 @@ import {
     Button,
     Typography,
     TextField,
-    Divider,
     InputLabel,
     FormControl,
     Select,
@@ -17,7 +16,6 @@ import {
 import { useSpring, animated } from 'react-spring'
 import styled from 'styled-components'
 import CloseIcon from '@material-ui/icons/Close'
-import TextInput from './TextInput'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
