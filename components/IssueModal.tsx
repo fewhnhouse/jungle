@@ -1,39 +1,22 @@
 import React from 'react'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
+
 import {
+    Breadcrumb,
+    BreadcrumbItem,
     Modal,
-    Backdrop,
-    Link,
-    Breadcrumbs,
+    ModalHeader,
+    ModalBody,
     Button,
-    Typography,
-    TextField,
-    InputLabel,
-    FormControl,
-    Select,
-    MenuItem,
-} from '@material-ui/core'
-import { Breadcrumb, BreadcrumbItem } from 'shards-react'
+    FormInput,
+} from 'shards-react'
 
 import { useSpring, animated } from 'react-spring'
 import styled from 'styled-components'
 import CloseIcon from '@material-ui/icons/Close'
-
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        modal: {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-        },
-        textInput: {
-            margin: '10px',
-        },
-        formControl: {
-            margin: '10px',
-        },
-    })
-)
+import EditableTitle from './EditableTitle'
+import EditableDescription from './EditableDescription'
+import CustomSelect from './Select'
 
 const ModalContainer = styled.div`
     background: #ecf0f1;
@@ -43,12 +26,19 @@ const ModalContainer = styled.div`
     padding: 20px;
 `
 
-const Header = styled.header`
+const Header = styled.div`
     width: 100%;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
-    margin-bottom: 10px;
+    padding: 10px;
+`
+
+const StyledBreadcrumb = styled(Breadcrumb)`
+    ol {
+        margin-bottom: 0px;
+        padding: 10px;
+    }
 `
 
 const Main = styled.main`
@@ -60,6 +50,7 @@ const Content = styled.div`
     flex: 3;
     display: flex;
     flex-direction: column;
+    padding: 10px;
 `
 
 const Sidebar = styled.aside`
@@ -70,43 +61,6 @@ const Footer = styled.footer`
     display: flex;
 `
 
-interface FadeProps {
-    children?: React.ReactElement
-    in: boolean
-    onEnter?: () => {}
-    onExited?: () => {}
-}
-
-const Fade = React.forwardRef<HTMLDivElement, FadeProps>(function Fade(
-    props,
-    ref
-) {
-    const { in: open, children, onEnter, onExited, ...other } = props
-    const style = useSpring({
-        from: { opacity: 0, transform: 'translate(0px, 30px)' },
-        to: {
-            opacity: open ? 1 : 0,
-            transform: open ? 'translate(0px, 0px)' : 'translate(0px, 30px)',
-        },
-        onStart: () => {
-            if (open && onEnter) {
-                onEnter()
-            }
-        },
-        onRest: () => {
-            if (!open && onExited) {
-                onExited()
-            }
-        },
-    })
-
-    return (
-        <animated.div ref={ref} style={style} {...other}>
-            {children}
-        </animated.div>
-    )
-})
-
 export default function IssueModal({
     open,
     onClose,
@@ -114,91 +68,25 @@ export default function IssueModal({
     open: boolean
     onClose: () => void
 }) {
-    const classes = useStyles()
-
     return (
-        <Modal
-            aria-labelledby="spring-modal-title"
-            aria-describedby="spring-modal-description"
-            className={classes.modal}
-            open={open}
-            onClose={onClose}
-            closeAfterTransition
-            BackdropComponent={Backdrop}
-            BackdropProps={{
-                timeout: 500,
-            }}
-        >
-            <Fade in={open}>
-                <ModalContainer>
-                    <Header>
-                        <Breadcrumb>
-                            <BreadcrumbItem>
-                                <a href="#">Home 1</a>
-                            </BreadcrumbItem>
-                            <BreadcrumbItem active>Library</BreadcrumbItem>
-                        </Breadcrumb>
-
-                        <Button onClick={onClose}>
-                            <CloseIcon />
-                        </Button>
-                    </Header>
-                    <Main>
-                        <Content>
-                            <TextField
-                                className={classes.textInput}
-                                value="The issue Title"
-                                id="outlined-basic"
-                                label="Title"
-                                variant="outlined"
-                            />
-                            <TextField
-                                className={classes.textInput}
-                                value="The issue description"
-                                multiline
-                                rows={4}
-                                id="outlined-basic"
-                                label="Description"
-                                variant="outlined"
-                            />
-                        </Content>
-                        <Sidebar>
-                            <FormControl
-                                variant="outlined"
-                                className={classes.formControl}
-                            >
-                                <InputLabel id="demo-simple-select-outlined-label">
-                                    Status
-                                </InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-outlined-label"
-                                    id="demo-simple-select-outlined"
-                                    value={'To Do'}
-                                    onChange={() => {}}
-                                    label="Status"
-                                >
-                                    <MenuItem value={'To Do'}>To Do</MenuItem>
-                                    <MenuItem value={'Doing'}>Doing</MenuItem>
-                                    <MenuItem value={'Blocked'}>
-                                        Blocked
-                                    </MenuItem>
-                                    <MenuItem value={'In Review'}>
-                                        In Review
-                                    </MenuItem>
-                                    <MenuItem value={'Deployed'}>
-                                        Deployed
-                                    </MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Sidebar>
-                    </Main>
-                    <Typography variant="h5">Comments</Typography>
-
-                    <Footer>
-                        <Button>Save</Button>
-                    </Footer>
-                </ModalContainer>
-            </Fade>
+        <Modal size="lg" open={open} toggle={onClose}>
+            <Header>
+                <StyledBreadcrumb>
+                    <BreadcrumbItem>
+                        <a href="#">Home</a>
+                    </BreadcrumbItem>
+                    <BreadcrumbItem active>Library</BreadcrumbItem>
+                </StyledBreadcrumb>
+                <CustomSelect />
+                <Button size="sm" theme="light" onClick={onClose}>
+                    <CloseIcon />
+                </Button>
+            </Header>
+            <Content>
+                <EditableTitle initialValue="Test Title" />
+                <EditableDescription initialValue="Test Description" />
+            </Content>
+            <Sidebar></Sidebar>
         </Modal>
     )
 }
