@@ -5344,6 +5344,11 @@ react-beautiful-dnd@^13.0.0:
     redux "^4.0.4"
     use-memo-one "^1.1.1"
 
+react-cool-inview@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/react-cool-inview/-/react-cool-inview-1.1.2.tgz#0513d2770847557b73d73b63303b971877f2cd17"
+  integrity sha512-0LsRA8YVDvHUNTu8o1z43HYrlQsTEc2pCzul93thbCopCTX4PGb9StjJGhArFMBH/n2N+aciqixfEHcjGLhPxQ==
+
 react-dom@16.13.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.13.1.tgz#c1bd37331a0486c078ee54c4740720993b2e0e7f"

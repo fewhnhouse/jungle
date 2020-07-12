@@ -16,6 +16,22 @@ const Container = styled.div`
     display: inline-flex;
 `
 
+const BoardContainer = styled.div`
+    width: 100%;
+    overflow: auto;
+`
+
+const StoryHeader = styled.div`
+    height: 30px;
+    margin: 5px 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px 10px;
+    background-color: #ecf0f1;
+    border-radius: 4px;
+`
+
 type Props = {
     id: string
     data: Issue[]
@@ -25,6 +41,7 @@ type Props = {
 
 const Board = ({ id, data, columns, withScrollableColumns }: Props) => {
     /* eslint-disable react/sort-comp */
+
     const [issues, setColumns] = useState(data)
     const [ordered, setOrdered] = useState(columns)
 
@@ -69,33 +86,36 @@ const Board = ({ id, data, columns, withScrollableColumns }: Props) => {
 
     return (
         <>
-            <DragDropContext onDragEnd={onDragEnd}>
-                <Droppable
-                    droppableId={id}
-                    type="COLUMN"
-                    direction="horizontal"
-                >
-                    {(provided: DroppableProvided) => (
-                        <Container
-                            ref={provided.innerRef}
-                            {...provided.droppableProps}
-                        >
-                            {ordered.map((key: string, index: number) => (
-                                <Column
-                                    key={key}
-                                    index={index}
-                                    title={key}
-                                    issues={issues.filter(
-                                        (data) => data.status === key
-                                    )}
-                                    isScrollable={withScrollableColumns}
-                                />
-                            ))}
-                            {provided.placeholder}
-                        </Container>
-                    )}
-                </Droppable>
-            </DragDropContext>
+            <StoryHeader>Story</StoryHeader>
+            <BoardContainer>
+                <DragDropContext onDragEnd={onDragEnd}>
+                    <Droppable
+                        droppableId={id}
+                        type="COLUMN"
+                        direction="horizontal"
+                    >
+                        {(provided: DroppableProvided) => (
+                            <Container
+                                ref={provided.innerRef}
+                                {...provided.droppableProps}
+                            >
+                                {ordered.map((key: string, index: number) => (
+                                    <Column
+                                        key={key}
+                                        index={index}
+                                        title={key}
+                                        issues={issues.filter(
+                                            (data) => data.status === key
+                                        )}
+                                        isScrollable={withScrollableColumns}
+                                    />
+                                ))}
+                                {provided.placeholder}
+                            </Container>
+                        )}
+                    </Droppable>
+                </DragDropContext>
+            </BoardContainer>
         </>
     )
 }

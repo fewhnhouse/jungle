@@ -31,7 +31,7 @@ const getBackgroundColor = (
 }
 
 const getBorderColor = (isDragging: boolean, authorColors: AuthorColors) =>
-    isDragging ? '#95a5a6' : 'transparent'
+    isDragging ? '#2c3e50' : 'transparent'
 
 const imageSize: number = 40
 
@@ -54,7 +54,7 @@ const Container = styled.a`
             props.colors
         )};
     box-shadow: ${({ isDragging }) =>
-        isDragging ? `2px 2px 1px #2c3e50` : 'none'};
+        isDragging ? `box-shadow: 0px 0px 10px 0px black` : 'none'};
     box-sizing: border-box;
     padding: 4px;
     min-height: ${imageSize}px;
@@ -66,8 +66,7 @@ const Container = styled.a`
 
     &:hover,
     &:active {
-        color: #34495e;
-        text-decoration: none;
+        color: #7f8c8d;
     }
 
     &:focus {

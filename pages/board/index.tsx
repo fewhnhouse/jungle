@@ -1,6 +1,7 @@
 import Board from './board'
-import { authorQuoteMap, columns, sprint } from '../../util/data'
+import { columns, sprint } from '../../util/data'
 import styled from 'styled-components'
+import useInView from "react-cool-inview";
 
 const ParentContainer = styled.div`
     min-height: 100vh;
@@ -9,7 +10,10 @@ const ParentContainer = styled.div`
     overflow-y: auto;
 `
 
+
+
 export default () => {
+    
     return (
         <ParentContainer>
             <Board id="board-1" data={sprint} columns={columns} />
