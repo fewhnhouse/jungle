@@ -45,6 +45,7 @@ const Links = styled.div`
 
 const Options = styled.div`
     display: flex;
+    align-items: center;
 `
 
 const StyledInputGroup = styled(InputGroup)`

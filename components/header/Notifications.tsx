@@ -11,6 +11,7 @@ import { useState } from 'react'
 const StyledButton = styled(Button)`
     margin: 0px 5px;
     padding: 5px;
+    height: 40px;
 `
 
 export default function Notifications() {
@@ -19,11 +20,11 @@ export default function Notifications() {
 
     return (
         <>
+
+                        <Dropdown open={open} toggle={toggle}>
         <StyledButton theme="light" onClick={toggle}>
                     <NotificationsIcon />
                 </StyledButton>    
-
-                        <Dropdown open={open} toggle={toggle}>
                 <DropdownMenu right>
                         <DropdownItem>Action</DropdownItem>
                         <DropdownItem>Another action</DropdownItem>
