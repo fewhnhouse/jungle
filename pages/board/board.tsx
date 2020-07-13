@@ -41,7 +41,7 @@ const StoryHeader = styled.div`
     }
 `
 
-const StoryTitle = styled.h4`
+const StoryTitle = styled.h6`
     margin: 0;
     padding: 0px 10px;
 `

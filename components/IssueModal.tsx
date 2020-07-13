@@ -16,14 +16,17 @@ import styled from 'styled-components'
 import CloseIcon from '@material-ui/icons/Close'
 import EditableTitle from './EditableTitle'
 import EditableDescription from './EditableDescription'
+import EditableNumber from './EditableNumber'
 import CustomSelect from './Select'
 
 const ModalContainer = styled.div`
-    background: #ecf0f1;
-    border-radius: 4px;
-    width: 80vw;
-    height: 80vh;
-    padding: 20px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+`
+
+const Label = styled.span`
+    margin-top: 5px;
 `
 
 const Header = styled.div`
@@ -41,9 +44,14 @@ const StyledBreadcrumb = styled(Breadcrumb)`
     }
 `
 
-const Main = styled.main`
+const Main = styled.div`
     display: flex;
     flex-direction: row;
+    @media only screen and (max-width: 600px) {
+        flex-direction: column;
+    }
+    overflow: auto;
+    height: 100%;
 `
 
 const Content = styled.div`
@@ -55,6 +63,11 @@ const Content = styled.div`
 
 const Sidebar = styled.aside`
     flex: 1;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 180px;
 `
 
 const Footer = styled.footer`
@@ -69,24 +82,41 @@ export default function IssueModal({
     onClose: () => void
 }) {
     return (
-        <Modal size="lg" open={open} toggle={onClose}>
-            <Header>
-                <StyledBreadcrumb>
-                    <BreadcrumbItem>
-                        <a href="#">Home</a>
-                    </BreadcrumbItem>
-                    <BreadcrumbItem active>Library</BreadcrumbItem>
-                </StyledBreadcrumb>
-                <CustomSelect />
-                <Button size="sm" theme="light" onClick={onClose}>
-                    <CloseIcon />
-                </Button>
-            </Header>
-            <Content>
-                <EditableTitle initialValue="Test Title" />
-                <EditableDescription initialValue="Test Description" />
-            </Content>
-            <Sidebar></Sidebar>
+        <Modal
+            style={{ maxHeight: '90vh' }}
+            size="lg"
+            open={open}
+            toggle={onClose}
+        >
+            <ModalContainer>
+                <Header>
+                    <StyledBreadcrumb>
+                        <BreadcrumbItem>
+                            <a href="#">Home</a>
+                        </BreadcrumbItem>
+                        <BreadcrumbItem active>Library</BreadcrumbItem>
+                    </StyledBreadcrumb>
+                    <Button size="sm" theme="light" onClick={onClose}>
+                        <CloseIcon />
+                    </Button>
+                </Header>
+                <Main>
+                    <Content>
+                        <EditableTitle initialValue="Test Title" />
+                        <EditableDescription initialValue="Test Description" />
+                    </Content>
+                    <Sidebar>
+                        <Label>Status</Label>
+                        <CustomSelect />
+                        <Label>Assignee</Label>
+                        <CustomSelect />
+                        <Label>Priority</Label>
+                        <CustomSelect />
+                        <Label>Story Points</Label>
+                        <EditableNumber initialValue={1} />
+                    </Sidebar>
+                </Main>
+            </ModalContainer>
         </Modal>
     )
 }

@@ -1,20 +1,17 @@
 import { useState } from 'react'
 import styled from 'styled-components'
 import { FormInput } from 'shards-react'
-import CloseIcon from '@material-ui/icons/Close'
-import CheckIcon from '@material-ui/icons/Check'
 import EditButtonGroup from './EditButtonGroup'
 
-const Title = styled.h3`
+const Title = styled.span`
     border-radius: 4px;
-    height: 48px;
+    height: 42px;
+    width: 100px;
     padding: 4px 12px;
-    line-height: 48px;
+    line-height: 42px;
     &:hover {
         background: #e9ecef;
     }
-    font-size: 1.6rem;
-    font-weight: 300;
     color: #495057;
     cursor: pointer;
     margin: 5px 0px;
@@ -22,7 +19,6 @@ const Title = styled.h3`
 
 const StyledInput = styled(FormInput)`
     padding: 4px 12px;
-    font-size: 1.6rem;
     margin-right: 5px;
 `
 
@@ -30,12 +26,13 @@ const InputContainer = styled.div`
     display: flex;
     margin: 5px 0px;
     align-items: center;
+    width: 130px;
 `
 
-export default function EditableTitle({
+export default function EditableNumber({
     initialValue,
 }: {
-    initialValue: string
+    initialValue: number
 }) {
     const [editable, setEditable] = useState(false)
     const [value, setValue] = useState(initialValue)
@@ -46,6 +43,7 @@ export default function EditableTitle({
             <StyledInput
                 autofocus="true"
                 size="lg"
+                type="number"
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
             />

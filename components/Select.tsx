@@ -3,21 +3,6 @@ import { useState } from 'react'
 import styled from 'styled-components'
 import { Button } from 'shards-react'
 
-const Title = styled.h3`
-    border-radius: 4px;
-    height: 48px;
-    padding: 4px 12px;
-    line-height: 48px;
-    &:hover {
-        background: #e9ecef;
-    }
-    font-size: 16px;
-    font-weight: 300;
-    color: #495057;
-    cursor: pointer;
-    margin-bottom: 5px;
-`
-
 const customStyles = {
     option: (provided, state) => ({
         ...provided,
@@ -30,7 +15,8 @@ const customStyles = {
             background: '#dadfe4',
         },
         border: 'none',
-        width: 100,
+        width: 160,
+        margin: "5px 0px"
     }),
     indicatorSeparator: () => ({
         visibility: 'none',

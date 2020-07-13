@@ -1,10 +1,9 @@
 import { useState } from 'react'
 import styled from 'styled-components'
-import { FormTextarea, Button } from 'shards-react'
-import CloseIcon from '@material-ui/icons/Close'
-import CheckIcon from '@material-ui/icons/Check'
+import { FormTextarea } from 'shards-react'
 import dynamic from 'next/dynamic'
 import MarkdownIt from 'markdown-it'
+import EditButtonGroup from './EditButtonGroup'
 
 const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
     ssr: false,
@@ -28,16 +27,10 @@ const StyledArea = styled(FormTextarea)`
     margin-right: 5px;
 `
 
-const StyledButton = styled(Button)`
-    margin: 0px 5px;
-    height: 35px;
-    width: 35px;
-    padding: 0px;
-`
-
 const InputContainer = styled.div`
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-end;
     margin-bottom: 10px;
 `
 
@@ -64,12 +57,7 @@ export default function EditableDescription({
                 renderHTML={(text) => mdParser.render(text)}
             />
 
-            <StyledButton onClick={toggleEditable} size="sm" theme="light">
-                <CloseIcon />
-            </StyledButton>
-            <StyledButton size="sm" theme="light">
-                <CheckIcon />
-            </StyledButton>
+            <EditButtonGroup onClick={toggleEditable} />
         </InputContainer>
     ) : (
         <Description
