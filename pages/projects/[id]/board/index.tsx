@@ -1,5 +1,5 @@
-import Board from '../../components/board/Board'
-import { columns, sprint } from '../../util/data'
+import Board from '../../../../components/board/Board'
+import { columns, sprint } from '../../../../util/data'
 import styled from 'styled-components'
 
 const ParentContainer = styled.div``
