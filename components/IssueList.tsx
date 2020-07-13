@@ -27,14 +27,15 @@ export const getBackgroundColor = (
     return theme.colors.darkgrey.light
 }
 
-interface WrapperProps {
+type WrapperProps = {
     isDraggingOver: boolean
     isDraggingFrom: boolean
     isDropDisabled: boolean
     theme: Theme
+    [key: string]: unknown
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<WrapperProps>`
     background-color: ${(props: WrapperProps) =>
         getBackgroundColor(
             props.isDraggingOver,
@@ -169,9 +170,9 @@ export default function IssueList({
             ) => (
                 <Wrapper
                     style={style}
-                    isDraggingOver={dropSnapshot.isDraggingOver}
                     isDropDisabled={isDropDisabled}
-                    isDraggingFrom={Boolean(dropSnapshot.draggingFromThisWith)}
+                    isDraggingOver={dropSnapshot.isDraggingOver}
+                    isDraggingFrom={!!dropSnapshot.draggingFromThisWith}
                     {...dropProvided.droppableProps}
                 >
                     {internalScroll ? (
