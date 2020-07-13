@@ -28,12 +28,10 @@ const InputContainer = styled.div`
     align-items: center;
     width: 130px;
 `
-
-export default function EditableNumber({
-    initialValue,
-}: {
+interface Props {
     initialValue: number
-}) {
+}
+export default function EditableNumber({ initialValue }: Props) {
     const [editable, setEditable] = useState(false)
     const [value, setValue] = useState(initialValue)
 

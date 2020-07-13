@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import Column from './column'
-import reorder, { reorderQuoteMap } from '../util/reorder'
+import Column from './Column'
+import reorder, { reorderQuoteMap } from '../../util/reorder'
 import {
     DragDropContext,
     DropResult,
@@ -9,10 +9,8 @@ import {
     Droppable,
 } from 'react-beautiful-dnd'
 import styled from 'styled-components'
-import { Issue } from '../interfaces/Issue'
-import ExpandLessIcon from '@material-ui/icons/ExpandLess'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import { Collapse } from 'react-collapse'
+import { Issue } from '../../interfaces/Issue'
+import CustomCollapse from '../Collapse'
 
 const Container = styled.div`
     min-width: 100vw;
@@ -24,28 +22,6 @@ const BoardContainer = styled.div`
     overflow: auto;
 `
 
-const StoryHeader = styled.div`
-    height: 30px;
-    margin: 5px 10px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 0px 10px;
-    background-color: ${({ theme }) => theme.colors.grey.light};
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
-    cursor: pointer;
-    &:hover,
-    &:active {
-        background-color: ${({ theme }) => theme.colors.grey.normal};
-    }
-`
-
-const StoryTitle = styled.h6`
-    margin: 0;
-    padding: 0px 10px;
-`
-
 type Props = {
     id: string
     data: Issue[]
@@ -53,10 +29,14 @@ type Props = {
     withScrollableColumns?: boolean
 }
 
-const Board = ({ id, data = [], columns = [], withScrollableColumns }: Props) => {
+const Board = ({
+    id,
+    data = [],
+    columns = [],
+    withScrollableColumns,
+}: Props) => {
     /* eslint-disable react/sort-comp */
-    const [expanded, setExpanded] = useState(true)
-    const [issues, setColumns] = useState(data)
+    const [issues, setIssues] = useState(data)
     const [ordered, setOrdered] = useState(columns)
 
     const onDragEnd = (result: DropResult) => {
@@ -89,24 +69,18 @@ const Board = ({ id, data = [], columns = [], withScrollableColumns }: Props) =>
             return
         }
 
-        const data = reorderQuoteMap({
+        const { issueMap } = reorderQuoteMap({
             issueMap: issues,
             source,
             destination,
         })
 
-        setColumns(data.issueMap)
+        setIssues(issueMap)
     }
-
-    const toggleVisibility = () => setExpanded((expanded) => !expanded)
 
     return (
         <>
-            <StoryHeader onClick={toggleVisibility}>
-                {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                <StoryTitle>Story</StoryTitle>
-            </StoryHeader>
-            <Collapse isOpened={expanded}>
+            <CustomCollapse title="Story">
                 <BoardContainer>
                     <DragDropContext onDragEnd={onDragEnd}>
                         <Droppable
@@ -141,7 +115,7 @@ const Board = ({ id, data = [], columns = [], withScrollableColumns }: Props) =>
                         </Droppable>
                     </DragDropContext>
                 </BoardContainer>
-            </Collapse>
+            </CustomCollapse>
         </>
     )
 }

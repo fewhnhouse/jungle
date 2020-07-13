@@ -9,9 +9,9 @@ import {
     DraggableStateSnapshot,
 } from 'react-beautiful-dnd'
 import IssueItem from './IssueItem'
-import Title from './Title'
-import { Issue } from '../interfaces/Issue'
-import { Theme } from '../pages/_app'
+import Title from '../Title'
+import { Issue } from '../../interfaces/Issue'
+import { Theme } from '../../pages/_app'
 
 export const getBackgroundColor = (
     isDraggingOver: boolean,
@@ -36,21 +36,15 @@ type WrapperProps = {
 }
 
 const Wrapper = styled.div<WrapperProps>`
-    background-color: ${(props) =>
-        getBackgroundColor(
-            props.isDraggingOver,
-            props.isDraggingFrom,
-            props.theme
-        )};
     display: flex;
     flex-direction: column;
     opacity: ${({ isDropDisabled }) => (isDropDisabled ? 0.5 : 'inherit')};
     padding: 4px;
     border: 4px;
+    margin: 5px 10px;
     padding-bottom: 0;
     transition: background-color 0.2s ease, opacity 0.1s ease;
     user-select: none;
-    width: 250px;
     height: 100%;
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
@@ -68,31 +62,9 @@ const DropZone = styled.div`
     padding-bottom: 4px;
 `
 
-const ScrollContainer = styled.div`
-    overflow-x: hidden;
-    overflow-y: auto;
-    max-height: ${scrollContainerHeight}px;
-`
-
 /* stylelint-disable block-no-empty */
 const Container = styled.div``
 /* stylelint-enable */
-
-type Props = {
-    listId?: string
-    listType?: string
-    issues: Issue[]
-    title?: string
-    internalScroll?: boolean
-    scrollContainerStyle?: Record<string, unknown>
-    isDropDisabled?: boolean
-    isCombineEnabled?: boolean
-    style?: Record<string, unknown>
-    // may not be provided - and might be null
-    ignoreContainerClipping?: boolean
-
-    useClone?: boolean
-}
 
 type IssueListProps = {
     issues: Issue[]
@@ -145,10 +117,18 @@ function InnerList(props: InnerListProps) {
     )
 }
 
+type Props = {
+    listId?: string
+    listType?: string
+    issues: Issue[]
+    title?: string
+    isDropDisabled?: boolean
+    style?: Record<string, unknown>
+    ignoreContainerClipping?: boolean
+}
+
 export default function IssueList({
     ignoreContainerClipping,
-    internalScroll,
-    scrollContainerStyle,
     isDropDisabled,
     listId = 'LIST',
     listType,
@@ -174,21 +154,11 @@ export default function IssueList({
                     isDraggingFrom={!!dropSnapshot.draggingFromThisWith}
                     {...dropProvided.droppableProps}
                 >
-                    {internalScroll ? (
-                        <ScrollContainer style={scrollContainerStyle}>
-                            <InnerList
-                                issues={issues}
-                                title={title}
-                                dropProvided={dropProvided}
-                            />
-                        </ScrollContainer>
-                    ) : (
-                        <InnerList
-                            issues={issues}
-                            title={title}
-                            dropProvided={dropProvided}
-                        />
-                    )}
+                    <InnerList
+                        issues={issues}
+                        title={title}
+                        dropProvided={dropProvided}
+                    />
                 </Wrapper>
             )}
         </Droppable>

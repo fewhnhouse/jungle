@@ -1,8 +1,6 @@
-import { Issue } from "../interfaces/Issue";
+import { Issue } from '../interfaces/Issue'
 
 type Author = any
-type Quote = any
-type QuoteMap = any
 
 const jake: Author = {
     id: '1',
@@ -13,7 +11,7 @@ const jake: Author = {
         soft: 'yellow',
         hard: 'orange',
     },
-};
+}
 
 const BMO: Author = {
     id: '2',
@@ -24,7 +22,7 @@ const BMO: Author = {
         soft: 'pink',
         hard: 'purple',
     },
-};
+}
 
 const finn: Author = {
     id: '3',
@@ -35,7 +33,7 @@ const finn: Author = {
         soft: 'orange',
         hard: 'red',
     },
-};
+}
 
 const princess: Author = {
     id: '4',
@@ -46,98 +44,165 @@ const princess: Author = {
         soft: 'yellow',
         hard: 'green',
     },
-};
+}
 
-export const columns = ["To Do", "In Progress", "Blocked", "In Review", "Done"]
+export const columns = ['To Do', 'In Progress', 'Blocked', 'In Review', 'Done']
 
-export const sprint: Issue[] = [{
-    id: 'ID-1',
-    content: 'Sprint Content',
-    status: columns[1],
-    tags: [],
-    priority: 1,
-    type: "Story",
-    storyPoints: 3,
-    author: princess,
-},
-{
-    id: 'ID-2',
-    content: 'Sprint Content',
-    status: columns[1],
-    tags: [],
-    priority: 1,
-    type: "Story",
-    storyPoints: 1,
-    author: princess,
-}, {
-    id: 'ID-3',
-    content: 'Sprint Content',
-    status: columns[2],
-    tags: [],
-    priority: 4,
-    type: "Story",
-    storyPoints: 3,
-    author: princess,
-}, {
-    id: 'ID-4',
-    content: 'Sprint Content',
-    status: columns[3],
-    tags: [],
-    priority: 2,
-    type: "Story",
-    storyPoints: 8,
-    author: princess,
-},
-{
-    id: 'ID-5',
-    content: 'Sprint Content',
-    status: columns[3],
-    tags: [],
-    priority: 2,
-    type: "Story",
-    storyPoints: 8,
-    author: princess,
-},
-{
-    id: 'ID-6',
-    content: 'Sprint Content',
-    status: columns[3],
-    tags: [],
-    priority: 2,
-    type: "Story",
-    storyPoints: 8,
-    author: princess,
-},
-{
-    id: 'ID-7',
-    content: 'Sprint Content',
-    status: columns[0],
-    tags: [],
-    priority: 2,
-    type: "Story",
-    storyPoints: 8,
-    author: princess,
-},
-{
-    id: 'ID-8',
-    content: 'Sprint Content',
-    status: columns[1],
-    tags: [],
-    priority: 2,
-    type: "Story",
-    storyPoints: 8,
-    author: princess,
-},
-{
-    id: 'ID-9',
-    content: 'Sprint Content',
-    status: columns[4],
-    tags: [],
-    priority: 2,
-    type: "Story",
-    storyPoints: 8,
-    author: princess,
-}]
-
-
-
+export const sprint: Issue[] = [
+    {
+        id: 'ID-1',
+        sprint: {
+            id: 'backlog',
+        },
+        content: 'Backlog Content',
+        status: 'backlog',
+        tags: [],
+        priority: 1,
+        type: 'Story',
+        storyPoints: 3,
+        author: princess,
+    },
+    {
+        id: 'ID-2',
+        sprint: {
+            id: '1',
+        },
+        content: 'Sprint Content',
+        status: columns[1],
+        tags: [],
+        priority: 1,
+        type: 'Story',
+        storyPoints: 1,
+        author: princess,
+    },
+    {
+        id: 'ID-3',
+        sprint: {
+            id: '1',
+        },
+        content: 'Sprint Content',
+        status: columns[2],
+        tags: [],
+        priority: 4,
+        type: 'Story',
+        storyPoints: 3,
+        author: princess,
+    },
+    {
+        id: 'ID-4',
+        sprint: {
+            id: '1',
+        },
+        content: 'Sprint Content',
+        status: columns[3],
+        tags: [],
+        priority: 2,
+        type: 'Story',
+        storyPoints: 8,
+        author: princess,
+    },
+    {
+        id: 'ID-5',
+        sprint: {
+            id: '1',
+        },
+        content: 'Sprint Content',
+        status: columns[3],
+        tags: [],
+        priority: 2,
+        type: 'Story',
+        storyPoints: 8,
+        author: princess,
+    },
+    {
+        id: 'ID-6',
+        sprint: {
+            id: '1',
+        },
+        content: 'Sprint Content',
+        status: columns[3],
+        tags: [],
+        priority: 2,
+        type: 'Story',
+        storyPoints: 8,
+        author: princess,
+    },
+    {
+        id: 'ID-7',
+        sprint: {
+            id: '1',
+        },
+        content: 'Sprint Content',
+        status: columns[0],
+        tags: [],
+        priority: 2,
+        type: 'Story',
+        storyPoints: 8,
+        author: princess,
+    },
+    {
+        id: 'ID-8',
+        sprint: {
+            id: '1',
+        },
+        content: 'Sprint Content',
+        status: columns[1],
+        tags: [],
+        priority: 2,
+        type: 'Story',
+        storyPoints: 8,
+        author: princess,
+    },
+    {
+        id: 'ID-9',
+        sprint: {
+            id: '1',
+        },
+        content: 'Sprint Content',
+        status: columns[4],
+        tags: [],
+        priority: 2,
+        type: 'Story',
+        storyPoints: 8,
+        author: princess,
+    },
+    {
+        id: 'ID-10',
+        sprint: {
+            id: 'backlog',
+        },
+        content: 'Backlog Content',
+        status: 'backlog',
+        tags: [],
+        priority: 1,
+        type: 'Story',
+        storyPoints: 3,
+        author: princess,
+    },
+    {
+        id: 'ID-11',
+        sprint: {
+            id: 'backlog',
+        },
+        content: 'Backlog Content',
+        status: 'backlog',
+        tags: [],
+        priority: 1,
+        type: 'Story',
+        storyPoints: 3,
+        author: princess,
+    },
+    {
+        id: 'ID-12',
+        sprint: {
+            id: 'backlog',
+        },
+        content: 'Backlog Content',
+        status: 'backlog',
+        tags: [],
+        priority: 1,
+        type: 'Story',
+        storyPoints: 3,
+        author: princess,
+    },
+]

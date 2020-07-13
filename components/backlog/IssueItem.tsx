@@ -1,8 +1,8 @@
 import styled from 'styled-components'
 import React, { useState } from 'react'
 import type { DraggableProvided } from 'react-beautiful-dnd'
-import { Issue } from '../interfaces/Issue'
-import IssueModal from './IssueModal'
+import { Issue } from '../../interfaces/Issue'
+import IssueModal from '../IssueModal'
 
 const getBackgroundColor = (isDragging: boolean, isGroupedOver: boolean) => {
     if (isDragging) {

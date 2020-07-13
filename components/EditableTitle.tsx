@@ -29,12 +29,11 @@ const InputContainer = styled.div`
     margin: 5px 0px;
     align-items: center;
 `
-
-export default function EditableTitle({
-    initialValue,
-}: {
+interface Props {
     initialValue: string
-}) {
+}
+
+export default function EditableTitle({ initialValue }: Props) {
     const [editable, setEditable] = useState(false)
     const [value, setValue] = useState(initialValue)
 

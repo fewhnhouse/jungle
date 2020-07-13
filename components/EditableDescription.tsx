@@ -28,11 +28,10 @@ const InputContainer = styled.div`
     margin-bottom: 10px;
 `
 
-export default function EditableDescription({
-    initialValue,
-}: {
+interface Props {
     initialValue: string
-}) {
+}
+export default function EditableDescription({ initialValue }: Props) {
     const [editable, setEditable] = useState(false)
     const [value, setValue] = useState(initialValue)
 

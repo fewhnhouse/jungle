@@ -1,17 +1,11 @@
 import React from 'react'
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 
 import {
     Breadcrumb,
     BreadcrumbItem,
     Modal,
-    ModalHeader,
-    ModalBody,
     Button,
-    FormInput,
 } from 'shards-react'
-
-import { useSpring, animated } from 'react-spring'
 import styled from 'styled-components'
 import CloseIcon from '@material-ui/icons/Close'
 import EditableTitle from './EditableTitle'
@@ -68,10 +62,6 @@ const Sidebar = styled.aside`
     flex-direction: column;
     align-items: flex-start;
     min-width: 180px;
-`
-
-const Footer = styled.footer`
-    display: flex;
 `
 
 export default function IssueModal({

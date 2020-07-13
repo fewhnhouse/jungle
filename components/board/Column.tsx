@@ -5,9 +5,9 @@ import {
     Draggable,
 } from 'react-beautiful-dnd'
 import IssueList from './IssueList'
-import Title from './Title'
-import { Issue } from '../interfaces/Issue'
-import { Theme } from '../pages/_app'
+import Title from '../Title'
+import { Issue } from '../../interfaces/Issue'
+import { Theme } from '../../pages/_app'
 
 const Container = styled.div`
     margin: 10px;
@@ -67,7 +67,6 @@ const Column = ({ title, issues, index, isScrollable }: Props) => {
                                 : null,
                         }}
                         issues={issues}
-                        internalScroll={isScrollable}
                     />
                 </Container>
             )}

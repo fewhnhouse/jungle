@@ -10,12 +10,15 @@ interface Author {
 }
 
 export interface Issue {
-    id: string,
-    content: string,
-    status: string,
-    tags: string[],
-    priority: number,
-    type: string,
-    storyPoints: number,
-    author: Author,
+    id: string
+    content: string
+    status: string
+    tags: string[]
+    priority: number
+    type: string
+    storyPoints: number
+    author: Author
+    sprint?: {
+        id: string
+    }
 }
