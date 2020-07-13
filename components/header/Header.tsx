@@ -60,19 +60,39 @@ const Header = () => {
         <StyledHeader scrolled={y > 0}>
             {pathname.includes('/projects') ? (
                 <Links>
+                    <WrappedLink href="/">Home</WrappedLink>
+
                     <WrappedLink href="/projects/[id]" as={`/projects/${id}`}>
                         Dashboard
                     </WrappedLink>
-                    <WrappedLink href="/projects/[id]/your-work" as={`/projects/${id}/your-work`}>
+                    <WrappedLink
+                        href="/projects/[id]/your-work"
+                        as={`/projects/${id}/your-work`}
+                    >
                         Your work
                     </WrappedLink>
-                    <WrappedLink href="/projects/[id]/board" as={`/projects/${id}/board`}>Board</WrappedLink>
-                    <WrappedLink href="/projects/[id]/backlog" as={`/projects/${id}/backlog`}>Backlog</WrappedLink>
-                    <WrappedLink href="/projects/[id]/reports" as={`/projects/${id}/reports`}>Reports</WrappedLink>
+                    <WrappedLink
+                        href="/projects/[id]/board"
+                        as={`/projects/${id}/board`}
+                    >
+                        Board
+                    </WrappedLink>
+                    <WrappedLink
+                        href="/projects/[id]/backlog"
+                        as={`/projects/${id}/backlog`}
+                    >
+                        Backlog
+                    </WrappedLink>
+                    <WrappedLink
+                        href="/projects/[id]/reports"
+                        as={`/projects/${id}/reports`}
+                    >
+                        Reports
+                    </WrappedLink>
                 </Links>
             ) : (
                 <Links>
-                    <WrappedLink href="/">Dashboard</WrappedLink>
+                    <WrappedLink href="/">Home</WrappedLink>
                     <WrappedLink href="/projects">Projects</WrappedLink>
                     <WrappedLink href="/activity">Activity</WrappedLink>
                     <WrappedLink href="/your-work">Your Work</WrappedLink>
