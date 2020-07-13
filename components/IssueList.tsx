@@ -36,7 +36,7 @@ type WrapperProps = {
 }
 
 const Wrapper = styled.div<WrapperProps>`
-    background-color: ${(props: WrapperProps) =>
+    background-color: ${(props) =>
         getBackgroundColor(
             props.isDraggingOver,
             props.isDraggingFrom,
@@ -44,8 +44,7 @@ const Wrapper = styled.div<WrapperProps>`
         )};
     display: flex;
     flex-direction: column;
-    opacity: ${({ isDropDisabled }: WrapperProps) =>
-        isDropDisabled ? 0.5 : 'inherit'};
+    opacity: ${({ isDropDisabled }) => (isDropDisabled ? 0.5 : 'inherit')};
     padding: 4px;
     border: 4px;
     padding-bottom: 0;
