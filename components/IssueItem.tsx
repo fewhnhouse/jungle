@@ -25,25 +25,24 @@ const getBackgroundColor = (
 const getBorderColor = (isDragging: boolean, authorColors: AuthorColors) =>
     isDragging ? '#2c3e50' : 'transparent'
 
-const imageSize: number = 40
+const imageSize = 40
 
 interface IContainerProps {
     isDragging: boolean
     isGroupedOver: boolean
     colors: AuthorColors
 }
-const Container = styled.div`
+const Container = styled.div<IContainerProps>`
     border-radius: 4px;
     border: 2px solid transparent;
-    border-color: ${(props: IContainerProps) =>
-        getBorderColor(props.isDragging, props.colors)};
-    background-color: ${(props: IContainerProps) =>
+    border-color: ${(props) => getBorderColor(props.isDragging, props.colors)};
+    background-color: ${(props) =>
         getBackgroundColor(
             props.isDragging,
             props.isGroupedOver,
             props.colors
         )};
-    box-shadow: ${({ isDragging }: IContainerProps) =>
+    box-shadow: ${({ isDragging }) =>
         isDragging ? `box-shadow: 0px 0px 10px 0px black` : 'none'};
     box-sizing: border-box;
     padding: 4px;
@@ -127,7 +126,10 @@ const QuoteId = styled.small`
     text-align: right;
 `
 
-function getStyle(provided: DraggableProvided, style?: Object) {
+function getStyle(
+    provided: DraggableProvided,
+    style?: Record<string, unknown>
+) {
     if (!style) {
         return provided.draggableProps.style
     }
@@ -143,7 +145,7 @@ interface IssueItemProps {
     isDragging: boolean
     provided: DraggableProvided
     isGroupedOver?: boolean
-    style?: Object
+    style?: Record<string, unknown>
     index?: number
 }
 
@@ -199,4 +201,4 @@ function IssueItem({
     )
 }
 
-export default React.memo<Props>(IssueItem)
+export default React.memo<IssueItemProps>(IssueItem)
