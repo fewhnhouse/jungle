@@ -4,10 +4,10 @@ import {
     DraggableStateSnapshot,
     Draggable,
 } from 'react-beautiful-dnd'
-import IssueList from '../../components/IssueList'
-import Title from '../../components/Title'
-import { Issue } from '../../interfaces/Issue'
-import { Theme } from '../_app'
+import IssueList from './IssueList'
+import Title from './Title'
+import { Issue } from '../interfaces/Issue'
+import { Theme } from '../pages/_app'
 
 const Container = styled.div`
     margin: 10px;
@@ -15,19 +15,18 @@ const Container = styled.div`
     flex-direction: column;
 `
 
-const Header = styled.div`
+interface HeaderProps {
+    isDragging: boolean
+    theme: Theme
+}
+const Header = styled.div<HeaderProps>`
     display: flex;
     align-items: center;
     justify-content: center;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
-    background-color: ${({
-        isDragging,
-        theme,
-    }: {
-        isDragging: boolean
-        theme: Theme
-    }) => (isDragging ? theme.colors.grey.dark : theme.colors.grey.light)};
+    background-color: ${({ isDragging, theme }) =>
+        isDragging ? theme.colors.grey.dark : theme.colors.grey.light};
     transition: background-color 0.2s ease;
     &:hover {
         background-color: ${({ theme }) => theme.colors.grey.normal};

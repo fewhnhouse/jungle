@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import Column from './column'
-import reorder, { reorderQuoteMap } from './reorder'
+import reorder, { reorderQuoteMap } from '../util/reorder'
 import {
     DragDropContext,
     DropResult,
@@ -9,7 +9,7 @@ import {
     Droppable,
 } from 'react-beautiful-dnd'
 import styled from 'styled-components'
-import { Issue } from '../../interfaces/Issue'
+import { Issue } from '../interfaces/Issue'
 import ExpandLessIcon from '@material-ui/icons/ExpandLess'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { Collapse } from 'react-collapse'
@@ -53,7 +53,7 @@ type Props = {
     withScrollableColumns?: boolean
 }
 
-const Board = ({ id, data, columns, withScrollableColumns }: Props) => {
+const Board = ({ id, data = [], columns = [], withScrollableColumns }: Props) => {
     /* eslint-disable react/sort-comp */
     const [expanded, setExpanded] = useState(true)
     const [issues, setColumns] = useState(data)

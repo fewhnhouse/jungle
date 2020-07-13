@@ -1,5 +1,5 @@
 import { DraggableLocation } from "react-beautiful-dnd";
-import { Issue } from "../../interfaces/Issue";
+import { Issue } from "../interfaces/Issue";
 
 // a little function to help us with reordering the result
 const reorder = (list: any[], startIndex: number, endIndex: number): any[] => {
@@ -16,13 +16,12 @@ interface ReorderIssueMapArgs {
     issueMap: Issue[],
     source: DraggableLocation,
     destination: DraggableLocation,
-};
-
+}
 
 
 export interface ReorderIssueMapResult {
     issueMap: Issue[]
-};
+}
 
 export const reorderQuoteMap = ({
     issueMap,

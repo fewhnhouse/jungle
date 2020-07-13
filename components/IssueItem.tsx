@@ -4,13 +4,7 @@ import type { DraggableProvided } from 'react-beautiful-dnd'
 import { Issue } from '../interfaces/Issue'
 import IssueModal from './IssueModal'
 
-type AuthorColors = any
-
-const getBackgroundColor = (
-    isDragging: boolean,
-    isGroupedOver: boolean,
-    authorColors: AuthorColors
-) => {
+const getBackgroundColor = (isDragging: boolean, isGroupedOver: boolean) => {
     if (isDragging) {
         return '#bdc3c7'
     }
@@ -22,7 +16,7 @@ const getBackgroundColor = (
     return '#ecf0f1'
 }
 
-const getBorderColor = (isDragging: boolean, authorColors: AuthorColors) =>
+const getBorderColor = (isDragging: boolean) =>
     isDragging ? '#2c3e50' : 'transparent'
 
 const imageSize = 40
@@ -30,18 +24,13 @@ const imageSize = 40
 interface IContainerProps {
     isDragging: boolean
     isGroupedOver: boolean
-    colors: AuthorColors
 }
 const Container = styled.div<IContainerProps>`
     border-radius: 4px;
     border: 2px solid transparent;
-    border-color: ${(props) => getBorderColor(props.isDragging, props.colors)};
+    border-color: ${(props) => getBorderColor(props.isDragging)};
     background-color: ${(props) =>
-        getBackgroundColor(
-            props.isDragging,
-            props.isGroupedOver,
-            props.colors
-        )};
+        getBackgroundColor(props.isDragging, props.isGroupedOver)};
     box-shadow: ${({ isDragging }) =>
         isDragging ? `box-shadow: 0px 0px 10px 0px black` : 'none'};
     box-sizing: border-box;
@@ -175,7 +164,6 @@ function IssueItem({
                 onClick={handleClick}
                 isDragging={isDragging}
                 isGroupedOver={isGroupedOver}
-                colors={issue.author.colors}
                 ref={provided.innerRef}
                 {...provided.draggableProps}
                 {...provided.dragHandleProps}
