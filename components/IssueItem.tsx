@@ -6,15 +6,6 @@ import IssueModal from './IssueModal'
 
 type AuthorColors = any
 
-type Props = {
-    issue: Issue
-    isDragging: boolean
-    provided: DraggableProvided
-    isGroupedOver?: boolean
-    style?: Object
-    index?: number
-}
-
 const getBackgroundColor = (
     isDragging: boolean,
     isGroupedOver: boolean,
@@ -147,6 +138,15 @@ function getStyle(provided: DraggableProvided, style?: Object) {
     }
 }
 
+interface IssueItemProps {
+    issue: Issue
+    isDragging: boolean
+    provided: DraggableProvided
+    isGroupedOver?: boolean
+    style?: Object
+    index?: number
+}
+
 // Previously this extended React.Component
 // That was a good thing, because using React.PureComponent can hide
 // issues with the selectors. However, moving it over does can considerable
@@ -161,12 +161,12 @@ function IssueItem({
     provided,
     style,
     index,
-}: Props) {
+}: IssueItemProps) {
     const [expanded, setExpanded] = useState(false)
 
     const handleClick = () => setExpanded(true)
     const handleClose = () => setExpanded(false)
-    
+
     return (
         <>
             <Container

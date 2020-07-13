@@ -1,11 +1,5 @@
 import styled from 'styled-components'
-import {
-    Button,
-    Dropdown,
-    DropdownMenu,
-    DropdownItem,
-} from 'shards-react'
-import NotificationsIcon from '@material-ui/icons/Notifications'
+import { Button, Dropdown, DropdownMenu, DropdownItem } from 'shards-react'
 import { useState } from 'react'
 
 const ProfileBadge = styled.img`
@@ -20,20 +14,18 @@ const ProfileBadge = styled.img`
     }
 `
 
-
 export default function Profile() {
     const [open, setOpen] = useState(false)
     const toggle = () => setOpen((open) => !open)
 
     return (
-                        <Dropdown open={open} toggle={toggle}>
-                    <ProfileBadge src="/bmo.png" onClick={toggle} />
-                    <DropdownMenu right>
-                        <DropdownItem>Action</DropdownItem>
-                        <DropdownItem>Another action</DropdownItem>
-                        <DropdownItem>Something else here</DropdownItem>
-                    </DropdownMenu>
-                </Dropdown>
-
+        <Dropdown open={open} toggle={toggle}>
+            <ProfileBadge src="/bmo.png" onClick={toggle} />
+            <DropdownMenu right>
+                <DropdownItem>Action</DropdownItem>
+                <DropdownItem>Another action</DropdownItem>
+                <DropdownItem>Something else here</DropdownItem>
+            </DropdownMenu>
+        </Dropdown>
     )
 }
