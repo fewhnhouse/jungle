@@ -31,13 +31,13 @@ const StoryHeader = styled.div`
     flex-direction: row;
     align-items: center;
     padding: 0px 10px;
-    background-color: #ecf0f1;
+    background-color: ${({ theme }) => theme.colors.grey.light};
     border-radius: 4px;
     transition: background-color 0.2s ease;
     cursor: pointer;
     &:hover,
     &:active {
-        background-color: #bdc3c7;
+        background-color: ${({ theme }) => theme.colors.grey.normal};
     }
 `
 

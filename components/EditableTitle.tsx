@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import styled from 'styled-components'
 import { FormInput } from 'shards-react'
-import CloseIcon from '@material-ui/icons/Close'
-import CheckIcon from '@material-ui/icons/Check'
 import EditButtonGroup from './EditButtonGroup'
 
 const Title = styled.h3`

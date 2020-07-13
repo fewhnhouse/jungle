@@ -5,16 +5,42 @@ import './app.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'shards-ui/dist/css/shards.min.css'
 import 'react-markdown-editor-lite/lib/index.css'
+import Header from '../components/Header'
 
+export interface Theme {
+    colors: {
+        primary: string
+        grey: {
+            light: string
+            normal: string
+            dark: string
+        }
+        darkgrey: {
+            light: string
+            normal: string
+            dark: string
+        }
+    }
+}
 const theme = {
     colors: {
         primary: '#0070f3',
+        grey: {
+            light: '#e9ecef',
+            normal: '#dadfe4',
+            dark: '#bdc3c7',
+        },
+        darkgrey: {
+            light: '#95a5a6',
+            normal: '#7f8c8d',
+            dark: '#34495e',
+        },
     },
 }
 
 const AppContainer = styled.main`
-    height: 100vh;
-    width: 100vw;
+    height: calc(100vh - 70px);
+    margin-top: 70px;
 `
 
 const fetcher = (query) =>
@@ -36,6 +62,7 @@ export default function App({ Component, pageProps }: AppProps) {
                     fetcher,
                 }}
             >
+                <Header />
                 <AppContainer>
                     <Component {...pageProps} />
                 </AppContainer>

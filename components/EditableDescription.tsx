@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import styled from 'styled-components'
-import { FormTextarea } from 'shards-react'
 import dynamic from 'next/dynamic'
 import MarkdownIt from 'markdown-it'
 import EditButtonGroup from './EditButtonGroup'
@@ -20,11 +19,6 @@ const Description = styled.p`
     font-weight: 300;
     color: #495057;
     cursor: pointer;
-`
-
-const StyledArea = styled(FormTextarea)`
-    padding: 4px 12px;
-    margin-right: 5px;
 `
 
 const InputContainer = styled.div`

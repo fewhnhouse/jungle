@@ -11,29 +11,36 @@ import {
 import IssueItem from './IssueItem'
 import Title from './Title'
 import { Issue } from '../interfaces/Issue'
+import { Theme } from '../pages/_app'
 
 export const getBackgroundColor = (
     isDraggingOver: boolean,
-    isDraggingFrom: boolean
+    isDraggingFrom: boolean,
+    theme: Theme
 ): string => {
     if (isDraggingOver) {
-        return '#7f8c8d'
+        return theme.colors.darkgrey.normal
     }
     if (isDraggingFrom) {
-        return '#7f8c8d'
+        return theme.colors.darkgrey.normal
     }
-    return '#95a5a6'
+    return theme.colors.darkgrey.light
 }
 
 interface WrapperProps {
     isDraggingOver: boolean
     isDraggingFrom: boolean
     isDropDisabled: boolean
+    theme: Theme
 }
 
 const Wrapper = styled.div`
     background-color: ${(props: WrapperProps) =>
-        getBackgroundColor(props.isDraggingOver, props.isDraggingFrom)};
+        getBackgroundColor(
+            props.isDraggingOver,
+            props.isDraggingFrom,
+            props.theme
+        )};
     display: flex;
     flex-direction: column;
     opacity: ${({ isDropDisabled }: WrapperProps) =>
@@ -49,7 +56,7 @@ const Wrapper = styled.div`
     border-bottom-right-radius: 4px;
 `
 
-const scrollContainerHeight: number = 250
+const scrollContainerHeight = 250
 
 const DropZone = styled.div`
     /* stop the list collapsing when empty */
@@ -77,10 +84,10 @@ type Props = {
     issues: Issue[]
     title?: string
     internalScroll?: boolean
-    scrollContainerStyle?: Object
+    scrollContainerStyle?: Record<string, unknown>
     isDropDisabled?: boolean
     isCombineEnabled?: boolean
-    style?: Object
+    style?: Record<string, unknown>
     // may not be provided - and might be null
     ignoreContainerClipping?: boolean
 
@@ -91,6 +98,7 @@ type IssueListProps = {
     issues: Issue[]
 }
 
+// eslint-disable-next-line react/display-name
 const InnerQuoteList = React.memo(({ issues }: IssueListProps) => {
     return (
         <>

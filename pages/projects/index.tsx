@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import Header from '../../components/Header'
 import Link from 'next/link'
 
 const Container = styled.div`
@@ -11,7 +10,6 @@ const Container = styled.div`
 
 const Projects = () => (
     <Container>
-        <Header />
         <Link href="/projects/123">
             <a>Project 1</a>
         </Link>

@@ -7,6 +7,7 @@ import {
 import IssueList from '../../components/IssueList'
 import Title from '../../components/Title'
 import { Issue } from '../../interfaces/Issue'
+import { Theme } from '../_app'
 
 const Container = styled.div`
     margin: 10px;
@@ -20,11 +21,16 @@ const Header = styled.div`
     justify-content: center;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
-    background-color: ${({ isDragging }: { isDragging: boolean }) =>
-        isDragging ? '#bdc3c7' : '#ecf0f1'};
+    background-color: ${({
+        isDragging,
+        theme,
+    }: {
+        isDragging: boolean
+        theme: Theme
+    }) => (isDragging ? theme.colors.grey.dark : theme.colors.grey.light)};
     transition: background-color 0.2s ease;
     &:hover {
-        background-color: #bdc3c7;
+        background-color: ${({ theme }) => theme.colors.grey.normal};
     }
 `
 
