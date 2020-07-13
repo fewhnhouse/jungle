@@ -1,14 +1,101 @@
-import Link from 'next/link'
+import {
+    Card,
+    CardHeader,
+    CardTitle,
+    CardImg,
+    CardBody,
+    CardFooter,
+    Button,
+} from 'shards-react'
+import styled from 'styled-components'
+import ListItem from '../components/ListItem'
 
-const Home = () => {
+const Container = styled.div`
+    margin: 10px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+`
+
+const StyledCard = styled(Card)`
+    flex: 1;
+    margin: 10px;
+    min-width: 500px;
+`
+
+const StyledFooter = styled(CardFooter)`
+    display: flex;
+    justify-content: flex-end;
+`
+
+const ScrollableCardBody = styled(CardBody)`
+    max-height: 300px;
+    overflow: auto;
+`
+
+const List = styled.ul`
+    margin: 0px;
+    padding: 0px;
+`
+
+const StyledButton = styled(Button)`
+    margin: 0px 5px;
+`
+
+export default function Home() {
     return (
-        <div>
-            <h1>Home</h1>
-            <Link href="/projects">
-                <a>Projects</a>
-            </Link>
-        </div>
+        <Container>
+            <StyledCard>
+                <CardHeader>Projects</CardHeader>
+                <ScrollableCardBody>
+                    <List>
+                        <ListItem>Project X</ListItem>
+                        <ListItem>Project X</ListItem>
+                        <ListItem>Project X</ListItem>
+                        <ListItem>Project X</ListItem>
+                        <ListItem>Project X</ListItem>
+                        <ListItem>Project X</ListItem>
+                        <ListItem>Project X</ListItem>
+                    </List>
+                </ScrollableCardBody>
+                <StyledFooter>
+                    <StyledButton outline>Create &rarr;</StyledButton>
+                    <StyledButton outline theme="dark">
+                        See all &rarr;
+                    </StyledButton>
+                </StyledFooter>
+            </StyledCard>
+            <StyledCard>
+                <CardHeader>Your Work</CardHeader>
+                <ScrollableCardBody>
+                    <List>
+                        <ListItem>Task X</ListItem>
+                        <ListItem>Task X</ListItem>
+                        <ListItem>Task X</ListItem>
+                        <ListItem>Task X</ListItem>
+                        <ListItem>Task X</ListItem>
+                        <ListItem>Task X</ListItem>
+                        <ListItem>Task X</ListItem>
+                    </List>
+                </ScrollableCardBody>
+                <StyledFooter>
+                    <StyledButton outline theme="dark">
+                        See all &rarr;
+                    </StyledButton>
+                </StyledFooter>
+            </StyledCard>
+            <StyledCard>
+                <CardHeader>Activity</CardHeader>
+                <CardBody>
+                    <CardTitle>Lorem Ipsum</CardTitle>
+                    <p>Lorem ipsum dolor sit amet.</p>
+                </CardBody>
+                <StyledFooter>
+                    <StyledButton outline theme="dark">
+                        See all &rarr;
+                    </StyledButton>
+                </StyledFooter>
+            </StyledCard>
+        </Container>
     )
 }
-
-export default Home

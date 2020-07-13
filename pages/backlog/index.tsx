@@ -5,6 +5,20 @@ import { useState } from 'react'
 import IssueList from '../../components/backlog/IssueList'
 import { sprint } from '../../util/data'
 import { reorderTasks } from '../../util/reorder'
+import styled from 'styled-components'
+import useMedia from 'use-media'
+
+const IssueContainer = styled.div`
+    flex: 2;
+`
+
+const ContentContainer = styled.div`
+    display: flex;
+`
+
+const Sidebar = styled.aside`
+    flex: 1;
+`
 
 export default function Backlog({ data = [] }: { data: Issue[] }) {
     const [issues, setIssues] = useState(sprint)
@@ -32,26 +46,34 @@ export default function Backlog({ data = [] }: { data: Issue[] }) {
         setIssues(issueMap)
     }
 
+    const isWideScreen = useMedia({ minWidth: '1000px' })
+
     return (
-        <>
-            <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
-                <CustomCollapse title="Current Sprint">
-                    <IssueList
-                        listId="1"
-                        issues={issues.filter(
-                            (item) => item.sprint?.id === '1'
-                        )}
-                    />
-                </CustomCollapse>
-                <CustomCollapse title="Backlog">
-                    <IssueList
-                        listId="backlog"
-                        issues={issues.filter(
-                            (item) => item.sprint?.id === 'backlog'
-                        )}
-                    />
-                </CustomCollapse>
-            </DragDropContext>
-        </>
+        <ContentContainer>
+            <IssueContainer>
+                <DragDropContext
+                    onDragStart={onDragStart}
+                    onDragEnd={onDragEnd}
+                >
+                    <CustomCollapse title="Current Sprint">
+                        <IssueList
+                            listId="1"
+                            issues={issues.filter(
+                                (item) => item.sprint?.id === '1'
+                            )}
+                        />
+                    </CustomCollapse>
+                    <CustomCollapse title="Backlog">
+                        <IssueList
+                            listId="backlog"
+                            issues={issues.filter(
+                                (item) => item.sprint?.id === 'backlog'
+                            )}
+                        />
+                    </CustomCollapse>
+                </DragDropContext>
+            </IssueContainer>
+            {isWideScreen && <Sidebar />}
+        </ContentContainer>
     )
 }

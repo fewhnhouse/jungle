@@ -6,16 +6,10 @@ import {
     InputGroup,
     InputGroupAddon,
     Button,
-    Dropdown,
-    DropdownMenu,
-    DropdownItem,
 } from 'shards-react'
 import SearchIcon from '@material-ui/icons/Search'
 import Notifications from './Notifications'
 import Profile from './Profile'
-
-import NotificationsIcon from '@material-ui/icons/Notifications'
-import { useState } from 'react'
 
 const StyledHeader = styled.header`
     height: 60px;
@@ -76,14 +70,6 @@ const Header = () => {
             <Options>
                 <StyledInputGroup>
                     <FormInput placeholder="Search..." />
-                    <InputGroupAddon type="append">
-                        <Button
-                            style={{ padding: '5px 10px' }}
-                            theme="secondary"
-                        >
-                            <SearchIcon />
-                        </Button>
-                    </InputGroupAddon>
                 </StyledInputGroup>
                 <Notifications/>
                 <Profile/>

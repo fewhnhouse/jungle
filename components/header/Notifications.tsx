@@ -16,7 +16,7 @@ export default function Notifications() {
     return (
         <>
             <Dropdown open={open} toggle={toggle}>
-                <StyledButton theme="light" onClick={toggle}>
+                <StyledButton outline theme="light" onClick={toggle}>
                     <NotificationsIcon />
                 </StyledButton>
                 <DropdownMenu right>
