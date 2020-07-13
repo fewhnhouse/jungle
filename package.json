@@ -5,6 +5,7 @@
         "dev": "next",
         "build": "next build",
         "start": "next start",
+        "analyze": "ANALYZE=true next build",
         "db": "prisma studio --experimental",
         "db-save": "prisma migrate save --experimental",
         "db-up": "prisma migrate up --experimental",
