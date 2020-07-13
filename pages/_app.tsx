@@ -5,7 +5,7 @@ import './app.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'shards-ui/dist/css/shards.min.css'
 import 'react-markdown-editor-lite/lib/index.css'
-import Header from '../components/Header'
+import Header from '../components/header/Header'
 
 export interface Theme {
     colors: {

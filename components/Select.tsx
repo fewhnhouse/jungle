@@ -1,11 +1,10 @@
 import Select from 'react-select'
-import { useState } from 'react'
-import styled from 'styled-components'
-import { Button } from 'shards-react'
 
 const customStyles = {
-    option: (provided, state) => ({
+    option: (provided, { isFocused, isSelected }) => ({
         ...provided,
+        color: '#6c757d',
+        backgroundColor: isSelected ? '#dadfe4' : isFocused ? '#e9ecef' : 'white'
     }),
     control: (provided) => ({
         ...provided,
@@ -16,7 +15,7 @@ const customStyles = {
         },
         border: 'none',
         width: 160,
-        margin: "5px 0px"
+        margin: '5px 0px',
     }),
     indicatorSeparator: () => ({
         visibility: 'none',
@@ -30,9 +29,6 @@ const customStyles = {
 }
 
 export default function CustomSelect() {
-    const [editable, setEditable] = useState(false)
-    const toggleEditable = () => setEditable((editable) => !editable)
-
     return (
         <Select
             isSearchable={false}

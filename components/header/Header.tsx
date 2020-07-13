@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import Link, { LinkProps } from 'next/link'
-import { useScrollPosition } from '../util/useScrollPosition'
+import { useScrollPosition } from '../../util/useScrollPosition'
 import {
     FormInput,
     InputGroup,
@@ -11,6 +11,9 @@ import {
     DropdownItem,
 } from 'shards-react'
 import SearchIcon from '@material-ui/icons/Search'
+import Notifications from './Notifications'
+import Profile from './Profile'
+
 import NotificationsIcon from '@material-ui/icons/Notifications'
 import { useState } from 'react'
 
@@ -48,22 +51,6 @@ const StyledInputGroup = styled(InputGroup)`
     margin: 0px 5px;
 `
 
-const StyledButton = styled(Button)`
-    margin: 0px 5px;
-    padding: 5px;
-`
-
-const ProfileBadge = styled.img`
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    margin: 0px 5px;
-    cursor: pointer;
-    transition: box-shadow 0.3s ease-in-out;
-    &:hover {
-        box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 15px 0px;
-    }
-`
 
 const WrappedLink = ({
     children,
@@ -76,8 +63,6 @@ const WrappedLink = ({
 
 const Header = () => {
     const { y } = useScrollPosition()
-    const [open, setOpen] = useState(false)
-    const toggle = () => setOpen((open) => !open)
     return (
         <StyledHeader scrolled={y > 0}>
             <Links>
@@ -99,17 +84,8 @@ const Header = () => {
                         </Button>
                     </InputGroupAddon>
                 </StyledInputGroup>
-                <StyledButton theme="light">
-                    <NotificationsIcon />
-                </StyledButton>
-                <Dropdown open={open} toggle={toggle}>
-                    <ProfileBadge src="/bmo.png" onClick={toggle} />
-                    <DropdownMenu right>
-                        <DropdownItem>Action</DropdownItem>
-                        <DropdownItem>Another action</DropdownItem>
-                        <DropdownItem>Something else here</DropdownItem>
-                    </DropdownMenu>
-                </Dropdown>
+                <Notifications/>
+                <Profile/>
             </Options>
         </StyledHeader>
     )
