@@ -6,7 +6,11 @@ import Notifications from './Notifications'
 import Profile from './Profile'
 import { useRouter } from 'next/router'
 
-const StyledHeader = styled.header`
+interface HeaderProps {
+    landing: boolean
+    scrolled: boolean
+}
+const StyledHeader = styled.header<HeaderProps>`
     height: 60px;
     width: 100%;
     display: flex;
@@ -17,7 +21,7 @@ const StyledHeader = styled.header`
     top: 0px;
     background-color: white;
     z-index: 100;
-    box-shadow: ${({ scrolled }: { scrolled: boolean }) =>
+    box-shadow: ${({ scrolled }) =>
         scrolled ? 'rgba(0, 0, 0, 0.5) 0px 0px 15px 0px' : ''};
     transition: box-shadow 0.3s ease-in-out;
 `
@@ -57,10 +61,10 @@ const Header = () => {
 
     const { y } = useScrollPosition()
     return (
-        <StyledHeader scrolled={y > 0}>
+        <StyledHeader landing={pathname === '/'} scrolled={y > 0}>
             {pathname.includes('/projects') ? (
                 <Links>
-                    <WrappedLink href="/">Home</WrappedLink>
+                    <WrappedLink href="/home">Home</WrappedLink>
 
                     <WrappedLink href="/projects/[id]" as={`/projects/${id}`}>
                         Dashboard
@@ -90,14 +94,16 @@ const Header = () => {
                         Reports
                     </WrappedLink>
                 </Links>
-            ) : (
+            ) : pathname.includes('/home') ? (
                 <Links>
-                    <WrappedLink href="/">Home</WrappedLink>
+                    <WrappedLink href="/home">Home</WrappedLink>
                     <WrappedLink href="/projects">Projects</WrappedLink>
                     <WrappedLink href="/activity">Activity</WrappedLink>
                     <WrappedLink href="/your-work">Your Work</WrappedLink>
                 </Links>
-            )}
+            ) : pathname === '/' ? (
+                <h3></h3>
+            ) : null}
 
             <Options>
                 <StyledInputGroup>

@@ -1,41 +1,43 @@
 import {
     Card,
     CardHeader,
-    CardTitle,
-    CardImg,
+    FormInput,
     CardBody,
     CardFooter,
     Button,
+    FormCheckbox,
 } from 'shards-react'
 import styled from 'styled-components'
-import ListItem from '../components/ListItem'
+import Link from 'next/link'
 
 const Container = styled.div`
-    margin: 10px;
     display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
+    background-image: url(jungle.png);
+    min-height: 100%;
+    width: 100%;
+    background-size: cover;
+    justify-content: center;
+    align-items: center;
 `
 
 const StyledCard = styled(Card)`
-    flex: 1;
     margin: 10px;
-    min-width: 500px;
+    width: 300px;
+`
+
+const StyledBody = styled(CardBody)`
+    padding: 32px 16px;
 `
 
 const StyledFooter = styled(CardFooter)`
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
 `
 
-const ScrollableCardBody = styled(CardBody)`
-    max-height: 300px;
-    overflow: auto;
-`
-
-const List = styled.ul`
-    margin: 0px;
-    padding: 0px;
+const StyledFormInput = styled(FormInput)`
+    margin: 10px 0px;
 `
 
 const StyledButton = styled(Button)`
@@ -44,58 +46,34 @@ const StyledButton = styled(Button)`
 
 export default function Home() {
     return (
-        <Container>
-            <StyledCard>
-                <CardHeader>Projects</CardHeader>
-                <ScrollableCardBody>
-                    <List>
-                        <ListItem>Project X</ListItem>
-                        <ListItem>Project X</ListItem>
-                        <ListItem>Project X</ListItem>
-                        <ListItem>Project X</ListItem>
-                        <ListItem>Project X</ListItem>
-                        <ListItem>Project X</ListItem>
-                        <ListItem>Project X</ListItem>
-                    </List>
-                </ScrollableCardBody>
-                <StyledFooter>
-                    <StyledButton outline>Create &rarr;</StyledButton>
-                    <StyledButton outline theme="dark">
-                        See all &rarr;
-                    </StyledButton>
-                </StyledFooter>
-            </StyledCard>
-            <StyledCard>
-                <CardHeader>Your Work</CardHeader>
-                <ScrollableCardBody>
-                    <List>
-                        <ListItem>Task X</ListItem>
-                        <ListItem>Task X</ListItem>
-                        <ListItem>Task X</ListItem>
-                        <ListItem>Task X</ListItem>
-                        <ListItem>Task X</ListItem>
-                        <ListItem>Task X</ListItem>
-                        <ListItem>Task X</ListItem>
-                    </List>
-                </ScrollableCardBody>
-                <StyledFooter>
-                    <StyledButton outline theme="dark">
-                        See all &rarr;
-                    </StyledButton>
-                </StyledFooter>
-            </StyledCard>
-            <StyledCard>
-                <CardHeader>Activity</CardHeader>
-                <CardBody>
-                    <CardTitle>Lorem Ipsum</CardTitle>
-                    <p>Lorem ipsum dolor sit amet.</p>
-                </CardBody>
-                <StyledFooter>
-                    <StyledButton outline theme="dark">
-                        See all &rarr;
-                    </StyledButton>
-                </StyledFooter>
-            </StyledCard>
-        </Container>
+        <>
+            <Container>
+                <StyledCard>
+                    <CardHeader>
+                        <h3>Into the Jungle</h3>
+                    </CardHeader>
+                    <StyledBody>
+                        <StyledFormInput placeholder="username" type="text" />
+                        <StyledFormInput
+                            placeholder="password"
+                            type="password"
+                        />
+                        <p>
+                            Forgot your password? Reset it{' '}
+                            <Link href="reset-password">
+                                <a>here</a>
+                            </Link>
+                            .
+                        </p>
+                    </StyledBody>
+                    <StyledFooter>
+                        <FormCheckbox>Remember Me</FormCheckbox>
+                        <StyledButton theme="success">
+                            Log In &rarr;
+                        </StyledButton>
+                    </StyledFooter>
+                </StyledCard>
+            </Container>
+        </>
     )
 }
