@@ -4,7 +4,6 @@ import { Theme } from '../pages/_app'
 const Container = styled.li<{ theme: Theme }>`
     background: ${({ theme }) => theme.colors.grey.light};
     border-radius: 4px;
-    padding: 10px;
     list-style: none;
     margin: 5px 0px;
     &:hover {
