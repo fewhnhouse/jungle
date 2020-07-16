@@ -1,13 +1,22 @@
-import DashboardIcon from '@material-ui/icons/Dashboard'
-import ListIcon from '@material-ui/icons/List'
-import { Button, Badge, Tooltip } from 'shards-react'
+import { Card, CardFooter, Button, Badge } from 'shards-react'
 import styled from 'styled-components'
-import ListItem from '../ListItem'
 import useMedia from 'use-media'
 
-const StyledIconButton = styled(Button)`
+const StyledButton = styled(Button)`
     margin: 0px 5px;
-    padding: 5px;
+`
+
+const StyledCard = styled(Card)`
+    min-width: 300px;
+    max-width: 500px;
+    width: 100%;
+    margin: 10px;
+`
+
+const StyledFooter = styled(CardFooter)`
+    padding: 10px;
+    display: flex;
+    justify-content: flex-end;
 `
 
 const StyledImage = styled.img`
@@ -23,9 +32,10 @@ const ProjectName = styled.span`
 
 const ItemContainer = styled.div`
     display: flex;
-    padding: 10px;
+    padding: 20px;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    flex-direction: column;
     &:hover > #link-buttons {
         opacity: 1;
     }
@@ -35,21 +45,20 @@ const StyledBadge = styled(Badge)`
     margin: 0px 5px;
 `
 
-const LinkButtonContainer = styled.div`
-    transition: opacity 0.3s ease-in-out;
-    opacity: 0;
+const InfoContainer = styled.div`
+    margin: 10px 0px;
 `
 
 export default function ProjectListItem() {
     const isMobile = useMedia({ maxWidth: '400px' })
 
     return (
-        <ListItem>
+        <StyledCard>
             <ItemContainer>
-                <div>
+                <InfoContainer>
                     <StyledImage src="bmo.png" />
                     <ProjectName>Project 1</ProjectName>
-                </div>
+                </InfoContainer>
                 <div>
                     <StyledBadge id="issues-todo" outline>
                         {!isMobile && 'To Do: '}16
@@ -58,26 +67,17 @@ export default function ProjectListItem() {
                         {!isMobile && 'In Progress: '} 32
                     </StyledBadge>
                 </div>
-                <LinkButtonContainer id="link-buttons">
-                    <Tooltip target="#dashboard">
-                        😁 Woo! I am a tooltip!
-                    </Tooltip>
-
-                    <StyledIconButton
-                        id="dashboard"
-                        theme="dark"
-                        size="sm"
-                        outline
-                    >
-                        <DashboardIcon />
-                    </StyledIconButton>
-                    <Tooltip target="#board">😁 Woo! I am a tooltip!</Tooltip>
-
-                    <StyledIconButton id="board" theme="dark" size="sm" outline>
-                        <ListIcon />
-                    </StyledIconButton>
-                </LinkButtonContainer>
             </ItemContainer>
-        </ListItem>
+
+            <StyledFooter>
+                <StyledButton id="dashboard" theme="dark" outline>
+                    Backlog &rarr;
+                </StyledButton>
+
+                <StyledButton id="board" theme="dark" outline>
+                    Board &rarr;
+                </StyledButton>
+            </StyledFooter>
+        </StyledCard>
     )
 }

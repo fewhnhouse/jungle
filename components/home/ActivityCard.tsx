@@ -1,19 +1,21 @@
-import { CardHeader, CardBody, CardTitle } from 'shards-react'
-import { StyledCard, StyledFooter, StyledButton } from './shared'
+import styled from 'styled-components'
+import ActivityListItem from './ActivityListItem'
+
+const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin: 40px;
+`
 
 export default function ActivityCard() {
     return (
-        <StyledCard>
-            <CardHeader>Activity</CardHeader>
-            <CardBody>
-                <CardTitle>Lorem Ipsum</CardTitle>
-                <p>Lorem ipsum dolor sit amet.</p>
-            </CardBody>
-            <StyledFooter>
-                <StyledButton outline theme="dark">
-                    See all &rarr;
-                </StyledButton>
-            </StyledFooter>
-        </StyledCard>
+        <Container>
+            <ActivityListItem></ActivityListItem>
+            <ActivityListItem></ActivityListItem>
+            <ActivityListItem></ActivityListItem>
+            <ActivityListItem></ActivityListItem>
+            <ActivityListItem></ActivityListItem>
+        </Container>
     )
 }

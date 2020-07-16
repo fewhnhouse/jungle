@@ -1,32 +1,23 @@
 import ProjectListItem from '../../components/home/ProjectListItem'
-import {
-    StyledCard,
-    List,
-    ScrollableCardBody,
-    StyledFooter,
-    StyledButton,
-} from './shared'
-import { CardHeader } from 'shards-react'
+import styled from 'styled-components'
+
+const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 2;
+    top: -80px;
+    position: relative;
+`
 
 export default function ProjectCard() {
     return (
-        <StyledCard>
-            <CardHeader>Projects</CardHeader>
-            <ScrollableCardBody>
-                <List>
-                    <ProjectListItem />
-                    <ProjectListItem />
-                    <ProjectListItem />
-                    <ProjectListItem />
-                    <ProjectListItem />
-                </List>
-            </ScrollableCardBody>
-            <StyledFooter>
-                <StyledButton outline>Create &rarr;</StyledButton>
-                <StyledButton outline theme="dark">
-                    See all &rarr;
-                </StyledButton>
-            </StyledFooter>
-        </StyledCard>
+        <Container>
+            <ProjectListItem />
+            <ProjectListItem />
+            <ProjectListItem />
+            <ProjectListItem />
+            <ProjectListItem />
+        </Container>
     )
 }

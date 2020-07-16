@@ -2,6 +2,7 @@ import { Badge } from 'shards-react'
 import styled from 'styled-components'
 import ListItem from '../ListItem'
 
+
 const IssueName = styled.span`
     margin: 0px 5px;
 `
@@ -9,6 +10,7 @@ const IssueName = styled.span`
 const ItemContainer = styled.div`
     display: flex;
     padding: 10px;
+    min-width: 300px;
     justify-content: space-between;
     align-items: center;
     &:hover > #link-buttons {
@@ -20,7 +22,8 @@ const StyledBadge = styled(Badge)`
     margin: 0px 5px;
 `
 
-export default function IssueListItem() {
+
+export default function ActivityListItem() {
 
     return (
         <ListItem>

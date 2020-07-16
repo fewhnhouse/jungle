@@ -39,9 +39,8 @@ const theme = {
 }
 
 const AppContainer = styled.main`
-    height: calc(100vh - 70px);
-    margin-top: 70px;
-    background-image: url(jungle.png);
+    height: calc(100vh - 60px);
+    margin-top: 60px;
     background-size: cover;
 `
 
