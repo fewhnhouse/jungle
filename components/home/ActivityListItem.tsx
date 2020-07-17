@@ -24,11 +24,13 @@ const ItemContainer = styled.div`
 const StyledBadge = styled(Badge)`
     margin: 0px 4px;
     width: 60px;
+    height: 26px;
 `
 
 const Content = styled.div`
     display: flex;
     flex-direction: row;
+    align-items: center;
 `
 
 interface Props {

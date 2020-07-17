@@ -8,7 +8,11 @@ const Container = styled.div`
     margin-bottom: ${({ theme }) => theme.spacing.big};
 `
 
-const Title = styled.h3``
+const Title = styled.h3`
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+`
 
 export default function Activities() {
     return (

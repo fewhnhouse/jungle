@@ -7,7 +7,9 @@ const Container = styled.div`
     flex: 1;
 `
 
-const Title = styled.h3``
+const Title = styled.h3`
+    width: 100%;
+`
 
 export default function YourWork() {
     return (

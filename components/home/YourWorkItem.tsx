@@ -23,11 +23,14 @@ const ItemContainer = styled.div`
 
 const StyledBadge = styled(Badge)`
     margin: 0px ${({ theme }) => `${theme.spacing.mini}`};
+    height: 26px;
 `
 
 const Content = styled.div`
     display: flex;
     flex-direction: row;
+    align-items: center;
+    margin-right: ${({ theme }) => `${theme.spacing.small}`};
 `
 
 export default function YourWorkItem() {
