@@ -109,11 +109,11 @@ const Divider = styled.div`
 
 export default function ProjectListItem() {
     const isMobile = useMedia({ maxWidth: '400px' })
-    const [modalIsOpen, setModalIsOpen] = useState(false)
-    const handleModalToggle = () => setModalIsOpen((open) => !open)
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const toggleModal = () => setIsModalOpen((open) => !open)
     return (
         <StyledCard>
-            <SettingsButton onClick={handleModalToggle} theme="light" outline>
+            <SettingsButton onClick={toggleModal} theme="light" outline>
                 <SettingsIcon />
             </SettingsButton>
             <ItemContainer>
@@ -157,7 +157,7 @@ export default function ProjectListItem() {
                     </StyledButton>
                 </Link>
             </StyledFooter>
-            <Modal centered toggle={handleModalToggle} open={modalIsOpen}>
+            <Modal centered toggle={toggleModal} open={isModalOpen}>
                 <ModalHeader>Project Settings</ModalHeader>
                 <ModalBody>👋 Hello there!</ModalBody>
             </Modal>

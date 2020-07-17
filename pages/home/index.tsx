@@ -1,8 +1,10 @@
 import styled from 'styled-components'
-import ProjectCard from '../../components/home/ProjectCard'
-import ActivityCard from '../../components/home/ActivityCard'
-import { Button } from 'shards-react'
+import Projects from '../../components/home/Projects'
+import Activities from '../../components/home/Activities'
+import { Button, Modal, ModalHeader, ModalBody } from 'shards-react'
 import useMedia from 'use-media'
+import { useState } from 'react'
+import YourWork from '../../components/home/YourWork'
 
 const Container = styled.div`
     padding: ${({ theme }) => `${theme.spacing.huge} ${theme.spacing.crazy}`};
@@ -64,8 +66,18 @@ const MobileButtonContainer = styled.div`
     padding-bottom: 80px;
 `
 
+const InnerContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+`
+
 export default function Home() {
     const isMobile = useMedia('screen and (max-width: 400px)')
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const toggleModal = () => {
+        setIsModalOpen((open) => !open)
+    }
     return (
         <>
             <ColorContainer>
@@ -75,7 +87,11 @@ export default function Home() {
                         <HeaderContainer>
                             <Title>Felix Wohnhaas</Title>
                             {!isMobile && (
-                                <Button outline theme="dark">
+                                <Button
+                                    onClick={toggleModal}
+                                    outline
+                                    theme="dark"
+                                >
                                     New Project
                                 </Button>
                             )}
@@ -91,9 +107,16 @@ export default function Home() {
                 )}
             </ColorContainer>
             <Container>
-                <ProjectCard />
-                <ActivityCard />
+                <Projects />
+                <InnerContainer>
+                    <Activities />
+                    <YourWork />
+                </InnerContainer>
             </Container>
+            <Modal centered toggle={toggleModal} open={isModalOpen}>
+                <ModalHeader>New Project</ModalHeader>
+                <ModalBody>👋 Hello there!</ModalBody>
+            </Modal>{' '}
         </>
     )
 }

@@ -1,4 +1,4 @@
-import ProjectListItem from '../../components/home/ProjectListItem'
+import ProjectListItem from './ProjectListItem'
 import styled from 'styled-components'
 
 const Container = styled.div`
@@ -14,7 +14,7 @@ const Container = styled.div`
     }
 `
 
-export default function ProjectCard() {
+export default function Projects() {
     return (
         <Container>
             <ProjectListItem />

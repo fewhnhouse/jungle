@@ -6,9 +6,14 @@ const IssueName = styled.span`
     margin: 0px ${({ theme }) => `${theme.spacing.small}`};
 `
 
+const Description = styled.span`
+    margin: 0px ${({ theme }) => `${theme.spacing.small}`};
+`
+
 const ItemContainer = styled.div`
     display: flex;
-    padding: ${({ theme }) => `${theme.spacing.small}`};;
+    padding: ${({ theme }) => `${theme.spacing.small}`};
+    min-width: 300px;
     justify-content: space-between;
     align-items: center;
     &:hover > #link-buttons {
@@ -17,21 +22,29 @@ const ItemContainer = styled.div`
 `
 
 const StyledBadge = styled(Badge)`
-    margin: 0px ${({ theme }) => `${theme.spacing.mini}`};;
+    margin: 0px ${({ theme }) => `${theme.spacing.mini}`};
 `
 
-export default function IssueListItem() {
+const Content = styled.div`
+    display: flex;
+    flex-direction: row;
+`
 
+export default function YourWorkItem() {
     return (
         <ListItem>
             <ItemContainer>
-                <div>
-                    <IssueName>Issue 1</IssueName>
-                </div>
-                <div>
+                <Content>
+                    <IssueName>
+                        <b>ID-1102</b>
+                        <Description>Create Dashboard Overlay</Description>
+                    </IssueName>
                     <StyledBadge id="issues-todo" outline>
                         To Do
                     </StyledBadge>
+                </Content>
+                <div>
+                    <span>1d</span>
                 </div>
             </ItemContainer>
         </ListItem>
