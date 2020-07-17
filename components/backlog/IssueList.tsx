@@ -39,13 +39,12 @@ const Wrapper = styled.div<WrapperProps>`
     display: flex;
     flex-direction: column;
     opacity: ${({ isDropDisabled }) => (isDropDisabled ? 0.5 : 'inherit')};
-    padding: ${({ theme }) => theme.spacing.mini};
     border: 4px;
-    margin: ${({ theme }) => `${theme.spacing.mini} ${theme.spacing.small}`};
     padding-bottom: 0;
     transition: background-color 0.2s ease, opacity 0.1s ease;
     user-select: none;
     height: 100%;
+    min-width: 300px;
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
 `
@@ -59,7 +58,7 @@ const DropZone = styled.div`
     not relying on the items for a margin-bottom
     as it will collapse when the list is empty
   */
-    padding-bottom: ${({ theme }) => theme.spacing.mini};;
+    padding-bottom: ${({ theme }) => theme.spacing.mini};
 `
 
 /* stylelint-disable block-no-empty */

@@ -6,14 +6,13 @@ import { Collapse } from 'react-collapse'
 
 const StoryHeader = styled.div`
     height: 30px;
-    margin: ${({ theme }) => `${theme.spacing.mini} ${theme.spacing.small}`};
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 0px ${({ theme }) => `${theme.spacing.small}`};
     background-color: ${({ theme }) => theme.colors.grey.light};
     border-radius: 4px;
     transition: background-color 0.2s ease;
+    margin: ${({ theme }) => `${theme.spacing.small} 0px`};
     cursor: pointer;
     &:hover,
     &:active {
