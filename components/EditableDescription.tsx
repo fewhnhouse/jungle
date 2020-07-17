@@ -5,7 +5,7 @@ import MarkdownIt from 'markdown-it'
 import EditButtonGroup from './EditButtonGroup'
 
 const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
-    ssr: true,
+    ssr: false,
 })
 const mdParser = new MarkdownIt(/* Markdown-it options */)
 
