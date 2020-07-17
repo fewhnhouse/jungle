@@ -5,7 +5,7 @@ import { Button } from 'shards-react'
 import useMedia from 'use-media'
 
 const Container = styled.div`
-    padding: 40px 80px;
+    padding: ${({ theme }) => `${theme.spacing.huge} ${theme.spacing.crazy}`};
     margin: auto;
     max-width: 1400px;
     display: flex;
@@ -14,7 +14,8 @@ const Container = styled.div`
     align-items: flex-start;
     background: #fff;
     @media screen and (max-width: 400px) {
-        padding: 10px 20px;
+        padding: ${({ theme }) =>
+            `${theme.spacing.small} ${theme.spacing.medium}`};
     }
 `
 
@@ -31,13 +32,13 @@ const Avatar = styled.img`
 
 const HomeContainer = styled.div`
     width: 100%;
-    padding: 80px;
+    padding: ${({ theme }) => theme.spacing.crazy};
     margin: auto;
     max-width: 1400px;
     display: flex;
     justify-content: space-between;
     @media screen and (max-width: 400px) {
-        padding: 20px;
+        padding: ${({ theme }) => theme.spacing.medium};
     }
 `
 
@@ -59,7 +60,7 @@ const Title = styled.h2`
 `
 
 const MobileButtonContainer = styled.div`
-    padding: 20px;
+    padding: ${({ theme }) => theme.spacing.medium};
     padding-bottom: 80px;
 `
 

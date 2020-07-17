@@ -4,8 +4,8 @@ import NotificationsIcon from '@material-ui/icons/Notifications'
 import { useState } from 'react'
 
 const StyledButton = styled(Button)`
-    margin: 0px 5px;
-    padding: 5px;
+    margin: 0px 4px;
+    padding: 4px;
     height: 40px;
 `
 

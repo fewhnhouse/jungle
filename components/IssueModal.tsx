@@ -20,7 +20,7 @@ const ModalContainer = styled.div`
 `
 
 const Label = styled.span`
-    margin-top: 5px;
+    margin-top: ${({ theme }) => theme.spacing.mini};
 `
 
 const Header = styled.div`
@@ -28,13 +28,13 @@ const Header = styled.div`
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    padding: 10px;
+    padding: ${({ theme }) => theme.spacing.small};
 `
 
 const StyledBreadcrumb = styled(Breadcrumb)`
     ol {
         margin-bottom: 0px;
-        padding: 10px;
+        padding: ${({ theme }) => theme.spacing.small};
     }
 `
 
@@ -57,7 +57,7 @@ const Content = styled.div`
 
 const Sidebar = styled.aside`
     flex: 1;
-    padding: 10px;
+    padding: ${({ theme }) => theme.spacing.small};
     display: flex;
     flex-direction: column;
     align-items: flex-start;

@@ -7,7 +7,7 @@ const Container = styled.div`
     align-items: center;
     flex: 1;
     top: -80px;
-    margin-right: 60px;
+    margin-right: ${({ theme }) => `${theme.spacing.crazy}`};
     position: relative;
     @media screen and (max-width: 400px) {
         margin-right: 0px;

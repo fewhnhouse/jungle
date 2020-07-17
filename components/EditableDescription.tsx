@@ -5,14 +5,14 @@ import MarkdownIt from 'markdown-it'
 import EditButtonGroup from './EditButtonGroup'
 
 const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
-    ssr: false,
+    ssr: true,
 })
 const mdParser = new MarkdownIt(/* Markdown-it options */)
 
 const Description = styled.p`
     border-radius: 4px;
     min-height: 80px;
-    padding: 4px 12px;
+    padding: ${({ theme }) => `${theme.spacing.mini} ${theme.spacing.small}`};
     &:hover {
         background: #e9ecef;
     }
@@ -25,7 +25,7 @@ const InputContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    margin-bottom: 10px;
+    margin-bottom: ${({ theme }) => theme.spacing.small};
 `
 
 interface Props {

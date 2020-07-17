@@ -1,12 +1,12 @@
 import styled from 'styled-components'
-import { Button, Dropdown, DropdownMenu, DropdownItem } from 'shards-react'
+import { Dropdown, DropdownMenu, DropdownItem } from 'shards-react'
 import { useState } from 'react'
 
 const ProfileBadge = styled.img`
     border-radius: 50%;
     width: 40px;
     height: 40px;
-    margin: 0px 5px;
+    margin: 0px ${({ theme }) => `${theme.spacing.small}`};
     cursor: pointer;
     transition: box-shadow 0.3s ease-in-out;
     &:hover {

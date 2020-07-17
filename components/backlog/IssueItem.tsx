@@ -61,7 +61,7 @@ const Avatar = styled.img`
     width: ${imageSize}px;
     height: ${imageSize}px;
     border-radius: 50%;
-    margin-right: 4px;
+    margin-right: ${({ theme }) => theme.spacing.mini};
     flex-shrink: 0;
     flex-grow: 0;
 `
@@ -90,7 +90,7 @@ const BlockQuote = styled.div`
 
 const Footer = styled.div`
     display: flex;
-    margin-top: 4px;
+    margin-top: ${({ theme }) => theme.spacing.mini};
     align-items: center;
 `
 
@@ -103,7 +103,7 @@ const Author = styled.small`
         props.colors.soft};
     border-radius: 4px;
     font-weight: normal;
-    padding: 4px;
+    padding: ${({ theme }) => theme.spacing.mini};
 `
 
 const QuoteId = styled.small`

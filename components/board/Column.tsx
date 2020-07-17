@@ -10,7 +10,7 @@ import { Issue } from '../../interfaces/Issue'
 import { Theme } from '../../pages/_app'
 
 const Container = styled.div`
-    margin: 10px;
+    margin: ${({ theme }) => theme.spacing.small};
     display: flex;
     flex-direction: column;
 `
@@ -42,7 +42,7 @@ type Props = {
     useClone?: boolean
 }
 
-const Column = ({ title, issues, index, isScrollable }: Props) => {
+const Column = ({ title, issues, index }: Props) => {
     return (
         <Draggable draggableId={title} index={index}>
             {(

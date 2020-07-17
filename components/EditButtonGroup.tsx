@@ -5,7 +5,7 @@ import { Button } from 'shards-react'
 
 const BtnContainer = styled.div`
     display: flex;
-    margin-top: 5px;
+    margin-top: ${({ theme }) => theme.spacing.mini};
 `
 
 const StyledButton = styled(Button)`

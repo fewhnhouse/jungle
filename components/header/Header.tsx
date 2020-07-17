@@ -27,7 +27,7 @@ const StyledHeader = styled.header<HeaderProps>`
 `
 
 const StyledLink = styled.a`
-    padding: 10px;
+    padding: ${({ theme }) => `${theme.spacing.small}`};
     text-decoration: none;
     cursor: pointer;
 `
@@ -42,7 +42,7 @@ const Options = styled.div`
 `
 
 const StyledInputGroup = styled(InputGroup)`
-    margin: 0px 5px;
+    margin: 0px ${({ theme }) => `${theme.spacing.small}`};
 `
 
 const WrappedLink = ({

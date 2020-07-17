@@ -3,12 +3,12 @@ import styled from 'styled-components'
 import ListItem from '../ListItem'
 
 const IssueName = styled.span`
-    margin: 0px 5px;
+    margin: 0px ${({ theme }) => `${theme.spacing.small}`};
 `
 
 const ItemContainer = styled.div`
     display: flex;
-    padding: 10px;
+    padding: ${({ theme }) => `${theme.spacing.small}`};;
     justify-content: space-between;
     align-items: center;
     &:hover > #link-buttons {
@@ -17,7 +17,7 @@ const ItemContainer = styled.div`
 `
 
 const StyledBadge = styled(Badge)`
-    margin: 0px 5px;
+    margin: 0px ${({ theme }) => `${theme.spacing.mini}`};;
 `
 
 export default function IssueListItem() {

@@ -7,24 +7,24 @@ const Title = styled.span`
     border-radius: 4px;
     height: 42px;
     width: 100px;
-    padding: 4px 12px;
+    padding: ${({ theme }) => `${theme.spacing.mini} ${theme.spacing.small}`};
     line-height: 42px;
     &:hover {
         background: #e9ecef;
     }
     color: #495057;
     cursor: pointer;
-    margin: 5px 0px;
+    margin: ${({ theme }) => theme.spacing.mini} 0px;
 `
 
 const StyledInput = styled(FormInput)`
-    padding: 4px 12px;
-    margin-right: 5px;
+    padding: 8px;
+    margin-right: 4px;
 `
 
 const InputContainer = styled.div`
     display: flex;
-    margin: 5px 0px;
+    margin: ${({ theme }) => theme.spacing.mini} 0px;
     align-items: center;
     width: 130px;
 `

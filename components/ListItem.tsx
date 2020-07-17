@@ -5,7 +5,7 @@ const Container = styled.li<{ theme: Theme }>`
     background: ${({ theme }) => theme.colors.grey.light};
     border-radius: 4px;
     list-style: none;
-    margin: 5px 0px;
+    margin: ${({ theme }) => theme.spacing.mini} 0px;
     &:hover {
         background: ${({ theme }) => theme.colors.grey.normal};
     }

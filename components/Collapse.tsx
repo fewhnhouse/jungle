@@ -6,11 +6,11 @@ import { Collapse } from 'react-collapse'
 
 const StoryHeader = styled.div`
     height: 30px;
-    margin: 5px 10px;
+    margin: ${({ theme }) => `${theme.spacing.mini} ${theme.spacing.small}`};
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 0px 10px;
+    padding: 0px ${({ theme }) => `${theme.spacing.small}`};
     background-color: ${({ theme }) => theme.colors.grey.light};
     border-radius: 4px;
     transition: background-color 0.2s ease;
@@ -23,7 +23,7 @@ const StoryHeader = styled.div`
 
 const StoryTitle = styled.h6`
     margin: 0;
-    padding: 0px 10px;
+    padding: 0px ${({ theme }) => `${theme.spacing.small}`};
 `
 
 interface CollapseProps {

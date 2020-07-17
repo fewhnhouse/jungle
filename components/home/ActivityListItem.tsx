@@ -4,12 +4,12 @@ import ListItem from '../ListItem'
 
 
 const IssueName = styled.span`
-    margin: 0px 5px;
+    margin: 0px ${({ theme }) => `${theme.spacing.small}`};
 `
 
 const ItemContainer = styled.div`
     display: flex;
-    padding: 10px;
+    padding: ${({ theme }) => `${theme.spacing.small}`};
     min-width: 300px;
     justify-content: space-between;
     align-items: center;
@@ -19,7 +19,7 @@ const ItemContainer = styled.div`
 `
 
 const StyledBadge = styled(Badge)`
-    margin: 0px 5px;
+    margin: 0px ${({ theme }) => `${theme.spacing.mini}`};;
 `
 
 

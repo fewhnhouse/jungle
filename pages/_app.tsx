@@ -21,6 +21,14 @@ export interface Theme {
             dark: string
         }
     }
+    spacing: {
+        mini: string
+        small: string
+        medium: string
+        big: string
+        huge: string
+        crazy: string
+    }
 }
 const theme = {
     colors: {
@@ -35,6 +43,14 @@ const theme = {
             normal: '#7f8c8d',
             dark: '#34495e',
         },
+    },
+    spacing: {
+        mini: '4px',
+        small: '8px',
+        medium: '16px',
+        big: '32px',
+        huge: '48px',
+        crazy: '64px',
     },
 }
 

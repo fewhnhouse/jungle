@@ -14,13 +14,13 @@ import Link from 'next/link'
 import { useState } from 'react'
 
 const StyledButton = styled(Button)`
-    margin: 0px 5px;
+    margin: 0px 4px;
 `
 
 const StyledCard = styled(Card)`
     min-width: 300px;
     width: 100%;
-    margin: 10px;
+    margin: ${({ theme }) => `${theme.spacing.small}`};
 `
 
 const StyledFooter = styled(CardFooter)`
@@ -33,7 +33,7 @@ const StyledImage = styled.img`
     border-radius: 50%;
     width: 40px;
     height: 40px;
-    margin: 0px 5px;
+    margin: 0px ${({ theme }) => `${theme.spacing.mini}`};
 `
 
 const ProjectName = styled.h5`
@@ -43,14 +43,14 @@ const ProjectName = styled.h5`
 const ProjectDescription = styled.span``
 
 const TextContainer = styled.div`
-    margin: 0px 20px;
+    margin: 0px ${({ theme }) => `${theme.spacing.medium}`};
     display: flex;
     flex-direction: column;
 `
 
 const ItemContainer = styled.div`
     display: flex;
-    padding: 20px;
+    padding: ${({ theme }) => `${theme.spacing.medium}`};
     justify-content: space-between;
     align-items: flex-start;
     flex-direction: column;
@@ -60,11 +60,11 @@ const ItemContainer = styled.div`
 `
 
 const StyledBadge = styled(Badge)`
-    margin: 0px 5px;
+    margin: 0px 4px;
 `
 
 const InfoContainer = styled.div`
-    margin: 10px 0px;
+    margin: ${({ theme }) => `${theme.spacing.small}`} 0px;
     display: flex;
     align-items: center;
 `
@@ -80,7 +80,7 @@ const SettingsButton = styled(Button)`
 
 const MembersContainer = styled.div`
     display: flex;
-    margin: 5px 0px;
+    margin: ${({ theme }) => `${theme.spacing.mini}`} 0px;
 `
 
 const Member = styled.img`
@@ -97,14 +97,14 @@ const Member = styled.img`
 
 const BadgeContainer = styled.div`
     width: 100%;
-    margin: 5px 0px;
+    margin: ${({ theme }) => `${theme.spacing.mini}`} 0px;
     display: flex;
 `
 
 const Divider = styled.div`
     border-bottom: 1px solid rgba(0, 0, 0, 0.125);
     width: 100%;
-    margin: 10px 0px;
+    margin: ${({ theme }) => `${theme.spacing.medium}`} 0px;
 `
 
 export default function ProjectListItem() {

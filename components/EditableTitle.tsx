@@ -6,7 +6,7 @@ import EditButtonGroup from './EditButtonGroup'
 const Title = styled.h3`
     border-radius: 4px;
     height: 48px;
-    padding: 4px 12px;
+    padding: ${({ theme }) => `${theme.spacing.mini} ${theme.spacing.small}`};
     line-height: 48px;
     &:hover {
         background: #e9ecef;
@@ -15,18 +15,18 @@ const Title = styled.h3`
     font-weight: 300;
     color: #495057;
     cursor: pointer;
-    margin: 5px 0px;
+    margin: ${({ theme }) => theme.spacing.mini} 0px;
 `
 
 const StyledInput = styled(FormInput)`
-    padding: 4px 12px;
+    padding: 4px 8px;
     font-size: 1.6rem;
-    margin-right: 5px;
+    margin-right: 4px;
 `
 
 const InputContainer = styled.div`
     display: flex;
-    margin: 5px 0px;
+    margin: ${({ theme }) => theme.spacing.mini} 0px;
     align-items: center;
 `
 interface Props {
