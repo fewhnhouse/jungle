@@ -6,6 +6,7 @@ import Notifications from './Notifications'
 import Profile from './Profile'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
+import useMedia from 'use-media'
 
 interface HeaderProps {
     landing: boolean
@@ -45,16 +46,17 @@ const Options = styled.div`
 const InputContainer = styled.div`
     position: absolute;
     right: 120px;
-    top: 10px;
+    top: 5px;
     transition: width 0.2s ease-in-out, height 0.2s ease-in-out,
         box-shadow 0.2s ease-in-out;
     width: ${({ opened }: { opened: boolean }) =>
         opened ? window.innerWidth - 240 + 'px' : '200px'};
-    height: ${({ opened }: { opened: boolean }) => (opened ? '300px' : '40px')};
+    height: ${({ opened }: { opened: boolean }) => (opened ? '300px' : '48px')};
     background: white;
     border-radius: 6px;
     box-shadow: ${({ opened }: { opened: boolean }) =>
         opened ? 'rgba(0,0,0,0.5) 0px 0px 15px 0px' : ''};
+    padding: ${({ theme }) => theme.spacing.mini};
 `
 
 const StyledInputGroup = styled(InputGroup)``
@@ -70,6 +72,7 @@ const WrappedLink = ({
 
 const Header = () => {
     const router = useRouter()
+    const isMobile = useMedia('screen and (max-width: 400px)')
     const { pathname, query } = router
     const { id } = query
 
@@ -79,11 +82,11 @@ const Header = () => {
     const onBlur = () => setOpen(false)
 
     const { y } = useScrollPosition()
-    return (
+    return !isMobile && (
         <StyledHeader landing={pathname === '/'} scrolled={y > 0}>
             {pathname.includes('/projects/') ? (
                 <Links>
-                    <WrappedLink href="/home">Home</WrappedLink>
+                    <WrappedLink href="/">Home</WrappedLink>
                     <WrappedLink
                         href="/projects/[id]/board"
                         as={`/projects/${id}/board`}
