@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import Projects from '../components/home/Projects'
 import Activities from '../components/home/Activities'
-import { Button, Modal, ModalHeader, ModalBody } from 'shards-react'
+import { Button, Modal, ModalHeader, ModalBody, Progress } from 'shards-react'
 import useMedia from 'use-media'
 import { useState } from 'react'
 import YourWork from '../components/home/YourWork'
@@ -72,6 +72,37 @@ const InnerContainer = styled.div`
     flex: 1;
 `
 
+const LevelContainer = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: ${({ theme }) => theme.spacing.small} 0px;
+`
+
+const StyledProgress = styled(Progress)`
+    width: 90%;
+    margin: 0;
+`
+
+const LevelIcon = styled.div`
+    background: #2ecc71;
+    border-radius: 50%;
+    margin: 0px ${({ theme }) => theme.spacing.mini};
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+`
+
+const TitleContainer = styled.div`
+    display: flex;
+    flex: 3;
+    flex-direction: column;
+    margin-right: ${({ theme }) => theme.spacing.medium};
+`
+
 export default function Home() {
     const isMobile = useMedia('screen and (max-width: 400px)')
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -85,7 +116,20 @@ export default function Home() {
                     <Avatar src="bmo.png" />
                     <OuterContainer>
                         <HeaderContainer>
-                            <Title>Felix Wohnhaas</Title>
+                            <TitleContainer>
+                                <Title>Felix Wohnhaas</Title>
+                                <span>Scrum Destroyer</span>
+                                <LevelContainer>
+                                    <LevelIcon>5</LevelIcon>
+                                    <StyledProgress
+                                        barClassName="level-bar"
+                                        theme="success"
+                                        value={50}
+                                    />
+                                    <LevelIcon>6</LevelIcon>
+                                </LevelContainer>
+                            </TitleContainer>
+
                             {!isMobile && (
                                 <Button
                                     onClick={toggleModal}
