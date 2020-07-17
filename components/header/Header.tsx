@@ -5,6 +5,7 @@ import { FormInput, InputGroup } from 'shards-react'
 import Notifications from './Notifications'
 import Profile from './Profile'
 import { useRouter } from 'next/router'
+import { useState } from 'react'
 
 interface HeaderProps {
     landing: boolean
@@ -41,9 +42,22 @@ const Options = styled.div`
     align-items: center;
 `
 
-const StyledInputGroup = styled(InputGroup)`
-    margin: 0px ${({ theme }) => `${theme.spacing.small}`};
+const InputContainer = styled.div`
+    position: absolute;
+    right: 120px;
+    top: 10px;
+    transition: width 0.2s ease-in-out, height 0.2s ease-in-out,
+        box-shadow 0.2s ease-in-out;
+    width: ${({ opened }: { opened: boolean }) =>
+        opened ? window.innerWidth - 240 + 'px' : '200px'};
+    height: ${({ opened }: { opened: boolean }) => (opened ? '300px' : '40px')};
+    background: white;
+    border-radius: 6px;
+    box-shadow: ${({ opened }: { opened: boolean }) =>
+        opened ? 'rgba(0,0,0,0.5) 0px 0px 15px 0px' : ''};
 `
+
+const StyledInputGroup = styled(InputGroup)``
 
 const WrappedLink = ({
     children,
@@ -59,22 +73,17 @@ const Header = () => {
     const { pathname, query } = router
     const { id } = query
 
+    const [open, setOpen] = useState(false)
+
+    const onFocus = () => setOpen(true)
+    const onBlur = () => setOpen(false)
+
     const { y } = useScrollPosition()
     return (
         <StyledHeader landing={pathname === '/'} scrolled={y > 0}>
-            {pathname.includes('/projects') ? (
+            {pathname.includes('/projects/') ? (
                 <Links>
                     <WrappedLink href="/home">Home</WrappedLink>
-
-                    <WrappedLink href="/projects/[id]" as={`/projects/${id}`}>
-                        Dashboard
-                    </WrappedLink>
-                    <WrappedLink
-                        href="/projects/[id]/your-work"
-                        as={`/projects/${id}/your-work`}
-                    >
-                        Your work
-                    </WrappedLink>
                     <WrappedLink
                         href="/projects/[id]/board"
                         as={`/projects/${id}/board`}
@@ -94,21 +103,27 @@ const Header = () => {
                         Reports
                     </WrappedLink>
                 </Links>
-            ) : pathname.includes('/home') ? (
+            ) : pathname === '/login' ? (
+                <h3></h3>
+            ) : pathname.includes('/') ? (
                 <Links>
-                    <WrappedLink href="/home">Home</WrappedLink>
+                    <WrappedLink href="/">Home</WrappedLink>
                     <WrappedLink href="/projects">Projects</WrappedLink>
                     <WrappedLink href="/activity">Activity</WrappedLink>
                     <WrappedLink href="/your-work">Your Work</WrappedLink>
                 </Links>
-            ) : pathname === '/' ? (
-                <h3></h3>
             ) : null}
 
             <Options>
-                <StyledInputGroup>
-                    <FormInput placeholder="Search..." />
-                </StyledInputGroup>
+                <InputContainer opened={open}>
+                    <StyledInputGroup>
+                        <FormInput
+                            onFocus={onFocus}
+                            onBlur={onBlur}
+                            placeholder="Search..."
+                        />
+                    </StyledInputGroup>
+                </InputContainer>
                 <Notifications />
                 <Profile />
             </Options>

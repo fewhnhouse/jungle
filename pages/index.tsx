@@ -1,79 +1,122 @@
-import {
-    Card,
-    CardHeader,
-    FormInput,
-    CardBody,
-    CardFooter,
-    Button,
-    FormCheckbox,
-} from 'shards-react'
 import styled from 'styled-components'
-import Link from 'next/link'
+import Projects from '../components/home/Projects'
+import Activities from '../components/home/Activities'
+import { Button, Modal, ModalHeader, ModalBody } from 'shards-react'
+import useMedia from 'use-media'
+import { useState } from 'react'
+import YourWork from '../components/home/YourWork'
 
 const Container = styled.div`
+    padding: ${({ theme }) => `${theme.spacing.huge} ${theme.spacing.crazy}`};
+    margin: auto;
+    max-width: 1400px;
     display: flex;
-    background-image: url(jungle.png);
-    min-height: 100%;
+    flex-wrap: wrap;
+    height: 100%;
+    align-items: flex-start;
+    background: #fff;
+    @media screen and (max-width: 400px) {
+        padding: ${({ theme }) =>
+            `${theme.spacing.small} ${theme.spacing.medium}`};
+    }
+`
+
+const ColorContainer = styled.div`
+    background: ${({ theme }) => theme.colors.grey.light};
+`
+
+const Avatar = styled.img`
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-right: 30px;
+`
+
+const HomeContainer = styled.div`
     width: 100%;
-    background-size: cover;
-    justify-content: center;
-    align-items: center;
-`
-
-const StyledCard = styled(Card)`
-    margin: 10px;
-    width: 300px;
-`
-
-const StyledBody = styled(CardBody)`
-    padding: 32px 16px;
-`
-
-const StyledFooter = styled(CardFooter)`
+    padding: ${({ theme }) => theme.spacing.crazy};
+    margin: auto;
+    max-width: 1400px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 16px;
+    @media screen and (max-width: 400px) {
+        padding: ${({ theme }) => theme.spacing.medium};
+    }
 `
 
-const StyledFormInput = styled(FormInput)`
-    margin: 10px 0px;
+const HeaderContainer = styled.div`
+    display: flex;
+    height: 40px;
+    justify-content: space-between;
 `
 
-const StyledButton = styled(Button)`
-    margin: 0px 5px;
+const OuterContainer = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: space-between;
+`
+
+const Title = styled.h2`
+    margin: 0px;
+`
+
+const MobileButtonContainer = styled.div`
+    padding: ${({ theme }) => theme.spacing.medium};
+    padding-bottom: 80px;
+`
+
+const InnerContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 `
 
 export default function Home() {
+    const isMobile = useMedia('screen and (max-width: 400px)')
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const toggleModal = () => {
+        setIsModalOpen((open) => !open)
+    }
     return (
         <>
+            <ColorContainer>
+                <HomeContainer>
+                    <Avatar src="bmo.png" />
+                    <OuterContainer>
+                        <HeaderContainer>
+                            <Title>Felix Wohnhaas</Title>
+                            {!isMobile && (
+                                <Button
+                                    onClick={toggleModal}
+                                    outline
+                                    theme="dark"
+                                >
+                                    New Project
+                                </Button>
+                            )}
+                        </HeaderContainer>
+                    </OuterContainer>
+                </HomeContainer>
+                {isMobile && (
+                    <MobileButtonContainer>
+                        <Button outline theme="dark">
+                            New Project
+                        </Button>
+                    </MobileButtonContainer>
+                )}
+            </ColorContainer>
             <Container>
-                <StyledCard>
-                    <CardHeader>
-                        <h3>Into the Jungle</h3>
-                    </CardHeader>
-                    <StyledBody>
-                        <StyledFormInput placeholder="username" type="text" />
-                        <StyledFormInput
-                            placeholder="password"
-                            type="password"
-                        />
-                        <p>
-                            Forgot your password? Reset it{' '}
-                            <Link href="reset-password">
-                                <a>here</a>
-                            </Link>
-                            .
-                        </p>
-                    </StyledBody>
-                    <StyledFooter>
-                        <FormCheckbox>Remember Me</FormCheckbox>
-                        <StyledButton theme="success">
-                            Log In &rarr;
-                        </StyledButton>
-                    </StyledFooter>
-                </StyledCard>
+                <Projects />
+                <InnerContainer>
+                    <Activities />
+                    <YourWork />
+                </InnerContainer>
             </Container>
+            <Modal centered toggle={toggleModal} open={isModalOpen}>
+                <ModalHeader>New Project</ModalHeader>
+                <ModalBody>👋 Hello there!</ModalBody>
+            </Modal>{' '}
         </>
     )
 }
