@@ -3,8 +3,12 @@ import Projects from '../components/home/Projects'
 import Activities from '../components/home/Activities'
 import { Button, Modal, ModalHeader, ModalBody, Progress } from 'shards-react'
 import useMedia from 'use-media'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import YourWork from '../components/home/YourWork'
+import useSWR from 'swr'
+import { IProject } from '../interfaces/Project'
+import { useRouter } from 'next/router'
+import Axios from 'axios'
 
 const Container = styled.div`
     padding: ${({ theme }) => `${theme.spacing.huge} ${theme.spacing.crazy}`};
@@ -117,6 +121,22 @@ export default function Home() {
     const toggleModal = () => {
         setIsModalOpen((open) => !open)
     }
+    const [user, setUser] = useState()
+
+    const { push } = useRouter()
+
+    useEffect(() => {
+        const userString = localStorage.getItem('user')
+        const user = JSON.parse(userString)
+        setUser(user)
+    }, [])
+
+    const { data, error } = useSWR<IProject, any>('/projects')
+    if (error) {
+        localStorage.removeItem('user')
+        push('/login')
+    }
+    console.log(data)
     return (
         <>
             <ColorContainer>
@@ -125,7 +145,7 @@ export default function Home() {
                     <OuterContainer>
                         <HeaderContainer>
                             <TitleContainer>
-                                <Title>Felix Wohnhaas</Title>
+                                <Title>{user?.username}</Title>
                                 <span>Scrum Destroyer</span>
                                 {!isMobile && (
                                     <LevelContainer>
@@ -182,4 +202,13 @@ export default function Home() {
             </Modal>{' '}
         </>
     )
+}
+
+export async function getServerSideProps(context) {
+    const { data } = await Axios.get(
+        'https://motius.taiga.apps.moti.us/api/v1/projects'
+    )
+    return {
+        props: {},
+    }
 }

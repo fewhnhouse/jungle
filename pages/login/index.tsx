@@ -9,6 +9,10 @@ import {
 } from 'shards-react'
 import styled from 'styled-components'
 import Link from 'next/link'
+import { useState } from 'react'
+import axios from 'axios'
+import { useRouter } from 'next/router'
+import { IUser } from '../../interfaces/User'
 
 const Container = styled.div`
     display: flex;
@@ -45,34 +49,68 @@ const StyledButton = styled(Button)`
 `
 
 export default function Home() {
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const { push } = useRouter()
+
+    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+        setPassword(e.target.value)
+
+    const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+        setUsername(e.target.value)
+
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault()
+        const { data } = await axios.post<unknown, { data: IUser }>('/auth', {
+            username,
+            password,
+            type: 'normal',
+        })
+
+        const { id, auth_token, username: name, email } = data
+        localStorage.setItem(
+            'user',
+            JSON.stringify({ id, auth_token, username: name, email })
+        )
+        push('/')
+    }
     return (
         <>
             <Container>
-                <StyledCard>
-                    <CardHeader>
-                        <h3>Into the Jungle</h3>
-                    </CardHeader>
-                    <StyledBody>
-                        <StyledFormInput placeholder="username" type="text" />
-                        <StyledFormInput
-                            placeholder="password"
-                            type="password"
-                        />
-                        <p>
-                            Forgot your password? Reset it{' '}
-                            <Link href="reset-password">
-                                <a>here</a>
-                            </Link>
-                            .
-                        </p>
-                    </StyledBody>
-                    <StyledFooter>
-                        <FormCheckbox>Remember Me</FormCheckbox>
-                        <StyledButton theme="success">
-                            Log In &rarr;
-                        </StyledButton>
-                    </StyledFooter>
-                </StyledCard>
+                <form onSubmit={handleLogin}>
+                    <StyledCard>
+                        <CardHeader>
+                            <h3>Into the Jungle</h3>
+                        </CardHeader>
+                        <StyledBody>
+                            <StyledFormInput
+                                onChange={handleUsernameChange}
+                                value={username}
+                                placeholder="username"
+                                type="text"
+                            />
+                            <StyledFormInput
+                                onChange={handlePasswordChange}
+                                value={password}
+                                placeholder="password"
+                                type="password"
+                            />
+                            <p>
+                                Forgot your password? Reset it{' '}
+                                <Link href="reset-password">
+                                    <a>here</a>
+                                </Link>
+                                .
+                            </p>
+                        </StyledBody>
+                        <StyledFooter>
+                            <FormCheckbox>Remember Me</FormCheckbox>
+                            <StyledButton type="submit" theme="success">
+                                Log In &rarr;
+                            </StyledButton>
+                        </StyledFooter>
+                    </StyledCard>
+                </form>
             </Container>
         </>
     )

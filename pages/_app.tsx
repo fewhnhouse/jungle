@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'shards-ui/dist/css/shards.min.css'
 import 'react-markdown-editor-lite/lib/index.css'
 import Header from '../components/header/Header'
+import axios from 'axios'
 
 export interface Theme {
     colors: {
@@ -60,7 +61,11 @@ const AppContainer = styled.main`
     background-size: cover;
 `
 
-const fetcher = (query) =>
+axios.defaults.baseURL = process.env.NEXT_PUBLIC_TAIGA_API_URL
+
+console.log(process.env.NEXT_PUBLIC_TAIGA_API_URL)
+
+const graphqlFetcher = (query) =>
     fetch('/api/graphql', {
         method: 'POST',
         headers: {
@@ -70,6 +75,8 @@ const fetcher = (query) =>
     })
         .then((res) => res.json())
         .then((json) => json.data)
+
+const fetcher = (url: string) => axios.get(url).then((res) => res.data)
 
 export default function App({ Component, pageProps }: AppProps) {
     return (
