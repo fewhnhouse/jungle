@@ -63,6 +63,7 @@ const Title = styled.h2`
 
 const MobileButtonContainer = styled.div`
     padding: ${({ theme }) => theme.spacing.medium};
+    padding-top: 0px;
     padding-bottom: 80px;
 `
 
@@ -87,13 +88,20 @@ const StyledProgress = styled(Progress)`
 const LevelIcon = styled.div`
     background: #2ecc71;
     border-radius: 50%;
-    margin: 0px ${({ theme }) => theme.spacing.mini};
     width: 30px;
+    min-width: 30px;
     height: 30px;
+    min-height: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
     color: white;
+    &:first-child {
+        margin-right: ${({ theme }) => theme.spacing.mini};
+    }
+    &:last-child {
+        margin-left: ${({ theme }) => theme.spacing.mini};
+    }
 `
 
 const TitleContainer = styled.div`
@@ -119,15 +127,17 @@ export default function Home() {
                             <TitleContainer>
                                 <Title>Felix Wohnhaas</Title>
                                 <span>Scrum Destroyer</span>
-                                <LevelContainer>
-                                    <LevelIcon>5</LevelIcon>
-                                    <StyledProgress
-                                        barClassName="level-bar"
-                                        theme="success"
-                                        value={50}
-                                    />
-                                    <LevelIcon>6</LevelIcon>
-                                </LevelContainer>
+                                {!isMobile && (
+                                    <LevelContainer>
+                                        <LevelIcon>5</LevelIcon>
+                                        <StyledProgress
+                                            barClassName="level-bar"
+                                            theme="success"
+                                            value={50}
+                                        />
+                                        <LevelIcon>6</LevelIcon>
+                                    </LevelContainer>
+                                )}
                             </TitleContainer>
 
                             {!isMobile && (
@@ -144,7 +154,16 @@ export default function Home() {
                 </HomeContainer>
                 {isMobile && (
                     <MobileButtonContainer>
-                        <Button outline theme="dark">
+                        <LevelContainer>
+                            <LevelIcon>5</LevelIcon>
+                            <StyledProgress
+                                barClassName="level-bar"
+                                theme="success"
+                                value={50}
+                            />
+                            <LevelIcon>6</LevelIcon>
+                        </LevelContainer>
+                        <Button onClick={toggleModal} outline theme="dark">
                             New Project
                         </Button>
                     </MobileButtonContainer>
