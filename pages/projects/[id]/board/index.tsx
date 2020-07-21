@@ -19,19 +19,18 @@ export default function BoardContainer() {
         `/userstories?project=${id}&include_tasks=true`
     )
 
-    console.log(data, storyFiltersData, taskFiltersData)
+    console.log(taskFiltersData.statuses)
 
-    const columns = taskFiltersData?.statuses.map((status) => status.name)
     return (
         <ParentContainer>
             {data?.map((story) => {
-                console.log(story)
+                console.log(story, taskFiltersData?.statuses)
                 return (
                     <Board
                         key={story.id}
                         id={`board-${story.id}`}
                         data={story.tasks}
-                        columns={columns}
+                        columns={taskFiltersData?.statuses}
                     />
                 )
             })}

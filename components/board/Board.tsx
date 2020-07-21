@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Column from './Column'
 import reorder, { reorderQuoteMap } from '../../util/reorder'
 import {
@@ -40,6 +40,11 @@ const Board = ({
     const [issues, setIssues] = useState(data)
     const [ordered, setOrdered] = useState(columns)
 
+    useEffect(() => {
+        setOrdered(columns)
+        setIssues(data)
+    }, [data, columns])
+    console.log(ordered, columns)
     const onDragEnd = (result: DropResult) => {
         // dropped nowhere
         if (!result.destination) {

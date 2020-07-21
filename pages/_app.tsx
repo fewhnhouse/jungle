@@ -82,12 +82,14 @@ const createFetcher = (token: string) => (url: string) =>
 
 export default function App({ Component, pageProps }: AppProps) {
     const [token, setToken] = useState('')
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         const token = localStorage.getItem('auth-token')
         setToken(token)
+        setLoading(false)
     }, [])
-    return token ? (
+    return loading ? null : (
         <ThemeProvider theme={theme}>
             <SWRConfig
                 value={{
@@ -100,5 +102,5 @@ export default function App({ Component, pageProps }: AppProps) {
                 </AppContainer>
             </SWRConfig>
         </ThemeProvider>
-    ) : ''
+    )
 }
