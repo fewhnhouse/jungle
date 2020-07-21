@@ -11,6 +11,7 @@ import {
 import styled from 'styled-components'
 import { Issue } from '../../interfaces/Issue'
 import CustomCollapse from '../Collapse'
+import { Status, Task } from '../../interfaces/UserStory'
 
 const Container = styled.div`
     min-width: 100vw;
@@ -24,8 +25,8 @@ const BoardContainer = styled.div`
 
 type Props = {
     id: string
-    data: Issue[]
-    columns: string[]
+    data: Task[]
+    columns: Status[]
     withScrollableColumns?: boolean
 }
 
@@ -58,11 +59,7 @@ const Board = ({
 
         // reordering column
         if (result.type === 'COLUMN') {
-            const reordered: string[] = reorder(
-                ordered,
-                source.index,
-                destination.index
-            )
+            const reordered = reorder(ordered, source.index, destination.index)
 
             setOrdered(reordered)
 
@@ -93,22 +90,18 @@ const Board = ({
                                     ref={provided.innerRef}
                                     {...provided.droppableProps}
                                 >
-                                    {ordered.map(
-                                        (key: string, index: number) => (
-                                            <Column
-                                                key={key}
-                                                index={index}
-                                                title={key}
-                                                issues={issues.filter(
-                                                    (data) =>
-                                                        data.status === key
-                                                )}
-                                                isScrollable={
-                                                    withScrollableColumns
-                                                }
-                                            />
-                                        )
-                                    )}
+                                    {ordered.map((status, index: number) => (
+                                        <Column
+                                            key={status.id}
+                                            index={index}
+                                            title={status.name}
+                                            issues={issues.filter(
+                                                (data) =>
+                                                    data.status_id === status.id
+                                            )}
+                                            isScrollable={withScrollableColumns}
+                                        />
+                                    ))}
                                     {provided.placeholder}
                                 </Container>
                             )}

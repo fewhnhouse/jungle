@@ -64,8 +64,6 @@ const AppContainer = styled.main`
 
 axios.defaults.baseURL = process.env.NEXT_PUBLIC_TAIGA_API_URL
 
-console.log(process.env.NEXT_PUBLIC_TAIGA_API_URL)
-
 const graphqlFetcher = (query) =>
     fetch('/api/graphql', {
         method: 'POST',

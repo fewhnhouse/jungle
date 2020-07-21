@@ -10,6 +10,7 @@ import { IProject } from '../interfaces/Project'
 import { useRouter } from 'next/router'
 import Axios from 'axios'
 import ProjectCreationModal from '../components/home/ProjectCreationModal'
+import { IUser } from '../interfaces/User'
 
 const Container = styled.div`
     padding: ${({ theme }) => `${theme.spacing.huge} ${theme.spacing.crazy}`};
@@ -122,7 +123,7 @@ export default function Home() {
     const toggleModal = () => {
         setIsModalOpen((open) => !open)
     }
-    const [user, setUser] = useState()
+    const [user, setUser] = useState<IUser | undefined>()
 
     const { push } = useRouter()
 
