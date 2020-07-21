@@ -12,6 +12,7 @@ import IssueItem from './IssueItem'
 import Title from '../Title'
 import { Issue } from '../../interfaces/Issue'
 import { Theme } from '../../pages/_app'
+import { Task } from '../../interfaces/UserStory'
 
 export const getBackgroundColor = (
     isDraggingOver: boolean,
@@ -73,15 +74,15 @@ const Container = styled.div``
 /* stylelint-enable */
 
 type IssueListProps = {
-    issues: Issue[]
+    issues: Task[]
 }
 
 // eslint-disable-next-line react/display-name
 const InnerQuoteList = React.memo(({ issues }: IssueListProps) => {
     return (
         <>
-            {issues.map((issue: Issue, index: number) => (
-                <Draggable key={issue.id} draggableId={issue.id} index={index}>
+            {issues.map((issue: Task, index: number) => (
+                <Draggable key={issue.id} draggableId={issue.id.toString()} index={index}>
                     {(
                         dragProvided: DraggableProvided,
                         dragSnapshot: DraggableStateSnapshot
@@ -104,7 +105,7 @@ const InnerQuoteList = React.memo(({ issues }: IssueListProps) => {
 
 type InnerListProps = {
     dropProvided: DroppableProvided
-    issues: Issue[]
+    issues: Task[]
     title?: string
 }
 
@@ -126,7 +127,7 @@ function InnerList(props: InnerListProps) {
 type Props = {
     listId?: string
     listType?: string
-    issues: Issue[]
+    issues: Task[]
     title?: string
     isDropDisabled?: boolean
     style?: Record<string, unknown>

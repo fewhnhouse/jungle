@@ -1,5 +1,6 @@
 import { DraggableLocation } from 'react-beautiful-dnd'
 import { Issue } from '../interfaces/Issue'
+import { Task } from '../interfaces/UserStory'
 
 // a little function to help us with reordering the result
 const reorder = (list: any[], startIndex: number, endIndex: number): any[] => {
@@ -20,6 +21,16 @@ interface ReorderIssueMapArgs {
 
 export interface ReorderIssueMapResult {
     issueMap: Issue[]
+}
+
+export interface ReorderTaskMapArgs {
+    issueMap: Task[]
+    source: DraggableLocation
+    destination: DraggableLocation
+}
+
+export interface ReorderTaskMapResult {
+    issueMap: Task[]
 }
 
 export const reorderTasks = ({
@@ -75,24 +86,24 @@ export const reorderQuoteMap = ({
     issueMap,
     source,
     destination,
-}: ReorderIssueMapArgs): ReorderIssueMapResult => {
-    const current: Issue[] = issueMap.filter(
-        (issue) => issue.status === source.droppableId
+}: ReorderTaskMapArgs): ReorderTaskMapResult => {
+    const current: Task[] = issueMap.filter(
+        (issue) => issue.status_id.toString() === source.droppableId
     )
-    const next: Issue[] = issueMap.filter(
-        (issue) => issue.status === destination.droppableId
+    const next: Task[] = issueMap.filter(
+        (issue) => issue.status_id.toString() === destination.droppableId
     )
-    const target: Issue = current[source.index]
+    const target: Task = current[source.index]
 
     // moving to same list
     if (source.droppableId === destination.droppableId) {
-        const reordered: Issue[] = reorder(
+        const reordered: Task[] = reorder(
             current,
             source.index,
             destination.index
         )
         const unaffected = issueMap.filter(
-            (issue) => issue.status !== source.droppableId
+            (issue) => issue.status_id.toString() !== source.droppableId
         )
         return {
             issueMap: [...unaffected, ...reordered],
@@ -106,12 +117,12 @@ export const reorderQuoteMap = ({
     // insert into next
     next.splice(destination.index, 0, {
         ...target,
-        status: destination.droppableId,
+        status_id: parseInt(destination.droppableId, 10),
     })
     const unaffected = issueMap.filter(
         (issue) =>
-            issue.status !== source.droppableId &&
-            issue.status !== destination.droppableId
+            issue.status_id.toString() !== source.droppableId &&
+            issue.status_id.toString() !== destination.droppableId
     )
 
     return {

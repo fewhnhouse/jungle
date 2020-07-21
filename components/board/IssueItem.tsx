@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import type { DraggableProvided } from 'react-beautiful-dnd'
 import { Issue } from '../../interfaces/Issue'
 import IssueModal from '../IssueModal'
+import { Task } from '../../interfaces/UserStory'
 
 const getBackgroundColor = (isDragging: boolean, isGroupedOver: boolean) => {
     if (isDragging) {
@@ -130,7 +131,7 @@ function getStyle(
 }
 
 interface IssueItemProps {
-    issue: Issue
+    issue: Task
     isDragging: boolean
     provided: DraggableProvided
     isGroupedOver?: boolean
@@ -171,14 +172,14 @@ function IssueItem({
                 data-is-dragging={isDragging}
                 data-testid={issue.id}
                 data-index={index}
-                aria-label={`${issue.author.name} quote ${issue.content}`}
+                aria-label={`${issue.subject}`}
             >
-                <Avatar src={issue.author.avatarUrl} alt={issue.author.name} />
+                <Avatar src={'issue.author.avatarUrl'} alt={'issue.author.name'} />
                 <Content>
-                    <BlockQuote>{issue.content}</BlockQuote>
+                    <BlockQuote>{issue.subject}</BlockQuote>
                     <Footer>
-                        <Author colors={issue.author.colors}>
-                            {issue.author.name}
+                        <Author colors={{ hard: '#fff', soft: '#fff' }}>
+                            Author Name
                         </Author>
                         <QuoteId>{issue.id}</QuoteId>
                     </Footer>

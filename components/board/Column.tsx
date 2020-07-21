@@ -54,7 +54,7 @@ const Column = ({ title, issues, index }: Props) => {
                     <Header isDragging={snapshot.isDragging}>
                         <Title
                             {...provided.dragHandleProps}
-                            aria-label={`${title} quote list`}
+                            aria-label={`${title} task list`}
                         >
                             {title}
                         </Title>
