@@ -12,6 +12,7 @@ import useMedia from 'use-media'
 import SettingsIcon from '@material-ui/icons/Settings'
 import Link from 'next/link'
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 
 const StyledButton = styled(Button)`
     margin: 0px 4px;
@@ -107,23 +108,27 @@ const Divider = styled.div`
     margin: ${({ theme }) => `${theme.spacing.medium}`} 0px;
 `
 
-export default function ProjectListItem() {
+interface Props {
+    id: string | number
+    name: string
+    description: string
+}
+export default function ProjectListItem({ id, name, description }: Props) {
     const isMobile = useMedia({ maxWidth: '400px' })
-    const [isModalOpen, setIsModalOpen] = useState(false)
-    const toggleModal = () => setIsModalOpen((open) => !open)
+    const { push } = useRouter()
+    const handleSettingsClick = () =>
+        push('/projects/[id]/settings', `/projects/${id}/settings`)
     return (
         <StyledCard>
-            <SettingsButton onClick={toggleModal} theme="light" outline>
+            <SettingsButton onClick={handleSettingsClick} theme="light" outline>
                 <SettingsIcon />
             </SettingsButton>
             <ItemContainer>
                 <InfoContainer>
                     <StyledImage src="bmo.png" />
                     <TextContainer>
-                        <ProjectName>Project 1</ProjectName>
-                        <ProjectDescription>
-                            This is the description
-                        </ProjectDescription>
+                        <ProjectName>{name}</ProjectName>
+                        <ProjectDescription>{description}</ProjectDescription>
                     </TextContainer>
                 </InfoContainer>
                 <BadgeContainer>
@@ -157,10 +162,6 @@ export default function ProjectListItem() {
                     </StyledButton>
                 </Link>
             </StyledFooter>
-            <Modal centered toggle={toggleModal} open={isModalOpen}>
-                <ModalHeader>Project Settings</ModalHeader>
-                <ModalBody>👋 Hello there!</ModalBody>
-            </Modal>
         </StyledCard>
     )
 }

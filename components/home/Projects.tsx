@@ -1,5 +1,7 @@
 import ProjectListItem from './ProjectListItem'
 import styled from 'styled-components'
+import useSWR from 'swr'
+import { IProject } from '../../interfaces/Project'
 
 const Container = styled.div`
     display: flex;
@@ -15,13 +17,21 @@ const Container = styled.div`
 `
 
 export default function Projects() {
+    const { data, error } = useSWR<IProject[]>('/projects')
+    if (error) {
+        localStorage.removeItem('user')
+    }
+
     return (
         <Container>
-            <ProjectListItem />
-            <ProjectListItem />
-            <ProjectListItem />
-            <ProjectListItem />
-            <ProjectListItem />
+            {data?.map(({ id, name, description }) => (
+                <ProjectListItem
+                    key={id}
+                    id={id}
+                    name={name}
+                    description={description}
+                />
+            ))}
         </Container>
     )
 }

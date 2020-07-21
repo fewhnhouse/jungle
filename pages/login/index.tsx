@@ -70,8 +70,9 @@ export default function Home() {
         const { id, auth_token, username: name, email } = data
         localStorage.setItem(
             'user',
-            JSON.stringify({ id, auth_token, username: name, email })
+            JSON.stringify({ id, username: name, email })
         )
+        localStorage.setItem('auth-token', auth_token)
         push('/')
     }
     return (

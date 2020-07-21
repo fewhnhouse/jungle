@@ -9,6 +9,7 @@ import useSWR from 'swr'
 import { IProject } from '../interfaces/Project'
 import { useRouter } from 'next/router'
 import Axios from 'axios'
+import ProjectCreationModal from '../components/home/ProjectCreationModal'
 
 const Container = styled.div`
     padding: ${({ theme }) => `${theme.spacing.huge} ${theme.spacing.crazy}`};
@@ -128,15 +129,12 @@ export default function Home() {
     useEffect(() => {
         const userString = localStorage.getItem('user')
         const user = JSON.parse(userString)
+        if (!user) {
+            push('/login')
+        }
         setUser(user)
     }, [])
 
-    const { data, error } = useSWR<IProject, any>('/projects')
-    if (error) {
-        localStorage.removeItem('user')
-        push('/login')
-    }
-    console.log(data)
     return (
         <>
             <ColorContainer>
@@ -196,10 +194,7 @@ export default function Home() {
                     <YourWork />
                 </InnerContainer>
             </Container>
-            <Modal centered toggle={toggleModal} open={isModalOpen}>
-                <ModalHeader>New Project</ModalHeader>
-                <ModalBody>👋 Hello there!</ModalBody>
-            </Modal>{' '}
+            <ProjectCreationModal toggle={toggleModal} open={isModalOpen} />
         </>
     )
 }

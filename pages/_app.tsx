@@ -7,6 +7,7 @@ import 'shards-ui/dist/css/shards.min.css'
 import 'react-markdown-editor-lite/lib/index.css'
 import Header from '../components/header/Header'
 import axios from 'axios'
+import { useState, useEffect } from 'react'
 
 export interface Theme {
     colors: {
@@ -76,14 +77,23 @@ const graphqlFetcher = (query) =>
         .then((res) => res.json())
         .then((json) => json.data)
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data)
+const createFetcher = (token: string) => (url: string) =>
+    axios
+        .get(url, { headers: { Authorization: `Bearer ${token}` } })
+        .then((res) => res.data)
 
 export default function App({ Component, pageProps }: AppProps) {
-    return (
+    const [token, setToken] = useState('')
+
+    useEffect(() => {
+        const token = localStorage.getItem('auth-token')
+        setToken(token)
+    }, [])
+    return token ? (
         <ThemeProvider theme={theme}>
             <SWRConfig
                 value={{
-                    fetcher,
+                    fetcher: createFetcher(token),
                 }}
             >
                 <Header />
@@ -92,5 +102,5 @@ export default function App({ Component, pageProps }: AppProps) {
                 </AppContainer>
             </SWRConfig>
         </ThemeProvider>
-    )
+    ) : ''
 }
