@@ -1,13 +1,14 @@
 import { AppProps } from 'next/app'
 import { SWRConfig } from 'swr'
 import styled, { ThemeProvider } from 'styled-components'
-import './app.css'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'shards-ui/dist/css/shards.min.css'
-import 'react-markdown-editor-lite/lib/index.css'
+import './app.less'
+// import 'bootstrap/dist/css/bootstrap.min.css'
+// import 'shards-ui/dist/css/shards.min.css'
+// import 'react-markdown-editor-lite/lib/index.css'
 import Header from '../components/header/Header'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
+import 'rsuite/lib/styles/index.less';
 
 export interface Theme {
     colors: {

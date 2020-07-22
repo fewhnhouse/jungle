@@ -1,16 +1,15 @@
 import styled from 'styled-components'
 import Projects from '../components/home/Projects'
 import Activities from '../components/home/Activities'
-import { Button, Modal, ModalHeader, ModalBody, Progress } from 'shards-react'
 import useMedia from 'use-media'
 import { useState, useEffect } from 'react'
 import YourWork from '../components/home/YourWork'
-import useSWR from 'swr'
-import { IProject } from '../interfaces/Project'
 import { useRouter } from 'next/router'
 import Axios from 'axios'
 import ProjectCreationModal from '../components/home/ProjectCreationModal'
 import { IUser } from '../interfaces/User'
+import { Button, Progress } from 'rsuite'
+const { Line } = Progress
 
 const Container = styled.div`
     padding: ${({ theme }) => `${theme.spacing.huge} ${theme.spacing.crazy}`};
@@ -86,11 +85,6 @@ const LevelContainer = styled.div`
     margin: ${({ theme }) => theme.spacing.small} 0px;
 `
 
-const StyledProgress = styled(Progress)`
-    width: 90%;
-    margin: 0;
-`
-
 const LevelIcon = styled.div`
     background: #2ecc71;
     border-radius: 50%;
@@ -149,10 +143,11 @@ export default function Home() {
                                 {!isMobile && (
                                     <LevelContainer>
                                         <LevelIcon>5</LevelIcon>
-                                        <StyledProgress
-                                            barClassName="level-bar"
-                                            theme="success"
-                                            value={50}
+                                        <Line
+                                            strokeColor="#2ecc71"
+                                            showInfo={false}
+                                            percent={30}
+                                            status="active"
                                         />
                                         <LevelIcon>6</LevelIcon>
                                     </LevelContainer>
@@ -161,9 +156,8 @@ export default function Home() {
 
                             {!isMobile && (
                                 <Button
+                                    appearance="ghost"
                                     onClick={toggleModal}
-                                    outline
-                                    theme="dark"
                                 >
                                     New Project
                                 </Button>
@@ -175,11 +169,13 @@ export default function Home() {
                     <MobileButtonContainer>
                         <LevelContainer>
                             <LevelIcon>5</LevelIcon>
-                            <StyledProgress
-                                barClassName="level-bar"
-                                theme="success"
-                                value={50}
+                            <Line
+                                strokeColor="#2ecc71"
+                                showInfo={false}
+                                percent={30}
+                                status="active"
                             />
+
                             <LevelIcon>6</LevelIcon>
                         </LevelContainer>
                         <Button onClick={toggleModal} outline theme="dark">

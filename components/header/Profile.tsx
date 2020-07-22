@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-import { Dropdown, DropdownMenu, DropdownItem } from 'shards-react'
 import { useState } from 'react'
+import { Avatar, Dropdown } from 'rsuite'
 
 const ProfileBadge = styled.img`
     border-radius: 50%;
@@ -19,13 +19,8 @@ export default function Profile() {
     const toggle = () => setOpen((open) => !open)
 
     return (
-        <Dropdown open={open} toggle={toggle}>
-            <ProfileBadge src="/bmo.png" onClick={toggle} />
-            <DropdownMenu right>
-                <DropdownItem>Action</DropdownItem>
-                <DropdownItem>Another action</DropdownItem>
-                <DropdownItem>Something else here</DropdownItem>
-            </DropdownMenu>
+        <Dropdown placement="bottomEnd" renderTitle={() => <Avatar circle>FW</Avatar>} noCaret>
+            <Dropdown.Item>Option 1</Dropdown.Item>
         </Dropdown>
     )
 }

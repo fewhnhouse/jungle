@@ -1,30 +1,22 @@
-import {
-    Card,
-    CardFooter,
-    Button,
-    Badge,
-    Modal,
-    ModalHeader,
-    ModalBody,
-} from 'shards-react'
 import styled from 'styled-components'
 import useMedia from 'use-media'
 import SettingsIcon from '@material-ui/icons/Settings'
 import Link from 'next/link'
-import { useState } from 'react'
 import { useRouter } from 'next/router'
+import { Button, Tag, Panel } from 'rsuite'
 
 const StyledButton = styled(Button)`
     margin: 0px 4px;
 `
 
-const StyledCard = styled(Card)`
+const StyledPanel = styled(Panel)`
     min-width: 300px;
+    background: white;
     width: 100%;
     margin: ${({ theme }) => `${theme.spacing.small}`};
 `
 
-const StyledFooter = styled(CardFooter)`
+const StyledFooter = styled.div`
     padding: 10px;
     display: flex;
     justify-content: flex-end;
@@ -51,7 +43,6 @@ const TextContainer = styled.div`
 
 const ItemContainer = styled.div`
     display: flex;
-    padding: ${({ theme }) => `${theme.spacing.medium}`};
     justify-content: space-between;
     align-items: flex-start;
     flex-direction: column;
@@ -60,7 +51,7 @@ const ItemContainer = styled.div`
     }
 `
 
-const StyledBadge = styled(Badge)`
+const StyledTag = styled(Tag)`
     margin: 0px 4px;
 `
 
@@ -74,8 +65,7 @@ const SettingsButton = styled(Button)`
     position: absolute;
     width: 30px;
     height: 30px;
-    right: 10px;
-    top: 10px;
+    right: 20px;
     padding: 0px;
 `
 
@@ -119,7 +109,7 @@ export default function ProjectListItem({ id, name, description }: Props) {
     const handleSettingsClick = () =>
         push('/projects/[id]/settings', `/projects/${id}/settings`)
     return (
-        <StyledCard>
+        <StyledPanel bordered>
             <SettingsButton onClick={handleSettingsClick} theme="light" outline>
                 <SettingsIcon />
             </SettingsButton>
@@ -132,12 +122,12 @@ export default function ProjectListItem({ id, name, description }: Props) {
                     </TextContainer>
                 </InfoContainer>
                 <BadgeContainer>
-                    <StyledBadge id="issues-todo" outline>
+                    <Tag id="issues-todo" outline>
                         {!isMobile && 'To Do: '}16
-                    </StyledBadge>
-                    <StyledBadge id="issues-in-progress" outline theme="dark">
+                    </Tag>
+                    <Tag id="issues-in-progress" outline theme="dark">
                         {!isMobile && 'In Progress: '} 32
-                    </StyledBadge>
+                    </Tag>
                 </BadgeContainer>
                 <Divider />
                 <MembersContainer>
@@ -162,6 +152,6 @@ export default function ProjectListItem({ id, name, description }: Props) {
                     </StyledButton>
                 </Link>
             </StyledFooter>
-        </StyledCard>
+        </StyledPanel>
     )
 }

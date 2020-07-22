@@ -1,30 +1,25 @@
-import styled from 'styled-components'
-import { Button, Dropdown, DropdownMenu, DropdownItem } from 'shards-react'
 import NotificationsIcon from '@material-ui/icons/Notifications'
-import { useState } from 'react'
+import { Dropdown, Badge, IconButton, Button } from 'rsuite'
+import styled from 'styled-components'
 
-const StyledButton = styled(Button)`
-    margin: 0px 4px;
-    padding: 4px;
-    height: 40px;
+const Container = styled.div`
+    margin: 0px 10px;
 `
 
 export default function Notifications() {
-    const [open, setOpen] = useState(false)
-    const toggle = () => setOpen((open) => !open)
-
     return (
-        <>
-            <Dropdown open={open} toggle={toggle}>
-                <StyledButton outline theme="light" onClick={toggle}>
-                    <NotificationsIcon />
-                </StyledButton>
-                <DropdownMenu right>
-                    <DropdownItem>Action</DropdownItem>
-                    <DropdownItem>Another action</DropdownItem>
-                    <DropdownItem>Something else here</DropdownItem>
-                </DropdownMenu>
-            </Dropdown>
-        </>
+        <Container>
+            <Badge>
+                <Dropdown
+                    placement="bottomEnd"
+                    noCaret
+                    renderTitle={() => <Button size="sm">{<NotificationsIcon />}</Button>}
+                >
+                    <Dropdown.Item>Action</Dropdown.Item>
+                    <Dropdown.Item>Another action</Dropdown.Item>
+                    <Dropdown.Item>Something else here</Dropdown.Item>
+                </Dropdown>
+            </Badge>
+        </Container>
     )
 }

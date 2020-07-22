@@ -1,18 +1,8 @@
-import {
-    Button,
-    Modal,
-    ModalHeader,
-    ModalBody,
-    Progress,
-    FormInput,
-    FormTextarea,
-    ModalFooter,
-} from 'shards-react'
 import { useState } from 'react'
-import Axios from 'axios'
 import authInstance from '../../util/axiosInstance'
 import { useRouter } from 'next/router'
 import { IProject } from '../../interfaces/Project'
+import { Modal, Button, Input } from 'rsuite'
 
 interface Props {
     open: boolean
@@ -24,11 +14,10 @@ export default function ProjectCreationModal({ open, toggle }: Props) {
     const [description, setDescription] = useState('')
     const { push } = useRouter()
 
-    const handleDescriptionChange = (
-        e: React.ChangeEvent<HTMLTextAreaElement>
-    ) => setDescription(e.target.value)
-    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-        setName(e.target.value)
+    const handleClose = () => toggle()
+
+    const handleDescriptionChange = (value: string) => setDescription(value)
+    const handleNameChange = (value: string) => setName(value)
 
     const createProject = async () => {
         const token = localStorage.getItem('auth-token')
@@ -45,31 +34,34 @@ export default function ProjectCreationModal({ open, toggle }: Props) {
         push('/projects/[id]/settings', `/projects/${id}/settings`)
     }
     return (
-        <Modal centered toggle={toggle} open={open}>
-            <ModalHeader>New Project</ModalHeader>
-            <ModalBody>
-                <FormInput
+        <Modal centered onHide={handleClose} show={open}>
+            <Modal.Header>
+                <Modal.Title>New Project</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Input
                     value={name}
                     onChange={handleNameChange}
                     placeholder="Project Name"
                     className="mb-2"
-                ></FormInput>
-                <FormTextarea
+                ></Input>
+                <Input
+                    type="textarea"
                     value={description}
                     onChange={handleDescriptionChange}
                     rows="4"
                     className="mb-2"
                     placeholder="Description"
-                ></FormTextarea>
-            </ModalBody>
-            <ModalFooter>
+                ></Input>
+            </Modal.Body>
+            <Modal.Footer>
                 <Button theme="light" onClick={toggle}>
                     Cancel
                 </Button>
                 <Button theme="success" onClick={createProject}>
                     Create
                 </Button>
-            </ModalFooter>
+            </Modal.Footer>
         </Modal>
     )
 }

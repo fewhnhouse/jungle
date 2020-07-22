@@ -1,12 +1,12 @@
 import styled from 'styled-components'
 import Link, { LinkProps } from 'next/link'
 import { useScrollPosition } from '../../util/useScrollPosition'
-import { FormInput, InputGroup } from 'shards-react'
 import Notifications from './Notifications'
 import Profile from './Profile'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import useMedia from 'use-media'
+import { Input } from 'rsuite'
 
 interface HeaderProps {
     landing: boolean
@@ -14,6 +14,7 @@ interface HeaderProps {
 }
 const StyledHeader = styled.header<HeaderProps>`
     height: 60px;
+    padding: 0px 10px;
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -46,7 +47,7 @@ const Options = styled.div`
 const InputContainer = styled.div`
     position: absolute;
     right: 120px;
-    top: 5px;
+    top: 8px;
     transition: width 0.2s ease-in-out, height 0.2s ease-in-out,
         box-shadow 0.2s ease-in-out;
     width: ${({ opened }: { opened: boolean }) =>
@@ -59,7 +60,6 @@ const InputContainer = styled.div`
     padding: ${({ theme }) => theme.spacing.mini};
 `
 
-const StyledInputGroup = styled(InputGroup)``
 
 const WrappedLink = ({
     children,
@@ -82,55 +82,55 @@ const Header = () => {
     const onBlur = () => setOpen(false)
 
     const { y } = useScrollPosition()
-    return !isMobile && (
-        <StyledHeader landing={pathname === '/'} scrolled={y > 0}>
-            {pathname.includes('/projects/') ? (
-                <Links>
-                    <WrappedLink href="/">Home</WrappedLink>
-                    <WrappedLink
-                        href="/projects/[id]/board"
-                        as={`/projects/${id}/board`}
-                    >
-                        Board
-                    </WrappedLink>
-                    <WrappedLink
-                        href="/projects/[id]/backlog"
-                        as={`/projects/${id}/backlog`}
-                    >
-                        Backlog
-                    </WrappedLink>
-                    <WrappedLink
-                        href="/projects/[id]/reports"
-                        as={`/projects/${id}/reports`}
-                    >
-                        Reports
-                    </WrappedLink>
-                </Links>
-            ) : pathname === '/login' ? (
-                <h3></h3>
-            ) : pathname.includes('/') ? (
-                <Links>
-                    <WrappedLink href="/">Home</WrappedLink>
-                    <WrappedLink href="/projects">Projects</WrappedLink>
-                    <WrappedLink href="/activity">Activity</WrappedLink>
-                    <WrappedLink href="/your-work">Your Work</WrappedLink>
-                </Links>
-            ) : null}
+    return (
+        !isMobile && (
+            <StyledHeader landing={pathname === '/'} scrolled={y > 0}>
+                {pathname.includes('/projects/') ? (
+                    <Links>
+                        <WrappedLink href="/">Home</WrappedLink>
+                        <WrappedLink
+                            href="/projects/[id]/board"
+                            as={`/projects/${id}/board`}
+                        >
+                            Board
+                        </WrappedLink>
+                        <WrappedLink
+                            href="/projects/[id]/backlog"
+                            as={`/projects/${id}/backlog`}
+                        >
+                            Backlog
+                        </WrappedLink>
+                        <WrappedLink
+                            href="/projects/[id]/reports"
+                            as={`/projects/${id}/reports`}
+                        >
+                            Reports
+                        </WrappedLink>
+                    </Links>
+                ) : pathname === '/login' ? (
+                    <h3></h3>
+                ) : pathname.includes('/') ? (
+                    <Links>
+                        <WrappedLink href="/">Home</WrappedLink>
+                        <WrappedLink href="/projects">Projects</WrappedLink>
+                        <WrappedLink href="/activity">Activity</WrappedLink>
+                        <WrappedLink href="/your-work">Your Work</WrappedLink>
+                    </Links>
+                ) : null}
 
-            <Options>
-                <InputContainer opened={open}>
-                    <StyledInputGroup>
-                        <FormInput
+                <Options>
+                    <InputContainer opened={open}>
+                        <Input
                             onFocus={onFocus}
                             onBlur={onBlur}
                             placeholder="Search..."
                         />
-                    </StyledInputGroup>
-                </InputContainer>
-                <Notifications />
-                <Profile />
-            </Options>
-        </StyledHeader>
+                    </InputContainer>
+                    <Notifications />
+                    <Profile />
+                </Options>
+            </StyledHeader>
+        )
     )
 }
 

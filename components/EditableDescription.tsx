@@ -4,10 +4,12 @@ import dynamic from 'next/dynamic'
 import MarkdownIt from 'markdown-it'
 import EditButtonGroup from './EditButtonGroup'
 
+/*
 const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
     ssr: false,
 })
-const mdParser = new MarkdownIt(/* Markdown-it options */)
+const mdParser = new MarkdownIt()
+*/
 
 const Description = styled.p`
     border-radius: 4px;
@@ -42,14 +44,16 @@ export default function EditableDescription({ initialValue }: Props) {
     const toggleEditable = () => setEditable((editable) => !editable)
     return editable ? (
         <InputContainer>
+            {/*
             <MdEditor
-                config={{ view: { html: false, menu: true, md: true } }}
-                value={value}
-                style={{ height: '200px', width: '100%' }}
-                onChange={handleEditorChange}
-                renderHTML={(text) => mdParser.render(text)}
+            config={{ view: { html: false, menu: true, md: true } }}
+            value={value}
+            style={{ height: '200px', width: '100%' }}
+            onChange={handleEditorChange}
+            renderHTML={(text) => mdParser.render(text)}
             />
-
+            
+        */}
             <EditButtonGroup onClick={toggleEditable} />
         </InputContainer>
     ) : (
