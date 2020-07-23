@@ -1,6 +1,6 @@
-import { Badge } from 'shards-react'
 import styled from 'styled-components'
 import ListItem from '../ListItem'
+import { Tag } from 'rsuite'
 
 const IssueName = styled.span`
     margin: 0px ${({ theme }) => `${theme.spacing.small}`};
@@ -21,11 +21,6 @@ const ItemContainer = styled.div`
     }
 `
 
-const StyledBadge = styled(Badge)`
-    margin: 0px ${({ theme }) => `${theme.spacing.mini}`};
-    height: 26px;
-`
-
 const Content = styled.div`
     display: flex;
     flex-direction: row;
@@ -42,9 +37,9 @@ export default function YourWorkItem() {
                         <b>ID-1102</b>
                         <Description>Create Dashboard Overlay</Description>
                     </IssueName>
-                    <StyledBadge id="issues-todo" outline>
+                    <Tag id="issues-todo" outline>
                         To Do
-                    </StyledBadge>
+                    </Tag>
                 </Content>
                 <div>
                     <span>1d</span>
