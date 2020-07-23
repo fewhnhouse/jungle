@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import styled from 'styled-components'
-import { FormInput } from 'shards-react'
 import EditButtonGroup from './EditButtonGroup'
+import { Input } from 'rsuite'
 
 const Title = styled.span`
     border-radius: 4px;
@@ -17,7 +17,7 @@ const Title = styled.span`
     margin: ${({ theme }) => theme.spacing.mini} 0px;
 `
 
-const StyledInput = styled(FormInput)`
+const StyledInput = styled(Input)`
     padding: 8px;
     margin-right: 4px;
 `
@@ -38,12 +38,12 @@ export default function EditableNumber({ initialValue }: Props) {
     const toggleEditable = () => setEditable((editable) => !editable)
     return editable ? (
         <InputContainer>
-            <StyledInput
-                autofocus="true"
+            <Input
+                autofocus
                 size="lg"
                 type="number"
                 value={value}
-                onChange={(e) => setValue(e.target.value)}
+                onChange={(number) => setValue(number)}
             />
             <EditButtonGroup onClick={toggleEditable} />
         </InputContainer>

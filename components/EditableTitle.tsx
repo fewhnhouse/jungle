@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import styled from 'styled-components'
-import { FormInput } from 'shards-react'
+import { Input } from 'rsuite'
 import EditButtonGroup from './EditButtonGroup'
 
 const Title = styled.h3`
@@ -18,7 +18,7 @@ const Title = styled.h3`
     margin: ${({ theme }) => theme.spacing.mini} 0px;
 `
 
-const StyledInput = styled(FormInput)`
+const StyledInput = styled(Input)`
     padding: 4px 8px;
     font-size: 1.6rem;
     margin-right: 4px;
@@ -40,8 +40,8 @@ export default function EditableTitle({ initialValue }: Props) {
     const toggleEditable = () => setEditable((editable) => !editable)
     return editable ? (
         <InputContainer>
-            <StyledInput
-                autofocus="true"
+            <Input
+                autofocus
                 size="lg"
                 value={value}
                 onChange={(e) => setValue(e.target.value)}

@@ -1,23 +1,12 @@
 import React from 'react'
 
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    Modal,
-    Button,
-} from 'shards-react'
 import styled from 'styled-components'
 import CloseIcon from '@material-ui/icons/Close'
 import EditableTitle from './EditableTitle'
 import EditableDescription from './EditableDescription'
 import EditableNumber from './EditableNumber'
 import CustomSelect from './Select'
-
-const ModalContainer = styled.div`
-    max-height: 90vh;
-    display: flex;
-    flex-direction: column;
-`
+import { Modal, Breadcrumb, Button } from 'rsuite'
 
 const Label = styled.span`
     margin-top: ${({ theme }) => theme.spacing.mini};
@@ -32,9 +21,16 @@ const Header = styled.div`
 `
 
 const StyledBreadcrumb = styled(Breadcrumb)`
-    ol {
-        margin-bottom: 0px;
-        padding: ${({ theme }) => theme.spacing.small};
+    margin: 0px;
+`
+
+const StyledModalBody = styled(Modal.Body)`
+    margin-top: 0px;
+`
+
+const StyledModal = styled(Modal)`
+    @media only screen and (max-width: 600px) {
+        max-width: 90%;
     }
 `
 
@@ -72,24 +68,16 @@ export default function IssueModal({
     onClose: () => void
 }) {
     return (
-        <Modal
-            style={{ maxHeight: '90vh' }}
-            size="lg"
-            open={open}
-            toggle={onClose}
-        >
-            <ModalContainer>
-                <Header>
-                    <StyledBreadcrumb>
-                        <BreadcrumbItem>
-                            <a href="#">Home</a>
-                        </BreadcrumbItem>
-                        <BreadcrumbItem active>Library</BreadcrumbItem>
-                    </StyledBreadcrumb>
-                    <Button size="sm" theme="light" onClick={onClose}>
-                        <CloseIcon />
-                    </Button>
-                </Header>
+        <StyledModal show={open} onHide={onClose}>
+            <Modal.Header>
+                <StyledBreadcrumb size="lg">
+                    <Breadcrumb.Item>
+                        <a href="#">Home</a>
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Item active>Library</Breadcrumb.Item>
+                </StyledBreadcrumb>
+            </Modal.Header>
+            <StyledModalBody>
                 <Main>
                     <Content>
                         <EditableTitle initialValue="Test Title" />
@@ -106,7 +94,7 @@ export default function IssueModal({
                         <EditableNumber initialValue={1} />
                     </Sidebar>
                 </Main>
-            </ModalContainer>
-        </Modal>
+            </StyledModalBody>
+        </StyledModal>
     )
 }

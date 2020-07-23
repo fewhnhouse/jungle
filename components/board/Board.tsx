@@ -44,7 +44,7 @@ const Board = ({
         setOrdered(columns)
         setIssues(data)
     }, [data, columns])
-    console.log(ordered, columns)
+    
     const onDragEnd = (result: DropResult) => {
         // dropped nowhere
         if (!result.destination) {

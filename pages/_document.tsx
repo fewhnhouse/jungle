@@ -7,7 +7,7 @@ export default class MyDocument extends Document {
         const sheet = new ServerStyleSheet()
         const originalRenderPage = ctx.renderPage
         resetServerContext()
-        
+
         try {
             ctx.renderPage = () =>
                 originalRenderPage({

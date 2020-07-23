@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
-import MarkdownIt from 'markdown-it'
 import EditButtonGroup from './EditButtonGroup'
 
 /*
@@ -57,9 +56,6 @@ export default function EditableDescription({ initialValue }: Props) {
             <EditButtonGroup onClick={toggleEditable} />
         </InputContainer>
     ) : (
-        <Description
-            dangerouslySetInnerHTML={{ __html: mdParser.render(value) }}
-            onClick={toggleEditable}
-        ></Description>
+        <div>Editor</div>
     )
 }

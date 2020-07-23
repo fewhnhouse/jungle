@@ -19,7 +19,7 @@ export default function BoardContainer() {
         `/userstories?project=${id}&include_tasks=true`
     )
 
-    console.log(taskFiltersData.statuses)
+    console.log(taskFiltersData?.statuses)
 
     return (
         <ParentContainer>

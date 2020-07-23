@@ -155,10 +155,7 @@ export default function Home() {
                             </TitleContainer>
 
                             {!isMobile && (
-                                <Button
-                                    appearance="ghost"
-                                    onClick={toggleModal}
-                                >
+                                <Button onClick={toggleModal}>
                                     New Project
                                 </Button>
                             )}
@@ -178,9 +175,7 @@ export default function Home() {
 
                             <LevelIcon>6</LevelIcon>
                         </LevelContainer>
-                        <Button onClick={toggleModal} outline theme="dark">
-                            New Project
-                        </Button>
+                        <Button onClick={toggleModal}>New Project</Button>
                     </MobileButtonContainer>
                 )}
             </ColorContainer>

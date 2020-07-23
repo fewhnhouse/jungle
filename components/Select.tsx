@@ -4,7 +4,11 @@ const customStyles = {
     option: (provided, { isFocused, isSelected }) => ({
         ...provided,
         color: '#6c757d',
-        backgroundColor: isSelected ? '#dadfe4' : isFocused ? '#e9ecef' : 'white'
+        backgroundColor: isSelected
+            ? '#dadfe4'
+            : isFocused
+            ? '#e9ecef'
+            : 'white',
     }),
     control: (provided) => ({
         ...provided,

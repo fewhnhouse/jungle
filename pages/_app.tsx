@@ -8,7 +8,7 @@ import './app.less'
 import Header from '../components/header/Header'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
-import 'rsuite/lib/styles/index.less';
+import 'rsuite/lib/styles/index.less'
 
 export interface Theme {
     colors: {
