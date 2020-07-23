@@ -1,5 +1,4 @@
 import Board from '../../../../components/board/Board'
-import { sprint } from '../../../../util/data'
 import styled from 'styled-components'
 import useSWR from 'swr'
 import { useRouter } from 'next/router'

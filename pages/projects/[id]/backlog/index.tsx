@@ -7,7 +7,7 @@ import { sprint } from '../../../../util/data'
 import { reorderTasks } from '../../../../util/reorder'
 import styled from 'styled-components'
 import useMedia from 'use-media'
-import { Button } from 'shards-react'
+import { Button } from 'rsuite'
 
 const IssueContainer = styled.div`
     flex: 2;
@@ -86,7 +86,7 @@ export default function Backlog({ data = [] }: { data: Issue[] }) {
                     <Container>
                         <TitleContainer>
                             <Title>Sprints</Title>
-                            <Button size="sm" outline theme="success">
+                            <Button size="sm" appearance="primary">
                                 Create Sprint
                             </Button>
                         </TitleContainer>
@@ -104,7 +104,7 @@ export default function Backlog({ data = [] }: { data: Issue[] }) {
                     <Container>
                         <TitleContainer>
                             <Title>Backlog</Title>
-                            <Button size="sm" outline theme="success">
+                            <Button size="sm" appearance="primary">
                                 Create Issue / Story
                             </Button>
                         </TitleContainer>

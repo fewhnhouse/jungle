@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import CloseIcon from '@material-ui/icons/Close'
 import CheckIcon from '@material-ui/icons/Check'
-import { Button } from 'shards-react'
+import { Button } from 'rsuite'
 
 const BtnContainer = styled.div`
     display: flex;
@@ -22,10 +22,10 @@ export default function EditButtonGroup({
 }) {
     return (
         <BtnContainer>
-            <StyledButton onClick={onClick} size="sm" theme="light">
+            <StyledButton onClick={onClick} size="sm">
                 <CloseIcon />
             </StyledButton>
-            <StyledButton size="sm" theme="light">
+            <StyledButton size="sm">
                 <CheckIcon />
             </StyledButton>
         </BtnContainer>

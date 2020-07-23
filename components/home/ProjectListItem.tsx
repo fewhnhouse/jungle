@@ -3,7 +3,7 @@ import useMedia from 'use-media'
 import SettingsIcon from '@material-ui/icons/Settings'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { Button, Tag, Panel } from 'rsuite'
+import { Button, Tag, Panel, IconButton, Icon } from 'rsuite'
 
 const StyledButton = styled(Button)`
     margin: 0px 4px;
@@ -57,12 +57,8 @@ const InfoContainer = styled.div`
     align-items: center;
 `
 
-const SettingsButton = styled(Button)`
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    right: 20px;
-    padding: 0px;
+const SettingsButton = styled(IconButton)`
+    float: right;
 `
 
 const MembersContainer = styled.div`
@@ -106,9 +102,10 @@ export default function ProjectListItem({ id, name, description }: Props) {
         push('/projects/[id]/settings', `/projects/${id}/settings`)
     return (
         <StyledPanel bordered>
-            <SettingsButton onClick={handleSettingsClick} theme="light" outline>
-                <SettingsIcon />
-            </SettingsButton>
+            <SettingsButton
+                icon={<Icon icon="cog" />}
+                onClick={handleSettingsClick}
+            />
             <ItemContainer>
                 <InfoContainer>
                     <StyledImage src="bmo.png" />
