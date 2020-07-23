@@ -17,11 +17,6 @@ const Title = styled.span`
     margin: ${({ theme }) => theme.spacing.mini} 0px;
 `
 
-const StyledInput = styled(Input)`
-    padding: 8px;
-    margin-right: 4px;
-`
-
 const InputContainer = styled.div`
     display: flex;
     margin: ${({ theme }) => theme.spacing.mini} 0px;
@@ -33,7 +28,7 @@ interface Props {
 }
 export default function EditableNumber({ initialValue }: Props) {
     const [editable, setEditable] = useState(false)
-    const [value, setValue] = useState(initialValue)
+    const [value, setValue] = useState(initialValue + '')
 
     const toggleEditable = () => setEditable((editable) => !editable)
     return editable ? (
@@ -43,7 +38,7 @@ export default function EditableNumber({ initialValue }: Props) {
                 size="lg"
                 type="number"
                 value={value}
-                onChange={(number) => setValue(number)}
+                onChange={(value) => setValue(value)}
             />
             <EditButtonGroup onClick={toggleEditable} />
         </InputContainer>

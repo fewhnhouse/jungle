@@ -5,7 +5,6 @@ import useMedia from 'use-media'
 import { useState, useEffect } from 'react'
 import YourWork from '../components/home/YourWork'
 import { useRouter } from 'next/router'
-import Axios from 'axios'
 import ProjectCreationModal from '../components/home/ProjectCreationModal'
 import { IUser } from '../interfaces/User'
 import { Button, Progress } from 'rsuite'
@@ -189,13 +188,4 @@ export default function Home() {
             <ProjectCreationModal toggle={toggleModal} open={isModalOpen} />
         </>
     )
-}
-
-export async function getServerSideProps(context) {
-    const { data } = await Axios.get(
-        'https://motius.taiga.apps.moti.us/api/v1/projects'
-    )
-    return {
-        props: {},
-    }
 }

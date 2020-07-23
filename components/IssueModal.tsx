@@ -1,23 +1,13 @@
 import React from 'react'
 
 import styled from 'styled-components'
-import CloseIcon from '@material-ui/icons/Close'
 import EditableTitle from './EditableTitle'
 import EditableDescription from './EditableDescription'
 import EditableNumber from './EditableNumber'
-import CustomSelect from './Select'
 import { Modal, Breadcrumb, Button, Dropdown } from 'rsuite'
 
 const Label = styled.span`
     margin-top: ${({ theme }) => theme.spacing.mini};
-`
-
-const Header = styled.div`
-    width: 100%;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    padding: ${({ theme }) => theme.spacing.small};
 `
 
 const StyledBreadcrumb = styled(Breadcrumb)`

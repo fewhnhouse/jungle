@@ -18,12 +18,6 @@ const Title = styled.h3`
     margin: ${({ theme }) => theme.spacing.mini} 0px;
 `
 
-const StyledInput = styled(Input)`
-    padding: 4px 8px;
-    font-size: 1.6rem;
-    margin-right: 4px;
-`
-
 const InputContainer = styled.div`
     display: flex;
     margin: ${({ theme }) => theme.spacing.mini} 0px;
@@ -44,7 +38,7 @@ export default function EditableTitle({ initialValue }: Props) {
                 autofocus
                 size="lg"
                 value={value}
-                onChange={(e) => setValue(e.target.value)}
+                onChange={(value) => setValue(value)}
             />
             <EditButtonGroup onClick={toggleEditable} />
         </InputContainer>

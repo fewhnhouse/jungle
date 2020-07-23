@@ -51,10 +51,6 @@ const ItemContainer = styled.div`
     }
 `
 
-const StyledTag = styled(Tag)`
-    margin: 0px 4px;
-`
-
 const InfoContainer = styled.div`
     margin: ${({ theme }) => `${theme.spacing.small}`} 0px;
     display: flex;
