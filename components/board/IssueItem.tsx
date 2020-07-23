@@ -4,6 +4,7 @@ import type { DraggableProvided } from 'react-beautiful-dnd'
 import { Issue } from '../../interfaces/Issue'
 import IssueModal from '../IssueModal'
 import { Task } from '../../interfaces/UserStory'
+import { IconButton, Icon, Tag } from 'rsuite'
 
 const getBackgroundColor = (isDragging: boolean, isGroupedOver: boolean) => {
     if (isDragging) {
@@ -28,6 +29,8 @@ interface IContainerProps {
 }
 const Container = styled.div<IContainerProps>`
     border-radius: 4px;
+    display: flex;
+    align-items: center;
     border: 2px solid transparent;
     border-color: ${(props) => getBorderColor(props.isDragging)};
     background-color: ${(props) =>
@@ -58,15 +61,6 @@ const Container = styled.div<IContainerProps>`
     display: flex;
 `
 
-const Avatar = styled.img`
-    width: ${imageSize}px;
-    height: ${imageSize}px;
-    border-radius: 50%;
-    margin-right: ${({ theme }) => `${theme.spacing.mini}`};
-    flex-shrink: 0;
-    flex-grow: 0;
-`
-
 const Content = styled.div`
     /* flex child */
     flex-grow: 1;
@@ -75,45 +69,21 @@ const Content = styled.div`
     https://stackoverflow.com/questions/35111090/why-ie11-doesnt-wrap-the-text-in-flexbox
   */
     flex-basis: 100%;
+    align-items: center;
+    justify-content: space-between;
     /* flex parent */
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
 `
 
-const BlockQuote = styled.div`
-    &::before {
-        content: open-quote;
-    }
-    &::after {
-        content: close-quote;
-    }
+const BlockQuote = styled.p`
+    margin: 0px 10px;
 `
 
 const Footer = styled.div`
     display: flex;
     margin-top: ${({ theme }) => `${theme.spacing.mini}`};
     align-items: center;
-`
-
-const Author = styled.small`
-    color: ${(props: { colors: { hard: string; soft: string } }) =>
-        props.colors.hard};
-    flex-grow: 0;
-    margin: 0;
-    background-color: ${(props: { colors: { hard: string; soft: string } }) =>
-        props.colors.soft};
-    border-radius: 4px;
-    font-weight: normal;
-    padding: ${({ theme }) => `${theme.spacing.mini}`};
-`
-
-const QuoteId = styled.small`
-    flex-grow: 1;
-    flex-shrink: 1;
-    margin: 0;
-    font-weight: normal;
-    text-overflow: ellipsis;
-    text-align: right;
 `
 
 function getStyle(
@@ -174,14 +144,11 @@ function IssueItem({
                 data-index={index}
                 aria-label={`${issue.subject}`}
             >
-                <Avatar src={'issue.author.avatarUrl'} alt={'issue.author.name'} />
+                <Icon icon="task" />
                 <Content>
                     <BlockQuote>{issue.subject}</BlockQuote>
                     <Footer>
-                        <Author colors={{ hard: '#fff', soft: '#fff' }}>
-                            Author Name
-                        </Author>
-                        <QuoteId>{issue.id}</QuoteId>
+                        <Tag>ID-{issue.id}</Tag>
                     </Footer>
                 </Content>
             </Container>

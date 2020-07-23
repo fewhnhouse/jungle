@@ -28,6 +28,7 @@ type Props = {
     data: Task[]
     columns: Status[]
     withScrollableColumns?: boolean
+    title: string
 }
 
 const Board = ({
@@ -35,6 +36,7 @@ const Board = ({
     data = [],
     columns = [],
     withScrollableColumns,
+    title,
 }: Props) => {
     /* eslint-disable react/sort-comp */
     const [issues, setIssues] = useState(data)
@@ -44,7 +46,7 @@ const Board = ({
         setOrdered(columns)
         setIssues(data)
     }, [data, columns])
-    
+
     const onDragEnd = (result: DropResult) => {
         // dropped nowhere
         if (!result.destination) {
@@ -64,6 +66,7 @@ const Board = ({
 
         // reordering column
         if (result.type === 'COLUMN') {
+            console.log(ordered, columns)
             const reordered = reorder(ordered, source.index, destination.index)
 
             setOrdered(reordered)
@@ -71,18 +74,18 @@ const Board = ({
             return
         }
 
-        const { issueMap } = reorderQuoteMap({
-            issueMap: issues,
+        const newIssues = reorderQuoteMap({
+            issues,
             source,
             destination,
         })
 
-        setIssues(issueMap)
+        setIssues(newIssues)
     }
 
     return (
         <>
-            <CustomCollapse title="Story">
+            <CustomCollapse title={title}>
                 <BoardContainer>
                     <DragDropContext onDragEnd={onDragEnd}>
                         <Droppable
@@ -97,6 +100,7 @@ const Board = ({
                                 >
                                     {ordered.map((status, index: number) => (
                                         <Column
+                                            id={status.id}
                                             key={status.id}
                                             index={index}
                                             title={status.name}

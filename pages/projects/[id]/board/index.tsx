@@ -8,6 +8,7 @@ const ParentContainer = styled.div``
 
 export default function BoardContainer() {
     const { id } = useRouter().query
+    console.log(id)
     const { data: storyFiltersData } = useSWR(
         `/userstories/filters_data?project=${id}`
     )
@@ -18,14 +19,12 @@ export default function BoardContainer() {
         `/userstories?project=${id}&include_tasks=true`
     )
 
-    console.log(taskFiltersData?.statuses)
-
     return (
         <ParentContainer>
             {data?.map((story) => {
-                console.log(story, taskFiltersData?.statuses)
                 return (
                     <Board
+                        title={story.subject}
                         key={story.id}
                         id={`board-${story.id}`}
                         data={story.tasks}

@@ -133,13 +133,13 @@ export default function ProjectListItem({ id, name, description }: Props) {
             <StyledFooter>
                 <Link
                     href="/projects/[id]/backlog"
-                    as={`/projects/${1}/backlog`}
+                    as={`/projects/${id}/backlog`}
                 >
                     <StyledButton id="dashboard" theme="dark" outline>
                         Backlog &rarr;
                     </StyledButton>
                 </Link>
-                <Link href="/projects/[id]/board" as={`/projects/${1}/board`}>
+                <Link href="/projects/[id]/board" as={`/projects/${id}/board`}>
                     <StyledButton id="board" theme="dark" outline>
                         Board &rarr;
                     </StyledButton>

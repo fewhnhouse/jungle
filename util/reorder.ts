@@ -7,7 +7,7 @@ const reorder = (list: any[], startIndex: number, endIndex: number): any[] => {
     const result = Array.from(list)
     const [removed] = result.splice(startIndex, 1)
     result.splice(endIndex, 0, removed)
-
+    console.log(list, result)
     return result
 }
 
@@ -24,13 +24,9 @@ export interface ReorderIssueMapResult {
 }
 
 export interface ReorderTaskMapArgs {
-    issueMap: Task[]
+    issues: Task[]
     source: DraggableLocation
     destination: DraggableLocation
-}
-
-export interface ReorderTaskMapResult {
-    issueMap: Task[]
 }
 
 export const reorderTasks = ({
@@ -83,14 +79,15 @@ export const reorderTasks = ({
 }
 
 export const reorderQuoteMap = ({
-    issueMap,
+    issues,
     source,
     destination,
-}: ReorderTaskMapArgs): ReorderTaskMapResult => {
-    const current: Task[] = issueMap.filter(
+}: ReorderTaskMapArgs): Task[] => {
+    console.log(issues, source, destination)
+    const current: Task[] = issues.filter(
         (issue) => issue.status_id.toString() === source.droppableId
     )
-    const next: Task[] = issueMap.filter(
+    const next: Task[] = issues.filter(
         (issue) => issue.status_id.toString() === destination.droppableId
     )
     const target: Task = current[source.index]
@@ -102,12 +99,10 @@ export const reorderQuoteMap = ({
             source.index,
             destination.index
         )
-        const unaffected = issueMap.filter(
+        const unaffected = issues.filter(
             (issue) => issue.status_id.toString() !== source.droppableId
         )
-        return {
-            issueMap: [...unaffected, ...reordered],
-        }
+        return [...unaffected, ...reordered]
     }
 
     // moving to different list
@@ -119,15 +114,13 @@ export const reorderQuoteMap = ({
         ...target,
         status_id: parseInt(destination.droppableId, 10),
     })
-    const unaffected = issueMap.filter(
+    const unaffected = issues.filter(
         (issue) =>
             issue.status_id.toString() !== source.droppableId &&
             issue.status_id.toString() !== destination.droppableId
     )
 
-    return {
-        issueMap: [...unaffected, ...current, ...next],
-    }
+    return [...unaffected, ...current, ...next]
 }
 
 type List<T> = {

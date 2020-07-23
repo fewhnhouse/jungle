@@ -37,15 +37,16 @@ const Header = styled.div<HeaderProps>`
 type Props = {
     title: string
     issues: Task[]
+    id: number
     index: number
     isScrollable?: boolean
     isCombineEnabled?: boolean
     useClone?: boolean
 }
 
-const Column = ({ title, issues, index }: Props) => {
+const Column = ({ title, issues, index, id }: Props) => {
     return (
-        <Draggable draggableId={title} index={index}>
+        <Draggable draggableId={title + id} index={index}>
             {(
                 provided: DraggableProvided,
                 snapshot: DraggableStateSnapshot
@@ -60,7 +61,7 @@ const Column = ({ title, issues, index }: Props) => {
                         </Title>
                     </Header>
                     <IssueList
-                        listId={title}
+                        listId={id + ''}
                         listType="QUOTE"
                         style={{
                             backgroundColor: snapshot.isDragging
