@@ -6,7 +6,7 @@ import EditableTitle from './EditableTitle'
 import EditableDescription from './EditableDescription'
 import EditableNumber from './EditableNumber'
 import CustomSelect from './Select'
-import { Modal, Breadcrumb, Button } from 'rsuite'
+import { Modal, Breadcrumb, Button, Dropdown } from 'rsuite'
 
 const Label = styled.span`
     margin-top: ${({ theme }) => theme.spacing.mini};
@@ -85,11 +85,11 @@ export default function IssueModal({
                     </Content>
                     <Sidebar>
                         <Label>Status</Label>
-                        <CustomSelect />
+                        <Dropdown toggleComponentClass={Button} appearance="default" title="Select..." />
                         <Label>Assignee</Label>
-                        <CustomSelect />
+                        <Dropdown toggleComponentClass={Button} appearance="default" title="Select..."/>
                         <Label>Priority</Label>
-                        <CustomSelect />
+                        <Dropdown toggleComponentClass={Button} appearance="default" title="Select..."/>
                         <Label>Story Points</Label>
                         <EditableNumber initialValue={1} />
                     </Sidebar>
