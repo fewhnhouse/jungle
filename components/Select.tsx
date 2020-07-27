@@ -22,7 +22,7 @@ const customStyles = {
         margin: '5px 0px',
     }),
     indicatorSeparator: () => ({
-        visibility: 'none',
+        visibility: 'hidden',
     }),
     singleValue: (provided, state) => {
         const opacity = state.isDisabled ? 0.5 : 1

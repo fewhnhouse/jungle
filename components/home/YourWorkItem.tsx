@@ -37,7 +37,7 @@ export default function YourWorkItem() {
                         <b>ID-1102</b>
                         <Description>Create Dashboard Overlay</Description>
                     </IssueName>
-                    <Tag id="issues-todo" outline>
+                    <Tag id="issues-todo">
                         To Do
                     </Tag>
                 </Content>
