@@ -41,7 +41,7 @@ export default function CustomSelect() {
                 { value: '1', label: 'To Do' },
                 { value: '2', label: 'Doing' },
             ]}
-            styles={customStyles}
+            styles={customStyles as any}
         />
     )
 }
