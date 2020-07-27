@@ -18,7 +18,7 @@ const Container = styled.div`
     flex-wrap: wrap;
     height: 100%;
     align-items: flex-start;
-    background: #fff;
+    background: ${({ theme }) => theme.colors.grey.light};
     @media screen and (max-width: 400px) {
         padding: ${({ theme }) =>
             `${theme.spacing.small} ${theme.spacing.medium}`};
@@ -26,7 +26,7 @@ const Container = styled.div`
 `
 
 const ColorContainer = styled.div`
-    background: ${({ theme }) => theme.colors.grey.light};
+    background: #fff;
 `
 
 const Avatar = styled.img`
