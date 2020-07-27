@@ -1,14 +1,6 @@
 import styled from 'styled-components'
 import Link from 'next/link'
-import {
-    Card,
-    CardHeader,
-    FormInput,
-    CardBody,
-    CardFooter,
-    Button,
-    FormCheckbox,
-} from 'shards-react'
+import { Panel } from 'rsuite'
 
 const Container = styled.div`
     display: flex;
@@ -17,33 +9,28 @@ const Container = styled.div`
     width: 100%;
 `
 
-const StyledCard = styled(Card)`
+const StyledPanel = styled(Panel)`
     margin: 8px 16px;
+    background: white;
 `
 
 const Projects = () => (
     <Container>
-        <StyledCard>
-            <CardBody>
-                <Link href="/projects/123">
-                    <a>Project 1</a>
-                </Link>
-            </CardBody>
-        </StyledCard>
-        <StyledCard>
-            <CardBody>
-                <Link href="/projects/123">
-                    <a>Project 1</a>
-                </Link>
-            </CardBody>
-        </StyledCard>
-        <StyledCard>
-            <CardBody>
-                <Link href="/projects/123">
-                    <a>Project 1</a>
-                </Link>
-            </CardBody>
-        </StyledCard>
+        <StyledPanel>
+            <Link href="/projects/123">
+                <a>Project 1</a>
+            </Link>
+        </StyledPanel>
+        <StyledPanel>
+            <Link href="/projects/123">
+                <a>Project 1</a>
+            </Link>
+        </StyledPanel>
+        <StyledPanel>
+            <Link href="/projects/123">
+                <a>Project 1</a>
+            </Link>
+        </StyledPanel>
     </Container>
 )
 

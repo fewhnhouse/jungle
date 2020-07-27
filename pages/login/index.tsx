@@ -36,7 +36,7 @@ export default function Home() {
     const [formState, setFormState] = useState({
         username: '',
         password: '',
-        remember: '',
+        remember: false,
     })
 
     const { push } = useRouter()
@@ -71,7 +71,11 @@ export default function Home() {
                     <Form
                         onSubmit={handleLogin}
                         value={formState}
-                        onChange={(value) => setFormState(value)}
+                        onChange={(value: {
+                            username: string
+                            password: string
+                            remember: boolean
+                        }) => setFormState(value)}
                     >
                         <FormGroup>
                             <ControlLabel>Username</ControlLabel>

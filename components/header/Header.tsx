@@ -1,13 +1,19 @@
 import styled from 'styled-components'
-import Link, { LinkProps } from 'next/link'
+import { LinkProps } from 'next/link'
 import { useScrollPosition } from '../../util/useScrollPosition'
 import Notifications from './Notifications'
 import Profile from './Profile'
 import { useRouter } from 'next/router'
 import { useState, useRef } from 'react'
 import useMedia from 'use-media'
-import { Input } from 'rsuite'
-import { useSpring, animated } from 'react-spring'
+import { Input, Button } from 'rsuite'
+import WorkOutlineIcon from '@material-ui/icons/WorkOutline'
+import AppsIcon from '@material-ui/icons/Apps'
+import HomeIcon from '@material-ui/icons/Home'
+import SyncIcon from '@material-ui/icons/Sync'
+import DashboardIcon from '@material-ui/icons/Dashboard'
+import HistoryIcon from '@material-ui/icons/History'
+import AssessmentIcon from '@material-ui/icons/Assessment'
 
 interface HeaderProps {
     landing: boolean
@@ -36,12 +42,7 @@ const HeaderContainer = styled.div`
     width: 100%;
     position: fixed;
     top: 0px;
-`
-
-const StyledLink = styled.a`
-    padding: ${({ theme }) => `${theme.spacing.small}`};
-    text-decoration: none;
-    cursor: pointer;
+    z-index: 1000;
 `
 
 const Links = styled.div`
@@ -53,19 +54,14 @@ const Options = styled.div`
     align-items: center;
 `
 
-const InputContainer = styled.div`
+const InputContainer = styled.div<{ opened: boolean; headerWidth?: number }>`
     position: relative;
     right: 20px;
     top: 0px;
     transition: width 0.2s ease-in-out, height 0.2s ease-in-out,
         box-shadow 0.2s ease-in-out;
-    width: ${({
-        opened,
-        headerWidth,
-    }: {
-        opened: boolean
-        headerWidth?: number
-    }) => (opened ? (headerWidth ?? 400) / 2 + 'px' : '200px')};
+    width: ${({ opened, headerWidth }) =>
+        opened ? (headerWidth ?? 400) / 2 + 'px' : '200px'};
     background: white;
     border-radius: 6px;
     box-shadow: ${({ opened }: { opened: boolean }) =>
@@ -73,14 +69,36 @@ const InputContainer = styled.div`
     padding: ${({ theme }) => theme.spacing.mini};
 `
 
+const StyledLinkButton = styled(Button)`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0px 10px;
+    color: ${({ isCurrent }: { isCurrent: boolean }) =>
+        isCurrent ? '#2589f5' : ''};
+`
+
+const IconWrapper = styled.div`
+    margin: 0px 10px;
+    display: flex;
+    align-items: center;
+`
+
 const WrappedLink = ({
     children,
-    ...rest
-}: LinkProps & { children: React.ReactNode }) => (
-    <Link {...rest}>
-        <StyledLink>{children}</StyledLink>
-    </Link>
-)
+    href,
+    as,
+}: LinkProps & { children: React.ReactNode }) => {
+    const { push, pathname } = useRouter()
+    return (
+        <StyledLinkButton
+            isCurrent={pathname === href}
+            onClick={() => push(href, as)}
+        >
+            {children}
+        </StyledLinkButton>
+    )
+}
 
 const Header = () => {
     const ref = useRef()
@@ -107,23 +125,37 @@ const Header = () => {
                 >
                     {pathname.includes('/projects/') ? (
                         <Links>
-                            <WrappedLink href="/">Home</WrappedLink>
+                            <WrappedLink href="/">
+                                <IconWrapper>
+                                    <HomeIcon />
+                                </IconWrapper>
+                                Home
+                            </WrappedLink>
                             <WrappedLink
                                 href="/projects/[id]/board"
                                 as={`/projects/${id}/board`}
                             >
+                                <IconWrapper>
+                                    <DashboardIcon />
+                                </IconWrapper>
                                 Board
                             </WrappedLink>
                             <WrappedLink
                                 href="/projects/[id]/backlog"
                                 as={`/projects/${id}/backlog`}
                             >
+                                <IconWrapper>
+                                    <HistoryIcon />
+                                </IconWrapper>
                                 Backlog
                             </WrappedLink>
                             <WrappedLink
                                 href="/projects/[id]/reports"
                                 as={`/projects/${id}/reports`}
                             >
+                                <IconWrapper>
+                                    <AssessmentIcon />
+                                </IconWrapper>
                                 Reports
                             </WrappedLink>
                         </Links>
@@ -131,10 +163,28 @@ const Header = () => {
                         <h3></h3>
                     ) : pathname.includes('/') ? (
                         <Links>
-                            <WrappedLink href="/">Home</WrappedLink>
-                            <WrappedLink href="/projects">Projects</WrappedLink>
-                            <WrappedLink href="/activity">Activity</WrappedLink>
+                            <WrappedLink href="/">
+                                <IconWrapper>
+                                    <HomeIcon />
+                                </IconWrapper>
+                                Home
+                            </WrappedLink>
+                            <WrappedLink href="/projects">
+                                <IconWrapper>
+                                    <AppsIcon />
+                                </IconWrapper>
+                                Projects
+                            </WrappedLink>
+                            <WrappedLink href="/activity">
+                                <IconWrapper>
+                                    <SyncIcon />
+                                </IconWrapper>
+                                Activity
+                            </WrappedLink>
                             <WrappedLink href="/your-work">
+                                <IconWrapper>
+                                    <WorkOutlineIcon />
+                                </IconWrapper>
                                 Your Work
                             </WrappedLink>
                         </Links>
@@ -142,7 +192,11 @@ const Header = () => {
 
                     <Options>
                         <InputContainer
-                            headerWidth={ref?.current?.clientWidth}
+                            headerWidth={
+                                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                // @ts-ignore
+                                (ref?.current?.clientWidth ?? 400) as number
+                            }
                             opened={open}
                         >
                             <Input

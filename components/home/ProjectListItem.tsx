@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import useMedia from 'use-media'
-import SettingsIcon from '@material-ui/icons/Settings'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Button, Tag, Panel, IconButton, Icon } from 'rsuite'
