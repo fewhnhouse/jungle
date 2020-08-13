@@ -78,7 +78,7 @@ type IssueListProps = {
 }
 
 // eslint-disable-next-line react/display-name
-const InnerQuoteList = React.memo(({ issues }: IssueListProps) => {
+const InnerIssueList = React.memo(({ issues }: IssueListProps) => {
     return (
         <>
             {issues.map((issue: Task, index: number) => (
@@ -109,7 +109,7 @@ type InnerListProps = {
     title?: string
 }
 
-function InnerList(props: InnerListProps) {
+function InnerListContainer(props: InnerListProps) {
     const { issues, dropProvided } = props
     const title = props.title ? <Title>{props.title}</Title> : null
 
@@ -117,7 +117,7 @@ function InnerList(props: InnerListProps) {
         <Container>
             {title}
             <DropZone ref={dropProvided.innerRef}>
-                <InnerQuoteList issues={issues} />
+                <InnerIssueList issues={issues} />
                 {dropProvided.placeholder}
             </DropZone>
         </Container>
@@ -162,7 +162,7 @@ export default function IssueList({
                     isDraggingFrom={!!dropSnapshot.draggingFromThisWith}
                     {...dropProvided.droppableProps}
                 >
-                    <InnerList
+                    <InnerListContainer
                         issues={issues}
                         title={title}
                         dropProvided={dropProvided}

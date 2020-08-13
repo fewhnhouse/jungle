@@ -3,6 +3,7 @@ import authInstance from '../../util/axiosInstance'
 import { useRouter } from 'next/router'
 import { IProject } from '../../interfaces/Project'
 import { Modal, Button, Input } from 'rsuite'
+import Axios from 'axios'
 
 interface Props {
     open: boolean
@@ -20,16 +21,10 @@ export default function ProjectCreationModal({ open, toggle }: Props) {
     const handleNameChange = (value: string) => setName(value)
 
     const createProject = async () => {
-        const token = localStorage.getItem('auth-token')
-        const { data } = await authInstance.post<IProject>(
-            '/projects',
-            { name, description },
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        )
+        const { data } = await Axios.post<IProject>('/projects', {
+            name,
+            description,
+        })
         const { id } = data
         push('/projects/[id]/settings', `/projects/${id}/settings`)
     }

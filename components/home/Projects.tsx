@@ -1,7 +1,8 @@
 import ProjectListItem from './ProjectListItem'
 import styled from 'styled-components'
-import useSWR from 'swr'
 import { IProject } from '../../interfaces/Project'
+import { useQuery } from 'react-query'
+import Axios from 'axios'
 
 const Container = styled.div`
     display: flex;
@@ -17,7 +18,10 @@ const Container = styled.div`
 `
 
 export default function Projects() {
-    const { data, error } = useSWR<IProject[]>('/projects')
+    const { data, error } = useQuery('projects', async () => {
+        const { data } = await Axios.get<IProject[]>('/projects')
+        return data
+    })
     if (error) {
         localStorage.removeItem('user')
     }

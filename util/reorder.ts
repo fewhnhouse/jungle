@@ -1,6 +1,6 @@
 import { DraggableLocation } from 'react-beautiful-dnd'
 import { Issue } from '../interfaces/Issue'
-import { Task } from '../interfaces/UserStory'
+import { Task, IUserStory } from '../interfaces/UserStory'
 
 // a little function to help us with reordering the result
 const reorder = (list: any[], startIndex: number, endIndex: number): any[] => {
@@ -24,37 +24,47 @@ export interface ReorderIssueMapResult {
 }
 
 export interface ReorderTaskMapArgs {
-    issues: Task[]
+    issues: Task[] | IUserStory[]
     source: DraggableLocation
     destination: DraggableLocation
 }
 
-export const reorderTasks = ({
-    issueMap,
+export interface ReoderBacklogArgs {
+    issues: IUserStory[]
+    source: DraggableLocation
+    destination: DraggableLocation
+}
+
+export const reorderBacklog = ({
+    issues,
     source,
     destination,
-}: ReorderIssueMapArgs): ReorderIssueMapResult => {
-    const current: Issue[] = issueMap.filter(
-        (issue) => issue.sprint?.id === source.droppableId
+}: ReoderBacklogArgs): IUserStory[] => {
+    const current: IUserStory[] = issues.filter((issue) =>
+        source.droppableId === 'backlog'
+            ? issue?.milestone === null
+            : issue?.milestone?.toString() === source.droppableId
     )
-    const next: Issue[] = issueMap.filter(
-        (issue) => issue.sprint?.id === destination.droppableId
+    const next: IUserStory[] = issues.filter((issue) =>
+        destination.droppableId === 'backlog'
+            ? issue?.milestone === null
+            : issue?.milestone?.toString() === destination.droppableId
     )
-    const target: Issue = current[source.index]
-    console.log(source, destination)
+    const target: IUserStory = current[source.index]
+
     // moving to same list
     if (source.droppableId === destination.droppableId) {
-        const reordered: Issue[] = reorder(
+        const reordered: IUserStory[] = reorder(
             current,
             source.index,
             destination.index
         )
-        const unaffected = issueMap.filter(
-            (issue) => issue.sprint?.id !== source.droppableId
+        const unaffected = issues.filter((issue) =>
+            source.droppableId === 'backlog'
+                ? issue?.milestone !== null
+                : issue?.milestone?.toString() !== source.droppableId
         )
-        return {
-            issueMap: [...unaffected, ...reordered],
-        }
+        return [...unaffected, ...reordered]
     }
 
     // moving to different list
@@ -62,45 +72,45 @@ export const reorderTasks = ({
     // remove from original
     current.splice(source.index, 1)
     // insert into next
-    next.splice(destination.index, 0, {
-        ...target,
-        sprint: { id: destination.droppableId },
-    })
-    const unaffected = issueMap.filter(
+    next.splice(destination.index, 0, target)
+    const unaffected = issues.filter(
         (issue) =>
-            issue.sprint?.id !== source.droppableId &&
-            issue.sprint?.id !== destination.droppableId
+            issue.id.toString() !== source.droppableId &&
+            issue.id.toString() !== destination.droppableId
     )
     console.log(current, next, unaffected)
 
-    return {
-        issueMap: [...unaffected, ...current, ...next],
-    }
+    return [...unaffected, ...current, ...next]
 }
 
-export const reorderQuoteMap = ({
+export const reorderBoard = ({
     issues,
     source,
     destination,
-}: ReorderTaskMapArgs): Task[] => {
+}: ReorderTaskMapArgs): IUserStory[] | Task[] => {
     console.log(issues, source, destination)
-    const current: Task[] = issues.filter(
-        (issue) => issue.status_id.toString() === source.droppableId
+    const current = (issues as any[]).filter(
+        (issue) =>
+            (issue.status
+                ? issue.status.toString()
+                : issue.status_id.toString()) === source.droppableId
     )
-    const next: Task[] = issues.filter(
-        (issue) => issue.status_id.toString() === destination.droppableId
+    const next = (issues as any[]).filter(
+        (issue) =>
+            (issue.status
+                ? issue.status.toString()
+                : issue.status_id.toString()) === destination.droppableId
     )
     const target: Task = current[source.index]
 
     // moving to same list
     if (source.droppableId === destination.droppableId) {
-        const reordered: Task[] = reorder(
-            current,
-            source.index,
-            destination.index
-        )
-        const unaffected = issues.filter(
-            (issue) => issue.status_id.toString() !== source.droppableId
+        const reordered = reorder(current, source.index, destination.index)
+        const unaffected = (issues as any[]).filter(
+            (issue) =>
+                (issue.status
+                    ? issue.status.toString()
+                    : issue.status_id.toString()) !== source.droppableId
         )
         return [...unaffected, ...reordered]
     }
@@ -114,7 +124,7 @@ export const reorderQuoteMap = ({
         ...target,
         status_id: parseInt(destination.droppableId, 10),
     })
-    const unaffected = issues.filter(
+    const unaffected = (issues as any[]).filter(
         (issue) =>
             issue.status_id.toString() !== source.droppableId &&
             issue.status_id.toString() !== destination.droppableId

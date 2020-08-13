@@ -1,17 +1,20 @@
-import CustomCollapse from '../../../../components/Collapse'
 import { DragDropContext, DropResult } from 'react-beautiful-dnd'
 import { Issue } from '../../../../interfaces/Issue'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import IssueList from '../../../../components/backlog/IssueList'
-import { sprint } from '../../../../util/data'
-import { reorderTasks } from '../../../../util/reorder'
+import { reorderBacklog } from '../../../../util/reorder'
 import styled from 'styled-components'
 import useMedia from 'use-media'
 import { Button } from 'rsuite'
+import { useRouter } from 'next/router'
+import { IMilestone } from '../../../../interfaces/Project'
+import { IUserStory } from '../../../../interfaces/UserStory'
+import Sprint from '../../../../components/backlog/Sprint'
+import { useQuery } from 'react-query'
+import Axios from 'axios'
 
 const IssueContainer = styled.div`
     flex: 2;
-    flex-wrap: wrap;
     display: flex;
     flex-direction: row-reverse;
 
@@ -25,6 +28,9 @@ const ContentContainer = styled.div`
 `
 
 const Sidebar = styled.aside`
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    margin: 20px;
     flex: 1;
 `
 
@@ -49,7 +55,36 @@ const Title = styled.h3`
 `
 
 export default function Backlog({ data = [] }: { data: Issue[] }) {
-    const [issues, setIssues] = useState(sprint)
+    const { id } = useRouter().query
+    const { data: backlogData = [], error } = useQuery(
+        'userstories',
+        async () => {
+            const { data } = await Axios.get<IUserStory[]>(
+                `/userstories?milestone=null&project=${id}`
+            )
+            return data
+        }
+    )
+    const { data: sprintsData = [], error: sprintError } = useQuery(
+        `/milestones?closed=false&project=${id}`,
+        async () => {
+            const { data } = await Axios.get<IMilestone[]>(
+                `/milestones?closed=false&project=${id}`
+            )
+            return data
+        }
+    )
+
+    useEffect(() => {
+        setBacklog(backlogData)
+    }, [backlogData])
+
+    useEffect(() => {
+        setSprints(sprintsData)
+    }, [sprintsData])
+
+    const [sprints, setSprints] = useState<IMilestone[]>(sprintsData)
+    const [backlog, setBacklog] = useState<IUserStory[]>(backlogData)
     function onDragStart() {
         // Add a little vibration if the browser supports it.
         // Add's a nice little physical feedback
@@ -60,22 +95,28 @@ export default function Backlog({ data = [] }: { data: Issue[] }) {
 
     function onDragEnd({ source, destination }: DropResult) {
         // dropped outside the list
+        console.log(source, destination)
         if (!destination) {
             return
         }
         if (destination.index === source.index) {
             return
         }
-        const { issueMap } = reorderTasks({
-            issueMap: issues,
+
+        const reorderedIssues = reorderBacklog({
+            issues: [
+                ...backlog,
+                ...sprints.flatMap((sprint) => sprint.user_stories),
+            ],
             source,
             destination,
         })
-        setIssues(issueMap)
+        console.log(reorderedIssues)
+        setBacklog(reorderedIssues)
     }
 
     const isWideScreen = useMedia({ minWidth: '1000px' })
-
+    console.log(backlog)
     return (
         <ContentContainer>
             <IssueContainer>
@@ -91,14 +132,9 @@ export default function Backlog({ data = [] }: { data: Issue[] }) {
                             </Button>
                         </TitleContainer>
                         <ListContainer>
-                            <CustomCollapse title="Current Sprint">
-                                <IssueList
-                                    listId="1"
-                                    issues={issues.filter(
-                                        (item) => item.sprint?.id === '1'
-                                    )}
-                                />
-                            </CustomCollapse>
+                            {sprintsData.map((sprint) => (
+                                <Sprint key={sprint.id} sprint={sprint} />
+                            ))}
                         </ListContainer>
                     </Container>
                     <Container>
@@ -109,12 +145,7 @@ export default function Backlog({ data = [] }: { data: Issue[] }) {
                             </Button>
                         </TitleContainer>
                         <ListContainer>
-                            <IssueList
-                                listId="backlog"
-                                issues={issues.filter(
-                                    (item) => item.sprint?.id === 'backlog'
-                                )}
-                            />
+                            <IssueList listId="backlog" issues={backlogData} />
                         </ListContainer>
                     </Container>
                 </DragDropContext>

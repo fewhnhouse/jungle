@@ -1,5 +1,4 @@
 import { AppProps } from 'next/app'
-import { SWRConfig } from 'swr'
 import styled, { ThemeProvider } from 'styled-components'
 import './app.less'
 // import 'bootstrap/dist/css/bootstrap.min.css'
@@ -7,7 +6,7 @@ import './app.less'
 // import 'react-markdown-editor-lite/lib/index.css'
 import Header from '../components/header/Header'
 import axios from 'axios'
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import 'rsuite/lib/styles/index.less'
 
 export interface Theme {
@@ -78,32 +77,17 @@ const graphqlFetcher = (query) =>
         .then((json) => json.data)
 */
 
-const createFetcher = (token: string) => (url: string) =>
-    axios
-        .get(url, { headers: { Authorization: `Bearer ${token}` } })
-        .then((res) => res.data)
-
 export default function App({ Component, pageProps }: AppProps) {
-    const [token, setToken] = useState('')
-    const [loading, setLoading] = useState(false)
-
     useEffect(() => {
         const token = localStorage.getItem('auth-token')
-        setToken(token)
-        setLoading(false)
+        axios.defaults.headers.authorization = token && `Bearer ${token}`
     }, [])
-    return loading ? null : (
+    return (
         <ThemeProvider theme={theme}>
-            <SWRConfig
-                value={{
-                    fetcher: createFetcher(token),
-                }}
-            >
-                <Header />
-                <AppContainer>
-                    <Component {...pageProps} />
-                </AppContainer>
-            </SWRConfig>
+            <Header />
+            <AppContainer>
+                <Component {...pageProps} />
+            </AppContainer>
         </ThemeProvider>
     )
 }

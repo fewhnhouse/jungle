@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import Column from './Column'
-import reorder, { reorderQuoteMap } from '../../util/reorder'
+import reorder, { reorderBoard } from '../../util/reorder'
 import {
     DragDropContext,
     DropResult,
@@ -11,7 +11,9 @@ import {
 import styled from 'styled-components'
 import { Issue } from '../../interfaces/Issue'
 import CustomCollapse from '../Collapse'
-import { Status, Task } from '../../interfaces/UserStory'
+import { Status, Task, IUserStory } from '../../interfaces/UserStory'
+import { useQuery } from 'react-query'
+import Axios from 'axios'
 
 const Container = styled.div`
     min-width: 100vw;
@@ -25,27 +27,19 @@ const BoardContainer = styled.div`
 
 type Props = {
     id: string
-    data: Task[]
     columns: Status[]
     withScrollableColumns?: boolean
     title: string
 }
 
-const Board = ({
-    id,
-    data = [],
-    columns = [],
-    withScrollableColumns,
-    title,
-}: Props) => {
+const Board = ({ id, columns = [], withScrollableColumns, title }: Props) => {
+    const { data: tasks = [] } = useQuery('tasks', async () => {
+        const { data } = await Axios.get<Task[]>(`/tasks/${id}`)
+        return data
+    })
     /* eslint-disable react/sort-comp */
-    const [issues, setIssues] = useState(data)
+    const [issues, setIssues] = useState(tasks)
     const [ordered, setOrdered] = useState(columns)
-
-    useEffect(() => {
-        setOrdered(columns)
-        setIssues(data)
-    }, [data, columns])
 
     const onDragEnd = (result: DropResult) => {
         // dropped nowhere
@@ -74,7 +68,7 @@ const Board = ({
             return
         }
 
-        const newIssues = reorderQuoteMap({
+        const newIssues = reorderBoard({
             issues,
             source,
             destination,
@@ -89,7 +83,7 @@ const Board = ({
                 <BoardContainer>
                     <DragDropContext onDragEnd={onDragEnd}>
                         <Droppable
-                            droppableId={id}
+                            droppableId={`board-${id}`}
                             type="COLUMN"
                             direction="horizontal"
                         >
@@ -104,9 +98,11 @@ const Board = ({
                                             key={status.id}
                                             index={index}
                                             title={status.name}
-                                            issues={issues.filter(
+                                            issues={(issues as any).filter(
                                                 (data) =>
-                                                    data.status_id === status.id
+                                                    (data.status ||
+                                                        data.status_id) ===
+                                                    status.id
                                             )}
                                             isScrollable={withScrollableColumns}
                                         />

@@ -10,21 +10,15 @@ import {
 } from 'react-beautiful-dnd'
 import IssueItem from './IssueItem'
 import Title from '../Title'
-import { Issue } from '../../interfaces/Issue'
 import { Theme } from '../../pages/_app'
+import { IUserStory } from '../../interfaces/UserStory'
 
 export const getBackgroundColor = (
     isDraggingOver: boolean,
     isDraggingFrom: boolean,
     theme: Theme
 ): string => {
-    if (isDraggingOver) {
-        return theme.colors.darkgrey.normal
-    }
-    if (isDraggingFrom) {
-        return theme.colors.darkgrey.normal
-    }
-    return theme.colors.darkgrey.light
+    return 'white'
 }
 
 type WrapperProps = {
@@ -36,15 +30,21 @@ type WrapperProps = {
 }
 
 const Wrapper = styled.div<WrapperProps>`
+    background-color: ${(props) =>
+        getBackgroundColor(
+            props.isDraggingOver,
+            props.isDraggingFrom,
+            props.theme
+        )};
     display: flex;
     flex-direction: column;
     opacity: ${({ isDropDisabled }) => (isDropDisabled ? 0.5 : 'inherit')};
+    padding: ${({ theme }) => `${theme.spacing.mini}`};
     border: 4px;
     padding-bottom: 0;
     transition: background-color 0.2s ease, opacity 0.1s ease;
     user-select: none;
     height: 100%;
-    min-width: 300px;
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
 `
@@ -58,7 +58,7 @@ const DropZone = styled.div`
     not relying on the items for a margin-bottom
     as it will collapse when the list is empty
   */
-    padding-bottom: ${({ theme }) => theme.spacing.mini};
+    padding-bottom: ${({ theme }) => `${theme.spacing.mini}`};
 `
 
 /* stylelint-disable block-no-empty */
@@ -66,15 +66,23 @@ const Container = styled.div``
 /* stylelint-enable */
 
 type IssueListProps = {
-    issues: Issue[]
+    issues: IUserStory[]
 }
 
 // eslint-disable-next-line react/display-name
-const InnerQuoteList = React.memo(({ issues }: IssueListProps) => {
+const InnerIssueList = React.memo(({ issues }: IssueListProps) => {
     return (
         <>
-            {issues.map((issue: Issue, index: number) => (
-                <Draggable key={issue.id} draggableId={issue.id} index={index}>
+            {issues.map((issue: IUserStory, index: number) => (
+                <Draggable
+                    key={issue.id}
+                    draggableId={issue.id.toString()}
+                    index={
+                        issue.milestone === null
+                            ? issue.backlog_order
+                            : issue.sprint_order
+                    }
+                >
                     {(
                         dragProvided: DraggableProvided,
                         dragSnapshot: DraggableStateSnapshot
@@ -97,11 +105,11 @@ const InnerQuoteList = React.memo(({ issues }: IssueListProps) => {
 
 type InnerListProps = {
     dropProvided: DroppableProvided
-    issues: Issue[]
+    issues: IUserStory[]
     title?: string
 }
 
-function InnerList(props: InnerListProps) {
+function InnerListContainer(props: InnerListProps) {
     const { issues, dropProvided } = props
     const title = props.title ? <Title>{props.title}</Title> : null
 
@@ -109,7 +117,7 @@ function InnerList(props: InnerListProps) {
         <Container>
             {title}
             <DropZone ref={dropProvided.innerRef}>
-                <InnerQuoteList issues={issues} />
+                <InnerIssueList issues={issues} />
                 {dropProvided.placeholder}
             </DropZone>
         </Container>
@@ -119,10 +127,11 @@ function InnerList(props: InnerListProps) {
 type Props = {
     listId?: string
     listType?: string
-    issues: Issue[]
+    issues: IUserStory[]
     title?: string
     isDropDisabled?: boolean
     style?: Record<string, unknown>
+    // may not be provided - and might be null
     ignoreContainerClipping?: boolean
 }
 
@@ -135,6 +144,7 @@ export default function IssueList({
     issues,
     title,
 }: Props) {
+    console.log(issues)
     return (
         <Droppable
             droppableId={listId}
@@ -153,7 +163,7 @@ export default function IssueList({
                     isDraggingFrom={!!dropSnapshot.draggingFromThisWith}
                     {...dropProvided.droppableProps}
                 >
-                    <InnerList
+                    <InnerListContainer
                         issues={issues}
                         title={title}
                         dropProvided={dropProvided}

@@ -1,4 +1,5 @@
 import { IUser } from './User'
+import { IUserStory } from './UserStory'
 
 export interface IProject {
     anon_permissions: string[]
@@ -58,4 +59,28 @@ export interface IProject {
     totals_updated_datetime: string
     videoconferences: null | any
     videoconferences_extra_data: null | any
+}
+
+export interface IMilestone {
+    closed: boolean
+    closed_points: null | number
+    created_date: string
+    disponibility: number
+    estimated_finish: string
+    estimated_start: string
+    id: number
+    modified_date: string
+    name: string
+    order: number
+    owner: number
+    project: number
+    project_extra_info: {
+        name: string
+        slug: string
+        logo_small_url: null | string
+        id: number
+    }
+    slug: string
+    total_points: null | number
+    user_stories: IUserStory[]
 }

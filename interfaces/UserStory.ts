@@ -32,9 +32,9 @@ export interface IUserStory {
     is_voter: boolean
     is_watcher: boolean
     kanban_order: number
-    milestone: null
-    milestone_name: null
-    milestone_slug: null
+    milestone: null | number
+    milestone_name: null | string
+    milestone_slug: null | string
     modified_date: string
     origin_issue: null
     origin_task: null
