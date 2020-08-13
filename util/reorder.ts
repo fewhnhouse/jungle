@@ -24,7 +24,7 @@ export interface ReorderIssueMapResult {
 }
 
 export interface ReorderTaskMapArgs {
-    issues: Task[] | IUserStory[]
+    issues: Task[]
     source: DraggableLocation
     destination: DraggableLocation
 }
@@ -87,7 +87,7 @@ export const reorderBoard = ({
     issues,
     source,
     destination,
-}: ReorderTaskMapArgs): IUserStory[] | Task[] => {
+}: ReorderTaskMapArgs): Task[] => {
     console.log(issues, source, destination)
     const current = (issues as any[]).filter(
         (issue) =>
