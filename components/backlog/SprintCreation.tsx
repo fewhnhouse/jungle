@@ -13,6 +13,7 @@ import authInstance from '../../util/axiosInstance'
 import { useRouter } from 'next/router'
 import { queryCache } from 'react-query'
 import { IMilestone } from '../../interfaces/Project'
+import { createMilestone } from '../../api/milestones'
 
 const SprintCreation = () => {
     const [show, setShow] = useState(false)
@@ -34,19 +35,14 @@ const SprintCreation = () => {
         e: React.FormEvent<HTMLFormElement>
     ) => {
         e.preventDefault()
-        const { data: newMilestone } = await authInstance.post<IMilestone>(
-            '/milestones',
-            {
-                name: formState.name,
-                estimated_start: formState.dateRange[0]
-                    .toISOString()
-                    .split('T')[0],
-                estimated_finish: formState.dateRange[1]
-                    .toISOString()
-                    .split('T')[0],
-                project: id,
-            }
-        )
+        const { data: newMilestone } = await createMilestone({
+            name: formState.name,
+            estimated_start: formState.dateRange[0].toISOString().split('T')[0],
+            estimated_finish: formState.dateRange[1]
+                .toISOString()
+                .split('T')[0],
+            project: id,
+        })
         queryCache.setQueryData('milestones', (oldMilestones: IMilestone[]) => [
             ...oldMilestones,
             newMilestone,
