@@ -149,7 +149,7 @@ export default function Backlog({ data = [] }: { data: Issue[] }) {
                             <SprintCreation />
                         </TitleContainer>
                         <ListContainer>
-                            {sprintsData.map((sprint) => (
+                            {sprintsData?.map((sprint) => (
                                 <Sprint key={sprint.id} sprint={sprint} />
                             ))}
                         </ListContainer>
@@ -162,7 +162,10 @@ export default function Backlog({ data = [] }: { data: Issue[] }) {
                             </Button>
                         </TitleContainer>
                         <ListContainer>
-                            <IssueList listId="backlog" issues={backlogData} />
+                            <IssueList
+                                listId="backlog"
+                                issues={backlogData ?? []}
+                            />
                         </ListContainer>
                     </Container>
                 </DragDropContext>
