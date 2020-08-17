@@ -1,7 +1,23 @@
 import authInstance from '../util/axiosInstance'
 
-export const getEpics = () => {
-    return authInstance.get('/epics')
+export const getEpics = ({
+    projectId,
+    slug,
+    assignedTo,
+    isClosed,
+}: {
+    projectId?: string
+    slug?: string
+    assignedTo?: string
+    isClosed?: boolean
+}) => {
+    const params = new URLSearchParams()
+    projectId && params.append('project', projectId)
+    slug && params.append('project__slug', slug)
+    assignedTo && params.append('assigned_to', assignedTo)
+    isClosed && params.append('status__is_closed', isClosed.toString())
+
+    return authInstance.get('/epics', { params })
 }
 
 export const createEpic = (data: any) => {
@@ -92,8 +108,18 @@ export const getEpicWatchers = (id: string) => {
     return authInstance.get(`/epics/${id}/watchers`)
 }
 
-export const getAttachments = () => {
-    return authInstance.get(`/epics/attachments`)
+export const getAttachments = ({
+    projectId,
+    epicId,
+}: {
+    projectId?: string
+    epicId?: string
+}) => {
+    const params = new URLSearchParams()
+    projectId && params.append('project', projectId)
+    epicId && params.append('object_id', epicId)
+
+    return authInstance.get(`/epics/attachments`, { params })
 }
 
 export const createEpicAttachment = (data: any) => {

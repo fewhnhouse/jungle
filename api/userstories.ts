@@ -61,8 +61,63 @@ export interface UserStory {
     watchers: number[]
 }
 
-export const getUserstories = () => {
-    return authInstance.get('/userstories')
+export const getUserstories = ({
+    projectId,
+    milestone,
+    milestoneIsNull,
+    status,
+    statusIsArchived,
+    tags,
+    watchers,
+    assignedTo,
+    epic,
+    role,
+    statusIsClosed,
+    excludeStatus,
+    excludeTags,
+    excludeAssignedTo,
+    excludeRole,
+    excludeEpic,
+}: {
+    projectId?: string
+    milestone?: string
+    milestoneIsNull?: boolean
+    status?: string
+    statusIsArchived?: boolean
+    tags?: string[]
+    watchers?: string
+    assignedTo?: string
+    epic?: string
+    role?: string
+    statusIsClosed?: boolean
+    excludeStatus?: string
+    excludeTags?: string[]
+    excludeAssignedTo?: string
+    excludeRole?: string
+    excludeEpic?: string
+}) => {
+    const params = new URLSearchParams()
+    projectId && params.append('project', projectId)
+    milestone && params.append('milestone', milestone)
+    milestoneIsNull &&
+        params.append('milestone__isnull', milestoneIsNull.toString())
+    status && params.append('status', status)
+    statusIsArchived &&
+        params.append('status__is_archived', statusIsArchived.toString())
+    tags && params.append('tags', tags.toString())
+    watchers && params.append('watchers', watchers)
+    assignedTo && params.append('assigned_to', assignedTo)
+    epic && params.append('epic', epic)
+    role && params.append('role', role)
+    statusIsClosed &&
+        params.append('status__is_closed', statusIsClosed.toString())
+    excludeStatus && params.append('exclude_status', excludeStatus)
+    excludeTags && params.append('exclude_tags', excludeTags.toString())
+    excludeAssignedTo && params.append('exclude_assigned_to', excludeAssignedTo)
+    excludeRole && params.append('exclude_role', excludeRole)
+    excludeEpic && params.append('exclude_epic', excludeEpic)
+
+    return authInstance.get('/userstories', { params })
 }
 
 export const createUserstory = (data: any) => {
@@ -113,15 +168,25 @@ export const getUserstoryWatchers = (id: string) => {
     return authInstance.get(`/userstories/${id}/watchers`)
 }
 
-export const getAttachments = () => {
-    return authInstance.get(`/userstories/attachments`)
+export const getUserstoryAttachments = ({
+    projectId,
+    userstoryId,
+}: {
+    projectId?: string
+    userstoryId?: string
+}) => {
+    const params = new URLSearchParams()
+    projectId && params.append('project', projectId)
+    userstoryId && params.append('object_id', userstoryId)
+
+    return authInstance.get(`/userstories/attachments`, { params })
 }
 
 export const createUserstoryAttachment = (data: any) => {
     return authInstance.post(`/userstories/attachments`, data)
 }
 
-export const getUserstoryAttachments = (attachmentId: string) => {
+export const getUserstoryAttachment = (attachmentId: string) => {
     return authInstance.get(`/userstories/attachments/${attachmentId}`)
 }
 

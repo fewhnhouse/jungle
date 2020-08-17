@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Column from './Column'
 import reorder, { reorderBoard } from '../../util/reorder'
 import {
@@ -9,11 +9,9 @@ import {
     Droppable,
 } from 'react-beautiful-dnd'
 import styled from 'styled-components'
-import { Issue } from '../../interfaces/Issue'
 import CustomCollapse from '../Collapse'
-import { Status, Task, IUserStory } from '../../interfaces/UserStory'
+import { Status, Task } from '../../interfaces/UserStory'
 import { useQuery } from 'react-query'
-import Axios from 'axios'
 import authInstance from '../../util/axiosInstance'
 
 const Container = styled.div`

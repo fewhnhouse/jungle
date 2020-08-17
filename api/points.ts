@@ -1,7 +1,9 @@
 import authInstance from '../util/axiosInstance'
 
-export const getPoints = () => {
-    return authInstance.get(`/points`)
+export const getPoints = ({ projectId }: { projectId?: string }) => {
+    const params = new URLSearchParams()
+    projectId && params.append('project', projectId)
+    return authInstance.get(`/points`, { params })
 }
 
 export const createPoint = (data: any) => {

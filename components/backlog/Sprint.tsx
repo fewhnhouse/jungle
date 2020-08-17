@@ -1,15 +1,15 @@
 import CustomCollapse from '../Collapse'
 import IssueList from './IssueList'
 import { IMilestone } from '../../interfaces/Project'
-import authInstance from '../../util/axiosInstance'
 import { queryCache } from 'react-query'
+import { deleteMilestone } from '../../api/milestones'
 
 const Sprint = ({ sprint }: { sprint: IMilestone }) => {
     const handleRemove = async () => {
         queryCache.setQueryData('milestones', (oldMilestones: IMilestone[]) =>
             oldMilestones.filter((m) => m.id !== sprint.id)
         )
-        await authInstance.delete(`/milestones/${sprint.id}`)
+        await deleteMilestone(sprint.id)
     }
     return (
         <CustomCollapse

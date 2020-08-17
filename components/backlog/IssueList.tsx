@@ -73,7 +73,7 @@ type IssueListProps = {
 const InnerIssueList = React.memo(({ issues }: IssueListProps) => {
     return (
         <>
-            {issues.map((issue: IUserStory, index: number) => (
+            {issues.map((issue: IUserStory) => (
                 <Draggable
                     key={issue.id}
                     draggableId={issue.id.toString()}

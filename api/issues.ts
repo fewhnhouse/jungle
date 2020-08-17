@@ -1,7 +1,70 @@
-import authInstance from "../util/axiosInstance"
+import authInstance from '../util/axiosInstance'
 
-export const getIssues = () => {
-    return authInstance.get('/issues')
+export const getIssues = ({
+    projectId,
+    status,
+    severity,
+    priority,
+    owner,
+    assignedTo,
+    tags,
+    type,
+    role,
+    watchers,
+    statusIsClosed,
+    excludeStatus,
+    excludeSeverity,
+    excludePriority,
+    excludeOwner,
+    excludeAssignedTo,
+    excludeTags,
+    excludeType,
+    excludeRole,
+}: {
+    projectId?: string
+    severity?: string
+    priority?: string
+    status?: string
+    owner?: string
+    type?: string
+    tags?: string[]
+    watchers?: string
+    assignedTo?: string
+    role?: string
+    statusIsClosed?: boolean
+    excludeStatus?: string
+    excludeSeverity?: string
+    excludePriority?: string
+    excludeOwner?: string
+    excludeTags?: string[]
+    excludeAssignedTo?: string
+    excludeType?: string
+    excludeRole?: string
+}) => {
+    const params = new URLSearchParams()
+    projectId && params.append('project', projectId)
+    status && params.append('status', status)
+    severity && params.append('severity', severity)
+    priority && params.append('priority', priority)
+    owner && params.append('priority', owner)
+
+    tags && params.append('tags', tags.toString())
+    watchers && params.append('watchers', watchers)
+    assignedTo && params.append('assigned_to', assignedTo)
+    type && params.append('epic', type)
+    role && params.append('role', role)
+    statusIsClosed &&
+        params.append('status__is_closed', statusIsClosed.toString())
+    excludeStatus && params.append('exclude_status', excludeStatus)
+    excludeTags && params.append('exclude_tags', excludeTags.toString())
+    excludeAssignedTo && params.append('exclude_assigned_to', excludeAssignedTo)
+    excludeRole && params.append('exclude_role', excludeRole)
+    excludeSeverity && params.append('exclude_severity', excludeSeverity)
+    excludePriority && params.append('exclude_priority', excludePriority)
+    excludeType && params.append('exclude_type', excludeType)
+    excludeOwner && params.append('exclude_owner', excludeOwner)
+
+    return authInstance.get('/issues', { params })
 }
 
 export const createIssue = (data: any) => {

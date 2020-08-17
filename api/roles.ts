@@ -1,7 +1,9 @@
 import authInstance from '../util/axiosInstance'
 
-export const getRoles = () => {
-    return authInstance.get(`/roles`)
+export const getRoles = ({ projectId }: { projectId?: string }) => {
+    const params = new URLSearchParams()
+    projectId && params.append('project', projectId)
+    return authInstance.get(`/roles`, { params })
 }
 
 export const createRole = (data: any) => {
