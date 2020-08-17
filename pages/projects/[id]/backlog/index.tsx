@@ -12,6 +12,7 @@ import { useQuery, useMutation, queryCache } from 'react-query'
 import authInstance from '../../../../util/axiosInstance'
 import SprintCreation from '../../../../components/backlog/SprintCreation'
 import UserstoryCreation from '../../../../components/backlog/UserstoryCreation'
+import { UserStory } from '../../../../api/userstories'
 
 const IssueContainer = styled.div`
     flex: 2;
@@ -118,10 +119,96 @@ export default function Backlog({ data = [] }: { data: Issue[] }) {
         )
         const currentStory =
             source.droppableId === 'backlog'
-                ? backlogData[source.index]
+                ? backlogData.find((story) => story.backlog_order === source.index)
                 : currentSprint.user_stories.find(
                       (story) => story.sprint_order === source.index
                   )
+        queryCache.setQueryData('backlog', (prevData: UserStory[]) => {
+            if (source.droppableId === destination.droppableId) {
+                return prevData
+            }
+            if (source.droppableId === 'backlog') {
+                return prevData.filter((story) => story.id !== currentStory.id)
+            } else if (destination.droppableId === 'backlog') {
+                return [...prevData, currentStory]
+            }
+        })
+        queryCache.setQueryData('milestones', (prevData: IMilestone[]) => {
+            if (source.droppableId === destination.droppableId) {
+                return prevData
+            }
+            if (destination.droppableId === 'backlog') {
+                const sourceMilestone = prevData.find(
+                    (milestone) =>
+                        milestone.id.toString() === source.droppableId
+                )
+                const unaffectedMilestones = prevData.filter(
+                    (milestone) =>
+                        milestone.id.toString() !== destination.droppableId &&
+                        milestone.id.toString() !== source.droppableId
+                )
+                const updatedSource = {
+                    ...sourceMilestone,
+                    user_stories: sourceMilestone.user_stories.filter(
+                        (story) => story.id !== currentStory.id
+                    ),
+                }
+                return [updatedSource, ...unaffectedMilestones]
+            } else if (source.droppableId === 'backlog') {
+                const destinationMilestone = prevData.find(
+                    (milestone) =>
+                        milestone.id.toString() === destination.droppableId
+                )
+
+                const unaffectedMilestones = prevData.filter(
+                    (milestone) =>
+                        milestone.id.toString() !== destination.droppableId &&
+                        milestone.id.toString() !== source.droppableId
+                )
+                const updatedDestination = {
+                    ...destinationMilestone,
+                    user_stories: [
+                        ...destinationMilestone.user_stories,
+                        currentStory,
+                    ],
+                }
+                return [...unaffectedMilestones, updatedDestination]
+            } else {
+                const destinationMilestone = prevData.find(
+                    (milestone) =>
+                        milestone.id.toString() === destination.droppableId
+                )
+                const sourceMilestone = prevData.find(
+                    (milestone) =>
+                        milestone.id.toString() === source.droppableId
+                )
+                const unaffectedMilestones = prevData.filter(
+                    (milestone) =>
+                        milestone.id.toString() !== destination.droppableId &&
+                        milestone.id.toString() !== source.droppableId
+                )
+
+                const updatedSource = {
+                    ...sourceMilestone,
+                    user_stories: sourceMilestone.user_stories.filter(
+                        (story) => story.id !== currentStory.id
+                    ),
+                }
+
+                const updatedDestination = {
+                    ...destinationMilestone,
+                    user_stories: [
+                        ...destinationMilestone.user_stories,
+                        currentStory,
+                    ],
+                }
+                return [
+                    updatedSource,
+                    ...unaffectedMilestones,
+                    updatedDestination,
+                ]
+            }
+        })
         mutate({
             id: currentStory.id,
             milestoneId:

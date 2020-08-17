@@ -15,8 +15,6 @@ import {
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { queryCache } from 'react-query'
-import { IMilestone } from '../../interfaces/Project'
-import { createMilestone } from '../../api/milestones'
 import { createUserstory, UserStory } from '../../api/userstories'
 
 const UserstoryCreation = () => {
