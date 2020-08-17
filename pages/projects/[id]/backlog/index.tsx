@@ -10,6 +10,7 @@ import { IUserStory } from '../../../../interfaces/UserStory'
 import Sprint from '../../../../components/backlog/Sprint'
 import { useQuery, useMutation, queryCache } from 'react-query'
 import authInstance from '../../../../util/axiosInstance'
+import SprintCreation from '../../../../components/backlog/SprintCreation'
 
 const IssueContainer = styled.div`
     flex: 2;
@@ -84,7 +85,7 @@ export default function Backlog({ data = [] }: { data: Issue[] }) {
         return data
     })
     const { data: sprintsData = [], error: sprintError } = useQuery(
-        `sprints`,
+        'milestones',
         async () => {
             const { data } = await authInstance.get<IMilestone[]>(
                 `/milestones?closed=false&project=${id}`
@@ -130,7 +131,7 @@ export default function Backlog({ data = [] }: { data: Issue[] }) {
             version: currentStory.version,
         }).then((res) => {
             queryCache.invalidateQueries('backlog')
-            queryCache.invalidateQueries('sprints')
+            queryCache.invalidateQueries('milestones')
         })
     }
 
@@ -145,9 +146,7 @@ export default function Backlog({ data = [] }: { data: Issue[] }) {
                     <Container>
                         <TitleContainer>
                             <Title>Sprints</Title>
-                            <Button size="sm" appearance="ghost">
-                                Create Sprint
-                            </Button>
+                            <SprintCreation />
                         </TitleContainer>
                         <ListContainer>
                             {sprintsData.map((sprint) => (
