@@ -11,6 +11,7 @@ import Sprint from '../../../../components/backlog/Sprint'
 import { useQuery, useMutation, queryCache } from 'react-query'
 import authInstance from '../../../../util/axiosInstance'
 import SprintCreation from '../../../../components/backlog/SprintCreation'
+import UserstoryCreation from '../../../../components/backlog/UserstoryCreation'
 
 const IssueContainer = styled.div`
     flex: 2;
@@ -157,9 +158,7 @@ export default function Backlog({ data = [] }: { data: Issue[] }) {
                     <Container>
                         <TitleContainer>
                             <Title>Backlog</Title>
-                            <Button size="sm" appearance="ghost">
-                                Create Issue / Story
-                            </Button>
+                            <UserstoryCreation />
                         </TitleContainer>
                         <ListContainer>
                             <IssueList
