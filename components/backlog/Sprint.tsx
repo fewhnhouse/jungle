@@ -5,7 +5,7 @@ import { IMilestone } from '../../interfaces/Project'
 const Sprint = ({ sprint }: { sprint: IMilestone }) => {
     return (
         <CustomCollapse key={sprint.id} title="Current Sprint">
-            <IssueList listId="1" issues={sprint.user_stories} />
+            <IssueList listId={sprint.id.toString()} issues={sprint.user_stories} />
         </CustomCollapse>
     )
 }

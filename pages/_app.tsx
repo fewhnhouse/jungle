@@ -8,6 +8,7 @@ import Header from '../components/header/Header'
 import axios from 'axios'
 import { useEffect } from 'react'
 import 'rsuite/lib/styles/index.less'
+import { useRouter } from 'next/router'
 
 export interface Theme {
     colors: {
@@ -78,9 +79,12 @@ const graphqlFetcher = (query) =>
 */
 
 export default function App({ Component, pageProps }: AppProps) {
+    const { push } = useRouter()
     useEffect(() => {
         const token = localStorage.getItem('auth-token')
-        axios.defaults.headers.authorization = token && `Bearer ${token}`
+        if (!token) {
+            push('/login')
+        }
     }, [])
     return (
         <ThemeProvider theme={theme}>

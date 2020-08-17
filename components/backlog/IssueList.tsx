@@ -144,7 +144,6 @@ export default function IssueList({
     issues,
     title,
 }: Props) {
-    console.log(issues)
     return (
         <Droppable
             droppableId={listId}

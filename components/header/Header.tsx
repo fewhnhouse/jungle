@@ -14,6 +14,7 @@ import SyncIcon from '@material-ui/icons/Sync'
 import DashboardIcon from '@material-ui/icons/Dashboard'
 import HistoryIcon from '@material-ui/icons/History'
 import AssessmentIcon from '@material-ui/icons/Assessment'
+import Tab from './Tab'
 
 interface HeaderProps {
     landing: boolean
@@ -47,6 +48,11 @@ const HeaderContainer = styled.div`
 
 const Links = styled.div`
     display: flex;
+    flex-direction: row;
+    @media screen and (max-width: 700px) {
+        justify-content: space-between;
+        width: 100%;
+    }
 `
 
 const Options = styled.div`
@@ -78,13 +84,7 @@ const StyledLinkButton = styled(Button)`
         isCurrent ? '#2589f5' : ''};
 `
 
-const IconWrapper = styled.div`
-    margin: 0px 10px;
-    display: flex;
-    align-items: center;
-`
-
-const WrappedLink = ({
+export const WrappedLink = ({
     children,
     href,
     as,
@@ -102,9 +102,9 @@ const WrappedLink = ({
 
 const Header = () => {
     const ref = useRef()
-    console.log(ref.current)
     const router = useRouter()
-    const isMobile = useMedia('screen and (max-width: 400px)')
+    const isTablet = useMedia('screen and (max-width: 720px)')
+
     const { pathname, query } = router
     const { id } = query
 
@@ -116,81 +116,56 @@ const Header = () => {
     const { y } = useScrollPosition()
 
     return (
-        !isMobile && (
-            <HeaderContainer>
-                <StyledHeader
-                    ref={ref}
-                    landing={pathname === '/'}
-                    scrolled={y > 0}
-                >
-                    {pathname.includes('/projects/') ? (
-                        <Links>
-                            <WrappedLink href="/">
-                                <IconWrapper>
-                                    <HomeIcon />
-                                </IconWrapper>
-                                Home
-                            </WrappedLink>
-                            <WrappedLink
-                                href="/projects/[id]/board"
-                                as={`/projects/${id}/board`}
-                            >
-                                <IconWrapper>
-                                    <DashboardIcon />
-                                </IconWrapper>
-                                Board
-                            </WrappedLink>
-                            <WrappedLink
-                                href="/projects/[id]/backlog"
-                                as={`/projects/${id}/backlog`}
-                            >
-                                <IconWrapper>
-                                    <HistoryIcon />
-                                </IconWrapper>
-                                Backlog
-                            </WrappedLink>
-                            <WrappedLink
-                                href="/projects/[id]/reports"
-                                as={`/projects/${id}/reports`}
-                            >
-                                <IconWrapper>
-                                    <AssessmentIcon />
-                                </IconWrapper>
-                                Reports
-                            </WrappedLink>
-                        </Links>
-                    ) : pathname === '/login' ? (
-                        <h3></h3>
-                    ) : pathname.includes('/') ? (
-                        <Links>
-                            <WrappedLink href="/">
-                                <IconWrapper>
-                                    <HomeIcon />
-                                </IconWrapper>
-                                Home
-                            </WrappedLink>
-                            <WrappedLink href="/projects">
-                                <IconWrapper>
-                                    <AppsIcon />
-                                </IconWrapper>
-                                Projects
-                            </WrappedLink>
-                            <WrappedLink href="/activity">
-                                <IconWrapper>
-                                    <SyncIcon />
-                                </IconWrapper>
-                                Activity
-                            </WrappedLink>
-                            <WrappedLink href="/your-work">
-                                <IconWrapper>
-                                    <WorkOutlineIcon />
-                                </IconWrapper>
-                                Your Work
-                            </WrappedLink>
-                        </Links>
-                    ) : null}
+        <HeaderContainer>
+            <StyledHeader ref={ref} landing={pathname === '/'} scrolled={y > 0}>
+                {pathname.includes('/projects/') ? (
+                    <Links>
+                        <Tab href="/" icon={<HomeIcon />} label="Home" />
 
-                    <Options>
+                        <Tab
+                            href="/projects/[id]/board"
+                            as={`/projects/${id}/board`}
+                            icon={<DashboardIcon />}
+                            label="Board"
+                        />
+                        <Tab
+                            href="/projects/[id]/backlog"
+                            as={`/projects/${id}/backlog`}
+                            icon={<HistoryIcon />}
+                            label="Backlog"
+                        />
+
+                        <Tab
+                            href="/projects/[id]/reports"
+                            as={`/projects/${id}/reports`}
+                            icon={<AssessmentIcon />}
+                            label="Reports"
+                        />
+                    </Links>
+                ) : pathname === '/login' ? (
+                    <h3></h3>
+                ) : pathname.includes('/') ? (
+                    <Links>
+                        <Tab
+                            href="/projects"
+                            icon={<AppsIcon />}
+                            label="Projects"
+                        />
+                        <Tab
+                            href="/activity"
+                            icon={<SyncIcon />}
+                            label="Activity"
+                        />
+                        <Tab
+                            href="/your-work"
+                            icon={<WorkOutlineIcon />}
+                            label="Your Work"
+                        />
+                    </Links>
+                ) : null}
+
+                <Options>
+                    {!isTablet && (
                         <InputContainer
                             headerWidth={
                                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -205,12 +180,12 @@ const Header = () => {
                                 placeholder="Search..."
                             />
                         </InputContainer>
-                        <Notifications />
-                        <Profile />
-                    </Options>
-                </StyledHeader>
-            </HeaderContainer>
-        )
+                    )}
+                    <Notifications />
+                    <Profile />
+                </Options>
+            </StyledHeader>
+        </HeaderContainer>
     )
 }
 

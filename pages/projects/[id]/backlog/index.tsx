@@ -1,8 +1,6 @@
 import { DragDropContext, DropResult } from 'react-beautiful-dnd'
 import { Issue } from '../../../../interfaces/Issue'
-import { useState, useEffect } from 'react'
 import IssueList from '../../../../components/backlog/IssueList'
-import { reorderBacklog } from '../../../../util/reorder'
 import styled from 'styled-components'
 import useMedia from 'use-media'
 import { Button } from 'rsuite'
@@ -10,8 +8,8 @@ import { useRouter } from 'next/router'
 import { IMilestone } from '../../../../interfaces/Project'
 import { IUserStory } from '../../../../interfaces/UserStory'
 import Sprint from '../../../../components/backlog/Sprint'
-import { useQuery } from 'react-query'
-import Axios from 'axios'
+import { useQuery, useMutation, queryCache } from 'react-query'
+import authInstance from '../../../../util/axiosInstance'
 
 const IssueContainer = styled.div`
     flex: 2;
@@ -54,37 +52,47 @@ const Title = styled.h3`
     margin: 0;
 `
 
+interface UserstoryMutation {
+    id: number
+    milestoneId: number | null
+    order: number
+    version: number
+}
+
 export default function Backlog({ data = [] }: { data: Issue[] }) {
     const { id } = useRouter().query
-    const { data: backlogData = [], error } = useQuery(
-        'userstories',
-        async () => {
-            const { data } = await Axios.get<IUserStory[]>(
-                `/userstories?milestone=null&project=${id}`
-            )
-            return data
-        }
-    )
+    const updateUserstory = ({
+        id,
+        milestoneId,
+        order,
+        version,
+    }: UserstoryMutation) => {
+        return authInstance
+            .patch<IUserStory>(`/userstories/${id}`, {
+                milestone: milestoneId,
+                sprint_order: order,
+                version,
+            })
+            .then((res) => res.data)
+    }
+    const [mutate] = useMutation<IUserStory, UserstoryMutation>(updateUserstory)
+
+    const { data: backlogData = [], error } = useQuery('backlog', async () => {
+        const { data } = await authInstance.get<IUserStory[]>(
+            `/userstories?milestone=null&project=${id}`
+        )
+        return data
+    })
     const { data: sprintsData = [], error: sprintError } = useQuery(
-        `/milestones?closed=false&project=${id}`,
+        `sprints`,
         async () => {
-            const { data } = await Axios.get<IMilestone[]>(
+            const { data } = await authInstance.get<IMilestone[]>(
                 `/milestones?closed=false&project=${id}`
             )
             return data
         }
     )
 
-    useEffect(() => {
-        setBacklog(backlogData)
-    }, [backlogData])
-
-    useEffect(() => {
-        setSprints(sprintsData)
-    }, [sprintsData])
-
-    const [sprints, setSprints] = useState<IMilestone[]>(sprintsData)
-    const [backlog, setBacklog] = useState<IUserStory[]>(backlogData)
     function onDragStart() {
         // Add a little vibration if the browser supports it.
         // Add's a nice little physical feedback
@@ -103,20 +111,30 @@ export default function Backlog({ data = [] }: { data: Issue[] }) {
             return
         }
 
-        const reorderedIssues = reorderBacklog({
-            issues: [
-                ...backlog,
-                ...sprints.flatMap((sprint) => sprint.user_stories),
-            ],
-            source,
-            destination,
+        const currentSprint = sprintsData.find(
+            (sprint) => sprint.id.toString() === source.droppableId
+        )
+        const currentStory =
+            source.droppableId === 'backlog'
+                ? backlogData[source.index]
+                : currentSprint.user_stories.find(
+                      (story) => story.sprint_order === source.index
+                  )
+        mutate({
+            id: currentStory.id,
+            milestoneId:
+                destination.droppableId === 'backlog'
+                    ? null
+                    : parseInt(destination.droppableId, 10),
+            order: destination.index,
+            version: currentStory.version,
+        }).then((res) => {
+            queryCache.invalidateQueries('backlog')
+            queryCache.invalidateQueries('sprints')
         })
-        console.log(reorderedIssues)
-        setBacklog(reorderedIssues)
     }
 
     const isWideScreen = useMedia({ minWidth: '1000px' })
-    console.log(backlog)
     return (
         <ContentContainer>
             <IssueContainer>
@@ -127,7 +145,7 @@ export default function Backlog({ data = [] }: { data: Issue[] }) {
                     <Container>
                         <TitleContainer>
                             <Title>Sprints</Title>
-                            <Button size="sm" appearance="primary">
+                            <Button size="sm" appearance="ghost">
                                 Create Sprint
                             </Button>
                         </TitleContainer>
@@ -140,7 +158,7 @@ export default function Backlog({ data = [] }: { data: Issue[] }) {
                     <Container>
                         <TitleContainer>
                             <Title>Backlog</Title>
-                            <Button size="sm" appearance="primary">
+                            <Button size="sm" appearance="ghost">
                                 Create Issue / Story
                             </Button>
                         </TitleContainer>

@@ -14,6 +14,7 @@ import CustomCollapse from '../Collapse'
 import { Status, Task, IUserStory } from '../../interfaces/UserStory'
 import { useQuery } from 'react-query'
 import Axios from 'axios'
+import authInstance from '../../util/axiosInstance'
 
 const Container = styled.div`
     min-width: 100vw;
@@ -34,7 +35,7 @@ type Props = {
 
 const Board = ({ id, columns = [], withScrollableColumns, title }: Props) => {
     const { data: tasks = [] } = useQuery('tasks', async () => {
-        const { data } = await Axios.get<Task[]>(`/tasks/${id}`)
+        const { data } = await authInstance.get<Task[]>(`/tasks/${id}`)
         return data
     })
     /* eslint-disable react/sort-comp */
@@ -60,7 +61,6 @@ const Board = ({ id, columns = [], withScrollableColumns, title }: Props) => {
 
         // reordering column
         if (result.type === 'COLUMN') {
-            console.log(ordered, columns)
             const reordered = reorder(ordered, source.index, destination.index)
 
             setOrdered(reordered)
