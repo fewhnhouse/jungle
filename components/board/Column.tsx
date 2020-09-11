@@ -6,9 +6,8 @@ import {
 } from 'react-beautiful-dnd'
 import IssueList from './IssueList'
 import Title from '../Title'
-import { Issue } from '../../interfaces/Issue'
 import { Theme } from '../../pages/_app'
-import { Task } from '../../interfaces/UserStory'
+import { Task } from '../../api/tasks'
 
 const Container = styled.div`
     margin: ${({ theme }) => theme.spacing.small};

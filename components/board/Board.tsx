@@ -1,6 +1,4 @@
-import { useState } from 'react'
 import Column from './Column'
-import reorder, { reorderBoard } from '../../util/reorder'
 import {
     DragDropContext,
     DropResult,
@@ -10,9 +8,9 @@ import {
 } from 'react-beautiful-dnd'
 import styled from 'styled-components'
 import CustomCollapse from '../Collapse'
-import { Status, Task } from '../../interfaces/UserStory'
-import { useQuery } from 'react-query'
-import authInstance from '../../util/axiosInstance'
+import { useQuery, queryCache } from 'react-query'
+import { getTasks, TaskStatus, updateTask } from '../../api/tasks'
+import { useRouter } from 'next/router'
 
 const Container = styled.div`
     min-width: 100vw;
@@ -25,20 +23,44 @@ const BoardContainer = styled.div`
 `
 
 type Props = {
-    id: string
-    columns: Status[]
+    milestoneId: string
+    storyId: string
+    columns: TaskStatus[]
     withScrollableColumns?: boolean
     title: string
 }
 
-const Board = ({ id, columns = [], withScrollableColumns, title }: Props) => {
-    const { data: tasks = [] } = useQuery('tasks', async () => {
-        const { data } = await authInstance.get<Task[]>(`/tasks/${id}`)
-        return data
-    })
+const Board = ({
+    milestoneId,
+    storyId,
+    columns = [],
+    withScrollableColumns,
+    title,
+}: Props) => {
+    const router = useRouter()
+    const { id } = router.query
+    console.log(columns)
+
+    const { data: tasks = [] } = useQuery(
+        ['tasks', { milestoneId, storyId, id }],
+        async (key, { milestoneId, storyId, id }) => {
+            return getTasks({
+                milestone: milestoneId,
+                userStory: storyId,
+                projectId: id as string,
+            })
+        },
+        { enabled: id && milestoneId && storyId }
+    )
     /* eslint-disable react/sort-comp */
-    const [issues, setIssues] = useState(tasks)
-    const [ordered, setOrdered] = useState(columns)
+
+    function onDragStart() {
+        // Add a little vibration if the browser supports it.
+        // Add's a nice little physical feedback
+        if (window.navigator.vibrate) {
+            window.navigator.vibrate(100)
+        }
+    }
 
     const onDragEnd = (result: DropResult) => {
         // dropped nowhere
@@ -56,30 +78,25 @@ const Board = ({ id, columns = [], withScrollableColumns, title }: Props) => {
         ) {
             return
         }
-
-        // reordering column
-        if (result.type === 'COLUMN') {
-            const reordered = reorder(ordered, source.index, destination.index)
-
-            setOrdered(reordered)
-
-            return
-        }
-
-        const newIssues = reorderBoard({
-            issues,
-            source,
-            destination,
+        const task = tasks.find(
+            (task) => task.id.toString() === result.draggableId
+        )
+        updateTask(task.id.toString(), {
+            status: destination.droppableId,
+            version: task.version,
+        }).then((res) => {
+            queryCache.invalidateQueries('tasks')
         })
-
-        setIssues(newIssues)
     }
 
     return (
         <>
             <CustomCollapse title={title}>
                 <BoardContainer>
-                    <DragDropContext onDragEnd={onDragEnd}>
+                    <DragDropContext
+                        onDragStart={onDragStart}
+                        onDragEnd={onDragEnd}
+                    >
                         <Droppable
                             droppableId={`board-${id}`}
                             type="COLUMN"
@@ -90,17 +107,15 @@ const Board = ({ id, columns = [], withScrollableColumns, title }: Props) => {
                                     ref={provided.innerRef}
                                     {...provided.droppableProps}
                                 >
-                                    {ordered.map((status, index: number) => (
+                                    {columns.map((status, index: number) => (
                                         <Column
                                             id={status.id}
                                             key={status.id}
                                             index={index}
                                             title={status.name}
-                                            issues={(issues as any).filter(
+                                            issues={tasks.filter(
                                                 (data) =>
-                                                    (data.status ||
-                                                        data.status_id) ===
-                                                    status.id
+                                                    data.status === status.id
                                             )}
                                             isScrollable={withScrollableColumns}
                                         />

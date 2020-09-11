@@ -9,17 +9,19 @@ const ParentContainer = styled.div``
 
 export default function BoardContainer() {
     const router = useRouter()
-    console.log(router)
     const { id } = router.query
-    const { data: milestones } = useQuery('milestones', (key) =>
-        getMilestones()
+    const { data: milestones } = useQuery(
+        'milestones',
+        () => getMilestones({ projectId: id as string, closed: false }),
+        { enabled: id }
     )
     const milestone = milestones?.length ? milestones[0] : undefined
     const { data: sprint } = useQuery(
         ['milestone', { milestoneId: milestone?.id }],
         async (key, { milestoneId }) => {
             return getMilestone(milestoneId.toString())
-        }
+        },
+        { enabled: milestones }
     )
     /*const { data: storyFiltersData } = useQuery(
         'userstoryFilters',
@@ -33,12 +35,12 @@ export default function BoardContainer() {
     const { data: taskFiltersData } = useQuery(
         ['taskFilters', { id }],
         async (key, { id }) => {
-            const { data } = await getFiltersData(id)
-            return data
-        }
+            return getFiltersData(id as string)
+        },
+        { enabled: id }
     )
     // TODO: Figure out if we can use the active sprint to query data rather than userstories endpoint
-    if (!milestones || !milestones.length) {
+    if (milestones && !milestones.length) {
         return <div>No sprint active.</div>
     }
     /*
@@ -50,8 +52,7 @@ export default function BoardContainer() {
     })
     */
 
-    console.log(sprint, milestones, taskFiltersData)
-
+    console.log(taskFiltersData)
     return (
         <ParentContainer>
             {sprint?.user_stories.map((story) => {
@@ -59,7 +60,8 @@ export default function BoardContainer() {
                     <Board
                         title={story.subject}
                         key={story.id}
-                        id={story.id.toString()}
+                        storyId={story.id.toString()}
+                        milestoneId={sprint.id.toString()}
                         columns={taskFiltersData?.statuses}
                     />
                 )

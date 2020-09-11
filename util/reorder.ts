@@ -1,6 +1,7 @@
 import { DraggableLocation } from 'react-beautiful-dnd'
 import { Issue } from '../interfaces/Issue'
 import { Task, IUserStory } from '../interfaces/UserStory'
+import { updateTask } from '../api/tasks'
 
 // a little function to help us with reordering the result
 const reorder = (list: any[], startIndex: number, endIndex: number): any[] => {
@@ -13,18 +14,12 @@ const reorder = (list: any[], startIndex: number, endIndex: number): any[] => {
 
 export default reorder
 
-interface ReorderIssueMapArgs {
-    issueMap: Issue[]
-    source: DraggableLocation
-    destination: DraggableLocation
-}
-
 export interface ReorderIssueMapResult {
     issueMap: Issue[]
 }
 
 export interface ReorderTaskMapArgs {
-    issues: Task[]
+    tasks: Task[]
     source: DraggableLocation
     destination: DraggableLocation
 }
@@ -83,6 +78,17 @@ export const reorderBacklog = ({
     return [...unaffected, ...current, ...next]
 }
 
+export const reorderTasks = ({
+    tasks,
+    source,
+    destination
+}) => {
+    const task = tasks[source.index]
+    console.log(tasks, source, destination)
+    updateTask(task.id, { status: destination.droppableId })
+}
+
+/*
 export const reorderBoard = ({
     issues,
     source,
@@ -176,3 +182,4 @@ export function moveBetween<T>({
         },
     }
 }
+*/

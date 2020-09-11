@@ -4,14 +4,16 @@ import IssueList from '../../../../components/backlog/IssueList'
 import styled from 'styled-components'
 import useMedia from 'use-media'
 import { useRouter } from 'next/router'
-import { IMilestone } from '../../../../interfaces/Project'
-import { IUserStory } from '../../../../interfaces/UserStory'
 import Sprint from '../../../../components/backlog/Sprint'
-import { useQuery, useMutation, queryCache } from 'react-query'
-import authInstance from '../../../../util/axiosInstance'
+import { useQuery, queryCache } from 'react-query'
 import SprintCreation from '../../../../components/backlog/SprintCreation'
 import UserstoryCreation from '../../../../components/backlog/UserstoryCreation'
-import { UserStory } from '../../../../api/userstories'
+import {
+    UserStory,
+    getUserstories,
+    updateUserstory,
+} from '../../../../api/userstories'
+import { getMilestones, Milestone } from '../../../../api/milestones'
 
 const IssueContainer = styled.div`
     flex: 2;
@@ -63,36 +65,19 @@ interface UserstoryMutation {
 
 export default function Backlog({ data = [] }: { data: Issue[] }) {
     const { id } = useRouter().query
-    const updateUserstory = ({
-        id,
-        milestoneId,
-        order,
-        version,
-    }: UserstoryMutation) => {
-        return authInstance
-            .patch<IUserStory>(`/userstories/${id}`, {
-                milestone: milestoneId,
-                sprint_order: order,
-                version,
-            })
-            .then((res) => res.data)
-    }
-    const [mutate] = useMutation<IUserStory, UserstoryMutation>(updateUserstory)
 
-    const { data: backlogData = [], error } = useQuery('backlog', async () => {
-        const { data } = await authInstance.get<IUserStory[]>(
-            `/userstories?milestone=null&project=${id}`
-        )
-        return data
+    const { data: backlogData = [] } = useQuery('backlog', async () => {
+        return getUserstories({
+            projectId: id as string,
+            milestoneIsNull: true,
+        })
     })
-    const { data: sprintsData = [], error: sprintError } = useQuery(
+    const { data: sprintsData = [] } = useQuery(
         'milestones',
         async () => {
-            const { data } = await authInstance.get<IMilestone[]>(
-                `/milestones?closed=false&project=${id}`
-            )
-            return data
-        }
+            return getMilestones({ closed: false, projectId: id as string })
+        },
+        { enabled: id }
     )
 
     function onDragStart() {
@@ -103,8 +88,9 @@ export default function Backlog({ data = [] }: { data: Issue[] }) {
         }
     }
 
-    function onDragEnd({ source, destination }: DropResult) {
+    function onDragEnd({ source, destination, draggableId }: DropResult) {
         // dropped outside the list
+        console.log(draggableId)
         console.log(source, destination)
         if (!destination) {
             return
@@ -116,12 +102,12 @@ export default function Backlog({ data = [] }: { data: Issue[] }) {
         const currentSprint = sprintsData.find(
             (sprint) => sprint.id.toString() === source.droppableId
         )
-        const currentStory =
-            source.droppableId === 'backlog'
-                ? backlogData.find((story) => story.backlog_order === source.index)
-                : currentSprint.user_stories.find(
-                      (story) => story.sprint_order === source.index
-                  )
+
+        const currentStory = (source.droppableId === 'backlog'
+            ? backlogData
+            : currentSprint.user_stories
+        ).find((story) => story.id.toString() === draggableId)
+
         queryCache.setQueryData('backlog', (prevData: UserStory[]) => {
             if (source.droppableId === destination.droppableId) {
                 return prevData
@@ -132,7 +118,7 @@ export default function Backlog({ data = [] }: { data: Issue[] }) {
                 return [...prevData, currentStory]
             }
         })
-        queryCache.setQueryData('milestones', (prevData: IMilestone[]) => {
+        queryCache.setQueryData('milestones', (prevData: Milestone[]) => {
             if (source.droppableId === destination.droppableId) {
                 return prevData
             }
@@ -208,14 +194,16 @@ export default function Backlog({ data = [] }: { data: Issue[] }) {
                 ]
             }
         })
-        mutate({
-            id: currentStory.id,
-            milestoneId:
-                destination.droppableId === 'backlog'
-                    ? null
-                    : parseInt(destination.droppableId, 10),
-            order: destination.index,
-            version: currentStory.version,
+        const milestone =
+            destination.droppableId === 'backlog'
+                ? null
+                : parseInt(destination.droppableId, 10)
+        const { id, version } = currentStory
+        const order = destination.index
+        updateUserstory(id.toString(), {
+            milestone,
+            sprint_order: order,
+            version,
         }).then((res) => {
             queryCache.invalidateQueries('backlog')
             queryCache.invalidateQueries('milestones')
