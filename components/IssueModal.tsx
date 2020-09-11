@@ -8,6 +8,11 @@ import { useQuery } from 'react-query'
 import { getTask } from '../api/tasks'
 import AssigneeDropdown from './AssigneeDropdown'
 import StatusDropdown from './StatusDropdown'
+import { WrappedLink } from './header/Header'
+
+const Separator = styled.span`
+    font-size: 16px;
+`
 
 const Label = styled.span`
     margin-top: ${({ theme }) => theme.spacing.mini};
@@ -70,11 +75,31 @@ export default function IssueModal({ id, type, open, onClose }: Props) {
     return (
         <StyledModal show={open} onHide={onClose}>
             <Modal.Header>
-                <StyledBreadcrumb size="lg">
+                <StyledBreadcrumb separator={<Separator>/</Separator>}>
                     <Breadcrumb.Item>
-                        <a href="#">Home</a>
+                        <WrappedLink
+                            href="/projects/[projectId]"
+                            as={`/projects/${data.project}`}
+                        >
+                            {data.project_extra_info.name}
+                        </WrappedLink>
                     </Breadcrumb.Item>
-                    <Breadcrumb.Item active>Library</Breadcrumb.Item>
+                    <Breadcrumb.Item>
+                        <WrappedLink
+                            href="/projects/stories/[id]"
+                            as={`/projects/stories/${data.user_story}`}
+                        >
+                            {data.user_story_extra_info.subject}
+                        </WrappedLink>
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Item active>
+                        <WrappedLink
+                            href="/projects/tasks/[id]"
+                            as={`/projects/tasks/${data.id}`}
+                        >
+                            {data.subject}
+                        </WrappedLink>
+                    </Breadcrumb.Item>
                 </StyledBreadcrumb>
             </Modal.Header>
             <StyledModalBody>

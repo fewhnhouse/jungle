@@ -79,19 +79,21 @@ const StyledLinkButton = styled(Button)`
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0px 10px;
+    margin: 0px;
     color: ${({ isCurrent }: { isCurrent: boolean }) =>
         isCurrent ? '#2589f5' : ''};
 `
 
 export const WrappedLink = ({
     children,
+    className,
     href,
     as,
-}: LinkProps & { children: React.ReactNode }) => {
+}: LinkProps & { children: React.ReactNode; className?: string }) => {
     const { push, pathname } = useRouter()
     return (
         <StyledLinkButton
+            className={className}
             isCurrent={pathname === href}
             onClick={() => push(href, as)}
         >
