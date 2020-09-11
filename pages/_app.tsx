@@ -1,14 +1,13 @@
 import { AppProps } from 'next/app'
 import styled, { ThemeProvider } from 'styled-components'
 import './app.less'
-// import 'bootstrap/dist/css/bootstrap.min.css'
-// import 'shards-ui/dist/css/shards.min.css'
-// import 'react-markdown-editor-lite/lib/index.css'
 import Header from '../components/header/Header'
 import axios from 'axios'
 import { useEffect } from 'react'
 import 'rsuite/lib/styles/index.less'
 import { useRouter } from 'next/router'
+import 'draft-js/dist/Draft.css';
+import 'react-markdown-editor-lite/lib/index.css';
 
 export interface Theme {
     colors: {

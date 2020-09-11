@@ -11,6 +11,7 @@ import CustomCollapse from '../Collapse'
 import { useQuery, queryCache } from 'react-query'
 import { getTasks, TaskStatus, updateTask, Task } from '../../api/tasks'
 import { useRouter } from 'next/router'
+import { memo } from 'react'
 
 const Container = styled.div`
     min-width: 100vw;
@@ -96,7 +97,7 @@ const Board = ({
         updateTask(task.id.toString(), {
             status: destination.droppableId,
             version: task.version,
-        }).then((res) => {
+        }).then(() => {
             queryCache.invalidateQueries([
                 'tasks',
                 { milestoneId, storyId, projectId },
@@ -146,4 +147,4 @@ const Board = ({
     )
 }
 
-export default Board
+export default memo(Board)

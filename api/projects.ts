@@ -1,6 +1,18 @@
 import authInstance from '../util/axiosInstance'
 import { User } from './users'
 
+interface Member {
+    color: string
+    full_name: string
+    full_name_display: string
+    gravatar_id: string
+    id: number
+    is_active: boolean
+    photo: null | string
+    role: number
+    role_name: string
+    username: string
+}
 export interface Project {
     anon_permissions: string[]
     blocked_code: number | null
@@ -33,7 +45,7 @@ export interface Project {
     logo_big_url: string | null
     logo_small_url: string | null
     looking_for_people_note: ''
-    members: number[]
+    members: Member[]
     modified_date: string
     my_homepage: string
     my_permissions: string[]

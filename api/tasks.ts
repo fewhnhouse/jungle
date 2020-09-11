@@ -17,10 +17,10 @@ export interface TaskFiltersData {
     owners: TinyUser[]
     roles: TaskStatus[]
     statuses: TaskStatus[]
-    tags: []
+    tags: [string, string][]
 }
 export interface Task {
-    assigned_to: string | null
+    assigned_to: number | null
     assigned_to_extra_info: string | null
     attachments: any[]
     blocked_note: string
@@ -47,7 +47,8 @@ export interface Task {
     status: number
     status_extra_info: TaskStatus
     subject: string
-    tags: string[]
+    description?: string
+    tags: [string, string][]
     taskboard_order: number
     total_comments: number
     total_voters: number

@@ -2,8 +2,9 @@ import styled from 'styled-components'
 import React, { useState } from 'react'
 import type { DraggableProvided } from 'react-beautiful-dnd'
 import IssueModal from '../IssueModal'
-import { Task } from '../../interfaces/UserStory'
 import { Icon, Tag } from 'rsuite'
+import { Task } from '../../api/tasks'
+
 
 const getBackgroundColor = (isDragging: boolean, isGroupedOver: boolean) => {
     if (isDragging) {
@@ -151,7 +152,12 @@ function IssueItem({
                     </Footer>
                 </Content>
             </Container>
-            <IssueModal open={expanded} onClose={handleClose} />
+            <IssueModal
+                id={issue.id.toString()}
+                type="task"
+                open={expanded}
+                onClose={handleClose}
+            />
         </>
     )
 }

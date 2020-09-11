@@ -10,9 +10,8 @@ import {
 } from 'react-beautiful-dnd'
 import IssueItem from './IssueItem'
 import Title from '../Title'
-import { Issue } from '../../interfaces/Issue'
 import { Theme } from '../../pages/_app'
-import { Task } from '../../interfaces/UserStory'
+import { Task } from '../../api/tasks'
 
 export const getBackgroundColor = (
     isDraggingOver: boolean,

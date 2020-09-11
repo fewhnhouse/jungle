@@ -13,7 +13,7 @@ export interface Issue {
     id: string
     content: string
     status: string
-    tags: string[]
+    tags: [string, string][]
     priority: number
     type: string
     storyPoints: number

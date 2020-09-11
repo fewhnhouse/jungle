@@ -1,10 +1,13 @@
-import React from 'react'
-
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import EditableTitle from './EditableTitle'
 import EditableDescription from './EditableDescription'
 import EditableNumber from './EditableNumber'
-import { Modal, Breadcrumb, Button, Dropdown } from 'rsuite'
+import { Modal, Breadcrumb, Button, Dropdown, Loader } from 'rsuite'
+import { useQuery } from 'react-query'
+import { getTask } from '../api/tasks'
+import AssigneeDropdown from './AssigneeDropdown'
+import StatusDropdown from './StatusDropdown'
 
 const Label = styled.span`
     margin-top: ${({ theme }) => theme.spacing.mini};
@@ -50,13 +53,20 @@ const Sidebar = styled.aside`
     min-width: 180px;
 `
 
-export default function IssueModal({
-    open,
-    onClose,
-}: {
+interface Props {
     open: boolean
     onClose: () => void
-}) {
+    id: string
+    type: 'task' | 'story' | 'epic'
+}
+
+export default function IssueModal({ id, type, open, onClose }: Props) {
+    const { data } = useQuery(['task', { id }], (key, { id }) => getTask(id))
+
+    if (!data) {
+        return <Loader />
+    }
+
     return (
         <StyledModal show={open} onHide={onClose}>
             <Modal.Header>
@@ -70,16 +80,30 @@ export default function IssueModal({
             <StyledModalBody>
                 <Main>
                     <Content>
-                        <EditableTitle initialValue="Test Title" />
-                        <EditableDescription initialValue="Test Description" />
+                        <EditableTitle initialValue={data?.subject} />
+                        <EditableDescription initialValue={data?.description} />
                     </Content>
                     <Sidebar>
                         <Label>Status</Label>
-                        <Dropdown toggleComponentClass={Button} appearance="default" title="Select..." />
+                        <StatusDropdown
+                            value={data?.status}
+                            onSelect={(value) => {
+                                console.log(value)
+                            }}
+                        />
                         <Label>Assignee</Label>
-                        <Dropdown toggleComponentClass={Button} appearance="default" title="Select..."/>
+                        <AssigneeDropdown
+                            value={data?.assigned_to}
+                            onSelect={(value) => {
+                                console.log(value)
+                            }}
+                        />
                         <Label>Priority</Label>
-                        <Dropdown toggleComponentClass={Button} appearance="default" title="Select..."/>
+                        <Dropdown
+                            toggleComponentClass={Button}
+                            appearance="default"
+                            title="Select..."
+                        />
                         <Label>Story Points</Label>
                         <EditableNumber initialValue={1} />
                     </Sidebar>

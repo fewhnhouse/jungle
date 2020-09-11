@@ -1,5 +1,4 @@
 import { DragDropContext, DropResult } from 'react-beautiful-dnd'
-import { Issue } from '../../../../interfaces/Issue'
 import IssueList from '../../../../components/backlog/IssueList'
 import styled from 'styled-components'
 import useMedia from 'use-media'
@@ -56,14 +55,9 @@ const Title = styled.h3`
     margin: 0;
 `
 
-interface UserstoryMutation {
-    id: number
-    milestoneId: number | null
-    order: number
-    version: number
-}
 
-export default function Backlog({ data = [] }: { data: Issue[] }) {
+
+export default function Backlog() {
     const { projectId } = useRouter().query
 
     const { data: backlogData = [] } = useQuery(
