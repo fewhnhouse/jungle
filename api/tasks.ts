@@ -137,7 +137,7 @@ export const deleteTask = (id: string) => {
 }
 
 export const getFiltersData = (projectId: string) => {
-    return authInstance.get<TaskStatus[]>(`/tasks/filters_data?project=${projectId}`).then(res => res.data)
+    return authInstance.get<TaskFiltersData>(`/tasks/filters_data?project=${projectId}`).then(res => res.data)
 }
 
 export const upvoteTask = (id: string) => {

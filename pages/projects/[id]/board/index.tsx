@@ -52,7 +52,6 @@ export default function BoardContainer() {
     })
     */
 
-    console.log(taskFiltersData)
     return (
         <ParentContainer>
             {sprint?.user_stories.map((story) => {
