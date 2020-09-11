@@ -1,9 +1,7 @@
 import { useState } from 'react'
-import authInstance from '../../util/axiosInstance'
 import { useRouter } from 'next/router'
 import { Modal, Button, Input } from 'rsuite'
-import Axios from 'axios'
-import { Project, addProject } from '../../api/projects'
+import { addProject } from '../../api/projects'
 
 interface Props {
     open: boolean

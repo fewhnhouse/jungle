@@ -4,7 +4,7 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 import styled from 'styled-components'
 import { useState } from 'react'
 import { Collapse } from 'react-collapse'
-import { Dropdown, IconButton } from 'rsuite'
+import { Dropdown } from 'rsuite'
 
 const StoryHeader = styled.div`
     height: 30px;

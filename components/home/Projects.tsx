@@ -1,8 +1,8 @@
 import ProjectListItem from './ProjectListItem'
 import styled from 'styled-components'
-import { IProject } from '../../interfaces/Project'
 import { useQuery } from 'react-query'
 import authInstance from '../../util/axiosInstance'
+import { Project } from '../../api/projects'
 
 const Container = styled.div`
     display: flex;
@@ -19,7 +19,7 @@ const Container = styled.div`
 
 export default function Projects() {
     const { data, error } = useQuery('projects', async () => {
-        const { data } = await authInstance.get<IProject[]>('/projects')
+        const { data } = await authInstance.get<Project[]>('/projects')
         return data
     })
     if (error) {

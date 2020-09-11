@@ -2,8 +2,9 @@ import styled from 'styled-components'
 import React, { useState } from 'react'
 import type { DraggableProvided } from 'react-beautiful-dnd'
 import IssueModal from '../IssueModal'
-import { Task, IUserStory } from '../../interfaces/UserStory'
 import { Icon, Tag } from 'rsuite'
+import { UserStory } from '../../api/userstories'
+import { Task } from '../../api/tasks'
 
 const getBackgroundColor = (isDragging: boolean, isGroupedOver: boolean) => {
     if (isDragging) {
@@ -100,7 +101,7 @@ function getStyle(
 }
 
 interface IssueItemProps {
-    issue: IUserStory | Task
+    issue: UserStory | Task
     isDragging: boolean
     provided: DraggableProvided
     isGroupedOver?: boolean

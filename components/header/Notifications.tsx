@@ -1,5 +1,5 @@
 import NotificationsIcon from '@material-ui/icons/Notifications'
-import { Dropdown, Badge, IconButton, Button } from 'rsuite'
+import { Dropdown, Badge, Button } from 'rsuite'
 import styled from 'styled-components'
 
 const Container = styled.div`
