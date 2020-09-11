@@ -9,7 +9,7 @@ import {
 import styled from 'styled-components'
 import CustomCollapse from '../Collapse'
 import { useQuery, queryCache } from 'react-query'
-import { getTasks, TaskStatus, updateTask } from '../../api/tasks'
+import { getTasks, TaskStatus, updateTask, Task } from '../../api/tasks'
 import { useRouter } from 'next/router'
 
 const Container = styled.div`
@@ -81,11 +81,26 @@ const Board = ({
         const task = tasks.find(
             (task) => task.id.toString() === result.draggableId
         )
+        queryCache.setQueryData(
+            ['tasks', { milestoneId, storyId, id }],
+            (prevData: Task[]) =>
+                prevData.map((t) =>
+                    t.id === task.id
+                        ? {
+                              ...task,
+                              status: parseInt(destination.droppableId, 10),
+                          }
+                        : t
+                )
+        )
         updateTask(task.id.toString(), {
             status: destination.droppableId,
             version: task.version,
         }).then((res) => {
-            queryCache.invalidateQueries('tasks')
+            queryCache.invalidateQueries([
+                'tasks',
+                { milestoneId, storyId, id },
+            ])
         })
     }
 

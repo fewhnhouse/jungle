@@ -66,15 +66,18 @@ interface UserstoryMutation {
 export default function Backlog({ data = [] }: { data: Issue[] }) {
     const { id } = useRouter().query
 
-    const { data: backlogData = [] } = useQuery('backlog', async () => {
-        return getUserstories({
-            projectId: id as string,
-            milestoneIsNull: true,
-        })
-    })
+    const { data: backlogData = [] } = useQuery(
+        ['backlog', { id }],
+        async (key, { id }) => {
+            return getUserstories({
+                projectId: id as string,
+                milestoneIsNull: true,
+            })
+        }
+    )
     const { data: sprintsData = [] } = useQuery(
-        'milestones',
-        async () => {
+        ['milestones', { id }],
+        async (key, { id }) => {
             return getMilestones({ closed: false, projectId: id as string })
         },
         { enabled: id }
@@ -90,8 +93,6 @@ export default function Backlog({ data = [] }: { data: Issue[] }) {
 
     function onDragEnd({ source, destination, draggableId }: DropResult) {
         // dropped outside the list
-        console.log(draggableId)
-        console.log(source, destination)
         if (!destination) {
             return
         }
@@ -108,105 +109,116 @@ export default function Backlog({ data = [] }: { data: Issue[] }) {
             : currentSprint.user_stories
         ).find((story) => story.id.toString() === draggableId)
 
-        queryCache.setQueryData('backlog', (prevData: UserStory[]) => {
-            if (source.droppableId === destination.droppableId) {
-                return prevData
-            }
-            if (source.droppableId === 'backlog') {
-                return prevData.filter((story) => story.id !== currentStory.id)
-            } else if (destination.droppableId === 'backlog') {
-                return [...prevData, currentStory]
-            }
-        })
-        queryCache.setQueryData('milestones', (prevData: Milestone[]) => {
-            if (source.droppableId === destination.droppableId) {
-                return prevData
-            }
-            if (destination.droppableId === 'backlog') {
-                const sourceMilestone = prevData.find(
-                    (milestone) =>
-                        milestone.id.toString() === source.droppableId
-                )
-                const unaffectedMilestones = prevData.filter(
-                    (milestone) =>
-                        milestone.id.toString() !== destination.droppableId &&
-                        milestone.id.toString() !== source.droppableId
-                )
-                const updatedSource = {
-                    ...sourceMilestone,
-                    user_stories: sourceMilestone.user_stories.filter(
+        queryCache.setQueryData(
+            ['backlog', { id }],
+            (prevData: UserStory[]) => {
+                if (source.droppableId === destination.droppableId) {
+                    return prevData
+                }
+                if (source.droppableId === 'backlog') {
+                    return prevData.filter(
                         (story) => story.id !== currentStory.id
-                    ),
+                    )
+                } else if (destination.droppableId === 'backlog') {
+                    return [...prevData, currentStory]
                 }
-                return [updatedSource, ...unaffectedMilestones]
-            } else if (source.droppableId === 'backlog') {
-                const destinationMilestone = prevData.find(
-                    (milestone) =>
-                        milestone.id.toString() === destination.droppableId
-                )
-
-                const unaffectedMilestones = prevData.filter(
-                    (milestone) =>
-                        milestone.id.toString() !== destination.droppableId &&
-                        milestone.id.toString() !== source.droppableId
-                )
-                const updatedDestination = {
-                    ...destinationMilestone,
-                    user_stories: [
-                        ...destinationMilestone.user_stories,
-                        currentStory,
-                    ],
-                }
-                return [...unaffectedMilestones, updatedDestination]
-            } else {
-                const destinationMilestone = prevData.find(
-                    (milestone) =>
-                        milestone.id.toString() === destination.droppableId
-                )
-                const sourceMilestone = prevData.find(
-                    (milestone) =>
-                        milestone.id.toString() === source.droppableId
-                )
-                const unaffectedMilestones = prevData.filter(
-                    (milestone) =>
-                        milestone.id.toString() !== destination.droppableId &&
-                        milestone.id.toString() !== source.droppableId
-                )
-
-                const updatedSource = {
-                    ...sourceMilestone,
-                    user_stories: sourceMilestone.user_stories.filter(
-                        (story) => story.id !== currentStory.id
-                    ),
-                }
-
-                const updatedDestination = {
-                    ...destinationMilestone,
-                    user_stories: [
-                        ...destinationMilestone.user_stories,
-                        currentStory,
-                    ],
-                }
-                return [
-                    updatedSource,
-                    ...unaffectedMilestones,
-                    updatedDestination,
-                ]
             }
-        })
+        )
+        queryCache.setQueryData(
+            ['milestones', { id }],
+            (prevData: Milestone[]) => {
+                if (source.droppableId === destination.droppableId) {
+                    return prevData
+                }
+                if (destination.droppableId === 'backlog') {
+                    const sourceMilestone = prevData.find(
+                        (milestone) =>
+                            milestone.id.toString() === source.droppableId
+                    )
+                    const unaffectedMilestones = prevData.filter(
+                        (milestone) =>
+                            milestone.id.toString() !==
+                                destination.droppableId &&
+                            milestone.id.toString() !== source.droppableId
+                    )
+                    const updatedSource = {
+                        ...sourceMilestone,
+                        user_stories: sourceMilestone.user_stories.filter(
+                            (story) => story.id !== currentStory.id
+                        ),
+                    }
+                    return [updatedSource, ...unaffectedMilestones]
+                } else if (source.droppableId === 'backlog') {
+                    const destinationMilestone = prevData.find(
+                        (milestone) =>
+                            milestone.id.toString() === destination.droppableId
+                    )
+
+                    const unaffectedMilestones = prevData.filter(
+                        (milestone) =>
+                            milestone.id.toString() !==
+                                destination.droppableId &&
+                            milestone.id.toString() !== source.droppableId
+                    )
+                    const updatedDestination = {
+                        ...destinationMilestone,
+                        user_stories: [
+                            ...destinationMilestone.user_stories,
+                            currentStory,
+                        ],
+                    }
+                    return [...unaffectedMilestones, updatedDestination]
+                } else {
+                    const destinationMilestone = prevData.find(
+                        (milestone) =>
+                            milestone.id.toString() === destination.droppableId
+                    )
+                    const sourceMilestone = prevData.find(
+                        (milestone) =>
+                            milestone.id.toString() === source.droppableId
+                    )
+                    const unaffectedMilestones = prevData.filter(
+                        (milestone) =>
+                            milestone.id.toString() !==
+                                destination.droppableId &&
+                            milestone.id.toString() !== source.droppableId
+                    )
+
+                    const updatedSource = {
+                        ...sourceMilestone,
+                        user_stories: sourceMilestone.user_stories.filter(
+                            (story) => story.id !== currentStory.id
+                        ),
+                    }
+
+                    const updatedDestination = {
+                        ...destinationMilestone,
+                        user_stories: [
+                            ...destinationMilestone.user_stories,
+                            currentStory,
+                        ],
+                    }
+                    return [
+                        updatedSource,
+                        ...unaffectedMilestones,
+                        updatedDestination,
+                    ]
+                }
+            }
+        )
         const milestone =
             destination.droppableId === 'backlog'
                 ? null
                 : parseInt(destination.droppableId, 10)
-        const { id, version } = currentStory
+        const { id: storyId, version } = currentStory
         const order = destination.index
-        updateUserstory(id.toString(), {
+        updateUserstory(storyId.toString(), {
             milestone,
             sprint_order: order,
             version,
-        }).then((res) => {
-            queryCache.invalidateQueries('backlog')
-            queryCache.invalidateQueries('milestones')
+        }).then(() => {
+            queryCache.invalidateQueries(['backlog', { id }])
+            queryCache.invalidateQueries(['milestones', { id }])
         })
     }
 
