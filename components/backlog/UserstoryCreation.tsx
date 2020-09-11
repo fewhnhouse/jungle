@@ -19,7 +19,7 @@ import { createUserstory, UserStory } from '../../api/userstories'
 
 const UserstoryCreation = () => {
     const [show, setShow] = useState(false)
-    const { id } = useRouter().query
+    const { projectId } = useRouter().query
     const [formState, setFormState] = useState({
         name: '',
         dateRange: [new Date(), new Date()],
@@ -37,13 +37,13 @@ const UserstoryCreation = () => {
         e: React.FormEvent<HTMLFormElement>
     ) => {
         e.preventDefault()
-        const { data: newUserstory } = await createUserstory({
+        const newUserstory = await createUserstory({
             name: formState.name,
             estimated_start: formState.dateRange[0].toISOString().split('T')[0],
             estimated_finish: formState.dateRange[1]
                 .toISOString()
                 .split('T')[0],
-            project: id,
+            project: projectId,
         })
         queryCache.setQueryData('userstories', (oldStories: UserStory[]) => [
             ...oldStories,

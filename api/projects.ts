@@ -62,93 +62,93 @@ export interface Project {
 }
 
 export const getProjects = () => {
-    return authInstance.get(`/projects`)
+    return authInstance.get<Project[]>(`/projects`).then(res => res.data)
 }
 
 export const getProject = (id: string) => {
-    return authInstance.get(`/projects/${id}`)
+    return authInstance.get<Project>(`/projects/${id}`).then(res => res.data)
 }
 
-export const addProject = () => {
-    return authInstance.post(`/projects/`)
+export const addProject = (data: any) => {
+    return authInstance.post<Project>(`/projects/`, data).then(res => res.data)
 }
 
 export const replaceProject = (id: string, data: any) => {
-    return authInstance.put(`/projects/${id}`, data)
+    return authInstance.put<Project>(`/projects/${id}`, data).then(res => res.data)
 }
 
 export const updateProject = (id: string, data: any) => {
-    return authInstance.patch(`/projects/${id}`, data)
+    return authInstance.patch<Project>(`/projects/${id}`, data).then(res => res.data)
 }
 
 export const deleteProject = (id: string) => {
-    return authInstance.delete(`/projects/${id}`)
+    return authInstance.delete<Project>(`/projects/${id}`).then(res => res.data)
 }
 
 export const getProjectStats = (id: string) => {
-    return authInstance.get(`/projects/${id}/stats`)
+    return authInstance.get(`/projects/${id}/stats`).then(res => res.data)
 }
 
 export const getIssuesStats = (id: string) => {
-    return authInstance.get(`/projects/${id}/issues_stats`)
+    return authInstance.get(`/projects/${id}/issues_stats`).then(res => res.data)
 }
 
 export const getTagColors = (id: string) => {
-    return authInstance.get(`/projects/${id}/tags_colors`)
+    return authInstance.get(`/projects/${id}/tags_colors`).then(res => res.data)
 }
 
 export const createTag = (id: string, data: any) => {
-    return authInstance.get(`/projects/${id}/create_tag`, data)
+    return authInstance.get(`/projects/${id}/create_tag`, data).then(res => res.data)
 }
 
 export const editTag = (id: string, data: any) => {
-    return authInstance.post(`/projects/${id}/edit_tag`, data)
+    return authInstance.post(`/projects/${id}/edit_tag`, data).then(res => res.data)
 }
 
 export const deleteTag = (id: string, data) => {
-    return authInstance.post(`/projects/${id}/delete_tag`, data)
+    return authInstance.post(`/projects/${id}/delete_tag`, data).then(res => res.data)
 }
 
 export const mixTags = (id: string, data) => {
-    return authInstance.post(`/projects/${id}/mix_tags`, data)
+    return authInstance.post(`/projects/${id}/mix_tags`, data).then(res => res.data)
 }
 
 export const like = (id: string) => {
-    return authInstance.post(`/projects/${id}/like`)
+    return authInstance.post(`/projects/${id}/like`).then(res => res.data)
 }
 
 export const unlike = (id: string) => {
-    return authInstance.post(`/projects/${id}/unlike`)
+    return authInstance.post(`/projects/${id}/unlike`).then(res => res.data)
 }
 
 export const fans = (id: string) => {
-    return authInstance.get(`/projects/${id}/fans`)
+    return authInstance.get(`/projects/${id}/fans`).then(res => res.data)
 }
 
 export const watchers = (id: string) => {
-    return authInstance.get(`/projects/${id}/watchers`)
+    return authInstance.get(`/projects/${id}/watchers`).then(res => res.data)
 }
 
 export const watch = (id: string) => {
-    return authInstance.post(`/projects/${id}/watch`)
+    return authInstance.post(`/projects/${id}/watch`).then(res => res.data)
 }
 
 export const unwatch = (id: string) => {
-    return authInstance.post(`/projects/${id}/undwatch`)
+    return authInstance.post(`/projects/${id}/undwatch`).then(res => res.data)
 }
 
 export const createTemplate = (id: string) => {
-    return authInstance.post(`/projects/${id}/create_template`)
+    return authInstance.post(`/projects/${id}/create_template`).then(res => res.data)
 }
 
 export const leaveProject = (id: string) => {
-    return authInstance.post(`/projects/${id}/leave`)
+    return authInstance.post(`/projects/${id}/leave`).then(res => res.data)
 }
 
 export const changeLogo = (id: string, data: any) => {
-    return authInstance.post(`/projects/${id}/change_logo`, data)
+    return authInstance.post(`/projects/${id}/change_logo`, data).then(res => res.data)
 }
 
 export const removeLogo = (id: string) => {
-    return authInstance.post(`/projects/${id}/remove_logo`)
+    return authInstance.post(`/projects/${id}/remove_logo`).then(res => res.data)
 }

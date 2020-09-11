@@ -64,23 +64,26 @@ interface UserstoryMutation {
 }
 
 export default function Backlog({ data = [] }: { data: Issue[] }) {
-    const { id } = useRouter().query
+    const { projectId } = useRouter().query
 
     const { data: backlogData = [] } = useQuery(
-        ['backlog', { id }],
-        async (key, { id }) => {
+        ['backlog', { projectId }],
+        async (key, { projectId }) => {
             return getUserstories({
-                projectId: id as string,
+                projectId: projectId as string,
                 milestoneIsNull: true,
             })
         }
     )
     const { data: sprintsData = [] } = useQuery(
-        ['milestones', { id }],
-        async (key, { id }) => {
-            return getMilestones({ closed: false, projectId: id as string })
+        ['milestones', { projectId }],
+        async (key, { projectId }) => {
+            return getMilestones({
+                closed: false,
+                projectId: projectId as string,
+            })
         },
-        { enabled: id }
+        { enabled: projectId }
     )
 
     function onDragStart() {
@@ -110,7 +113,7 @@ export default function Backlog({ data = [] }: { data: Issue[] }) {
         ).find((story) => story.id.toString() === draggableId)
 
         queryCache.setQueryData(
-            ['backlog', { id }],
+            ['backlog', { projectId }],
             (prevData: UserStory[]) => {
                 if (source.droppableId === destination.droppableId) {
                     return prevData
@@ -125,7 +128,7 @@ export default function Backlog({ data = [] }: { data: Issue[] }) {
             }
         )
         queryCache.setQueryData(
-            ['milestones', { id }],
+            ['milestones', { projectId }],
             (prevData: Milestone[]) => {
                 if (source.droppableId === destination.droppableId) {
                     return prevData
@@ -217,8 +220,8 @@ export default function Backlog({ data = [] }: { data: Issue[] }) {
             sprint_order: order,
             version,
         }).then(() => {
-            queryCache.invalidateQueries(['backlog', { id }])
-            queryCache.invalidateQueries(['milestones', { id }])
+            queryCache.invalidateQueries(['backlog', { projectId }])
+            queryCache.invalidateQueries(['milestones', { projectId }])
         })
     }
 

@@ -9,15 +9,13 @@ import {
     ButtonToolbar,
 } from 'rsuite'
 import { useState } from 'react'
-import authInstance from '../../util/axiosInstance'
 import { useRouter } from 'next/router'
 import { queryCache } from 'react-query'
-import { IMilestone } from '../../interfaces/Project'
-import { createMilestone } from '../../api/milestones'
+import { createMilestone, Milestone } from '../../api/milestones'
 
 const SprintCreation = () => {
     const [show, setShow] = useState(false)
-    const { id } = useRouter().query
+    const { projectId } = useRouter().query
     const [formState, setFormState] = useState({
         name: '',
         dateRange: [new Date(), new Date()],
@@ -35,15 +33,15 @@ const SprintCreation = () => {
         e: React.FormEvent<HTMLFormElement>
     ) => {
         e.preventDefault()
-        const { data: newMilestone } = await createMilestone({
+        const newMilestone = await createMilestone({
             name: formState.name,
             estimated_start: formState.dateRange[0].toISOString().split('T')[0],
             estimated_finish: formState.dateRange[1]
                 .toISOString()
                 .split('T')[0],
-            project: id,
+            project: projectId,
         })
-        queryCache.setQueryData('milestones', (oldMilestones: IMilestone[]) => [
+        queryCache.setQueryData('milestones', (oldMilestones: Milestone[]) => [
             ...oldMilestones,
             newMilestone,
         ])

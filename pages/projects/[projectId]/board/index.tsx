@@ -9,11 +9,11 @@ const ParentContainer = styled.div``
 
 export default function BoardContainer() {
     const router = useRouter()
-    const { id } = router.query
+    const { projectId } = router.query
     const { data: milestones } = useQuery(
         'milestones',
-        () => getMilestones({ projectId: id as string, closed: false }),
-        { enabled: id }
+        () => getMilestones({ projectId: projectId as string, closed: false }),
+        { enabled: projectId }
     )
     const milestone = milestones?.length ? milestones[0] : undefined
     const { data: sprint } = useQuery(
@@ -33,11 +33,11 @@ export default function BoardContainer() {
         }
     )*/
     const { data: taskFiltersData } = useQuery(
-        ['taskFilters', { id }],
-        async (key, { id }) => {
-            return getFiltersData(id as string)
+        ['taskFilters', { projectId }],
+        async (key, { projectId }) => {
+            return getFiltersData(projectId as string)
         },
-        { enabled: id }
+        { enabled: projectId }
     )
     // TODO: Figure out if we can use the active sprint to query data rather than userstories endpoint
     if (milestones && !milestones.length) {

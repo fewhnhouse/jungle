@@ -106,7 +106,7 @@ const Header = () => {
     const isTablet = useMedia('screen and (max-width: 720px)')
 
     const { pathname, query } = router
-    const { id } = query
+    const { projectId } = query
 
     const [open, setOpen] = useState(false)
 
@@ -124,20 +124,20 @@ const Header = () => {
 
                         <Tab
                             href="/projects/[id]/board"
-                            as={`/projects/${id}/board`}
+                            as={`/projects/${projectId}/board`}
                             icon={<DashboardIcon />}
                             label="Board"
                         />
                         <Tab
                             href="/projects/[id]/backlog"
-                            as={`/projects/${id}/backlog`}
+                            as={`/projects/${projectId}/backlog`}
                             icon={<HistoryIcon />}
                             label="Backlog"
                         />
 
                         <Tab
                             href="/projects/[id]/reports"
-                            as={`/projects/${id}/reports`}
+                            as={`/projects/${projectId}/reports`}
                             icon={<AssessmentIcon />}
                             label="Reports"
                         />

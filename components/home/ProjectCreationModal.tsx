@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import authInstance from '../../util/axiosInstance'
 import { useRouter } from 'next/router'
-import { IProject } from '../../interfaces/Project'
 import { Modal, Button, Input } from 'rsuite'
 import Axios from 'axios'
+import { Project, addProject } from '../../api/projects'
 
 interface Props {
     open: boolean
@@ -21,11 +21,8 @@ export default function ProjectCreationModal({ open, toggle }: Props) {
     const handleNameChange = (value: string) => setName(value)
 
     const createProject = async () => {
-        const { data } = await Axios.post<IProject>('/projects', {
-            name,
-            description,
-        })
-        const { id } = data
+        const project = await addProject({ name, description })
+        const { id } = project
         push('/projects/[id]/settings', `/projects/${id}/settings`)
     }
     return (

@@ -38,19 +38,19 @@ const Board = ({
     title,
 }: Props) => {
     const router = useRouter()
-    const { id } = router.query
+    const { projectId } = router.query
     console.log(columns)
 
     const { data: tasks = [] } = useQuery(
-        ['tasks', { milestoneId, storyId, id }],
-        async (key, { milestoneId, storyId, id }) => {
+        ['tasks', { milestoneId, storyId, projectId }],
+        async (key, { milestoneId, storyId, projectId }) => {
             return getTasks({
                 milestone: milestoneId,
                 userStory: storyId,
-                projectId: id as string,
+                projectId: projectId as string,
             })
         },
-        { enabled: id && milestoneId && storyId }
+        { enabled: projectId && milestoneId && storyId }
     )
     /* eslint-disable react/sort-comp */
 
@@ -82,7 +82,7 @@ const Board = ({
             (task) => task.id.toString() === result.draggableId
         )
         queryCache.setQueryData(
-            ['tasks', { milestoneId, storyId, id }],
+            ['tasks', { milestoneId, storyId, projectId }],
             (prevData: Task[]) =>
                 prevData.map((t) =>
                     t.id === task.id
@@ -99,7 +99,7 @@ const Board = ({
         }).then((res) => {
             queryCache.invalidateQueries([
                 'tasks',
-                { milestoneId, storyId, id },
+                { milestoneId, storyId, projectId },
             ])
         })
     }
@@ -113,7 +113,7 @@ const Board = ({
                         onDragEnd={onDragEnd}
                     >
                         <Droppable
-                            droppableId={`board-${id}`}
+                            droppableId={`board-${projectId}`}
                             type="COLUMN"
                             direction="horizontal"
                         >

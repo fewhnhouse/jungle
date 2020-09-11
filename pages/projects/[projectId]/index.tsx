@@ -11,14 +11,14 @@ const Container = styled.div`
 
 const Project = () => {
     const router = useRouter()
-    const { id } = router.query
+    const { projectId } = router.query
 
     return (
         <Container>
-            <Link href="/projects/[id]/board" as={`/projects/${id}/board`}>
+            <Link href="/projects/[id]/board" as={`/projects/${projectId}/board`}>
                 <a>Board</a>
             </Link>
-            <Link href="/projects/[id]/backlog" as={`/projects/${id}/backlog`}>
+            <Link href="/projects/[id]/backlog" as={`/projects/${projectId}/backlog`}>
                 <a>Backlog</a>
             </Link>
         </Container>
