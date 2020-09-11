@@ -16,16 +16,18 @@ const StyledButton = styled(Button)`
 `
 
 export default function EditButtonGroup({
-    onClick,
+    onCancel,
+    onAccept,
 }: {
-    onClick: (e: React.MouseEvent<HTMLButtonElement>) => void
+    onCancel: (e: React.MouseEvent<HTMLButtonElement>) => void
+    onAccept: (e: React.MouseEvent<HTMLButtonElement>) => void
 }) {
     return (
         <BtnContainer>
-            <StyledButton onClick={onClick} size="sm">
+            <StyledButton onClick={onCancel} size="sm">
                 <CloseIcon />
             </StyledButton>
-            <StyledButton size="sm">
+            <StyledButton onClick={onAccept} size="sm">
                 <CheckIcon />
             </StyledButton>
         </BtnContainer>

@@ -40,7 +40,10 @@ export default function EditableNumber({ initialValue }: Props) {
                 value={value}
                 onChange={(value) => setValue(value)}
             />
-            <EditButtonGroup onClick={toggleEditable} />
+            <EditButtonGroup
+                onCancel={toggleEditable}
+                onAccept={toggleEditable}
+            />
         </InputContainer>
     ) : (
         <Title onClick={toggleEditable}>{value}</Title>

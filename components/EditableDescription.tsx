@@ -10,6 +10,16 @@ const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
     ssr: false,
 })
 
+const DisplayContainer = styled.div`
+    height: 200px;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    &:hover {
+        background: #eee;
+    }
+`
+
 const InputContainer = styled.div`
     display: flex;
     flex-direction: column;
@@ -32,24 +42,31 @@ export default function EditableDescription({ initialValue }: Props) {
     return editable ? (
         <InputContainer>
             <MdEditor
+                shortcuts
+                config={{
+                    shortcuts: true,
+                    view: { menu: true, md: true, html: false },
+                    canView: {
+                        menu: true,
+                        md: true,
+                        html: false,
+                        fullScreen: false,
+                        hideMenu: false,
+                    },
+                }}
                 style={{ height: 200 }}
                 value={value}
-                view={{ menu: true, md: true, html: false }}
-                canView={{
-                    menu: true,
-                    md: true,
-                    html: false,
-                    fullScreen: false,
-                    hideMenu: false,
-                }}
                 onChange={handleEditorChange}
                 renderHTML={(text) => mdParser.render(text)}
             />
-            <EditButtonGroup onClick={toggleEditable} />
+            <EditButtonGroup
+                onCancel={toggleEditable}
+                onAccept={toggleEditable}
+            />
         </InputContainer>
     ) : (
-        <div style={{ padding: 10 }} onClick={toggleEditable}>
+        <DisplayContainer onClick={toggleEditable}>
             <ReactMarkdown source={value}></ReactMarkdown>
-        </div>
+        </DisplayContainer>
     )
 }
