@@ -2,25 +2,23 @@ import Board from '../../../../components/board/Board'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
-import authInstance from '../../../../util/axiosInstance'
-import {
-    Milestone,
-    getMilestones,
-    getMilestone,
-} from '../../../../api/milestones'
-import { UserStory } from '../../../../api/userstories'
+import { getMilestones, getMilestone } from '../../../../api/milestones'
+import { getFiltersData } from '../../../../api/tasks'
 
 const ParentContainer = styled.div``
 
 export default function BoardContainer() {
-    const { id } = useRouter().query
-    const { data: milestones } = useQuery('milestones', (key) => getMilestones())
+    const router = useRouter()
+    console.log(router)
+    const { id } = router.query
+    const { data: milestones } = useQuery('milestones', (key) =>
+        getMilestones()
+    )
     const milestone = milestones?.length ? milestones[0] : undefined
     const { data: sprint } = useQuery(
-        ['milestone', { milestoneId: milestone.id }],
+        ['milestone', { milestoneId: milestone?.id }],
         async (key, { milestoneId }) => {
-            const { data } = await getMilestone(milestoneId.toString())
-            return data
+            return getMilestone(milestoneId.toString())
         }
     )
     /*const { data: storyFiltersData } = useQuery(
@@ -32,12 +30,13 @@ export default function BoardContainer() {
             return data
         }
     )*/
-    const { data: taskFiltersData } = useQuery('taskFilters', async () => {
-        const { data } = await authInstance.get(
-            `/tasks/filters_data?project=${id}`
-        )
-        return data
-    })
+    const { data: taskFiltersData } = useQuery(
+        ['taskFilters', { id }],
+        async (key, { id }) => {
+            const { data } = await getFiltersData(id)
+            return data
+        }
+    )
     // TODO: Figure out if we can use the active sprint to query data rather than userstories endpoint
     if (!milestones || !milestones.length) {
         return <div>No sprint active.</div>
@@ -50,6 +49,8 @@ export default function BoardContainer() {
         return data
     })
     */
+
+    console.log(sprint, milestones, taskFiltersData)
 
     return (
         <ParentContainer>

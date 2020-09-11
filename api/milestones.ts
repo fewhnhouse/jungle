@@ -25,16 +25,16 @@ export interface Milestone {
     user_stories: UserStory[]
 }
 
-export const getMilestones = ({
-    projectId,
-    closed,
-}: {
+export const getMilestones = (urlParams?: {
     projectId?: string
     closed?: boolean
 }) => {
     const params = new URLSearchParams()
-    projectId && params.append('project', projectId)
-    closed && params.append('closed', closed.toString())
+    if (urlParams) {
+        const { projectId, closed } = urlParams
+        projectId && params.append('project', projectId)
+        closed && params.append('closed', closed.toString())
+    }
     return authInstance
         .get<Milestone[]>(`/milestones`, { params })
         .then((res) => res.data)
@@ -59,25 +59,25 @@ export const replaceMilestone = (id: string, data: any) => {
 }
 
 export const updateMilestone = (id: string, data: any) => {
-    return authInstance.patch(`/milestones/${id}`)
+    return authInstance.patch(`/milestones/${id}`).then(res => res.data)
 }
 
 export const deleteMilestone = (id: string) => {
-    return authInstance.delete(`/milestones/${id}`)
+    return authInstance.delete(`/milestones/${id}`).then(res => res.data)
 }
 
 export const getMilestoneStats = (id: string) => {
-    return authInstance.get(`/milestones/${id}/stats`)
+    return authInstance.get(`/milestones/${id}/stats`).then(res => res.data)
 }
 
 export const watchMilestone = (id: string) => {
-    return authInstance.post(`/milestones/${id}/watch`)
+    return authInstance.post(`/milestones/${id}/watch`).then(res => res.data)
 }
 
 export const unwatchMilestone = (id: string) => {
-    return authInstance.post(`/milestones/${id}/unwatch`)
+    return authInstance.post(`/milestones/${id}/unwatch`).then(res => res.data)
 }
 
 export const getMilestoneWatchers = (id: string) => {
-    return authInstance.get(`/milestones/${id}/watchers`)
+    return authInstance.get(`/milestones/${id}/watchers`).then(res => res.data)
 }
