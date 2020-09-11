@@ -49,6 +49,9 @@ const HeaderContainer = styled.div`
 const Links = styled.div`
     display: flex;
     flex-direction: row;
+    button {
+        margin: 0px 10px;
+    }
     @media screen and (max-width: 700px) {
         justify-content: space-between;
         width: 100%;
