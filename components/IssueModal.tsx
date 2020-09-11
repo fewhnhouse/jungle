@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import EditableTitle from './EditableTitle'
 import EditableDescription from './EditableDescription'
 import EditableNumber from './EditableNumber'
-import { Modal, Breadcrumb, Button, Dropdown, Loader } from 'rsuite'
+import { Modal, Breadcrumb, Button, Dropdown, Loader, Uploader } from 'rsuite'
 import { useQuery } from 'react-query'
 import { getTask } from '../api/tasks'
 import AssigneeDropdown from './AssigneeDropdown'
@@ -58,6 +58,11 @@ const Sidebar = styled.aside`
     min-width: 180px;
 `
 
+const UploadContent = styled.div`
+    width: 100%;
+    margin: 10px 0px;
+`
+
 interface Props {
     open: boolean
     onClose: () => void
@@ -71,6 +76,8 @@ export default function IssueModal({ id, type, open, onClose }: Props) {
     if (!data) {
         return <Loader />
     }
+
+    const token = localStorage.getItem('auth-token')
 
     return (
         <StyledModal show={open} onHide={onClose}>
@@ -107,6 +114,22 @@ export default function IssueModal({ id, type, open, onClose }: Props) {
                     <Content>
                         <EditableTitle initialValue={data?.subject} />
                         <EditableDescription initialValue={data?.description} />
+                        <Uploader
+                            data={{
+                                object_id: data.id,
+                                project: data.project,
+                            }}
+                            name="attached_file"
+                            headers={{
+                                Authorization: token && `Bearer ${token}`,
+                            }}
+                            action={`${process.env.NEXT_PUBLIC_TAIGA_API_URL}/tasks/attachments`}
+                            draggable
+                        >
+                            <UploadContent>
+                                Click or Drag files to this area to upload
+                            </UploadContent>
+                        </Uploader>
                     </Content>
                     <Sidebar>
                         <Label>Status</Label>
