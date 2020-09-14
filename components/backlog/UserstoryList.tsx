@@ -49,21 +49,6 @@ const Wrapper = styled.div<WrapperProps>`
     border-bottom-right-radius: 4px;
 `
 
-const scrollContainerHeight = 250
-
-const DropZone = styled.div`
-    /* stop the list collapsing when empty */
-    min-height: ${scrollContainerHeight}px;
-    /*
-    not relying on the items for a margin-bottom
-    as it will collapse when the list is empty
-  */
-    padding-bottom: ${({ theme }) => `${theme.spacing.mini}`};
-`
-
-/* stylelint-disable block-no-empty */
-const Container = styled.div``
-/* stylelint-enable */
 
 type IssueListProps = {
     issues: UserStory[]
@@ -114,13 +99,13 @@ function InnerListContainer(props: InnerListProps) {
     const title = props.title ? <Title>{props.title}</Title> : null
 
     return (
-        <Container>
+        <div>
             {title}
-            <DropZone ref={dropProvided.innerRef}>
+            <div ref={dropProvided.innerRef}>
                 <InnerIssueList issues={issues} />
                 {dropProvided.placeholder}
-            </DropZone>
-        </Container>
+            </div>
+        </div>
     )
 }
 

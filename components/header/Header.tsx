@@ -128,20 +128,20 @@ const Header = () => {
                         <Tab href="/" icon={<HomeIcon />} label="Home" />
 
                         <Tab
-                            href="/projects/[id]/board"
+                            href="/projects/[projectId]/board"
                             as={`/projects/${projectId}/board`}
                             icon={<DashboardIcon />}
                             label="Board"
                         />
                         <Tab
-                            href="/projects/[id]/backlog"
+                            href="/projects/[projectId]/backlog"
                             as={`/projects/${projectId}/backlog`}
                             icon={<HistoryIcon />}
                             label="Backlog"
                         />
 
                         <Tab
-                            href="/projects/[id]/reports"
+                            href="/projects/[projectId]/reports"
                             as={`/projects/${projectId}/reports`}
                             icon={<AssessmentIcon />}
                             label="Reports"

@@ -7,7 +7,6 @@ import { Collapse } from 'react-collapse'
 import { Dropdown } from 'rsuite'
 
 const StoryHeader = styled.div`
-    height: 30px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -24,6 +23,18 @@ const StoryHeader = styled.div`
     }
 `
 
+const HeaderContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: ${({ theme }) => `${theme.spacing.small}`};
+`
+
+const Description = styled.span`
+    font-size: ${({ theme }) => theme.fontSize.xs};
+    color: ${({ theme }) => theme.colors.darkgrey.normal};
+`
+
 const InnerContainer = styled.div`
     display: flex;
     flex-direction: row;
@@ -34,17 +45,18 @@ const InnerContainer = styled.div`
 
 const StoryTitle = styled.h6`
     margin: 0;
-    padding: 0px ${({ theme }) => `${theme.spacing.small}`};
 `
 
 interface CollapseProps {
     children: React.ReactNode
     title: string | React.ReactNode
+    description?: string
     actions?: { title: string; action: () => void }[]
 }
 export default function CustomCollapse({
     children,
     title,
+    description,
     actions,
 }: CollapseProps) {
     const [expanded, setExpanded] = useState(true)
@@ -54,7 +66,10 @@ export default function CustomCollapse({
             <StoryHeader>
                 <InnerContainer onClick={toggleVisibility}>
                     {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                    <StoryTitle>{title}</StoryTitle>
+                    <HeaderContainer>
+                        <StoryTitle>{title}</StoryTitle>
+                        <Description>{description}</Description>
+                    </HeaderContainer>
                 </InnerContainer>
                 {actions && (
                     <Dropdown

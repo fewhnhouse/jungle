@@ -6,8 +6,8 @@ import axios from 'axios'
 import { useEffect } from 'react'
 import 'rsuite/lib/styles/index.less'
 import { useRouter } from 'next/router'
-import 'draft-js/dist/Draft.css';
-import 'react-markdown-editor-lite/lib/index.css';
+import 'draft-js/dist/Draft.css'
+import 'react-markdown-editor-lite/lib/index.css'
 
 export interface Theme {
     colors: {
@@ -31,6 +31,13 @@ export interface Theme {
         huge: string
         crazy: string
     }
+    fontSize: {
+        xs: string
+        sm: string
+        md: string
+        lg: string
+        xl: string
+    }
 }
 const theme = {
     colors: {
@@ -45,6 +52,13 @@ const theme = {
             normal: '#7f8c8d',
             dark: '#34495e',
         },
+    },
+    fontSize: {
+        xs: '10px',
+        sm: '12px',
+        md: '16px',
+        lg: '24px',
+        xl: '32px',
     },
     spacing: {
         mini: '4px',
