@@ -3,13 +3,22 @@ import styled from 'styled-components'
 import EditableTitle from '../EditableTitle'
 import EditableDescription from '../EditableDescription'
 import EditableNumber from '../EditableNumber'
-import { Modal, Button, Dropdown, Placeholder, Uploader, Divider } from 'rsuite'
+import {
+    Modal,
+    Button,
+    Dropdown,
+    Placeholder,
+    Uploader,
+    Divider,
+    TagPicker,
+} from 'rsuite'
 import { useQuery } from 'react-query'
 import AssigneeDropdown from '../AssigneeDropdown'
 import StatusDropdown from '../StatusDropdown'
 import { getUserstory } from '../../api/userstories'
 import Breadcrumbs from './Breadcrumbs'
 import SubtaskList from './SubtaskList'
+import CustomTagPicker from '../TagPicker'
 
 const { Paragraph } = Placeholder
 
@@ -127,11 +136,11 @@ export default function IssueModal({ id, open, onClose }: Props) {
                                         console.log(value)
                                     }}
                                 />
-                                <Label>Priority</Label>
-                                <Dropdown
-                                    toggleComponentClass={Button}
-                                    appearance="default"
-                                    title="Select..."
+                                <Label>Tags</Label>
+                                <CustomTagPicker
+                                    value={data.tags}
+                                    version={data.version}
+                                    id={id}
                                 />
                                 <Label>Story Points</Label>
                                 <EditableNumber initialValue={1} />

@@ -27,8 +27,8 @@ const Breadcrumbs = ({ data }: Props) => {
             </Breadcrumb.Item>
             <Breadcrumb.Item>
                 <WrappedLink
-                    href="/projects/stories/[id]"
-                    as={`/projects/stories/${data.id}`}
+                    href="/projects/[projectId]/stories/[id]"
+                    as={`/projects/${data.project}/stories/${data.id}`}
                 >
                     {data.subject}
                 </WrappedLink>

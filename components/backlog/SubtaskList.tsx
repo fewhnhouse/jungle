@@ -116,8 +116,8 @@ const SubtaskList = ({ id }: Props) => {
                         <TaskItem key={task.id}>
                             <Link
                                 key={task.id}
-                                href="/project/[projectId]/tasks/[id]"
-                                as={`/project/${projectId}/tasks/${id}`}
+                                href="/projects/[projectId]/tasks/[id]"
+                                as={`/projects/${projectId}/tasks/${id}`}
                             >
                                 <Flex>
                                     <Icon icon="task" />

@@ -46,38 +46,38 @@ export const createMilestone = (data: any) => {
         .then((res) => res.data)
 }
 
-export const getMilestone = (id: string) => {
+export const getMilestone = (id: number) => {
     return authInstance
         .get<Milestone>(`/milestones/${id}`)
         .then((res) => res.data)
 }
 
-export const replaceMilestone = (id: string, data: any) => {
+export const replaceMilestone = (id: number, data: any) => {
     return authInstance
         .put<Milestone>(`/milestones/${id}`)
         .then((res) => res.data)
 }
 
-export const updateMilestone = (id: string, data: any) => {
+export const updateMilestone = (id: number, data: any) => {
     return authInstance.patch(`/milestones/${id}`).then(res => res.data)
 }
 
-export const deleteMilestone = (id: string) => {
+export const deleteMilestone = (id: number) => {
     return authInstance.delete(`/milestones/${id}`).then(res => res.data)
 }
 
-export const getMilestoneStats = (id: string) => {
+export const getMilestoneStats = (id: number) => {
     return authInstance.get(`/milestones/${id}/stats`).then(res => res.data)
 }
 
-export const watchMilestone = (id: string) => {
+export const watchMilestone = (id: number) => {
     return authInstance.post(`/milestones/${id}/watch`).then(res => res.data)
 }
 
-export const unwatchMilestone = (id: string) => {
+export const unwatchMilestone = (id: number) => {
     return authInstance.post(`/milestones/${id}/unwatch`).then(res => res.data)
 }
 
-export const getMilestoneWatchers = (id: string) => {
+export const getMilestoneWatchers = (id: number) => {
     return authInstance.get(`/milestones/${id}/watchers`).then(res => res.data)
 }

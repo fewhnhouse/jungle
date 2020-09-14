@@ -13,6 +13,10 @@ interface Member {
     role_name: string
     username: string
 }
+
+export interface TagObject {
+    [key: string]: string;
+}
 export interface Project {
     anon_permissions: string[]
     blocked_code: number | null
@@ -106,7 +110,7 @@ export const getIssuesStats = (id: string) => {
 }
 
 export const getTagColors = (id: string) => {
-    return authInstance.get(`/projects/${id}/tags_colors`).then(res => res.data)
+    return authInstance.get<TagObject>(`/projects/${id}/tags_colors`).then(res => res.data)
 }
 
 export const createTag = (id: string, data: any) => {

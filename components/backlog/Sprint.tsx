@@ -1,12 +1,11 @@
 import CustomCollapse from '../Collapse'
 import IssueList from './UserstoryList'
-import { IMilestone } from '../../interfaces/Project'
 import { queryCache } from 'react-query'
-import { deleteMilestone } from '../../api/milestones'
+import { deleteMilestone, Milestone } from '../../api/milestones'
 
-const Sprint = ({ sprint }: { sprint: IMilestone }) => {
+const Sprint = ({ sprint }: { sprint: Milestone }) => {
     const handleRemove = async () => {
-        queryCache.setQueryData('milestones', (oldMilestones: IMilestone[]) =>
+        queryCache.setQueryData('milestones', (oldMilestones: Milestone[]) =>
             oldMilestones.filter((m) => m.id !== sprint.id)
         )
         await deleteMilestone(sprint.id)
