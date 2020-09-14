@@ -152,7 +152,12 @@ function IssueItem({
                     </Footer>
                 </Content>
             </Container>
-            <IssueModal open={expanded} onClose={handleClose} />
+            <IssueModal
+                id={issue.id}
+                type="story"
+                open={expanded}
+                onClose={handleClose}
+            />
         </>
     )
 }

@@ -6,13 +6,13 @@ export const getEpics = ({
     assignedTo,
     isClosed,
 }: {
-    projectId?: string
+    projectId?: number
     slug?: string
     assignedTo?: string
     isClosed?: boolean
 }) => {
     const params = new URLSearchParams()
-    projectId && params.append('project', projectId)
+    projectId && params.append('project', projectId.toString())
     slug && params.append('project__slug', slug)
     assignedTo && params.append('assigned_to', assignedTo)
     isClosed && params.append('status__is_closed', isClosed.toString())
@@ -24,37 +24,37 @@ export const createEpic = (data: any) => {
     return authInstance.post('/epics', data).then(res => res.data)
 }
 
-export const getEpic = (id: string) => {
+export const getEpic = (id: number) => {
     return authInstance.get(`/epics/${id}`).then(res => res.data)
 }
 
-export const replaceEpic = (id: string, data: any) => {
+export const replaceEpic = (id: number, data: any) => {
     return authInstance.put(`/epics/${id}/`).then(res => res.data)
 }
 
-export const updateEpic = (id: string, data: any) => {
+export const updateEpic = (id: number, data: any) => {
     return authInstance.patch(`/epics/${id}/`).then(res => res.data)
 }
 
-export const deleteEpic = (id: string) => {
+export const deleteEpic = (id: number) => {
     return authInstance.delete(`/epics/${id}/`).then(res => res.data)
 }
 
-export const getEpicRelatedUserstories = (id: string) => {
+export const getEpicRelatedUserstories = (id: number) => {
     return authInstance.get(`/epics/${id}/related_userstories`).then(res => res.data)
 }
 
-export const createEpicRelatedUserstories = (id: string, data: any) => {
+export const createEpicRelatedUserstories = (id: number, data: any) => {
     return authInstance.post(`/epics/${id}/related_userstories`, data).then(res => res.data)
 }
 
-export const getEpicRelatedUserstory = (id: string, userstoryId: string) => {
+export const getEpicRelatedUserstory = (id: number, userstoryId: number) => {
     return authInstance.get(`/epics/${id}/related_userstories/${userstoryId}`).then(res => res.data)
 }
 
 export const replaceEpicRelatedUserstory = (
-    id: string,
-    userstoryId: string,
+    id: number,
+    userstoryId: number,
     data: any
 ) => {
     return authInstance.put(
@@ -64,8 +64,8 @@ export const replaceEpicRelatedUserstory = (
 }
 
 export const updateEpicRelatedUserstory = (
-    id: string,
-    userstoryId: string,
+    id: number,
+    userstoryId: number,
     data: any
 ) => {
     return authInstance.patch(
@@ -74,37 +74,37 @@ export const updateEpicRelatedUserstory = (
     ).then(res => res.data)
 }
 
-export const deleteEpicRelatedUserstory = (id: string, userstoryId: string) => {
+export const deleteEpicRelatedUserstory = (id: number, userstoryId: number) => {
     return authInstance.delete(
         `/epics/${id}/related_userstories/${userstoryId}`
     ).then(res => res.data)
 }
 
-export const getFiltersData = (projectId: string) => {
+export const getFiltersData = (projectId: number) => {
     return authInstance.get(`/epics/filters_data?project=${projectId}`).then(res => res.data)
 }
 
-export const upvoteEpic = (id: string) => {
+export const upvoteEpic = (id: number) => {
     return authInstance.post(`/epics/${id}/upvote`).then(res => res.data)
 }
 
-export const downvoteEpic = (id: string) => {
+export const downvoteEpic = (id: number) => {
     return authInstance.post(`/epics/${id}/downvote`).then(res => res.data)
 }
 
-export const voters = (id: string) => {
+export const voters = (id: number) => {
     return authInstance.get(`/epics/${id}/voters`).then(res => res.data)
 }
 
-export const watchEpic = (id: string) => {
+export const watchEpic = (id: number) => {
     return authInstance.post(`/epics/${id}/watch`).then(res => res.data)
 }
 
-export const unwatchEpic = (id: string) => {
+export const unwatchEpic = (id: number) => {
     return authInstance.post(`/epics/${id}/unwatch`).then(res => res.data)
 }
 
-export const getEpicWatchers = (id: string) => {
+export const getEpicWatchers = (id: number) => {
     return authInstance.get(`/epics/${id}/watchers`).then(res => res.data)
 }
 
@@ -112,12 +112,12 @@ export const getAttachments = ({
     projectId,
     epicId,
 }: {
-    projectId?: string
-    epicId?: string
+    projectId?: number
+    epicId?: number
 }) => {
     const params = new URLSearchParams()
-    projectId && params.append('project', projectId)
-    epicId && params.append('object_id', epicId)
+    projectId && params.append('project', projectId.toString())
+    epicId && params.append('object_id', epicId.toString())
 
     return authInstance.get(`/epics/attachments`, { params }).then(res => res.data)
 }
@@ -126,18 +126,18 @@ export const createEpicAttachment = (data: any) => {
     return authInstance.post(`/epics/attachments`, data).then(res => res.data)
 }
 
-export const getEpicAttachments = (attachmentId: string) => {
+export const getEpicAttachments = (attachmentId: number) => {
     return authInstance.get(`/epics/attachments/${attachmentId}`).then(res => res.data)
 }
 
-export const replaceEpicAttachment = (attachmentId: string, data: any) => {
+export const replaceEpicAttachment = (attachmentId: number, data: any) => {
     return authInstance.put(`/epics/attachments/${attachmentId}`, data).then(res => res.data)
 }
 
-export const updateEpicAttachment = (attachmentId: string, data: any) => {
+export const updateEpicAttachment = (attachmentId: number, data: any) => {
     return authInstance.patch(`/epics/attachments/${attachmentId}`, data).then(res => res.data)
 }
 
-export const deleteEpicAttachment = (attachmentId: string) => {
+export const deleteEpicAttachment = (attachmentId: number) => {
     return authInstance.delete(`/epics/attachments/${attachmentId}`).then(res => res.data)
 }

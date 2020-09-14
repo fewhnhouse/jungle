@@ -9,6 +9,8 @@ import { getTask } from '../api/tasks'
 import AssigneeDropdown from './AssigneeDropdown'
 import StatusDropdown from './StatusDropdown'
 import { WrappedLink } from './header/Header'
+import { getUserstory } from '../api/userstories'
+import { getEpic } from '../api/epics'
 
 const Separator = styled.span`
     font-size: 16px;
@@ -66,16 +68,27 @@ const UploadContent = styled.div`
 interface Props {
     open: boolean
     onClose: () => void
-    id: string
+    id: number
     type: 'task' | 'story' | 'epic'
 }
 
 export default function IssueModal({ id, type, open, onClose }: Props) {
-    const { data } = useQuery(['task', { id }], (key, { id }) => getTask(id))
+    const { isLoading, data, isError } = useQuery(
+        [type, { id }],
+        (type, { id }) => {
+            if (type === 'task') {
+                return getTask(id)
+            } else if (type === 'story') {
+                return getUserstory(id)
+            } else {
+                return getEpic(id)
+            }
+        },
+        { enabled: open }
+    )
 
-    if (!data) {
-        return <Loader />
-    }
+    if (isLoading) return <Loader />
+    if (isError) return <div>Error</div>
 
     const token = localStorage.getItem('auth-token')
 

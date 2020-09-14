@@ -86,7 +86,7 @@ export const getUserstories = ({
     excludeRole,
     excludeEpic,
 }: {
-    projectId?: string
+    projectId?: number
     milestone?: string
     milestoneIsNull?: boolean
     status?: string
@@ -104,7 +104,7 @@ export const getUserstories = ({
     excludeEpic?: string
 }) => {
     const params = new URLSearchParams()
-    projectId && params.append('project', projectId)
+    projectId && params.append('project', projectId.toString())
     milestone && params.append('milestone', milestone)
     milestoneIsNull &&
         params.append('milestone__isnull', milestoneIsNull.toString())
@@ -131,47 +131,47 @@ export const createUserstory = (data: any) => {
     return authInstance.post<UserStory>('/userstories', data).then(res => res.data)
 }
 
-export const getUserstory = (id: string) => {
+export const getUserstory = (id: number) => {
     return authInstance.get<UserStory>(`/userstories/${id}`).then(res => res.data)
 }
 
-export const replaceUserstory = (id: string, data: any) => {
+export const replaceUserstory = (id: number, data: any) => {
     return authInstance.put<UserStory>(`/userstories/${id}`, data).then(res => res.data)
 }
 
-export const updateUserstory = (id: string, data: any) => {
+export const updateUserstory = (id: number, data: any) => {
     return authInstance.patch<UserStory>(`/userstories/${id}`, data).then(res => res.data)
 }
 
-export const deleteUserstory = (id: string) => {
+export const deleteUserstory = (id: number) => {
     return authInstance.delete<UserStory>(`/userstories/${id}`).then(res => res.data)
 }
 
-export const getFiltersData = (projectId: string) => {
+export const getFiltersData = (projectId: number) => {
     return authInstance.get(`/userstories/filters_data?project=${projectId}`).then(res => res.data)
 }
 
-export const upvoteUserstory = (id: string) => {
+export const upvoteUserstory = (id: number) => {
     return authInstance.post(`/userstories/${id}/upvote`).then(res => res.data)
 }
 
-export const downvoteUserstory = (id: string) => {
+export const downvoteUserstory = (id: number) => {
     return authInstance.post(`/userstories/${id}/downvote`).then(res => res.data)
 }
 
-export const voters = (id: string) => {
+export const voters = (id: number) => {
     return authInstance.get(`/userstories/${id}/voters`).then(res => res.data)
 }
 
-export const watchUserstory = (id: string) => {
+export const watchUserstory = (id: number) => {
     return authInstance.post(`/userstories/${id}/watch`).then(res => res.data)
 }
 
-export const unwatchUserstory = (id: string) => {
+export const unwatchUserstory = (id: number) => {
     return authInstance.post(`/userstories/${id}/unwatch`).then(res => res.data)
 }
 
-export const getUserstoryWatchers = (id: string) => {
+export const getUserstoryWatchers = (id: number) => {
     return authInstance.get(`/userstories/${id}/watchers`)
 }
 
@@ -179,12 +179,12 @@ export const getUserstoryAttachments = ({
     projectId,
     userstoryId,
 }: {
-    projectId?: string
-    userstoryId?: string
+    projectId?: number
+    userstoryId?: number
 }) => {
     const params = new URLSearchParams()
-    projectId && params.append('project', projectId)
-    userstoryId && params.append('object_id', userstoryId)
+    projectId && params.append('project', projectId.toString())
+    userstoryId && params.append('object_id', userstoryId.toString())
 
     return authInstance.get(`/userstories/attachments`, { params }).then(res => res.data)
 }
@@ -193,18 +193,18 @@ export const createUserstoryAttachment = (data: any) => {
     return authInstance.post(`/userstories/attachments`, data).then(res => res.data)
 }
 
-export const getUserstoryAttachment = (attachmentId: string) => {
+export const getUserstoryAttachment = (attachmentId: number) => {
     return authInstance.get(`/userstories/attachments/${attachmentId}`).then(res => res.data)
 }
 
-export const replaceUserstoryAttachment = (attachmentId: string, data: any) => {
+export const replaceUserstoryAttachment = (attachmentId: number, data: any) => {
     return authInstance.put(`/userstories/attachments/${attachmentId}`, data).then(res => res.data)
 }
 
-export const updateUserstoryAttachment = (attachmentId: string, data: any) => {
+export const updateUserstoryAttachment = (attachmentId: number, data: any) => {
     return authInstance.patch(`/userstories/attachments/${attachmentId}`, data).then(res => res.data)
 }
 
-export const deleteUserstoryAttachment = (attachmentId: string) => {
+export const deleteUserstoryAttachment = (attachmentId: number) => {
     return authInstance.delete(`/userstories/attachments/${attachmentId}`).then(res => res.data)
 }

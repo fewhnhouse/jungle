@@ -11,7 +11,7 @@ export interface TaskStatus {
     is_closed: boolean
 }
 
-type TinyUser = { id: string | null, full_name: string, count: number }
+type TinyUser = { id: number | null, full_name: string, count: number }
 export interface TaskFiltersData {
     assigned_to: TinyUser[]
     owners: TinyUser[]
@@ -121,47 +121,47 @@ export const createTask = (data: any) => {
     return authInstance.post<Task>('/tasks', data).then(res => res.data)
 }
 
-export const getTask = (id: string) => {
+export const getTask = (id: number) => {
     return authInstance.get<Task>(`/tasks/${id}`).then(res => res.data)
 }
 
-export const replaceTask = (id: string, data: any) => {
+export const replaceTask = (id: number, data: any) => {
     return authInstance.put<Task>(`/tasks/${id}`, data).then(res => res.data)
 }
 
-export const updateTask = (id: string, data: any) => {
+export const updateTask = (id: number, data: any) => {
     return authInstance.patch<Task>(`/tasks/${id}`, data).then(res => res.data)
 }
 
-export const deleteTask = (id: string) => {
+export const deleteTask = (id: number) => {
     return authInstance.delete<Task>(`/tasks/${id}`).then(res => res.data)
 }
 
-export const getFiltersData = (projectId: string) => {
+export const getFiltersData = (projectId: number) => {
     return authInstance.get<TaskFiltersData>(`/tasks/filters_data?project=${projectId}`).then(res => res.data)
 }
 
-export const upvoteTask = (id: string) => {
+export const upvoteTask = (id: number) => {
     return authInstance.post(`/tasks/${id}/upvote`).then(res => res.data)
 }
 
-export const downvoteTask = (id: string) => {
+export const downvoteTask = (id: number) => {
     return authInstance.post(`/tasks/${id}/downvote`).then(res => res.data)
 }
 
-export const voters = (id: string) => {
+export const voters = (id: number) => {
     return authInstance.get(`/tasks/${id}/voters`).then(res => res.data)
 }
 
-export const watchTask = (id: string) => {
+export const watchTask = (id: number) => {
     return authInstance.post(`/tasks/${id}/watch`).then(res => res.data)
 }
 
-export const unwatchTask = (id: string) => {
+export const unwatchTask = (id: number) => {
     return authInstance.post(`/tasks/${id}/unwatch`).then(res => res.data)
 }
 
-export const getTaskWatchers = (id: string) => {
+export const getTaskWatchers = (id: number) => {
     return authInstance.get(`/tasks/${id}/watchers`).then(res => res.data)
 }
 
@@ -169,12 +169,12 @@ export const getTaskAttachments = ({
     projectId,
     userstoryId,
 }: {
-    projectId?: string
-    userstoryId?: string
+    projectId?: number
+    userstoryId?: number
 }) => {
     const params = new URLSearchParams()
-    projectId && params.append('project', projectId)
-    userstoryId && params.append('object_id', userstoryId)
+    projectId && params.append('project', projectId.toString())
+    userstoryId && params.append('object_id', userstoryId.toString())
     return authInstance.get(`/tasks/attachments/`, { params }).then(res => res.data)
 }
 
@@ -182,18 +182,18 @@ export const createTaskAttachment = (data: any) => {
     return authInstance.post(`/tasks/attachments`, data).then(res => res.data)
 }
 
-export const getTaskAttachment = (attachmentId: string) => {
+export const getTaskAttachment = (attachmentId: number) => {
     return authInstance.get(`/tasks/attachments/${attachmentId}`).then(res => res.data)
 }
 
-export const replaceTaskAttachment = (attachmentId: string, data: any) => {
+export const replaceTaskAttachment = (attachmentId: number, data: any) => {
     return authInstance.put(`/tasks/attachments/${attachmentId}`, data).then(res => res.data)
 }
 
-export const updateTaskAttachment = (attachmentId: string, data: any) => {
+export const updateTaskAttachment = (attachmentId: number, data: any) => {
     return authInstance.patch(`/tasks/attachments/${attachmentId}`, data).then(res => res.data)
 }
 
-export const deleteTaskAttachment = (attachmentId: string) => {
+export const deleteTaskAttachment = (attachmentId: number) => {
     return authInstance.delete(`/tasks/attachments/${attachmentId}`).then(res => res.data)
 }

@@ -153,7 +153,7 @@ function IssueItem({
                 </Content>
             </Container>
             <IssueModal
-                id={issue.id.toString()}
+                id={issue.id}
                 type="task"
                 open={expanded}
                 onClose={handleClose}

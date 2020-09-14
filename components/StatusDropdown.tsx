@@ -21,12 +21,12 @@ interface Props {
 
 const StatusDropdown = ({ onSelect, value }: Props) => {
     const { projectId } = useRouter().query
-    const { data } = useQuery(
+    const { data, isLoading } = useQuery(
         ['taskFilters', { projectId }],
         (key, { projectId }) => getFiltersData(projectId as string),
         { enabled: projectId }
     )
-    if (!data) {
+    if (isLoading) {
         return <Loader />
     }
     return (
