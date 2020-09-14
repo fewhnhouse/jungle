@@ -91,7 +91,6 @@ const CustomTagPicker = ({ id }: Props) => {
                     </ColoredTag>
                 ))
             }}
-            onSelect={(value, item, event) => console.log(value, item)}
             onChange={handleChange}
             renderMenuItem={(label, item) => {
                 return (
