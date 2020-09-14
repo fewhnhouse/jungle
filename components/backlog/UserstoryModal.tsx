@@ -3,12 +3,13 @@ import styled from 'styled-components'
 import EditableTitle from '../EditableTitle'
 import EditableDescription from '../EditableDescription'
 import EditableNumber from '../EditableNumber'
-import { Modal, Button, Dropdown, Placeholder, Uploader } from 'rsuite'
+import { Modal, Button, Dropdown, Placeholder, Uploader, Divider } from 'rsuite'
 import { useQuery } from 'react-query'
 import AssigneeDropdown from '../AssigneeDropdown'
 import StatusDropdown from '../StatusDropdown'
 import { getUserstory } from '../../api/userstories'
 import Breadcrumbs from './Breadcrumbs'
+import SubtaskList from './SubtaskList'
 
 const { Paragraph } = Placeholder
 
@@ -66,9 +67,7 @@ interface Props {
 export default function IssueModal({ id, open, onClose }: Props) {
     const { isLoading, data, isError } = useQuery(
         ['story', { id }],
-        (key, { id }) => {
-            return getUserstory(id)
-        },
+        (key, { id }) => getUserstory(id),
         { enabled: open }
     )
 
@@ -110,6 +109,8 @@ export default function IssueModal({ id, open, onClose }: Props) {
                                         upload
                                     </UploadContent>
                                 </Uploader>
+                                <Divider />
+                                <SubtaskList id={id} />
                             </Content>
                             <Sidebar>
                                 <Label>Status</Label>

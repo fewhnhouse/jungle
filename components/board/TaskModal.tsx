@@ -66,9 +66,7 @@ interface Props {
 export default function IssueModal({ id, open, onClose }: Props) {
     const { isLoading, data, isError } = useQuery(
         ['task', { id }],
-        (key, { id }) => {
-            return getTask(id)
-        },
+        (key, { id }) => getTask(id),
         { enabled: open }
     )
 

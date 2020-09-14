@@ -79,7 +79,7 @@ export const getTasks = ({
 }: {
     projectId?: string
     milestone?: string
-    userStory?: string
+    userStory?: number
     owner?: string
     status?: string
     statusIsArchived?: boolean
@@ -104,7 +104,7 @@ export const getTasks = ({
     tags && params.append('tags', tags.toString())
     watchers && params.append('watchers', watchers)
     assignedTo && params.append('assigned_to', assignedTo)
-    userStory && params.append('user_story', userStory)
+    userStory && params.append('user_story', userStory.toString())
     role && params.append('role', role)
     statusIsClosed &&
         params.append('status__is_closed', statusIsClosed.toString())

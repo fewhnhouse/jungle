@@ -79,7 +79,7 @@ const BlockQuote = styled.p`
     margin: 0px 10px;
 `
 
-const Footer = styled.div`
+const TagContainer = styled.div`
     display: flex;
     margin-top: ${({ theme }) => `${theme.spacing.mini}`};
     align-items: center;
@@ -146,9 +146,9 @@ function IssueItem({
                 <Icon icon="task" />
                 <Content>
                     <BlockQuote>{issue.subject}</BlockQuote>
-                    <Footer>
+                    <TagContainer>
                         <Tag>ID-{issue.id}</Tag>
-                    </Footer>
+                    </TagContainer>
                 </Content>
             </Container>
             <IssueModal
