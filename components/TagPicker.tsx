@@ -40,7 +40,7 @@ const CustomTagPicker = ({ id }: Props) => {
           }))
         : []
 
-    const handleChange = async (newTags: string[], event) => {
+    const handleChange = async (newTags?: string[], event) => {
         setIsUpdating(true)
         if (isUpdating) {
             return
@@ -49,7 +49,7 @@ const CustomTagPicker = ({ id }: Props) => {
             (newTag) => !tagsArray.find((tag) => tag.label === newTag)
         )
         const existingTags = tagsArray.filter((tag) =>
-            newTags.includes(tag.label)
+            newTags?.includes(tag.label)
         )
         if (!newTag) {
             // no new tag was added.
