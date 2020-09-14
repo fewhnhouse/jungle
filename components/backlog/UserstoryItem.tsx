@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import React, { useState } from 'react'
 import type { DraggableProvided } from 'react-beautiful-dnd'
-import IssueModal from '../IssueModal'
+import IssueModal from './UserstoryModal'
 import { Icon, Tag } from 'rsuite'
 import { UserStory } from '../../api/userstories'
 import { Task } from '../../api/tasks'
@@ -154,7 +154,6 @@ function IssueItem({
             </Container>
             <IssueModal
                 id={issue.id}
-                type="story"
                 open={expanded}
                 onClose={handleClose}
             />

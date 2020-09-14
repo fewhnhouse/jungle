@@ -1,5 +1,69 @@
 import authInstance from '../util/axiosInstance'
 
+export interface Epic {
+    assigned_to: number,
+    assigned_to_extra_info: {
+        big_photo: null,
+        full_name_display: string,
+        gravatar_id: string,
+        id: number,
+        is_active: boolean,
+        photo: null,
+        username: string
+    },
+    attachments: string[],
+    blocked_note: string,
+    client_requirement: boolean,
+    color: string,
+    created_date: string,
+    epics_order: number,
+    id: number,
+    is_blocked: boolean,
+    is_closed: boolean,
+    is_voter: boolean,
+    is_watcher: boolean,
+    modified_date: string,
+    owner: number,
+    owner_extra_info: {
+        big_photo: null,
+        full_name_display: string,
+        gravatar_id: string,
+        id: number,
+        is_active: boolean,
+        photo: null,
+        username: string
+    },
+    project: number,
+    project_extra_info: {
+        id: number,
+        logo_small_url: null,
+        name: string,
+        slug: string
+    },
+    ref: number,
+    status: number,
+    status_extra_info: {
+        color: string,
+        is_closed: boolean,
+        name: string
+    },
+    subject: string,
+    tags: [
+        string,
+        string
+    ][]
+    team_requirement: boolean,
+    total_voters: number,
+    total_watchers: number,
+    user_stories_counts: {
+        progress: number
+        total: number
+    },
+    version: number,
+    watchers: number[]
+}
+
+
 export const getEpics = ({
     projectId,
     slug,

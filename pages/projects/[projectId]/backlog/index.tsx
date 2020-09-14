@@ -1,5 +1,5 @@
 import { DragDropContext, DropResult } from 'react-beautiful-dnd'
-import IssueList from '../../../../components/backlog/IssueList'
+import IssueList from '../../../../components/backlog/UserstoryList'
 import styled from 'styled-components'
 import useMedia from 'use-media'
 import { useRouter } from 'next/router'
@@ -55,8 +55,6 @@ const Title = styled.h3`
     margin: 0;
 `
 
-
-
 export default function Backlog() {
     const { projectId } = useRouter().query
 
@@ -64,7 +62,7 @@ export default function Backlog() {
         ['backlog', { projectId }],
         async (key, { projectId }) => {
             return getUserstories({
-                projectId: projectId as string,
+                projectId: parseInt(projectId as string, 10),
                 milestoneIsNull: true,
             })
         }
@@ -209,7 +207,7 @@ export default function Backlog() {
                 : parseInt(destination.droppableId, 10)
         const { id: storyId, version } = currentStory
         const order = destination.index
-        updateUserstory(storyId.toString(), {
+        updateUserstory(storyId, {
             milestone,
             sprint_order: order,
             version,

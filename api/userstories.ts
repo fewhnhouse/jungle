@@ -55,6 +55,7 @@ export interface UserStory {
     status: number
     status_extra_info: { name: string; color: string; is_closed: boolean }
     subject: string
+    description?: string
     tags: [string, string][]
     tasks: Task[]
     team_requirement: boolean

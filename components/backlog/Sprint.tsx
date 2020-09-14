@@ -1,5 +1,5 @@
 import CustomCollapse from '../Collapse'
-import IssueList from './IssueList'
+import IssueList from './UserstoryList'
 import { IMilestone } from '../../interfaces/Project'
 import { queryCache } from 'react-query'
 import { deleteMilestone } from '../../api/milestones'

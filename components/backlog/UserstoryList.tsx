@@ -8,10 +8,10 @@ import {
     DraggableProvided,
     DraggableStateSnapshot,
 } from 'react-beautiful-dnd'
-import IssueItem from './IssueItem'
+import IssueItem from './UserstoryItem'
 import Title from '../Title'
 import { Theme } from '../../pages/_app'
-import { IUserStory } from '../../interfaces/UserStory'
+import { UserStory } from '../../api/userstories'
 
 export const getBackgroundColor = (
     isDraggingOver: boolean,
@@ -66,14 +66,14 @@ const Container = styled.div``
 /* stylelint-enable */
 
 type IssueListProps = {
-    issues: IUserStory[]
+    issues: UserStory[]
 }
 
 // eslint-disable-next-line react/display-name
 const InnerIssueList = React.memo(({ issues }: IssueListProps) => {
     return (
         <>
-            {issues.map((issue: IUserStory) => (
+            {issues.map((issue: UserStory) => (
                 <Draggable
                     key={issue.id}
                     draggableId={issue.id.toString()}
@@ -105,7 +105,7 @@ const InnerIssueList = React.memo(({ issues }: IssueListProps) => {
 
 type InnerListProps = {
     dropProvided: DroppableProvided
-    issues: IUserStory[]
+    issues: UserStory[]
     title?: string
 }
 
@@ -127,7 +127,7 @@ function InnerListContainer(props: InnerListProps) {
 type Props = {
     listId?: string
     listType?: string
-    issues: IUserStory[]
+    issues: UserStory[]
     title?: string
     isDropDisabled?: boolean
     style?: Record<string, unknown>

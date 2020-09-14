@@ -4,7 +4,7 @@ import {
     DraggableStateSnapshot,
     Draggable,
 } from 'react-beautiful-dnd'
-import IssueList from './IssueList'
+import IssueList from './TaskList'
 import Title from '../Title'
 import { Theme } from '../../pages/_app'
 import { Task } from '../../api/tasks'
