@@ -36,7 +36,7 @@ const Flex = styled.div`
     width: 100%;
 `
 
-const InputLi = styled.li`
+const InputForm = styled.form`
     display: flex;
     align-items: center;
     width: 100%;
@@ -89,7 +89,8 @@ const SubtaskList = ({ id }: Props) => {
         setSubtask(val)
     }
 
-    const handleAddSubtask = () => {
+    const handleAddSubtask = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
         setSubtask('')
         createTask({
             assigned_to: null,
@@ -135,14 +136,14 @@ const SubtaskList = ({ id }: Props) => {
                             </Link>
                         </TaskItem>
                     ))}
-                    <InputLi>
+                    <InputForm onSubmit={handleAddSubtask}>
                         <Input
                             onChange={handleChangeSubtask}
                             value={subtask}
                             placeholder="Add Subtask..."
                         />
-                        <Button onClick={handleAddSubtask}>+</Button>
-                    </InputLi>
+                        <Button disabled={!subtask}>+</Button>
+                    </InputForm>
                 </>
             )}
         </TaskList>
