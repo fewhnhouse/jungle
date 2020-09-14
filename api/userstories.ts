@@ -148,7 +148,7 @@ export const deleteUserstory = (id: number) => {
     return authInstance.delete<UserStory>(`/userstories/${id}`).then(res => res.data)
 }
 
-export const getFiltersData = (projectId: number) => {
+export const getFiltersData = (projectId: string) => {
     return authInstance.get(`/userstories/filters_data?project=${projectId}`).then(res => res.data)
 }
 

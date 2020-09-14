@@ -12,13 +12,18 @@ import {
     Divider,
     TagPicker,
 } from 'rsuite'
-import { useQuery } from 'react-query'
+import { queryCache, useQuery } from 'react-query'
 import AssigneeDropdown from '../AssigneeDropdown'
 import StatusDropdown from '../StatusDropdown'
-import { getUserstory } from '../../api/userstories'
+import {
+    getFiltersData,
+    getUserstory,
+    updateUserstory,
+} from '../../api/userstories'
 import Breadcrumbs from './Breadcrumbs'
 import SubtaskList from './SubtaskList'
 import CustomTagPicker from '../TagPicker'
+import { useRouter } from 'next/router'
 
 const { Paragraph } = Placeholder
 
@@ -74,15 +79,43 @@ interface Props {
 }
 
 export default function IssueModal({ id, open, onClose }: Props) {
+    const { projectId } = useRouter().query
     const { isLoading, data, isError } = useQuery(
         ['story', { id }],
         (key, { id }) => getUserstory(id),
         { enabled: open }
     )
+    const { data: storyFilters } = useQuery(
+        ['storyFilters', { projectId }],
+        (key, { projectId }) => getFiltersData(projectId as string),
+        { enabled: projectId }
+    )
+    const statusData =
+        storyFilters?.statuses.map((status) => ({
+            value: status.id,
+            label: status.name,
+        })) ?? []
 
     if (isError) return <div>Error</div>
 
     const token = localStorage.getItem('auth-token')
+
+    const updateAssignee = async (assigneeId: number) => {
+        const updatedStory = await updateUserstory(id, {
+            assigned_to: assigneeId,
+            assigned_users: [assigneeId],
+            version: data.version,
+        })
+        queryCache.setQueryData(['story', { id }], () => updatedStory)
+    }
+
+    const updateStatus = async (status: number) => {
+        const updatedStory = await updateUserstory(id, {
+            status,
+            version: data.version,
+        })
+        queryCache.setQueryData(['story', { id }], () => updatedStory)
+    }
 
     return data ? (
         <StyledModal show={open} onHide={onClose}>
@@ -124,24 +157,17 @@ export default function IssueModal({ id, open, onClose }: Props) {
                             <Sidebar>
                                 <Label>Status</Label>
                                 <StatusDropdown
+                                    data={statusData}
                                     value={data?.status}
-                                    onSelect={(value) => {
-                                        console.log(value)
-                                    }}
+                                    onSelect={updateStatus}
                                 />
                                 <Label>Assignee</Label>
                                 <AssigneeDropdown
                                     value={data?.assigned_to}
-                                    onSelect={(value) => {
-                                        console.log(value)
-                                    }}
+                                    onSelect={updateAssignee}
                                 />
                                 <Label>Tags</Label>
-                                <CustomTagPicker
-                                    value={data.tags}
-                                    version={data.version}
-                                    id={id}
-                                />
+                                <CustomTagPicker id={id} />
                                 <Label>Story Points</Label>
                                 <EditableNumber initialValue={1} />
                             </Sidebar>

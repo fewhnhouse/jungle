@@ -4,11 +4,12 @@ import EditableTitle from '../EditableTitle'
 import EditableDescription from '../EditableDescription'
 import EditableNumber from '../EditableNumber'
 import { Modal, Button, Dropdown, Loader, Uploader, Placeholder } from 'rsuite'
-import { useQuery } from 'react-query'
-import { getTask } from '../../api/tasks'
+import { queryCache, useQuery } from 'react-query'
+import { getFiltersData, getTask, updateTask } from '../../api/tasks'
 import AssigneeDropdown from '../AssigneeDropdown'
 import StatusDropdown from '../StatusDropdown'
 import Breadcrumbs from './Breadcrumbs'
+import { useRouter } from 'next/router'
 
 const { Paragraph } = Placeholder
 
@@ -64,11 +65,41 @@ interface Props {
 }
 
 export default function IssueModal({ id, open, onClose }: Props) {
+    const { projectId } = useRouter().query
+
     const { isLoading, data, isError } = useQuery(
         ['task', { id }],
         (key, { id }) => getTask(id),
         { enabled: open }
     )
+
+    const { data: taskFilters } = useQuery(
+        ['taskFilters', { projectId }],
+        (key, { projectId }) => getFiltersData(projectId as string),
+        { enabled: projectId }
+    )
+    const statusData =
+        taskFilters?.statuses.map((status) => ({
+            value: status.id.toString(),
+            label: status.name,
+        })) ?? []
+
+    const updateAssignee = async (assigneeId: number) => {
+        const updatedTask = await updateTask(id, {
+            assigned_to: assigneeId,
+            assigned_users: [assigneeId],
+            version: data.version,
+        })
+        queryCache.setQueryData(['task', { id }], () => updatedTask)
+    }
+
+    const updateStatus = async (status: number) => {
+        const updatedTask = await updateTask(id, {
+            status,
+            version: data.version,
+        })
+        queryCache.setQueryData(['task', { id }], () => updatedTask)
+    }
 
     if (isError) return <div>Error</div>
 
@@ -112,17 +143,14 @@ export default function IssueModal({ id, open, onClose }: Props) {
                             <Sidebar>
                                 <Label>Status</Label>
                                 <StatusDropdown
+                                    data={statusData}
                                     value={data?.status}
-                                    onSelect={(value) => {
-                                        console.log(value)
-                                    }}
+                                    onSelect={updateStatus}
                                 />
                                 <Label>Assignee</Label>
                                 <AssigneeDropdown
                                     value={data?.assigned_to}
-                                    onSelect={(value) => {
-                                        console.log(value)
-                                    }}
+                                    onSelect={updateAssignee}
                                 />
                                 <Label>Priority</Label>
                                 <Dropdown

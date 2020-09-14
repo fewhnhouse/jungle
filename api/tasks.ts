@@ -12,6 +12,15 @@ export interface TaskStatus {
 }
 
 type TinyUser = { id: number | null, full_name: string, count: number }
+type Assignee = {
+    big_photo: null
+    full_name_display: string
+    gravatar_id: string
+    id: number
+    is_active: boolean
+    photo: null
+    username: string
+}
 export interface TaskFiltersData {
     assigned_to: TinyUser[]
     owners: TinyUser[]
@@ -21,7 +30,7 @@ export interface TaskFiltersData {
 }
 export interface Task {
     assigned_to: number | null
-    assigned_to_extra_info: string | null
+    assigned_to_extra_info: Assignee | null
     attachments: any[]
     blocked_note: string
     created_date: string
@@ -137,7 +146,7 @@ export const deleteTask = (id: number) => {
     return authInstance.delete<Task>(`/tasks/${id}`).then(res => res.data)
 }
 
-export const getFiltersData = (projectId: number) => {
+export const getFiltersData = (projectId: string) => {
     return authInstance.get<TaskFiltersData>(`/tasks/filters_data?project=${projectId}`).then(res => res.data)
 }
 

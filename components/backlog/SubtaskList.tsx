@@ -126,6 +126,18 @@ const SubtaskList = ({ id }: Props) => {
                                             {task.subject}
                                         </TaskSubject>
                                         <TagContainer>
+                                            {task.assigned_to_extra_info && (
+                                                <Tag>
+                                                    {
+                                                        task
+                                                            .assigned_to_extra_info
+                                                            .full_name_display
+                                                    }
+                                                </Tag>
+                                            )}
+                                            <Tag>
+                                                {task.status_extra_info.name}
+                                            </Tag>
                                             <Tag>
                                                 ID-
                                                 {task.id}

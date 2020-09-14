@@ -16,8 +16,6 @@ const ColoredTag = styled(Tag)<{ backgroundColor?: string }>`
 `
 interface Props {
     id: number
-    tags: [string, string][]
-    version: string
 }
 const CustomTagPicker = ({ id }: Props) => {
     const { data: userStory } = useQuery(
