@@ -1,6 +1,6 @@
 import { Breadcrumb } from 'rsuite'
 import styled from 'styled-components'
-import { UserStory } from '../../api/userstories'
+import { UserStory } from '../../taiga-api/userstories'
 import { WrappedLink } from '../header/Header'
 
 const StyledBreadcrumb = styled(Breadcrumb)`

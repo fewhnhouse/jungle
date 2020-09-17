@@ -11,7 +11,7 @@ import {
 import IssueItem from './TaskItem'
 import Title from '../Title'
 import { Theme } from '../../pages/_app'
-import { Task } from '../../api/tasks'
+import { Task } from '../../taiga-api/tasks'
 
 export const getBackgroundColor = (
     isDraggingOver: boolean,

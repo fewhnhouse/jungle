@@ -11,7 +11,7 @@ import {
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { queryCache } from 'react-query'
-import { createMilestone, Milestone } from '../../api/milestones'
+import { createMilestone, Milestone } from '../../taiga-api/milestones'
 
 const SprintCreation = () => {
     const [show, setShow] = useState(false)

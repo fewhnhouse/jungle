@@ -11,8 +11,8 @@ import {
     UserStory,
     getUserstories,
     updateUserstory,
-} from '../../../../api/userstories'
-import { getMilestones, Milestone } from '../../../../api/milestones'
+} from '../../../../taiga-api/userstories'
+import { getMilestones, Milestone } from '../../../../taiga-api/milestones'
 
 const IssueContainer = styled.div`
     flex: 2;

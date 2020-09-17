@@ -2,8 +2,8 @@ import Board from '../../../../components/board/Board'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
-import { getMilestones, getMilestone } from '../../../../api/milestones'
-import { getFiltersData } from '../../../../api/tasks'
+import { getMilestones, getMilestone } from '../../../../taiga-api/milestones'
+import { getFiltersData } from '../../../../taiga-api/tasks'
 
 const ParentContainer = styled.div``
 

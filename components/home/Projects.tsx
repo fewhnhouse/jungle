@@ -2,7 +2,7 @@ import ProjectListItem from './ProjectListItem'
 import styled from 'styled-components'
 import { useQuery } from 'react-query'
 import authInstance from '../../util/axiosInstance'
-import { Project } from '../../api/projects'
+import { Project } from '../../taiga-api/projects'
 
 const Container = styled.div`
     display: flex;

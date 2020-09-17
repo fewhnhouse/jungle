@@ -3,8 +3,8 @@ import React, { useState } from 'react'
 import type { DraggableProvided } from 'react-beautiful-dnd'
 import IssueModal from './UserstoryModal'
 import { Icon, Tag } from 'rsuite'
-import { UserStory } from '../../api/userstories'
-import { Task } from '../../api/tasks'
+import { UserStory } from '../../taiga-api/userstories'
+import { Task } from '../../taiga-api/tasks'
 
 const getBackgroundColor = (isDragging: boolean, isGroupedOver: boolean) => {
     if (isDragging) {

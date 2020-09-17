@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
-import { getProject } from '../api/projects'
+import { getProject } from '../taiga-api/projects'
 import { Button, Loader, SelectPicker } from 'rsuite'
 import { SyntheticEvent } from 'react'
 import { ItemDataType } from 'rsuite/lib/@types/common'

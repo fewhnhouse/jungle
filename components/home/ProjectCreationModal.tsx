@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { Modal, Button, Input } from 'rsuite'
-import { addProject } from '../../api/projects'
+import { addProject } from '../../taiga-api/projects'
 
 interface Props {
     open: boolean

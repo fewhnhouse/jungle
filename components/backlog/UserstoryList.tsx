@@ -11,7 +11,7 @@ import {
 import IssueItem from './UserstoryItem'
 import Title from '../Title'
 import { Theme } from '../../pages/_app'
-import { UserStory } from '../../api/userstories'
+import { UserStory } from '../../taiga-api/userstories'
 
 export const getBackgroundColor = (
     isDraggingOver: boolean,
