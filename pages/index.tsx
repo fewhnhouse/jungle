@@ -8,6 +8,8 @@ import { useRouter } from 'next/router'
 import ProjectCreationModal from '../components/home/ProjectCreationModal'
 import { Button, Progress } from 'rsuite'
 import { User } from '../taiga-api/users'
+import PageTitle from '../components/PageTitle'
+import { PageBody, PageHeader } from '../components/Layout'
 const { Line } = Progress
 
 const Container = styled.div`
@@ -22,10 +24,6 @@ const Container = styled.div`
         padding: ${({ theme }) =>
             `${theme.spacing.small} ${theme.spacing.medium}`};
     }
-`
-
-const ColorContainer = styled.div`
-    background: #fff;
 `
 
 const Avatar = styled.img`
@@ -65,7 +63,7 @@ const OuterContainer = styled.div`
     align-items: space-between;
 `
 
-const Title = styled.h2`
+const Title = styled.h1`
     margin: 0px;
 `
 
@@ -115,7 +113,7 @@ const TitleContainer = styled.div`
 `
 
 export default function Home() {
-    const isMobile = useMedia('screen and (max-width: 400px)')
+    const isMobile = useMedia('screen and (max-width: 845px)')
     const [isModalOpen, setIsModalOpen] = useState(false)
     const toggleModal = () => {
         setIsModalOpen((open) => !open)
@@ -135,14 +133,16 @@ export default function Home() {
 
     return (
         <>
-            <ColorContainer>
+            <PageHeader>
                 <HomeContainer>
                     <Avatar src="bmo.png" />
                     <OuterContainer>
                         <HeaderContainer>
                             <TitleContainer>
-                                <Title>{user?.username}</Title>
-                                <span>Scrum Destroyer</span>
+                                <PageTitle
+                                    title={user?.username ?? ''}
+                                    description="Scrum Destroyer"
+                                />
                                 {!isMobile && (
                                     <LevelContainer>
                                         <LevelIcon>5</LevelIcon>
@@ -181,8 +181,8 @@ export default function Home() {
                         <Button onClick={toggleModal}>New Project</Button>
                     </MobileButtonContainer>
                 )}
-            </ColorContainer>
-            <OuterContentContainer>
+            </PageHeader>
+            <PageBody>
                 <Container>
                     <Projects />
                     <InnerContainer>
@@ -190,7 +190,7 @@ export default function Home() {
                         <YourWork />
                     </InnerContainer>
                 </Container>
-            </OuterContentContainer>
+            </PageBody>
             <ProjectCreationModal toggle={toggleModal} open={isModalOpen} />
         </>
     )

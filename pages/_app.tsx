@@ -72,7 +72,10 @@ const theme = {
 
 const AppContainer = styled.main`
     min-height: calc(100vh - 100px);
+    margin: auto;
+    padding: 0px 20px;
     margin-top: 100px;
+    max-width: 1400px;
     background-size: cover;
 `
 
