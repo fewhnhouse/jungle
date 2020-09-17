@@ -1,8 +1,17 @@
 import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
+import styled from 'styled-components'
+import Flex from '../../../components/Flex'
 import { PageBody, PageHeader } from '../../../components/Layout'
 import PageTitle from '../../../components/PageTitle'
 import { getProject } from '../../../taiga-api/projects'
+
+const Menu = styled.nav`
+    display: flex;
+    flex-direction: column;
+`
+
+const Content = styled.div``
 
 export default function Settings() {
     const { projectId } = useRouter().query
@@ -22,7 +31,10 @@ export default function Settings() {
                 />
             </PageHeader>
             <PageBody>
-                Body
+                <Flex>
+                    <Menu>nav</Menu>
+                    <Content>content</Content>
+                </Flex>
             </PageBody>
         </div>
     )
