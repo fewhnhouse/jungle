@@ -88,7 +88,7 @@ export const getTasks = ({
 }: {
     projectId?: string
     milestone?: string
-    userStory?: number
+    userStory?: string
     owner?: string
     status?: string
     statusIsArchived?: boolean

@@ -40,8 +40,6 @@ const Board = ({
 }: Props) => {
     const router = useRouter()
     const { projectId } = router.query
-    console.log(columns)
-
     const { data: tasks = [] } = useQuery(
         ['tasks', { milestoneId, storyId, projectId }],
         async (key, { milestoneId, storyId, projectId }) => {
@@ -94,7 +92,7 @@ const Board = ({
                         : t
                 )
         )
-        updateTask(task.id.toString(), {
+        updateTask(task.id, {
             status: destination.droppableId,
             version: task.version,
         }).then(() => {
