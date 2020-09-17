@@ -2,11 +2,13 @@ import styled from "styled-components";
 
 const PageHeaderInner = styled.div`
     max-width: 1400px;
+    padding: 20px;
     margin: auto;
 `
 
 const PageHeaderOuter = styled.div`
     width: 100%;
+    margin-top: 100px;
     border-bottom: 1px solid #e5e5ea;
 `
 
@@ -20,11 +22,12 @@ export const PageHeader = ({children}: Props) => {
             <PageHeaderInner>
                 {children}
             </PageHeaderInner>
-        </PageHeaderOuter>>
+        </PageHeaderOuter>
     )
 }
 
 export const PageBody = styled.div`
     max-width: 1400px;
     margin: auto;
+    padding: 20px;
 `

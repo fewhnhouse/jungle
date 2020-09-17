@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
+import { PageBody, PageHeader } from '../../../components/Layout'
 import PageTitle from '../../../components/PageTitle'
 import { getProject } from '../../../taiga-api/projects'
 
@@ -14,7 +15,15 @@ export default function Settings() {
 
     return (
         <div>
-            <PageTitle title="Settings" description={`For Project ${project?.name}`} />
+            <PageHeader>
+                <PageTitle
+                    title="Settings"
+                    description={`For Project ${project?.name}`}
+                />
+            </PageHeader>
+            <PageBody>
+                Body
+            </PageBody>
         </div>
     )
 }
