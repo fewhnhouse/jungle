@@ -6,7 +6,6 @@ import { useState, useEffect } from 'react'
 import YourWork from '../components/home/YourWork'
 import { useRouter } from 'next/router'
 import ProjectCreationModal from '../components/home/ProjectCreationModal'
-import { IUser } from '../interfaces/User'
 import { Button, Progress } from 'rsuite'
 const { Line } = Progress
 
@@ -18,7 +17,6 @@ const Container = styled.div`
     flex-wrap: wrap;
     height: 100%;
     align-items: flex-start;
-    background: ${({ theme }) => theme.colors.grey.light};
     @media screen and (max-width: 400px) {
         padding: ${({ theme }) =>
             `${theme.spacing.small} ${theme.spacing.medium}`};
@@ -34,6 +32,11 @@ const Avatar = styled.img`
     height: 100px;
     border-radius: 50%;
     margin-right: 30px;
+`
+
+const OuterContentContainer = styled.div`
+    width: 100%;
+    background: ${({ theme }) => theme.colors.grey.light};
 `
 
 const HomeContainer = styled.div`
@@ -178,13 +181,15 @@ export default function Home() {
                     </MobileButtonContainer>
                 )}
             </ColorContainer>
-            <Container>
-                <Projects />
-                <InnerContainer>
-                    <Activities />
-                    <YourWork />
-                </InnerContainer>
-            </Container>
+            <OuterContentContainer>
+                <Container>
+                    <Projects />
+                    <InnerContainer>
+                        <Activities />
+                        <YourWork />
+                    </InnerContainer>
+                </Container>
+            </OuterContentContainer>
             <ProjectCreationModal toggle={toggleModal} open={isModalOpen} />
         </>
     )

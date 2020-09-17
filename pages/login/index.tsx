@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { useState } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/router'
-import { IUser } from '../../interfaces/User'
 import {
     Panel,
     Button,
@@ -16,11 +15,13 @@ import {
     Alert,
     CheckboxGroup,
 } from 'rsuite'
+import { User } from '../../api/users'
 
 const Container = styled.div`
     display: flex;
+    background-color: rgb(51, 99, 209);
     background-image: url(jungle.png);
-    min-height: 100%;
+    min-height: 100vh;
     width: 100%;
     background-size: cover;
     justify-content: center;
@@ -44,7 +45,7 @@ export default function Home() {
     const handleLogin = async () => {
         const { username, password, remember } = formState
         try {
-            const { data } = await axios.post<unknown, { data: IUser }>(
+            const { data } = await axios.post<unknown, { data: User }>(
                 '/auth',
                 {
                     username,
@@ -65,52 +66,50 @@ export default function Home() {
         }
     }
     return (
-        <>
-            <Container>
-                <StyledPanel bordered title={<h3>Into the Jungle</h3>}>
-                    <Form
-                        onSubmit={handleLogin}
-                        value={formState}
-                        onChange={(value: {
-                            username: string
-                            password: string
-                            remember: boolean
-                        }) => setFormState(value)}
-                    >
-                        <FormGroup>
-                            <ControlLabel>Username</ControlLabel>
-                            <FormControl name="username" />
-                        </FormGroup>
-                        <FormGroup>
-                            <ControlLabel>Password</ControlLabel>
-                            <FormControl name="password" type="password" />
-                        </FormGroup>
-                        <p>
-                            Forgot your password? Reset it{' '}
-                            <Link href="reset-password">
-                                <a>here</a>
-                            </Link>
-                            .
-                        </p>
-                        <FormGroup>
-                            <FormControl
-                                accepter={CheckboxGroup}
-                                name="remember"
-                                inline
-                            >
-                                <Checkbox>Remember me</Checkbox>
-                            </FormControl>
-                        </FormGroup>
-                        <FormGroup>
-                            <ButtonToolbar>
-                                <Button type="submit" appearance="primary">
-                                    Log In &rarr;
-                                </Button>
-                            </ButtonToolbar>
-                        </FormGroup>
-                    </Form>
-                </StyledPanel>
-            </Container>
-        </>
+        <Container>
+            <StyledPanel bordered title="Into the Jungle">
+                <Form
+                    onSubmit={handleLogin}
+                    value={formState}
+                    onChange={(value: {
+                        username: string
+                        password: string
+                        remember: boolean
+                    }) => setFormState(value)}
+                >
+                    <FormGroup>
+                        <ControlLabel>Username</ControlLabel>
+                        <FormControl name="username" />
+                    </FormGroup>
+                    <FormGroup>
+                        <ControlLabel>Password</ControlLabel>
+                        <FormControl name="password" type="password" />
+                    </FormGroup>
+                    <p>
+                        Forgot your password? Reset it{' '}
+                        <Link href="reset-password">
+                            <a>here</a>
+                        </Link>
+                        .
+                    </p>
+                    <FormGroup>
+                        <FormControl
+                            accepter={CheckboxGroup}
+                            name="remember"
+                            inline
+                        >
+                            <Checkbox>Remember me</Checkbox>
+                        </FormControl>
+                    </FormGroup>
+                    <FormGroup>
+                        <ButtonToolbar>
+                            <Button type="submit" appearance="primary">
+                                Log In &rarr;
+                            </Button>
+                        </ButtonToolbar>
+                    </FormGroup>
+                </Form>
+            </StyledPanel>
+        </Container>
     )
 }
