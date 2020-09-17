@@ -9,7 +9,7 @@ import {
 import styled from 'styled-components'
 import CustomCollapse from '../Collapse'
 import { useQuery, queryCache } from 'react-query'
-import { getTasks, TaskStatus, updateTask, Task } from '../../api/tasks'
+import { getTasks, TaskStatus, updateTask, Task } from '../../taiga-api/tasks'
 import { useRouter } from 'next/router'
 import { memo } from 'react'
 

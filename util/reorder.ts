@@ -1,7 +1,7 @@
 import { DraggableLocation } from 'react-beautiful-dnd'
 import { Issue } from '../interfaces/Issue'
 import { Task, IUserStory } from '../interfaces/UserStory'
-import { updateTask } from '../api/tasks'
+import { updateTask } from '../taiga-api/tasks'
 
 // a little function to help us with reordering the result
 const reorder = (list: any[], startIndex: number, endIndex: number): any[] => {

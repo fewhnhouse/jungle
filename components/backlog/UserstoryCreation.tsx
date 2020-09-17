@@ -15,7 +15,7 @@ import {
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { queryCache } from 'react-query'
-import { createUserstory, UserStory } from '../../api/userstories'
+import { createUserstory, UserStory } from '../../taiga-api/userstories'
 
 const UserstoryCreation = () => {
     const [show, setShow] = useState(false)

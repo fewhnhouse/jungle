@@ -7,7 +7,7 @@ import {
 import IssueList from './TaskList'
 import Title from '../Title'
 import { Theme } from '../../pages/_app'
-import { Task } from '../../api/tasks'
+import { Task } from '../../taiga-api/tasks'
 
 const Container = styled.div`
     margin: ${({ theme }) => theme.spacing.small};

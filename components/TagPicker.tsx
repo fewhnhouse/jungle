@@ -3,8 +3,8 @@ import { useState } from 'react'
 import { queryCache, useQuery } from 'react-query'
 import { Tag, TagPicker } from 'rsuite'
 import styled from 'styled-components'
-import { getTagColors, TagObject } from '../api/projects'
-import { getUserstory, updateUserstory } from '../api/userstories'
+import { getTagColors, TagObject } from '../taiga-api/projects'
+import { getUserstory, updateUserstory } from '../taiga-api/userstories'
 
 const StyledTagPicker = styled(TagPicker)`
     width: 100%;

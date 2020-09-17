@@ -1,6 +1,6 @@
 import { Breadcrumb } from 'rsuite'
 import styled from 'styled-components'
-import { Task } from '../../api/tasks'
+import { Task } from '../../taiga-api/tasks'
 import { WrappedLink } from '../header/Header'
 
 const StyledBreadcrumb = styled(Breadcrumb)`

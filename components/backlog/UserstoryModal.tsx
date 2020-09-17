@@ -19,7 +19,7 @@ import {
     getFiltersData,
     getUserstory,
     updateUserstory,
-} from '../../api/userstories'
+} from '../../taiga-api/userstories'
 import Breadcrumbs from './Breadcrumbs'
 import SubtaskList from './SubtaskList'
 import CustomTagPicker from '../TagPicker'

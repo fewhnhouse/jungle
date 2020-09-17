@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Button, Icon, Tag, Input, Placeholder } from 'rsuite'
 import { queryCache, useQuery } from 'react-query'
-import { getTasks, createTask, Task } from '../../api/tasks'
+import { getTasks, createTask, Task } from '../../taiga-api/tasks'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 
