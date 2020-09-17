@@ -15,7 +15,7 @@ import {
     Alert,
     CheckboxGroup,
 } from 'rsuite'
-import { User } from '../../api/users'
+import { User } from '../../taiga-api/users'
 
 const Container = styled.div`
     display: flex;

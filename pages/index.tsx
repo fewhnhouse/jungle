@@ -7,6 +7,7 @@ import YourWork from '../components/home/YourWork'
 import { useRouter } from 'next/router'
 import ProjectCreationModal from '../components/home/ProjectCreationModal'
 import { Button, Progress } from 'rsuite'
+import { User } from '../taiga-api/users'
 const { Line } = Progress
 
 const Container = styled.div`
@@ -119,7 +120,7 @@ export default function Home() {
     const toggleModal = () => {
         setIsModalOpen((open) => !open)
     }
-    const [user, setUser] = useState<IUser | undefined>()
+    const [user, setUser] = useState<User | undefined>()
 
     const { push } = useRouter()
 

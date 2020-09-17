@@ -1,7 +1,7 @@
 import { DraggableLocation } from 'react-beautiful-dnd'
 import { Issue } from '../interfaces/Issue'
-import { Task, IUserStory } from '../interfaces/UserStory'
-import { updateTask } from '../taiga-api/tasks'
+import { Task, updateTask } from '../taiga-api/tasks'
+import { UserStory } from '../taiga-api/userstories'
 
 // a little function to help us with reordering the result
 const reorder = (list: any[], startIndex: number, endIndex: number): any[] => {
@@ -25,7 +25,7 @@ export interface ReorderTaskMapArgs {
 }
 
 export interface ReoderBacklogArgs {
-    issues: IUserStory[]
+    issues: UserStory[]
     source: DraggableLocation
     destination: DraggableLocation
 }
@@ -34,22 +34,22 @@ export const reorderBacklog = ({
     issues,
     source,
     destination,
-}: ReoderBacklogArgs): IUserStory[] => {
-    const current: IUserStory[] = issues.filter((issue) =>
+}: ReoderBacklogArgs): UserStory[] => {
+    const current: UserStory[] = issues.filter((issue) =>
         source.droppableId === 'backlog'
             ? issue?.milestone === null
             : issue?.milestone?.toString() === source.droppableId
     )
-    const next: IUserStory[] = issues.filter((issue) =>
+    const next: UserStory[] = issues.filter((issue) =>
         destination.droppableId === 'backlog'
             ? issue?.milestone === null
             : issue?.milestone?.toString() === destination.droppableId
     )
-    const target: IUserStory = current[source.index]
+    const target: UserStory = current[source.index]
 
     // moving to same list
     if (source.droppableId === destination.droppableId) {
-        const reordered: IUserStory[] = reorder(
+        const reordered: UserStory[] = reorder(
             current,
             source.index,
             destination.index

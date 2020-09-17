@@ -40,7 +40,7 @@ const CustomTagPicker = ({ id }: Props) => {
           }))
         : []
 
-    const handleChange = async (newTags?: string[], event) => {
+    const handleChange = async (newTags: string[] | undefined) => {
         setIsUpdating(true)
         if (isUpdating) {
             return

@@ -19,7 +19,7 @@ export default function BoardContainer() {
     const { data: sprint } = useQuery(
         ['milestone', { milestoneId: milestone?.id }],
         async (key, { milestoneId }) => {
-            return getMilestone(milestoneId.toString())
+            return getMilestone(milestoneId)
         },
         { enabled: milestones }
     )

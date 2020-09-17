@@ -79,7 +79,7 @@ const SubtaskList = ({ id }: Props) => {
         (key, { id }) =>
             getTasks({
                 projectId: projectId as string,
-                userStory: id,
+                userStory: id.toString(),
             }),
 
         { enabled: id && projectId }
