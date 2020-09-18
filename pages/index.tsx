@@ -33,16 +33,8 @@ const Avatar = styled.img`
     margin-right: 30px;
 `
 
-const OuterContentContainer = styled.div`
-    width: 100%;
-    background: ${({ theme }) => theme.colors.grey.light};
-`
-
 const HomeContainer = styled.div`
-    width: 100%;
     padding: ${({ theme }) => theme.spacing.crazy};
-    margin: auto;
-    max-width: 1400px;
     display: flex;
     justify-content: space-between;
     @media screen and (max-width: 400px) {
@@ -52,19 +44,9 @@ const HomeContainer = styled.div`
 
 const HeaderContainer = styled.div`
     display: flex;
-    height: 40px;
-    justify-content: space-between;
-`
-
-const OuterContainer = styled.div`
+    align-items: flex-start;
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: space-between;
-`
-
-const Title = styled.h1`
-    margin: 0px;
+    justify-content: space-between;
 `
 
 const MobileButtonContainer = styled.div`
@@ -136,34 +118,30 @@ export default function Home() {
             <PageHeader>
                 <HomeContainer>
                     <Avatar src="bmo.png" />
-                    <OuterContainer>
-                        <HeaderContainer>
-                            <TitleContainer>
-                                <PageTitle
-                                    title={user?.username ?? ''}
-                                    description="Scrum Destroyer"
-                                />
-                                {!isMobile && (
-                                    <LevelContainer>
-                                        <LevelIcon>5</LevelIcon>
-                                        <Line
-                                            strokeColor="#2ecc71"
-                                            showInfo={false}
-                                            percent={30}
-                                            status="active"
-                                        />
-                                        <LevelIcon>6</LevelIcon>
-                                    </LevelContainer>
-                                )}
-                            </TitleContainer>
-
+                    <HeaderContainer>
+                        <TitleContainer>
+                            <PageTitle
+                                title={user?.username ?? ''}
+                                description="Scrum Destroyer"
+                            />
                             {!isMobile && (
-                                <Button onClick={toggleModal}>
-                                    New Project
-                                </Button>
+                                <LevelContainer>
+                                    <LevelIcon>5</LevelIcon>
+                                    <Line
+                                        strokeColor="#2ecc71"
+                                        showInfo={false}
+                                        percent={30}
+                                        status="active"
+                                    />
+                                    <LevelIcon>6</LevelIcon>
+                                </LevelContainer>
                             )}
-                        </HeaderContainer>
-                    </OuterContainer>
+                        </TitleContainer>
+
+                        {!isMobile && (
+                            <Button onClick={toggleModal}>New Project</Button>
+                        )}
+                    </HeaderContainer>
                 </HomeContainer>
                 {isMobile && (
                     <MobileButtonContainer>
