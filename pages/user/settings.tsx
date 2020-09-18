@@ -15,7 +15,6 @@ export default function ProjectSettings() {
         'Desktop Notifications',
         'Events',
         'Start Pages',
-        'Change Password',
     ]
     
     return (

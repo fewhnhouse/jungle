@@ -42,6 +42,10 @@ const FileInput = styled.input`
     height: 0;
 `
 
+const Description = styled.p`
+    margin-bottom: 10px;
+`
+
 const UploadButton = styled.label`
     position: absolute;
     top: 0;
@@ -78,13 +82,24 @@ const UserDetails = () => {
                     </Footer>
                 </Form>
             </StyledPanel>
+            <StyledPanel bodyFill bordered header="Full Name">
+                <Form>
+                    <StyledFormGroup>
+                        <FormControl name="fullName" />
+                    </StyledFormGroup>
+                    <Footer>
+                        <span>Your full name is important for others to recognize you.</span>
+                        <Button appearance="ghost">Save</Button>
+                    </Footer>
+                </Form>
+            </StyledPanel>
             <StyledPanel bodyFill bordered header="Email">
                 <Form>
                     <StyledFormGroup>
-                        <span>
+                        <Description>
                             Please enter your email address used to log in to
                             Taiga.
-                        </span>
+                        </Description>
                         <FormControl name="name" />
                     </StyledFormGroup>
                     <Footer>
@@ -93,14 +108,34 @@ const UserDetails = () => {
                     </Footer>
                 </Form>
             </StyledPanel>
+            <StyledPanel bodyFill bordered header="Password">
+                <Form>
+                    <StyledFormGroup>
+                        <Description>
+                            Please enter your current password and a new one in
+                            order to update it.
+                        </Description>
+                        <FormControl
+                            style={{ marginBottom: 10 }}
+                            name="currentPassword"
+                        />
+                        <FormControl name="newPassword" />
+                    </StyledFormGroup>
+                    <Footer>
+                        <span>We will send you a verification email.</span>
+                        <Button appearance="ghost">Save</Button>
+                    </Footer>
+                </Form>
+            </StyledPanel>
+
             <StyledPanel bodyFill bordered header="Avatar">
                 <Form>
                     <StyledFormGroup>
                         <Flex align="center" justify="space-between">
-                            <span>
+                            <Description>
                                 Click the icon to change your Avatar.
                                 <br /> It is optional, but strongly recommended.
-                            </span>
+                            </Description>
                             <AvatarWrapper>
                                 <Avatar src="https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png" />
                                 <UploadButton htmlFor="avatar-upload"></UploadButton>

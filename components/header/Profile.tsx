@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import { useState } from 'react'
 import { Avatar, Dropdown } from 'rsuite'
+import Link from 'next/link'
 
 const ProfileBadge = styled.img`
     border-radius: 50%;
@@ -19,8 +20,14 @@ export default function Profile() {
     const toggle = () => setOpen((open) => !open)
 
     return (
-        <Dropdown placement="bottomEnd" renderTitle={() => <Avatar circle>FW</Avatar>} noCaret>
-            <Dropdown.Item>Option 1</Dropdown.Item>
+        <Dropdown
+            placement="bottomEnd"
+            renderTitle={() => <Avatar circle>FW</Avatar>}
+            noCaret
+        >
+            <Dropdown.Item>
+                <Link href="/user/settings">Settings</Link>
+            </Dropdown.Item>
         </Dropdown>
     )
 }
