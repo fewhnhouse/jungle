@@ -4,6 +4,8 @@ import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
 import { getMilestones, getMilestone } from '../../../../taiga-api/milestones'
 import { getFiltersData } from '../../../../taiga-api/tasks'
+import { PageBody, PageHeader } from '../../../../components/Layout'
+import PageTitle from '../../../../components/PageTitle'
 
 const ParentContainer = styled.div``
 
@@ -53,18 +55,25 @@ export default function BoardContainer() {
     */
 
     return (
-        <ParentContainer>
-            {sprint?.user_stories.map((story) => {
-                return (
-                    <Board
-                        title={story.subject}
-                        key={story.id}
-                        storyId={story.id.toString()}
-                        milestoneId={sprint.id.toString()}
-                        columns={taskFiltersData?.statuses}
-                    />
-                )
-            })}
-        </ParentContainer>
+        <>
+            <PageHeader>
+                <PageTitle title="Board" />
+            </PageHeader>
+            <PageBody>
+                <ParentContainer>
+                    {sprint?.user_stories.map((story) => {
+                        return (
+                            <Board
+                                title={story.subject}
+                                key={story.id}
+                                storyId={story.id.toString()}
+                                milestoneId={sprint.id.toString()}
+                                columns={taskFiltersData?.statuses}
+                            />
+                        )
+                    })}
+                </ParentContainer>
+            </PageBody>
+        </>
     )
 }
