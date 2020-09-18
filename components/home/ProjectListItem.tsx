@@ -10,9 +10,10 @@ const StyledButton = styled(Button)`
 
 const StyledPanel = styled(Panel)`
     min-width: 300px;
+    max-width: 500px;
     background: white;
     width: 100%;
-    margin: ${({ theme }) => `${theme.spacing.small}`};
+    margin: ${({ theme }) => `${theme.spacing.medium}`};
 `
 
 const StyledFooter = styled.div`
