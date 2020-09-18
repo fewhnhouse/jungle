@@ -13,30 +13,25 @@ import {
     updateUserstory,
 } from '../../../../taiga-api/userstories'
 import { getMilestones, Milestone } from '../../../../taiga-api/milestones'
+import { PageBody, PageHeader } from '../../../../components/Layout'
+import PageTitle from '../../../../components/PageTitle'
 
 const IssueContainer = styled.div`
     flex: 2;
     display: flex;
     flex-direction: row-reverse;
-
-    @media screen and(max-width: 400px) {
-        flex-direction: column;
-    }
+    flex-wrap: wrap;
 `
 
 const ContentContainer = styled.div`
     display: flex;
-`
-
-const Sidebar = styled.aside`
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
-    border-radius: 8px;
-    margin: 20px;
-    flex: 1;
+    max-width: 1000px;
+    margin: auto;
 `
 
 const Container = styled.div`
     flex: 1;
+    min-width: 300px;
     margin: ${({ theme }) => theme.spacing.small};
     padding: ${({ theme }) => theme.spacing.mini};
 `
@@ -219,38 +214,50 @@ export default function Backlog() {
 
     const isWideScreen = useMedia({ minWidth: '1000px' })
     return (
-        <ContentContainer>
-            <IssueContainer>
-                <DragDropContext
-                    onDragStart={onDragStart}
-                    onDragEnd={onDragEnd}
-                >
-                    <Container>
-                        <TitleContainer>
-                            <Title>Sprints</Title>
-                            <SprintCreation />
-                        </TitleContainer>
-                        <ListContainer>
-                            {sprintsData?.map((sprint) => (
-                                <Sprint key={sprint.id} sprint={sprint} />
-                            ))}
-                        </ListContainer>
-                    </Container>
-                    <Container>
-                        <TitleContainer>
-                            <Title>Backlog</Title>
-                            <UserstoryCreation />
-                        </TitleContainer>
-                        <ListContainer>
-                            <IssueList
-                                listId="backlog"
-                                issues={backlogData ?? []}
-                            />
-                        </ListContainer>
-                    </Container>
-                </DragDropContext>
-            </IssueContainer>
-            {isWideScreen && <Sidebar />}
-        </ContentContainer>
+        <>
+            <PageHeader>
+                <PageTitle
+                    title="Backlog"
+                    description="Adjust your backlog and your current sprints"
+                />
+            </PageHeader>
+            <PageBody>
+                <ContentContainer>
+                    <IssueContainer>
+                        <DragDropContext
+                            onDragStart={onDragStart}
+                            onDragEnd={onDragEnd}
+                        >
+                            <Container>
+                                <TitleContainer>
+                                    <Title>Sprints</Title>
+                                    <SprintCreation />
+                                </TitleContainer>
+                                <ListContainer>
+                                    {sprintsData?.map((sprint) => (
+                                        <Sprint
+                                            key={sprint.id}
+                                            sprint={sprint}
+                                        />
+                                    ))}
+                                </ListContainer>
+                            </Container>
+                            <Container>
+                                <TitleContainer>
+                                    <Title>Backlog</Title>
+                                    <UserstoryCreation />
+                                </TitleContainer>
+                                <ListContainer>
+                                    <IssueList
+                                        listId="backlog"
+                                        issues={backlogData ?? []}
+                                    />
+                                </ListContainer>
+                            </Container>
+                        </DragDropContext>
+                    </IssueContainer>
+                </ContentContainer>
+            </PageBody>
+        </>
     )
 }
