@@ -18,7 +18,7 @@ export const getBackgroundColor = (
     isDraggingFrom: boolean,
     theme: Theme
 ): string => {
-    return 'white'
+    return isDraggingOver ? '#EAEAEA' : 'white'
 }
 
 type WrapperProps = {
@@ -41,12 +41,11 @@ const Wrapper = styled.div<WrapperProps>`
     opacity: ${({ isDropDisabled }) => (isDropDisabled ? 0.5 : 'inherit')};
     padding: ${({ theme }) => `${theme.spacing.mini}`};
     border: 4px;
-    padding-bottom: 0;
+    padding-bottom: 0px;
     transition: background-color 0.2s ease, opacity 0.1s ease;
     user-select: none;
     height: 100%;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
+    border-radius: 4px;
 `
 
 

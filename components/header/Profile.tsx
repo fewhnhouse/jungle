@@ -26,7 +26,9 @@ export default function Profile() {
             noCaret
         >
             <Dropdown.Item>
-                <Link href="/user/settings">Settings</Link>
+                <Link href="/user/settings">
+                    <a>Settings</a>
+                </Link>
             </Dropdown.Item>
         </Dropdown>
     )
