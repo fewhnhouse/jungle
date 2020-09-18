@@ -1,8 +1,14 @@
 import { useState } from 'react'
+import styled from 'styled-components'
 import { PageBody, PageHeader } from '../../components/Layout'
 import PageTitle from '../../components/PageTitle'
 import Settings from '../../components/Settings'
 import UserDetails from '../../components/user-settings/UserDetails'
+
+const HeaderContainer = styled.div`
+    margin: auto;
+    max-width: 840px;
+`
 
 export default function ProjectSettings() {
     const [menuItemIndex, setMenuItemIndex] = useState(0)
@@ -16,11 +22,16 @@ export default function ProjectSettings() {
         'Events',
         'Start Pages',
     ]
-    
+
     return (
         <div>
             <PageHeader>
-                <PageTitle title="Settings" description={`For User Admin`} />
+                <HeaderContainer>
+                    <PageTitle
+                        title="Settings"
+                        description={`For User Admin`}
+                    />
+                </HeaderContainer>
             </PageHeader>
             <PageBody>
                 <Settings

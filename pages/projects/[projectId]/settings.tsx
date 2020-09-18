@@ -6,6 +6,12 @@ import PageTitle from '../../../components/PageTitle'
 import ProjectDetails from '../../..../../../components/project-settings/ProjectDetails'
 import Settings from '../../../components/Settings'
 import { getProject } from '../../../taiga-api/projects'
+import styled from 'styled-components'
+
+const HeaderContainer = styled.div`
+    margin: auto;
+    max-width: 840px;
+`
 
 export default function ProjectSettings() {
     const { projectId } = useRouter().query
@@ -31,10 +37,12 @@ export default function ProjectSettings() {
     return (
         <div>
             <PageHeader>
-                <PageTitle
-                    title="Settings"
-                    description={`For Project ${project?.name}`}
-                />
+                <HeaderContainer>
+                    <PageTitle
+                        title="Settings"
+                        description={`For Project ${project?.name}`}
+                    />
+                </HeaderContainer>
             </PageHeader>
             <PageBody>
                 <Settings
