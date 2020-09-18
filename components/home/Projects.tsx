@@ -31,12 +31,12 @@ export default function Projects() {
     return (
         <Container>
             {data
-                .sort(
+                ?.sort(
                     (a, b) =>
                         new Date(b.modified_date).getTime() -
                         new Date(a.modified_date).getTime()
                 )
-                ?.filter((_, index) => index < 6)
+                .filter((_, index) => index < 6)
                 .map(({ id, name, description }) => (
                     <ProjectListItem
                         key={id}
@@ -45,7 +45,11 @@ export default function Projects() {
                         description={description}
                     />
                 ))}
-            {isMax && <Link href="/projects">See all Projects</Link>}
+            {isMax && (
+                <Link href="/projects">
+                    <a>See all Projects</a>
+                </Link>
+            )}
         </Container>
     )
 }
