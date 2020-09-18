@@ -1,13 +1,4 @@
-import { useRouter } from 'next/router'
-import {
-    Form,
-    Input,
-    Panel,
-    FormGroup,
-    FormControl,
-    Button,
-    Checkbox,
-} from 'rsuite'
+import { Form, Panel, FormGroup, FormControl, Button, Checkbox } from 'rsuite'
 import styled from 'styled-components'
 import Flex from '../Flex'
 
@@ -73,36 +64,31 @@ const StyledFormGroup = styled(FormGroup)`
     padding: 10px 20px;
 `
 
-const ProjectSettings = () => {
-    const { projectId } = useRouter().query
-
+const UserDetails = () => {
     return (
         <div>
-            <StyledPanel bodyFill bordered header="Project Name">
+            <StyledPanel bodyFill bordered header="Username">
                 <Form>
                     <StyledFormGroup>
                         <FormControl name="name" />
                     </StyledFormGroup>
                     <Footer>
-                        <span>Your Project name is visible to everyone.</span>
+                        <span>Your username name is visible to everyone.</span>
                         <Button appearance="ghost">Save</Button>
                     </Footer>
                 </Form>
             </StyledPanel>
-            <StyledPanel bodyFill bordered header="Project Description">
+            <StyledPanel bodyFill bordered header="Email">
                 <Form>
                     <StyledFormGroup>
-                        <FormControl
-                            rows={5}
-                            name="textarea"
-                            componentClass="textarea"
-                        />
+                        <span>
+                            Please enter your email address used to log in to
+                            Taiga.
+                        </span>
+                        <FormControl name="name" />
                     </StyledFormGroup>
                     <Footer>
-                        <span>
-                            Your Project description makes others understand
-                            what this project is about.
-                        </span>
+                        <span>We will send you a verification email.</span>
                         <Button appearance="ghost">Save</Button>
                     </Footer>
                 </Form>
@@ -135,33 +121,36 @@ const ProjectSettings = () => {
                     </Footer>
                 </Form>
             </StyledPanel>
-            <StyledPanel bodyFill bordered header="Visibility">
+            <StyledPanel bodyFill bordered header="Bio">
                 <Form>
                     <StyledFormGroup>
-                        <span>
-                            Your Project is currently is visible to everyone.
-                        </span>
+                        <FormControl
+                            rows={5}
+                            name="textarea"
+                            componentClass="textarea"
+                        />
                     </StyledFormGroup>
                     <Footer>
-                        <span>Your Project is currently set to public.</span>
-                        <Button appearance="ghost">Take Private</Button>
+                        <span>Your bio lets others know what you can do.</span>
+                        <Button appearance="ghost">Save</Button>
                     </Footer>
                 </Form>
             </StyledPanel>
-            <StyledPanel bodyFill bordered header="Delete Project">
+
+            <StyledPanel bodyFill bordered header="Delete Account">
                 <Form>
                     <StyledFormGroup>
                         <span>
-                            If you delete your project, you wont be able to
+                            If you delete your account, you wont be able to
                             restore it later.
                         </span>
                     </StyledFormGroup>
                     <Footer>
                         <Checkbox>
-                            Confirm that you want to delete your project.
+                            Confirm that you want to delete your account.
                         </Checkbox>
                         <Button color="red" appearance="ghost">
-                            Delete Project
+                            Delete Account
                         </Button>
                     </Footer>
                 </Form>
@@ -170,4 +159,4 @@ const ProjectSettings = () => {
     )
 }
 
-export default ProjectSettings
+export default UserDetails

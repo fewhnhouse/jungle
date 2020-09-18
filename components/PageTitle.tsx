@@ -3,6 +3,8 @@ import styled from 'styled-components'
 const TitleContainer = styled.div`
     display: flex;
     flex-direction: column;
+    width: 840px;
+    margin: auto;
 `
 
 const Description = styled.span`
