@@ -10,10 +10,12 @@ import {
     Checkbox,
     Placeholder,
     Alert,
+    CheckboxGroup,
 } from 'rsuite'
 import styled from 'styled-components'
 import {
     changeLogo,
+    deleteProject,
     getProject,
     Project,
     updateProject,
@@ -85,7 +87,8 @@ const StyledFormGroup = styled(FormGroup)`
 `
 
 const ProjectDetails = () => {
-    const { projectId } = useRouter().query
+    const { query, replace } = useRouter()
+    const { projectId } = query
 
     const { data, error } = useQuery(
         ['project', { projectId }],
@@ -96,12 +99,12 @@ const ProjectDetails = () => {
     const [name, setName] = useState(data?.name ?? '')
     const [description, setDescription] = useState(data?.description ?? '')
     const [isPrivate, setIsPrivate] = useState(data?.is_private ?? false)
+    const [confirmDeletion, setConfirmDeletion] = useState(false)
     const [logo, setLogo] = useState(
         data?.logo_big_url ??
             'https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png'
     )
 
-    console.log(data)
     if (!data) {
         return <Paragraph rows={5} active />
     }
@@ -145,7 +148,17 @@ const ProjectDetails = () => {
         const file = e.target.files[0]
         const formData = new FormData()
         formData.append('logo', file)
-        changeLogo(projectId as string, formData).then(res => console.log(res))
+        changeLogo(projectId as string, formData).then((res) =>
+            console.log(res)
+        )
+    }
+
+    const handleDeleteProject = () => {
+        deleteProject(projectId as string).then(() => {
+            Alert.info('Project successfully deleted.')
+            queryCache.invalidateQueries('projects')
+            replace('/projects')
+        })
     }
 
     return (
@@ -252,10 +265,20 @@ const ProjectDetails = () => {
                         </span>
                     </StyledFormGroup>
                     <Footer>
-                        <Checkbox>
+                        <Checkbox
+                            value={confirmDeletion}
+                            onChange={(e, checked) =>
+                                setConfirmDeletion(checked)
+                            }
+                        >
                             Confirm that you want to delete your project.
                         </Checkbox>
-                        <Button color="red" appearance="ghost">
+                        <Button
+                            disabled={!confirmDeletion}
+                            color="red"
+                            onClick={handleDeleteProject}
+                            appearance="ghost"
+                        >
                             Delete Project
                         </Button>
                     </Footer>
