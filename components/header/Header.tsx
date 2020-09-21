@@ -78,13 +78,12 @@ const InputContainer = styled.div<{ opened: boolean; headerWidth?: number }>`
     padding: ${({ theme }) => theme.spacing.mini};
 `
 
-const StyledLinkButton = styled(Button)`
+const StyledLinkButton = styled(Button)<{ isCurrent?: boolean }>`
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 0px;
-    color: ${({ isCurrent }: { isCurrent: boolean }) =>
-        isCurrent ? '#2589f5' : ''};
+    color: ${({ isCurrent }) => (isCurrent ? '#2589f5' : '')};
 `
 
 export const WrappedLink = ({

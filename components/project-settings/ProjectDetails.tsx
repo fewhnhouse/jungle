@@ -1,3 +1,6 @@
+import { useRouter } from 'next/router'
+import { useState } from 'react'
+import { queryCache, useQuery } from 'react-query'
 import {
     Form,
     Panel,
@@ -5,9 +8,19 @@ import {
     FormControl,
     Button,
     Checkbox,
+    Placeholder,
+    Alert,
 } from 'rsuite'
 import styled from 'styled-components'
+import {
+    changeLogo,
+    getProject,
+    Project,
+    updateProject,
+} from '../../taiga-api/projects'
 import Flex from '../Flex'
+
+const { Paragraph } = Placeholder
 
 const StyledPanel = styled(Panel)`
     margin: 30px 0px;
@@ -72,26 +85,100 @@ const StyledFormGroup = styled(FormGroup)`
 `
 
 const ProjectDetails = () => {
+    const { projectId } = useRouter().query
+
+    const { data, error } = useQuery(
+        ['project', { projectId }],
+        async (key, { projectId }) => {
+            return getProject(projectId as string)
+        }
+    )
+    const [name, setName] = useState(data?.name ?? '')
+    const [description, setDescription] = useState(data?.description ?? '')
+    const [isPrivate, setIsPrivate] = useState(data?.is_private ?? false)
+    const [logo, setLogo] = useState(
+        data?.logo_big_url ??
+            'https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png'
+    )
+
+    console.log(data)
+    if (!data) {
+        return <Paragraph rows={5} active />
+    }
+
+    const handleNameSubmit = () => {
+        queryCache.setQueryData(
+            ['project', { projectId }],
+            (prevData: Project) => ({ ...prevData, name })
+        )
+        updateProject(projectId as string, { name }).then(() =>
+            Alert.info('Project name successfully updated')
+        )
+    }
+
+    const handleDescriptionSubmit = () => {
+        queryCache.setQueryData(
+            ['project', { projectId }],
+            (prevData: Project) => ({ ...prevData, description })
+        )
+        updateProject(projectId as string, { description }).then(() =>
+            Alert.info('Project description successfully updated')
+        )
+    }
+
+    const handleVisibilityToggle = () => {
+        console.log(isPrivate)
+        queryCache.setQueryData(
+            ['project', { projectId }],
+            (prevData: Project) => ({
+                ...prevData,
+                is_private: !prevData.is_private,
+            })
+        )
+        setIsPrivate((isPrivate) => !isPrivate)
+        updateProject(projectId as string, {
+            is_private: !isPrivate,
+        }).then(() => Alert.info('Project visibility successfully updated'))
+    }
+
+    const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files[0]
+        const formData = new FormData()
+        formData.append('logo', file)
+        changeLogo(projectId as string, formData).then(res => console.log(res))
+    }
 
     return (
         <div>
             <StyledPanel bodyFill bordered header="Project Name">
-                <Form>
+                <Form
+                    onChange={(formValue) => setName(formValue.name)}
+                    formValue={{ name }}
+                    onSubmit={handleNameSubmit}
+                >
                     <StyledFormGroup>
                         <FormControl name="name" />
                     </StyledFormGroup>
                     <Footer>
                         <span>Your Project name is visible to everyone.</span>
-                        <Button appearance="ghost">Save</Button>
+                        <Button type="submit" appearance="ghost">
+                            Save
+                        </Button>
                     </Footer>
                 </Form>
             </StyledPanel>
             <StyledPanel bodyFill bordered header="Project Description">
-                <Form>
+                <Form
+                    onChange={(formValue) =>
+                        setDescription(formValue.description)
+                    }
+                    formValue={{ description }}
+                    onSubmit={handleDescriptionSubmit}
+                >
                     <StyledFormGroup>
                         <FormControl
                             rows={5}
-                            name="textarea"
+                            name="description"
                             componentClass="textarea"
                         />
                     </StyledFormGroup>
@@ -100,7 +187,9 @@ const ProjectDetails = () => {
                             Your Project description makes others understand
                             what this project is about.
                         </span>
-                        <Button appearance="ghost">Save</Button>
+                        <Button type="submit" appearance="ghost">
+                            Save
+                        </Button>
                     </Footer>
                 </Form>
             </StyledPanel>
@@ -113,9 +202,10 @@ const ProjectDetails = () => {
                                 <br /> It is optional, but strongly recommended.
                             </span>
                             <AvatarWrapper>
-                                <Avatar src="https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png" />
+                                <Avatar src={logo} />
                                 <UploadButton htmlFor="avatar-upload"></UploadButton>
                                 <FileInput
+                                    onChange={handleAvatarChange}
                                     id="avatar-upload"
                                     className="file-upload"
                                     type="file"
@@ -133,15 +223,23 @@ const ProjectDetails = () => {
                 </Form>
             </StyledPanel>
             <StyledPanel bodyFill bordered header="Visibility">
-                <Form>
+                <Form onSubmit={handleVisibilityToggle}>
                     <StyledFormGroup>
                         <span>
-                            Your Project is currently is visible to everyone.
+                            {isPrivate
+                                ? 'Your project can only be seen by invited members.'
+                                : 'Your Project is currently is visible to everyone.'}
                         </span>
                     </StyledFormGroup>
                     <Footer>
-                        <span>Your Project is currently set to public.</span>
-                        <Button appearance="ghost">Take Private</Button>
+                        <span>
+                            {isPrivate
+                                ? 'Your Project is currently set to private.'
+                                : 'Your Project is currently set to public.'}
+                        </span>
+                        <Button type="submit" appearance="ghost">
+                            {isPrivate ? 'Take Public' : 'Take Private'}
+                        </Button>
                     </Footer>
                 </Form>
             </StyledPanel>

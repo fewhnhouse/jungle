@@ -80,7 +80,7 @@ axios.defaults.baseURL = process.env.NEXT_PUBLIC_TAIGA_API_URL
 
 /*
 const graphqlFetcher = (query) =>
-    fetch('/taiga-api/graphql', {
+    fetch('/api/graphql', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json',
