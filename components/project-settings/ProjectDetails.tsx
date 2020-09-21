@@ -104,7 +104,7 @@ const ProjectDetails = () => {
         data?.logo_big_url ??
             'https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png'
     )
-
+    console.log(logo)
     if (!data) {
         return <Paragraph rows={5} active />
     }
@@ -148,9 +148,9 @@ const ProjectDetails = () => {
         const file = e.target.files[0]
         const formData = new FormData()
         formData.append('logo', file)
-        changeLogo(projectId as string, formData).then((res) =>
-            console.log(res)
-        )
+        changeLogo(projectId as string, formData).then((res) => {
+            setLogo(res.logo_big_url)
+        })
     }
 
     const handleDeleteProject = () => {
@@ -206,13 +206,13 @@ const ProjectDetails = () => {
                     </Footer>
                 </Form>
             </StyledPanel>
-            <StyledPanel bodyFill bordered header="Avatar">
+            <StyledPanel bodyFill bordered header="Project Avatar">
                 <Form>
                     <StyledFormGroup>
                         <Flex align="center" justify="space-between">
                             <span>
-                                Click the icon to change your Avatar.
-                                <br /> It is optional, but strongly recommended.
+                                Click the icon to change the Avatar.
+                                <br /> It is optional, but recommended.
                             </span>
                             <AvatarWrapper>
                                 <Avatar src={logo} />
@@ -230,7 +230,7 @@ const ProjectDetails = () => {
 
                     <Footer>
                         <span>
-                            Your Avatar helps other people recognize you.
+                            The Avatar helps other people recognize this project.
                         </span>
                     </Footer>
                 </Form>

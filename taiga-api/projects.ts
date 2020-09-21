@@ -162,9 +162,9 @@ export const leaveProject = (id: string) => {
 }
 
 export const changeLogo = (id: string, data: any) => {
-    return authInstance.post(`/projects/${id}/change_logo`, data).then(res => res.data)
+    return authInstance.post<Project>(`/projects/${id}/change_logo`, data).then(res => res.data)
 }
 
 export const removeLogo = (id: string) => {
-    return authInstance.post(`/projects/${id}/remove_logo`).then(res => res.data)
+    return authInstance.post<Project>(`/projects/${id}/remove_logo`).then(res => res.data)
 }
