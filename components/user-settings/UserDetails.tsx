@@ -11,7 +11,13 @@ import {
     Alert,
 } from 'rsuite'
 import styled from 'styled-components'
-import { changeAvatar, getMe, updateUser, User } from '../../taiga-api/users'
+import {
+    changeAvatar,
+    changePassword,
+    getMe,
+    updateUser,
+    User,
+} from '../../taiga-api/users'
 import Flex from '../Flex'
 
 const { Paragraph } = Placeholder
@@ -88,8 +94,10 @@ const UserDetails = () => {
     const [username, setUsername] = useState(data?.username ?? '')
     const [fullName, setFullName] = useState(data?.full_name ?? '')
     const [bio, setBio] = useState(data?.bio ?? '')
-    const [currentPassword, setCurrentPassword] = useState('')
-    const [newPassword, setNewPassword] = useState('')
+    const [{ currentPassword, newPassword }, setPasswordFormState] = useState({
+        currentPassword: '',
+        newPassword: '',
+    })
     const [confirmDeletion, setConfirmDeletion] = useState(false)
     const [logo, setLogo] = useState(
         data?.photo ??
@@ -120,6 +128,15 @@ const UserDetails = () => {
         formData.append('avatar', file)
         changeAvatar(formData).then((res) => {
             setLogo(res.photo)
+        })
+    }
+
+    const handlePasswordChange = (
+        currentPassword: string,
+        newPassword: string
+    ) => {
+        changePassword(currentPassword, newPassword).then((res) => {
+            Alert.info(`Password successfully updated`)
         })
     }
 
@@ -196,17 +213,26 @@ const UserDetails = () => {
                 </Form>
             </StyledPanel>
             <StyledPanel bodyFill bordered header="Password">
-                <Form>
+                <Form
+                    onSubmit={() =>
+                        handlePasswordChange(currentPassword, newPassword)
+                    }
+                    onChange={({ currentPassword, newPassword }) =>
+                        setPasswordFormState({ currentPassword, newPassword })
+                    }
+                    formValue={{ currentPassword, newPassword }}
+                >
                     <StyledFormGroup>
                         <Description>
                             Please enter your current password and a new one in
                             order to update it.
                         </Description>
                         <FormControl
+                            type="password"
                             style={{ marginBottom: 10 }}
                             name="currentPassword"
                         />
-                        <FormControl name="newPassword" />
+                        <FormControl type="password" name="newPassword" />
                     </StyledFormGroup>
                     <Footer>
                         <span>We will send you a verification email.</span>

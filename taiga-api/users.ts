@@ -80,8 +80,8 @@ export const removeAvatar = () => {
 export const changeEmail = () => {
     return authInstance.post(`/users/change_email`).then(res => res.data)
 }
-export const changePassword = () => {
-    return authInstance.post(`/users/change_password`).then(res => res.data)
+export const changePassword = (current_password: string, password: string) => {
+    return authInstance.post(`/users/change_password`, { current_password, password }).then(res => res.data)
 }
 export const passwordRecovery = () => {
     return authInstance.post(`/users/password_recovery`).then(res => res.data)
