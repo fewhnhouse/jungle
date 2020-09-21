@@ -30,62 +30,62 @@ export interface User {
 }
 
 export const getUsers = () => {
-    return authInstance.get(`/users`)
+    return authInstance.get<User[]>(`/users`).then(res => res.data)
 }
 
 export const getUser = (id: string) => {
-    return authInstance.get(`/users/${id}`)
+    return authInstance.get<User>(`/users/${id}`).then(res => res.data)
 }
 export const getMe = () => {
-    return authInstance.get(`/users/me`)
+    return authInstance.get<User>(`/users/me`).then(res => res.data)
 }
-export const replaceUser = (id: string) => {
-    return authInstance.put(`/users/${id}`)
+export const replaceUser = (id: number, data: any) => {
+    return authInstance.put<User>(`/users/${id}`, data).then(res => res.data)
 }
-export const updateUser = (id: string) => {
-    return authInstance.patch(`/users/${id}`)
-}
-
-export const getUserStats = (id: string) => {
-    return authInstance.get(`/users/${id}/stats`)
+export const updateUser = (id: number, data: any) => {
+    return authInstance.patch<User>(`/users/${id}`, data).then(res => res.data)
 }
 
-export const getUserWatched = (id: string) => {
-    return authInstance.get(`/users/${id}/watched`)
+export const getUserStats = (id: number) => {
+    return authInstance.get(`/users/${id}/stats`).then(res => res.data)
 }
 
-export const getUserLiked = (id: string) => {
-    return authInstance.get(`/users/${id}/liked`)
+export const getUserWatched = (id: number) => {
+    return authInstance.get(`/users/${id}/watched`).then(res => res.data)
 }
 
-export const getUserVoted = (id: string) => {
-    return authInstance.get(`/users/${id}/voted`)
+export const getUserLiked = (id: number) => {
+    return authInstance.get(`/users/${id}/liked`).then(res => res.data)
 }
 
-export const deleteUser = (id: string) => {
-    return authInstance.delete(`/users/${id}`)
+export const getUserVoted = (id: number) => {
+    return authInstance.get(`/users/${id}/voted`).then(res => res.data)
 }
 
-export const getUserContacts = (id: string) => {
-    return authInstance.get(`/users/${id}/contacts`)
+export const deleteUser = (id: number) => {
+    return authInstance.delete(`/users/${id}`).then(res => res.data)
 }
 
-export const changeAvatar = () => {
-    return authInstance.post(`/users/change_avatar`)
+export const getUserContacts = (id: number) => {
+    return authInstance.get(`/users/${id}/contacts`).then(res => res.data)
+}
+
+export const changeAvatar = (data: any) => {
+    return authInstance.post<User>(`/users/change_avatar`, data).then(res => res.data)
 }
 
 export const removeAvatar = () => {
-    return authInstance.post(`/users/remove_avatar`)
+    return authInstance.post<User>(`/users/remove_avatar`).then(res => res.data)
 }
 export const changeEmail = () => {
-    return authInstance.post(`/users/change_email`)
+    return authInstance.post(`/users/change_email`).then(res => res.data)
 }
 export const changePassword = () => {
-    return authInstance.post(`/users/change_password`)
+    return authInstance.post(`/users/change_password`).then(res => res.data)
 }
 export const passwordRecovery = () => {
-    return authInstance.post(`/users/password_recovery`)
+    return authInstance.post(`/users/password_recovery`).then(res => res.data)
 }
 export const changePasswordFromRecovery = () => {
-    return authInstance.post(`/users/change_password_from_recovery`)
+    return authInstance.post(`/users/change_password_from_recovery`).then(res => res.data)
 }

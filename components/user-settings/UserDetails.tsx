@@ -1,6 +1,20 @@
-import { Form, Panel, FormGroup, FormControl, Button, Checkbox } from 'rsuite'
+import { useState } from 'react'
+import { queryCache, useQuery } from 'react-query'
+import {
+    Form,
+    Panel,
+    FormGroup,
+    FormControl,
+    Button,
+    Checkbox,
+    Placeholder,
+    Alert,
+} from 'rsuite'
 import styled from 'styled-components'
+import { changeAvatar, getMe, updateUser, User } from '../../taiga-api/users'
 import Flex from '../Flex'
+
+const { Paragraph } = Placeholder
 
 const StyledPanel = styled(Panel)`
     margin: 30px 0px;
@@ -69,42 +83,115 @@ const StyledFormGroup = styled(FormGroup)`
 `
 
 const UserDetails = () => {
+    const { data, error } = useQuery('me', () => getMe())
+    const [email, setEmail] = useState(data?.email ?? '')
+    const [username, setUsername] = useState(data?.username ?? '')
+    const [fullName, setFullName] = useState(data?.full_name ?? '')
+    const [bio, setBio] = useState(data?.bio ?? '')
+    const [currentPassword, setCurrentPassword] = useState('')
+    const [newPassword, setNewPassword] = useState('')
+    const [confirmDeletion, setConfirmDeletion] = useState(false)
+    const [logo, setLogo] = useState(
+        data?.photo ??
+            'https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png'
+    )
+
+    if (!data) {
+        return <Paragraph rows={5} active />
+    }
+
+    const handleFieldSubmit = (
+        field: string,
+        value: unknown,
+        fieldName: string
+    ) => () => {
+        queryCache.setQueryData('me', (prevData: User) => ({
+            ...prevData,
+            [field]: value,
+        }))
+        updateUser(data?.id, { [field]: value }).then(() =>
+            Alert.info(`${fieldName} successfully updated`)
+        )
+    }
+
+    const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files[0]
+        const formData = new FormData()
+        formData.append('avatar', file)
+        changeAvatar(formData).then((res) => {
+            setLogo(res.photo)
+        })
+    }
+
+    const handleDeleteUser = () => {
+        console.log('delete')
+    }
+
     return (
         <div>
             <StyledPanel bodyFill bordered header="Username">
-                <Form>
+                <Form
+                    formValue={{ username }}
+                    onSubmit={handleFieldSubmit(
+                        'username',
+                        username,
+                        'Username'
+                    )}
+                    onChange={(formValue) => setUsername(formValue.username)}
+                >
                     <StyledFormGroup>
-                        <FormControl name="name" />
+                        <FormControl name="username" />
                     </StyledFormGroup>
                     <Footer>
                         <span>Your username name is visible to everyone.</span>
-                        <Button appearance="ghost">Save</Button>
+                        <Button type="submit" appearance="ghost">
+                            Save
+                        </Button>
                     </Footer>
                 </Form>
             </StyledPanel>
             <StyledPanel bodyFill bordered header="Full Name">
-                <Form>
+                <Form
+                    formValue={{ fullName }}
+                    onSubmit={handleFieldSubmit(
+                        'full_name',
+                        fullName,
+                        'Full Name'
+                    )}
+                    onChange={(formValue) => setFullName(formValue.fullName)}
+                >
                     <StyledFormGroup>
                         <FormControl name="fullName" />
                     </StyledFormGroup>
                     <Footer>
-                        <span>Your full name is important for others to recognize you.</span>
-                        <Button appearance="ghost">Save</Button>
+                        <span>
+                            Your full name is important for others to recognize
+                            you.
+                        </span>
+                        <Button type="submit" appearance="ghost">
+                            Save
+                        </Button>
                     </Footer>
                 </Form>
             </StyledPanel>
             <StyledPanel bodyFill bordered header="Email">
-                <Form>
+                <Form
+                    formValue={{ email }}
+                    onSubmit={handleFieldSubmit('email', email, 'Email')}
+                    onChange={(formValue) => setEmail(formValue.email)}
+                >
                     <StyledFormGroup>
                         <Description>
                             Please enter your email address used to log in to
                             Taiga.
                         </Description>
-                        <FormControl name="name" />
+                        <FormControl type="email" name="email" />
                     </StyledFormGroup>
                     <Footer>
                         <span>We will send you a verification email.</span>
-                        <Button appearance="ghost">Save</Button>
+                        <Button type="submit" appearance="ghost">
+                            Save
+                        </Button>
                     </Footer>
                 </Form>
             </StyledPanel>
@@ -123,7 +210,9 @@ const UserDetails = () => {
                     </StyledFormGroup>
                     <Footer>
                         <span>We will send you a verification email.</span>
-                        <Button appearance="ghost">Save</Button>
+                        <Button type="submit" appearance="ghost">
+                            Save
+                        </Button>
                     </Footer>
                 </Form>
             </StyledPanel>
@@ -137,9 +226,10 @@ const UserDetails = () => {
                                 <br /> It is optional, but strongly recommended.
                             </Description>
                             <AvatarWrapper>
-                                <Avatar src="https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png" />
+                                <Avatar src={logo} />
                                 <UploadButton htmlFor="avatar-upload"></UploadButton>
                                 <FileInput
+                                    onChange={handleAvatarChange}
                                     id="avatar-upload"
                                     className="file-upload"
                                     type="file"
@@ -157,17 +247,23 @@ const UserDetails = () => {
                 </Form>
             </StyledPanel>
             <StyledPanel bodyFill bordered header="Bio">
-                <Form>
+                <Form
+                    formValue={{ bio }}
+                    onSubmit={handleFieldSubmit('bio', bio, 'Bio')}
+                    onChange={(formValue) => setBio(formValue.bio)}
+                >
                     <StyledFormGroup>
                         <FormControl
                             rows={5}
-                            name="textarea"
+                            name="bio"
                             componentClass="textarea"
                         />
                     </StyledFormGroup>
                     <Footer>
                         <span>Your bio lets others know what you can do.</span>
-                        <Button appearance="ghost">Save</Button>
+                        <Button type="submit" appearance="ghost">
+                            Save
+                        </Button>
                     </Footer>
                 </Form>
             </StyledPanel>
@@ -181,10 +277,20 @@ const UserDetails = () => {
                         </span>
                     </StyledFormGroup>
                     <Footer>
-                        <Checkbox>
+                        <Checkbox
+                            value={confirmDeletion}
+                            onChange={(e, checked) =>
+                                setConfirmDeletion(checked)
+                            }
+                        >
                             Confirm that you want to delete your account.
                         </Checkbox>
-                        <Button color="red" appearance="ghost">
+                        <Button
+                            disabled={!confirmDeletion}
+                            onClick={handleDeleteUser}
+                            color="red"
+                            appearance="ghost"
+                        >
                             Delete Account
                         </Button>
                     </Footer>

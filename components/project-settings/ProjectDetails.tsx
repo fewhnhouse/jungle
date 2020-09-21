@@ -10,7 +10,6 @@ import {
     Checkbox,
     Placeholder,
     Alert,
-    CheckboxGroup,
 } from 'rsuite'
 import styled from 'styled-components'
 import {
@@ -101,10 +100,10 @@ const ProjectDetails = () => {
     const [isPrivate, setIsPrivate] = useState(data?.is_private ?? false)
     const [confirmDeletion, setConfirmDeletion] = useState(false)
     const [logo, setLogo] = useState(
-        data?.logo_big_url ??
+        data?.logo_small_url ??
             'https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png'
     )
-    console.log(logo)
+
     if (!data) {
         return <Paragraph rows={5} active />
     }
@@ -130,7 +129,6 @@ const ProjectDetails = () => {
     }
 
     const handleVisibilityToggle = () => {
-        console.log(isPrivate)
         queryCache.setQueryData(
             ['project', { projectId }],
             (prevData: Project) => ({
@@ -149,7 +147,7 @@ const ProjectDetails = () => {
         const formData = new FormData()
         formData.append('logo', file)
         changeLogo(projectId as string, formData).then((res) => {
-            setLogo(res.logo_big_url)
+            setLogo(res.logo_small_url)
         })
     }
 
@@ -230,7 +228,8 @@ const ProjectDetails = () => {
 
                     <Footer>
                         <span>
-                            The Avatar helps other people recognize this project.
+                            The Avatar helps other people recognize this
+                            project.
                         </span>
                     </Footer>
                 </Form>
