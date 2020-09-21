@@ -94,8 +94,14 @@ interface Props {
     id: string | number
     name: string
     description: string
+    avatar?: string
 }
-export default function ProjectListItem({ id, name, description }: Props) {
+export default function ProjectListItem({
+    id,
+    name,
+    description,
+    avatar,
+}: Props) {
     const isMobile = useMedia({ maxWidth: '400px' })
     const { push } = useRouter()
     const handleSettingsClick = () =>
@@ -108,7 +114,7 @@ export default function ProjectListItem({ id, name, description }: Props) {
             />
             <ItemContainer>
                 <InfoContainer>
-                    <StyledImage src="bmo.png" />
+                    <StyledImage src={avatar ?? 'bmo.png'} />
                     <TextContainer>
                         <ProjectName>{name}</ProjectName>
                         <ProjectDescription>{description}</ProjectDescription>

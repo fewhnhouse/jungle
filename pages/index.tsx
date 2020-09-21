@@ -7,9 +7,10 @@ import YourWork from '../components/home/YourWork'
 import { useRouter } from 'next/router'
 import ProjectCreationModal from '../components/home/ProjectCreationModal'
 import { Button, Progress } from 'rsuite'
-import { User } from '../taiga-api/users'
+import { getMe, User } from '../taiga-api/users'
 import PageTitle from '../components/PageTitle'
 import { PageBody, PageHeader } from '../components/Layout'
+import { useQuery } from 'react-query'
 const { Line } = Progress
 
 const Container = styled.div`
@@ -28,7 +29,9 @@ const Container = styled.div`
 
 const Avatar = styled.img`
     width: 100px;
+    min-width: 100px;
     height: 100px;
+    min-height: 100px;
     border-radius: 50%;
     margin-right: 30px;
 `
@@ -101,6 +104,7 @@ export default function Home() {
         setIsModalOpen((open) => !open)
     }
     const [user, setUser] = useState<User | undefined>()
+    const { data, error } = useQuery('me', () => getMe())
 
     const { push } = useRouter()
 
@@ -117,7 +121,7 @@ export default function Home() {
         <>
             <PageHeader>
                 <HomeContainer>
-                    <Avatar src="bmo.png" />
+                    <Avatar src={data?.big_photo ?? 'bmo.png'} />
                     <HeaderContainer>
                         <TitleContainer>
                             <PageTitle

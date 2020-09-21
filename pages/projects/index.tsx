@@ -1,24 +1,10 @@
-import styled from 'styled-components'
-import Link from 'next/link'
-import { Button, Panel } from 'rsuite'
+import { Button } from 'rsuite'
 import { PageBody, PageHeader } from '../../components/Layout'
 import PageTitle from '../../components/PageTitle'
 import { useQuery } from 'react-query'
 import { getProjects } from '../../taiga-api/projects'
 import ProjectListItem from '../../components/home/ProjectListItem'
 import Flex from '../../components/Flex'
-
-const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
-`
-
-const StyledPanel = styled(Panel)`
-    margin: 8px 16px;
-    background: white;
-`
 
 const Projects = () => {
     const { data, error } = useQuery('projects', () => {
@@ -38,8 +24,9 @@ const Projects = () => {
             </PageHeader>
             <PageBody>
                 <Flex wrap align="center" justify="center">
-                    {data?.map(({ id, name, description }) => (
+                    {data?.map(({ id, name, description, logo_small_url }) => (
                         <ProjectListItem
+                            avatar={logo_small_url}
                             key={id}
                             id={id}
                             name={name}

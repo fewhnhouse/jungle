@@ -37,8 +37,9 @@ export default function Projects() {
                         new Date(a.modified_date).getTime()
                 )
                 .filter((_, index) => index < 6)
-                .map(({ id, name, description }) => (
+                .map(({ id, name, description, logo_small_url }) => (
                     <ProjectListItem
+                        avatar={logo_small_url}
                         key={id}
                         id={id}
                         name={name}
