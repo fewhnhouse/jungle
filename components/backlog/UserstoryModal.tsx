@@ -19,6 +19,7 @@ import {
     getFiltersData,
     getUserstory,
     updateUserstory,
+    UserStory,
 } from '../../taiga-api/userstories'
 import Breadcrumbs from './Breadcrumbs'
 import SubtaskList from './SubtaskList'
@@ -117,6 +118,20 @@ export default function IssueModal({ id, open, onClose }: Props) {
         queryCache.setQueryData(['story', { id }], () => updatedStory)
     }
 
+    const handleTitleSubmit = async (subject: string) => {
+        queryCache.setQueryData(['story', { id }], (prevData: UserStory) => ({
+            ...prevData,
+            subject,
+        }))
+
+        await updateUserstory(id, {
+            subject,
+            version: data.version,
+        })
+        queryCache.invalidateQueries('backlog')
+        queryCache.invalidateQueries('milestones')
+    }
+
     return data ? (
         <StyledModal show={open} onHide={onClose}>
             {isLoading ? (
@@ -129,7 +144,10 @@ export default function IssueModal({ id, open, onClose }: Props) {
                     <StyledModalBody>
                         <Main>
                             <Content>
-                                <EditableTitle initialValue={data?.subject} />
+                                <EditableTitle
+                                    onSubmit={handleTitleSubmit}
+                                    initialValue={data?.subject}
+                                />
                                 <EditableDescription
                                     initialValue={data?.description}
                                 />

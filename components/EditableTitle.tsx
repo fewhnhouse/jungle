@@ -18,22 +18,30 @@ const Title = styled.h3`
     margin: ${({ theme }) => theme.spacing.mini} 0px;
 `
 
-const InputContainer = styled.div`
+const InputContainer = styled.form`
     display: flex;
     margin: ${({ theme }) => theme.spacing.mini} 0px;
     align-items: center;
 `
 interface Props {
     initialValue: string
+    onSubmit: (value: string) => void
 }
 
-export default function EditableTitle({ initialValue }: Props) {
+export default function EditableTitle({ initialValue, onSubmit }: Props) {
     const [editable, setEditable] = useState(false)
     const [value, setValue] = useState(initialValue)
 
     const toggleEditable = () => setEditable((editable) => !editable)
+    
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault()
+        onSubmit(value)
+        toggleEditable()
+    }
+
     return editable ? (
-        <InputContainer>
+        <InputContainer onSubmit={handleSubmit}>
             <InputGroup size="lg">
                 <Input
                     autofocus
@@ -45,7 +53,7 @@ export default function EditableTitle({ initialValue }: Props) {
                     <ClearIcon />
                 </InputGroup.Button>
 
-                <InputGroup.Button onClick={toggleEditable}>
+                <InputGroup.Button type="submit">
                     <CheckIcon />
                 </InputGroup.Button>
             </InputGroup>
