@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import styled from 'styled-components'
-import { Input } from 'rsuite'
-import EditButtonGroup from './EditButtonGroup'
-
+import { Input, InputGroup } from 'rsuite'
+import ClearIcon from '@material-ui/icons/Clear'
+import CheckIcon from '@material-ui/icons/Check'
 const Title = styled.h3`
     border-radius: 4px;
-    height: 48px;
+    height: 42px;
     padding: ${({ theme }) => `${theme.spacing.mini} ${theme.spacing.small}`};
-    line-height: 48px;
+    line-height: 30px;
     &:hover {
         background: #e9ecef;
     }
@@ -34,16 +34,21 @@ export default function EditableTitle({ initialValue }: Props) {
     const toggleEditable = () => setEditable((editable) => !editable)
     return editable ? (
         <InputContainer>
-            <Input
-                autofocus
-                size="lg"
-                value={value}
-                onChange={(value) => setValue(value)}
-            />
-            <EditButtonGroup
-                onCancel={toggleEditable}
-                onAccept={toggleEditable}
-            />
+            <InputGroup size="lg">
+                <Input
+                    autofocus
+                    size="lg"
+                    value={value}
+                    onChange={(value) => setValue(value)}
+                />
+                <InputGroup.Button onClick={toggleEditable}>
+                    <ClearIcon />
+                </InputGroup.Button>
+
+                <InputGroup.Button onClick={toggleEditable}>
+                    <CheckIcon />
+                </InputGroup.Button>
+            </InputGroup>
         </InputContainer>
     ) : (
         <Title onClick={toggleEditable}>{value}</Title>

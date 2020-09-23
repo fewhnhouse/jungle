@@ -1,14 +1,15 @@
 import { useState } from 'react'
 import styled from 'styled-components'
-import EditButtonGroup from './EditButtonGroup'
-import { Input } from 'rsuite'
+import { Input, InputGroup } from 'rsuite'
+import ClearIcon from '@material-ui/icons/Clear'
+import CheckIcon from '@material-ui/icons/Check'
 
 const Title = styled.span`
     border-radius: 4px;
     height: 42px;
-    width: 100px;
+    width: 100%;
     padding: ${({ theme }) => `${theme.spacing.mini} ${theme.spacing.small}`};
-    line-height: 42px;
+    line-height: 30px;
     &:hover {
         background: #e9ecef;
     }
@@ -21,7 +22,7 @@ const InputContainer = styled.div`
     display: flex;
     margin: ${({ theme }) => theme.spacing.mini} 0px;
     align-items: center;
-    width: 130px;
+    width: 100%;
 `
 interface Props {
     initialValue: number
@@ -33,17 +34,22 @@ export default function EditableNumber({ initialValue }: Props) {
     const toggleEditable = () => setEditable((editable) => !editable)
     return editable ? (
         <InputContainer>
-            <Input
-                autofocus
-                size="lg"
-                type="number"
-                value={value}
-                onChange={(value) => setValue(value)}
-            />
-            <EditButtonGroup
-                onCancel={toggleEditable}
-                onAccept={toggleEditable}
-            />
+            <InputGroup size="lg">
+                <Input
+                    autofocus
+                    size="lg"
+                    type="number"
+                    value={value}
+                    onChange={(value) => setValue(value)}
+                />
+                <InputGroup.Button onClick={toggleEditable}>
+                    <ClearIcon />
+                </InputGroup.Button>
+
+                <InputGroup.Button onClick={toggleEditable}>
+                    <CheckIcon />
+                </InputGroup.Button>
+            </InputGroup>
         </InputContainer>
     ) : (
         <Title onClick={toggleEditable}>{value}</Title>
