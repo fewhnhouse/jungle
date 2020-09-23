@@ -1,7 +1,18 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { Modal, Button, Input } from 'rsuite'
-import { addProject } from '../../taiga-api/projects'
+import {
+    Modal,
+    Button,
+    Form,
+    FormGroup,
+    ControlLabel,
+    FormControl,
+    HelpBlock,
+    RadioGroup,
+    Radio,
+} from 'rsuite'
+import { addProject, Project } from '../../taiga-api/projects'
+import { queryCache } from 'react-query'
 
 interface Props {
     open: boolean
@@ -9,49 +20,69 @@ interface Props {
 }
 
 export default function ProjectCreationModal({ open, toggle }: Props) {
-    const [name, setName] = useState('')
-    const [description, setDescription] = useState('')
     const { push } = useRouter()
 
     const handleClose = () => toggle()
 
-    const handleDescriptionChange = (value: string) => setDescription(value)
-    const handleNameChange = (value: string) => setName(value)
+    const [formState, setFormState] = useState({
+        name: '',
+        description: '',
+        visibility: 'private',
+    })
 
-    const createProject = async () => {
-        const project = await addProject({ name, description })
-        const { id } = project
-        push('/projects/[id]/settings', `/projects/${id}/settings`)
+    const handleSubmit = async () => {
+        const { name, description, visibility } = formState
+        const project = await addProject({
+            name,
+            description,
+            is_private: visibility === 'private',
+        })
+        queryCache.setQueryData('projects', (prevData: Project[]) => [
+            ...prevData,
+            project,
+        ])
+        push('/projects/[id]/settings', `/projects/${project.id}/settings`)
     }
     return (
         <Modal centered onHide={handleClose} show={open}>
             <Modal.Header>
                 <Modal.Title>New Project</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
-                <Input
-                    value={name}
-                    onChange={handleNameChange}
-                    placeholder="Project Name"
-                    className="mb-2"
-                ></Input>
-                <Input
-                    type="textarea"
-                    value={description}
-                    onChange={handleDescriptionChange}
-                    rows="4"
-                    className="mb-2"
-                    placeholder="Description"
-                ></Input>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button theme="light" onClick={toggle}>
-                    Cancel
-                </Button>
-                <Button theme="success" onClick={createProject}>
-                    Create
-                </Button>
-            </Modal.Footer>
+            <Form
+                formValue={formState}
+                onChange={(formValue: any) => setFormState(formValue)}
+                onSubmit={handleSubmit}
+            >
+                <Modal.Body>
+                    <FormGroup>
+                        <ControlLabel>Project Name</ControlLabel>
+                        <FormControl name="name" />
+                        <HelpBlock tooltip>Required</HelpBlock>
+                    </FormGroup>
+                    <FormGroup>
+                        <ControlLabel>Description</ControlLabel>
+                        <FormControl
+                            name="description"
+                            componentClass="textarea"
+                        />
+                    </FormGroup>
+                    <FormControl
+                        inline
+                        appearance="picker"
+                        name="visibility"
+                        accepter={RadioGroup}
+                    >
+                        <Radio value="public">Public</Radio>
+                        <Radio value="private">Private</Radio>
+                    </FormControl>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={toggle}>Cancel</Button>
+                    <Button type="submit" appearance="primary">
+                        Create
+                    </Button>
+                </Modal.Footer>
+            </Form>
         </Modal>
     )
 }

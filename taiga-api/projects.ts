@@ -86,7 +86,7 @@ export const getProject = (id: string) => {
 }
 
 export const addProject = (data: any) => {
-    return authInstance.post<Project>(`/projects/`, data).then(res => res.data)
+    return authInstance.post<Project>(`/projects`, data).then(res => res.data)
 }
 
 export const replaceProject = (id: string, data: any) => {
