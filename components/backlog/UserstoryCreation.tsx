@@ -14,15 +14,25 @@ import {
 } from 'rsuite'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { queryCache } from 'react-query'
+import { queryCache, useQuery } from 'react-query'
 import { createUserstory, UserStory } from '../../taiga-api/userstories'
+import { getProject } from '../../taiga-api/projects'
 
 const UserstoryCreation = () => {
     const [show, setShow] = useState(false)
     const { projectId } = useRouter().query
+
+    const { data } = useQuery(
+        ['project', { projectId }],
+        (key, { projectId }) => getProject(projectId as string),
+        { enabled: projectId }
+    )
+
     const [formState, setFormState] = useState({
-        name: '',
-        dateRange: [new Date(), new Date()],
+        subject: '',
+        description: '',
+        tags: [],
+        assignee: null,
     })
 
     const handleChange = (value) => {
@@ -37,18 +47,17 @@ const UserstoryCreation = () => {
         e: React.FormEvent<HTMLFormElement>
     ) => {
         e.preventDefault()
+        const { subject, assignee, description, tags } = formState
         const newUserstory = await createUserstory({
-            name: formState.name,
-            estimated_start: formState.dateRange[0].toISOString().split('T')[0],
-            estimated_finish: formState.dateRange[1]
-                .toISOString()
-                .split('T')[0],
+            subject,
+            assigned_to: assignee,
+            description,
+            tags,
             project: projectId,
         })
-        queryCache.setQueryData('userstories', (oldStories: UserStory[]) => [
-            ...oldStories,
-            newUserstory,
-        ])
+        queryCache.setQueryData('backlog', (prevData?: UserStory[]) =>
+            prevData ? [...prevData, newUserstory] : [newUserstory]
+        )
         handleClose()
     }
     return (
@@ -60,13 +69,13 @@ const UserstoryCreation = () => {
                 <Modal.Header>
                     <Modal.Title>Create Story</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
-                    <Form
-                        fluid
-                        formValue={formState}
-                        onChange={handleChange}
-                        onSubmit={handleSubmit}
-                    >
+                <Form
+                    fluid
+                    formValue={formState}
+                    onChange={handleChange}
+                    onSubmit={handleSubmit}
+                >
+                    <Modal.Body>
                         <FormGroup>
                             <ControlLabel>Subject</ControlLabel>
                             <FormControl
@@ -77,7 +86,12 @@ const UserstoryCreation = () => {
                         <FormGroup>
                             <ControlLabel>Assignee</ControlLabel>
                             <FormControl
-                                data={[]}
+                                data={
+                                    data?.members.map((member) => ({
+                                        value: member.id,
+                                        label: member.full_name,
+                                    })) ?? []
+                                }
                                 accepter={SelectPicker}
                                 style={{ width: 300 }}
                                 name="assignee"
@@ -86,7 +100,12 @@ const UserstoryCreation = () => {
                         <FormGroup>
                             <ControlLabel>Tags</ControlLabel>
                             <FormControl
-                                data={[]}
+                                data={
+                                    data?.tags.map((tag) => ({
+                                        value: tag,
+                                        label: tag,
+                                    })) ?? []
+                                }
                                 creatable
                                 accepter={TagPicker}
                                 style={{ width: 300 }}
@@ -119,6 +138,8 @@ const UserstoryCreation = () => {
                                 name="description"
                             />
                         </FormGroup>
+                    </Modal.Body>
+                    <Modal.Footer>
                         <FormGroup>
                             <ButtonToolbar>
                                 <Button type="submit" appearance="primary">
@@ -132,8 +153,8 @@ const UserstoryCreation = () => {
                                 </Button>
                             </ButtonToolbar>
                         </FormGroup>
-                    </Form>
-                </Modal.Body>
+                    </Modal.Footer>
+                </Form>
             </Modal>
         </>
     )

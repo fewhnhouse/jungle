@@ -41,10 +41,9 @@ const SprintCreation = () => {
                 .split('T')[0],
             project: projectId,
         })
-        queryCache.setQueryData('milestones', (oldMilestones: Milestone[]) => [
-            ...oldMilestones,
-            newMilestone,
-        ])
+        queryCache.setQueryData('milestones', (oldMilestones?: Milestone[]) =>
+            oldMilestones ? [...oldMilestones, newMilestone] : [newMilestone]
+        )
         handleClose()
     }
     return (
