@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import ListItem from '../ListItem'
 import { Tag } from 'rsuite'
 import { Timeline, TimelineType } from '../../taiga-api/timelines'
+import Link from 'next/link'
 
 const IssueName = styled.span`
     margin: 0px ${({ theme }) => `${theme.spacing.small}`};
@@ -51,11 +52,20 @@ export default function ActivityListItem({ activityItem }: Props) {
                     <Tag id="issues-todo">{type}</Tag>
                     <IssueName>
                         <Description>
-                            {user.name}{' '}
+                            <Link as={`/user/${user?.id}`} href="/user/[id]">
+                                {user.name}
+                            </Link>{' '}
                             {type === TimelineType.Change
                                 ? 'updated'
                                 : 'created'}{' '}
-                            <b>{getItemName()}</b>.
+                            
+                            <Link
+                                as={`/${source}/${affectedItem?.id}`}
+                                href={`/${source}/[id]`}
+                            >
+                                {getItemName()}
+                            </Link>
+                            .
                         </Description>
                     </IssueName>
                 </Content>
