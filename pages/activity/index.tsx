@@ -15,7 +15,10 @@ export default function Activity() {
     return (
         <>
             <PageHeader>
-                <PageTitle title="Activity" />
+                <PageTitle
+                    title="Activity"
+                    description="All activity from this account"
+                />
             </PageHeader>
             <PageBody>
                 {data?.map((activityItem) => (
