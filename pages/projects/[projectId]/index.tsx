@@ -5,14 +5,23 @@ import { PageBody, PageHeader } from '../../../components/Layout'
 import PageTitle from '../../../components/PageTitle'
 import { useQuery } from 'react-query'
 import { getProject } from '../../../taiga-api/projects'
+import { getProjectTimeline } from '../../../taiga-api/timelines'
+import ActivityListItem from '../../../components/home/ActivityListItem'
+import Flex from '../../../components/Flex'
+import { Icon, IconButton } from 'rsuite'
 
-const Container = styled.div`
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-    width: 100%;
+const StyledFlex = styled(Flex)`
+    margin-top: 20px;
 `
 
+const StyledButton = styled(IconButton)`
+    &:first-child {
+        margin-right: 5px;
+    }
+    &:last-child {
+        margin-left: 5px;
+    }
+`
 const Project = () => {
     const router = useRouter()
     const { projectId } = router.query
@@ -22,27 +31,53 @@ const Project = () => {
         (key, { projectId }) => getProject(projectId as string)
     )
 
+    const { data: timeline } = useQuery(
+        ['projectTimeline', { projectId }],
+        (key, { projectId }) => getProjectTimeline(projectId)
+    )
+
     return (
         <>
             <PageHeader>
-                <PageTitle
-                    title={data?.name}
-                    description={data?.description}
-                />
+                <>
+                    <PageTitle
+                        title={data?.name}
+                        description={data?.description}
+                    />
+                    <StyledFlex>
+                        <StyledButton>
+                            <Icon icon="eye" />
+                            Watch
+                        </StyledButton>
+                        <StyledButton>
+                            <Icon icon="thumbs-up" />
+                            Like
+                        </StyledButton>
+                    </StyledFlex>
+                </>
             </PageHeader>
             <PageBody>
-                <Link
-                    href="/projects/[id]/board"
-                    as={`/projects/${projectId}/board`}
-                >
-                    <a>Board</a>
-                </Link>
-                <Link
-                    href="/projects/[id]/backlog"
-                    as={`/projects/${projectId}/backlog`}
-                >
-                    <a>Backlog</a>
-                </Link>
+                <Flex>
+                    <div>
+                        {timeline?.map((item) => (
+                            <ActivityListItem activityItem={item} />
+                        ))}
+                    </div>
+                    <div>
+                        <Link
+                            href="/projects/[id]/board"
+                            as={`/projects/${projectId}/board`}
+                        >
+                            <a>Board</a>
+                        </Link>
+                        <Link
+                            href="/projects/[id]/backlog"
+                            as={`/projects/${projectId}/backlog`}
+                        >
+                            <a>Backlog</a>
+                        </Link>
+                    </div>
+                </Flex>
             </PageBody>
         </>
     )
