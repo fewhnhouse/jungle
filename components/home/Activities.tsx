@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { useQuery } from 'react-query'
 import styled from 'styled-components'
 import { getUserTimeline } from '../../taiga-api/timelines'
@@ -26,12 +27,17 @@ export default function Activities() {
     return (
         <Container>
             <Title>Your recent Activity</Title>
-            {data?.map((activityItem) => (
-                <ActivityListItem
-                    key={activityItem.id}
-                    activityItem={activityItem}
-                ></ActivityListItem>
-            ))}
+            {data
+                ?.filter((_, index) => index < 10)
+                .map((activityItem) => (
+                    <ActivityListItem
+                        key={activityItem.id}
+                        activityItem={activityItem}
+                    ></ActivityListItem>
+                ))}
+            {data?.length > 10 && (
+                <Link href="/activity">See all activity</Link>
+            )}
         </Container>
     )
 }
