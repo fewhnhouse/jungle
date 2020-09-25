@@ -1,4 +1,7 @@
+import { useQuery } from 'react-query'
 import styled from 'styled-components'
+import { getUserTimeline } from '../../taiga-api/timelines'
+import { getMe } from '../../taiga-api/users'
 import ActivityListItem from './ActivityListItem'
 
 const Container = styled.div`
@@ -15,14 +18,20 @@ const Title = styled.h3`
 `
 
 export default function Activities() {
+    const { data: me } = useQuery('me', () => getMe())
+
+    const { data } = useQuery(['timeline', { id: me?.id }], (key, { id }) =>
+        getUserTimeline(id)
+    )
     return (
         <Container>
             <Title>Your recent Activity</Title>
-            <ActivityListItem type="create" issue="ID-2001"></ActivityListItem>
-            <ActivityListItem type="move" issue="ID-2001"></ActivityListItem>
-            <ActivityListItem type="edit" issue="ID-2001"></ActivityListItem>
-            <ActivityListItem type="delete" issue="ID-2001"></ActivityListItem>
-            <ActivityListItem type="create" issue="ID-2001"></ActivityListItem>
+            {data?.map((activityItem) => (
+                <ActivityListItem
+                    key={activityItem.id}
+                    activityItem={activityItem}
+                ></ActivityListItem>
+            ))}
         </Container>
     )
 }

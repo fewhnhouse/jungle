@@ -57,10 +57,23 @@ export interface Timeline {
     project: number
 }
 
-export const getUserTimeline = (userId: string) => {
+export enum TimelineSource {
+    UserStory = 'userstories.userstory',
+    Milestone = 'milestones.milestone',
+    User = 'users.user',
+    Project = 'projects.project',
+    Task = 'tasks.task',
+}
+
+export enum TimelineType {
+    Create = 'create',
+    Change = 'change',
+}
+
+export const getUserTimeline = (userId: number) => {
     return authInstance.get<Timeline[]>(`timeline/user/${userId}`).then(res => res.data)
 }
-export const getProfileTimeline = (userId: string) => {
+export const getProfileTimeline = (userId: number) => {
     return authInstance.get<Timeline[]>(`/timeline/profile/${userId}`).then(res => res.data)
 }
 export const getProjectTimeline = (projectId: string) => {
