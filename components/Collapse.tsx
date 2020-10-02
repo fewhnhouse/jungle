@@ -4,7 +4,7 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 import styled from 'styled-components'
 import { useState } from 'react'
 import { Collapse } from 'react-collapse'
-import { Dropdown } from 'rsuite'
+import { Dropdown, Menu } from 'antd'
 
 const StoryHeader = styled.div`
     display: flex;
@@ -61,6 +61,16 @@ export default function CustomCollapse({
 }: CollapseProps) {
     const [expanded, setExpanded] = useState(true)
     const toggleVisibility = () => setExpanded((expanded) => !expanded)
+
+    const menu = (
+        <Menu>
+            {actions.map(({ action, title }, index) => (
+                <Menu.Item key={index} onClick={action}>
+                    {title}
+                </Menu.Item>
+            ))}
+        </Menu>
+    )
     return (
         <>
             <StoryHeader>
@@ -72,15 +82,8 @@ export default function CustomCollapse({
                     </HeaderContainer>
                 </InnerContainer>
                 {actions && (
-                    <Dropdown
-                        placement="bottomEnd"
-                        renderTitle={() => <MoreHorizIcon />}
-                    >
-                        {actions.map(({ action, title }, index) => (
-                            <Dropdown.Item key={index} onClick={action}>
-                                {title}
-                            </Dropdown.Item>
-                        ))}
+                    <Dropdown overlay={menu}>
+                        <MoreHorizIcon />
                     </Dropdown>
                 )}
             </StoryHeader>
