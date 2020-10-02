@@ -9,7 +9,14 @@ import { PicLeftOutlined, PlusOutlined } from '@ant-design/icons'
 
 const TaskList = styled.ul`
     list-style: none;
+    width: 100%;
     padding: 0;
+`
+
+const StyledForm = styled(Form)`
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
 `
 
 const TaskItem = styled.li`
@@ -132,7 +139,7 @@ const SubtaskList = ({ id }: Props) => {
                             </Link>
                         </TaskItem>
                     ))}
-                    <Form layout="inline" onFinish={handleAddSubtask}>
+                    <StyledForm layout="inline" onFinish={handleAddSubtask}>
                         <Form.Item
                             name="name"
                             rules={[
@@ -143,14 +150,12 @@ const SubtaskList = ({ id }: Props) => {
                         >
                             <Input placeholder="Add Subtask..." />
                         </Form.Item>
-                        <Form.Item>
-                            <Button
-                                htmlType="submit"
-                                type="primary"
-                                icon={<PlusOutlined />}
-                            ></Button>
-                        </Form.Item>
-                    </Form>
+                        <Button
+                            htmlType="submit"
+                            type="primary"
+                            icon={<PlusOutlined />}
+                        ></Button>
+                    </StyledForm>
                 </>
             )}
         </TaskList>

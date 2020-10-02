@@ -43,7 +43,7 @@ const InnerContainer = styled.div`
     width: 100%;
 `
 
-const StoryTitle = styled.h6`
+const StoryTitle = styled.h3`
     margin: 0;
 `
 
@@ -64,7 +64,7 @@ export default function CustomCollapse({
 
     const menu = (
         <Menu>
-            {actions.map(({ action, title }, index) => (
+            {actions?.map(({ action, title }, index) => (
                 <Menu.Item key={index} onClick={action}>
                     {title}
                 </Menu.Item>
@@ -82,7 +82,7 @@ export default function CustomCollapse({
                     </HeaderContainer>
                 </InnerContainer>
                 {actions && (
-                    <Dropdown overlay={menu}>
+                    <Dropdown trigger={['click']} overlay={menu}>
                         <MoreHorizIcon />
                     </Dropdown>
                 )}

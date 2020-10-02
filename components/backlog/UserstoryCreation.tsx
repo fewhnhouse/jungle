@@ -52,7 +52,7 @@ const UserstoryCreation = () => {
                 onOk={handleFormSubmit}
             >
                 <Form form={form} layout="vertical" onFinish={handleSubmit}>
-                    <Form.Item name="Subject" label="Subject">
+                    <Form.Item name="subject" label="Subject">
                         <Input />
                     </Form.Item>
                     <Form.Item name="assignee" label="Assignee">

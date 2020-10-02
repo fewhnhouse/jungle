@@ -28,6 +28,7 @@ const StyledFlex = styled(Flex)`
 
 const Main = styled.div`
     display: flex;
+    width: 100%;
     flex-direction: row;
     @media only screen and (max-width: 600px) {
         flex-direction: column;

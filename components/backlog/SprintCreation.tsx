@@ -40,10 +40,10 @@ const SprintCreation = () => {
                 onCancel={handleClose}
             >
                 <Form layout="vertical" form={form} onFinish={handleSubmit}>
-                    <Form.Item name="name" label="Name">
+                    <Form.Item required name="name" label="Name">
                         <Input />
                     </Form.Item>
-                    <Form.Item name="date" label="Duration">
+                    <Form.Item required name="date" label="Duration">
                         <DatePicker.RangePicker />
                     </Form.Item>
                 </Form>

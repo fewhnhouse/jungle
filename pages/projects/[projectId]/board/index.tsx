@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
 import { getMilestones, getMilestone } from '../../../../taiga-api/milestones'
 import { getFiltersData } from '../../../../taiga-api/tasks'
+import { getFiltersData as getStoryFiltersData } from '../../../../taiga-api/userstories'
 import { PageBody, PageHeader } from '../../../../components/Layout'
 import PageTitle from '../../../../components/PageTitle'
 
@@ -25,15 +26,7 @@ export default function BoardContainer() {
         },
         { enabled: milestones }
     )
-    /*const { data: storyFiltersData } = useQuery(
-        'userstoryFilters',
-        async () => {
-            const { data } = await authInstance.get(
-                `/userstories/filters_data?project=${id}`
-            )
-            return data
-        }
-    )*/
+
     const { data: taskFiltersData } = useQuery(
         ['taskFilters', { projectId }],
         async (key, { projectId }) => {
@@ -41,18 +34,19 @@ export default function BoardContainer() {
         },
         { enabled: projectId }
     )
+
+    const { data: storyFiltersData } = useQuery(
+        ['taskFilters', { projectId }],
+        async (key, { projectId }) => {
+            return getStoryFiltersData(projectId as string)
+        },
+        { enabled: projectId }
+    )
+
     // TODO: Figure out if we can use the active sprint to query data rather than userstories endpoint
     if (milestones && !milestones.length) {
         return <div>No sprint active.</div>
     }
-    /*
-    const { data, error } = useQuery('userstories', async () => {
-        const { data } = await authInstance.get<UserStory[]>(
-            `/userstories?project=${id}&include_tasks=true`
-        )
-        return data
-    })
-    */
 
     return (
         <>

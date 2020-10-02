@@ -16,7 +16,7 @@ import Breadcrumbs from './Breadcrumbs'
 import SubtaskList from './SubtaskList'
 import CustomTagPicker from '../TagPicker'
 import { useRouter } from 'next/router'
-import { Divider, Modal, Select, Skeleton, Upload } from 'antd'
+import { Divider, Modal, Skeleton, Upload } from 'antd'
 import Flex from '../Flex'
 import { UploadOutlined } from '@ant-design/icons'
 
@@ -34,6 +34,7 @@ const Label = styled.span`
 
 const Main = styled.div`
     display: flex;
+    width: 100%;
     flex-direction: row;
     @media only screen and (max-width: 600px) {
         flex-direction: column;
