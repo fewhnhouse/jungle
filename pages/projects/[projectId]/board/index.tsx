@@ -7,6 +7,7 @@ import { getFiltersData } from '../../../../taiga-api/tasks'
 import { getFiltersData as getStoryFiltersData } from '../../../../taiga-api/userstories'
 import { PageBody, PageHeader } from '../../../../components/Layout'
 import PageTitle from '../../../../components/PageTitle'
+import StoryBoard from '../../../../components/board/StoryBoard'
 
 const ParentContainer = styled.div``
 
@@ -66,6 +67,12 @@ export default function BoardContainer() {
                             />
                         )
                     })}
+                    <StoryBoard
+                        title={`TODO: SPRINT: ${sprint.name}`}
+                        stories={sprint.user_stories}
+                        milestoneId={sprint.id.toString()}
+                        columns={storyFiltersData?.statuses}
+                    />
                 </ParentContainer>
             </PageBody>
         </>

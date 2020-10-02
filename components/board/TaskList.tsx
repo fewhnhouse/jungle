@@ -12,6 +12,7 @@ import IssueItem from './TaskItem'
 import Title from '../Title'
 import { Theme } from '../../pages/_app'
 import { Task } from '../../taiga-api/tasks'
+import { UserStory } from '../../taiga-api/userstories'
 
 export const getBackgroundColor = (
     isDraggingOver: boolean,
@@ -73,15 +74,19 @@ const Container = styled.div``
 /* stylelint-enable */
 
 type IssueListProps = {
-    issues: Task[]
+    issues: (Task | UserStory)[]
 }
 
 // eslint-disable-next-line react/display-name
 const InnerIssueList = React.memo(({ issues }: IssueListProps) => {
     return (
         <>
-            {issues.map((issue: Task, index: number) => (
-                <Draggable key={issue.id} draggableId={issue.id.toString()} index={index}>
+            {issues.map((issue, index: number) => (
+                <Draggable
+                    key={issue.id}
+                    draggableId={issue.id.toString()}
+                    index={index}
+                >
                     {(
                         dragProvided: DraggableProvided,
                         dragSnapshot: DraggableStateSnapshot
@@ -108,13 +113,10 @@ type InnerListProps = {
     title?: string
 }
 
-function InnerListContainer(props: InnerListProps) {
-    const { issues, dropProvided } = props
-    const title = props.title ? <Title>{props.title}</Title> : null
-
+function InnerListContainer({ issues, title, dropProvided }: InnerListProps) {
     return (
         <Container>
-            {title}
+            {title ? <Title>{title}</Title> : null}
             <DropZone ref={dropProvided.innerRef}>
                 <InnerIssueList issues={issues} />
                 {dropProvided.placeholder}

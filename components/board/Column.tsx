@@ -8,6 +8,7 @@ import IssueList from './TaskList'
 import Title from '../Title'
 import { Theme } from '../../pages/_app'
 import { Task } from '../../taiga-api/tasks'
+import { UserStory } from '../../taiga-api/userstories'
 
 const Container = styled.div`
     margin: ${({ theme }) => theme.spacing.small};
@@ -35,7 +36,7 @@ const Header = styled.div<HeaderProps>`
 
 type Props = {
     title: string
-    issues: Task[]
+    issues: (Task | UserStory)[]
     id: number
     index: number
     isScrollable?: boolean

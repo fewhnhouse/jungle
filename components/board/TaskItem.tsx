@@ -5,6 +5,7 @@ import IssueModal from './TaskModal'
 import { Task } from '../../taiga-api/tasks'
 import { Tag } from 'antd'
 import { PicLeftOutlined } from '@ant-design/icons'
+import { UserStory } from '../../taiga-api/userstories'
 
 const getBackgroundColor = (isDragging: boolean, isGroupedOver: boolean) => {
     if (isDragging) {
@@ -101,7 +102,7 @@ function getStyle(
 }
 
 interface IssueItemProps {
-    issue: Task
+    issue: Task | UserStory
     isDragging: boolean
     provided: DraggableProvided
     isGroupedOver?: boolean
