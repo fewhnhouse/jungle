@@ -8,6 +8,10 @@ import { getFiltersData as getStoryFiltersData } from '../../../../taiga-api/use
 import { PageBody, PageHeader } from '../../../../components/Layout'
 import PageTitle from '../../../../components/PageTitle'
 import StoryBoard from '../../../../components/board/StoryBoard'
+import { Select } from 'antd'
+import AssigneeDropdown from '../../../../components/AssigneeDropdown'
+import Flex from '../../../../components/Flex'
+const { Option } = Select
 
 const ParentContainer = styled.div``
 
@@ -53,6 +57,15 @@ export default function BoardContainer() {
         <>
             <PageHeader>
                 <PageTitle title="Board" />
+                <Flex>
+                    <Select placeholder="Group by...">
+                        <Option value="none">None</Option>
+                        <Option value="assignee">Assignee</Option>
+                        <Option value="epic">Epic</Option>
+                        <Option value="subtask">Subtask</Option>
+                    </Select>
+                    <AssigneeDropdown />
+                </Flex>
             </PageHeader>
             <PageBody>
                 <ParentContainer>

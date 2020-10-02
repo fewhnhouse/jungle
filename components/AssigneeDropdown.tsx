@@ -6,16 +6,17 @@ import styled from 'styled-components'
 
 const { Option } = Select
 
-const StyledSelect = styled(Select)`
-    width: 100%;
+const StyledSelect = styled(Select)<{ fluid?: boolean }>`
+    width: ${({ fluid }) => (fluid ? '100%' : '')};
 `
 
 interface Props {
     onChange: (id: number) => void
     value: number
+    fluid?: boolean
 }
 
-const AssigneeDropdown = ({ onChange, value }: Props) => {
+const AssigneeDropdown = ({ onChange, value, fluid }: Props) => {
     const { projectId } = useRouter().query
     const { data } = useQuery(
         ['project', { projectId }],
@@ -25,6 +26,8 @@ const AssigneeDropdown = ({ onChange, value }: Props) => {
 
     return (
         <StyledSelect
+            placeholder="Assignee..."
+            fluid={fluid}
             showSearch
             filterOption={(input, option) =>
                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
