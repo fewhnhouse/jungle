@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import styled from 'styled-components'
-import { Input, InputGroup } from 'rsuite'
 import ClearIcon from '@material-ui/icons/Clear'
 import CheckIcon from '@material-ui/icons/Check'
+import { Button, Input } from 'antd'
+import { ClearOutlined } from '@ant-design/icons'
+import Flex from './Flex'
 
 const Title = styled.span`
     border-radius: 4px;
@@ -18,39 +20,40 @@ const Title = styled.span`
     margin: ${({ theme }) => theme.spacing.mini} 0px;
 `
 
-const InputContainer = styled.div`
+const StyledButton = styled(Button)`
+    margin-left: 5px;
+    width: 40px;
+    padding: 0px;
     display: flex;
-    margin: ${({ theme }) => theme.spacing.mini} 0px;
     align-items: center;
-    width: 100%;
+    justify-content: center;
 `
+
 interface Props {
     initialValue: number
 }
+
 export default function EditableNumber({ initialValue }: Props) {
     const [editable, setEditable] = useState(false)
     const [value, setValue] = useState(initialValue + '')
 
     const toggleEditable = () => setEditable((editable) => !editable)
     return editable ? (
-        <InputContainer>
-            <InputGroup size="lg">
-                <Input
-                    autofocus
-                    size="lg"
-                    type="number"
-                    value={value}
-                    onChange={(value) => setValue(value)}
-                />
-                <InputGroup.Button onClick={toggleEditable}>
+        <Flex>
+            <Input
+                type="number"
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+            />
+            <Flex>
+                <StyledButton onClick={toggleEditable}>
                     <ClearIcon />
-                </InputGroup.Button>
-
-                <InputGroup.Button onClick={toggleEditable}>
+                </StyledButton>
+                <StyledButton onClick={toggleEditable}>
                     <CheckIcon />
-                </InputGroup.Button>
-            </InputGroup>
-        </InputContainer>
+                </StyledButton>
+            </Flex>
+        </Flex>
     ) : (
         <Title onClick={toggleEditable}>{value}</Title>
     )

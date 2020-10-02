@@ -6,7 +6,6 @@ import Profile from './Profile'
 import { useRouter } from 'next/router'
 import { useState, useRef } from 'react'
 import useMedia from 'use-media'
-import { Input, Button } from 'rsuite'
 import WorkOutlineIcon from '@material-ui/icons/WorkOutline'
 import AppsIcon from '@material-ui/icons/Apps'
 import HomeIcon from '@material-ui/icons/Home'
@@ -15,6 +14,7 @@ import DashboardIcon from '@material-ui/icons/Dashboard'
 import HistoryIcon from '@material-ui/icons/History'
 import AssessmentIcon from '@material-ui/icons/Assessment'
 import Tab from './Tab'
+import { Button, Input } from 'antd'
 
 interface HeaderProps {
     landing: boolean

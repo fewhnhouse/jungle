@@ -1,12 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
-import { Button, Icon, Tag, Input, Placeholder } from 'rsuite'
 import { queryCache, useQuery } from 'react-query'
 import { getTasks, createTask, Task } from '../../taiga-api/tasks'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-
-const { Paragraph } = Placeholder
+import { Button, Form, Input, Skeleton, Tag } from 'antd'
+import { PicLeftOutlined, PlusOutlined } from '@ant-design/icons'
 
 const TaskList = styled.ul`
     list-style: none;
@@ -36,15 +35,6 @@ const Flex = styled.div`
     width: 100%;
 `
 
-const InputForm = styled.form`
-    display: flex;
-    align-items: center;
-    width: 100%;
-    button {
-        margin-left: 5px;
-    }
-`
-
 const TaskContent = styled.div`
     /* flex child */
     flex-grow: 1;
@@ -72,7 +62,7 @@ interface Props {
 
 const SubtaskList = ({ id }: Props) => {
     const { projectId } = useRouter().query
-    const [subtask, setSubtask] = useState('')
+    const [form] = Form.useForm()
 
     const { isLoading: isTasksLoading, data: subtasks } = useQuery(
         ['subtasks', { id }],
@@ -85,20 +75,15 @@ const SubtaskList = ({ id }: Props) => {
         { enabled: id && projectId }
     )
 
-    const handleChangeSubtask = (val: string) => {
-        setSubtask(val)
-    }
-
-    const handleAddSubtask = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        setSubtask('')
+    const handleAddSubtask = (values: { name: string }) => {
         createTask({
             assigned_to: null,
             project: projectId,
             // TODO status: 16,
-            subject: subtask,
+            subject: values.name,
             user_story: id,
         }).then((newTask) => {
+            form.resetFields()
             queryCache.setQueryData(
                 ['subtasks', { id }],
                 (prevData: Task[]) => [...prevData, newTask]
@@ -109,18 +94,17 @@ const SubtaskList = ({ id }: Props) => {
     return (
         <TaskList>
             {isTasksLoading ? (
-                <Paragraph rows={2} />
+                <Skeleton active paragraph={{ rows: 2 }} />
             ) : (
                 <>
                     {subtasks?.map((task) => (
                         <TaskItem key={task.id}>
                             <Link
                                 key={task.id}
-                                href="/projects/[projectId]/tasks/[id]"
-                                as={`/projects/${projectId}/tasks/${id}`}
+                                href={`/projects/${projectId}/tasks/${id}`}
                             >
                                 <Flex>
-                                    <Icon icon="task" />
+                                    <PicLeftOutlined />
                                     <TaskContent>
                                         <TaskSubject>
                                             {task.subject}
@@ -148,14 +132,25 @@ const SubtaskList = ({ id }: Props) => {
                             </Link>
                         </TaskItem>
                     ))}
-                    <InputForm onSubmit={handleAddSubtask}>
-                        <Input
-                            onChange={handleChangeSubtask}
-                            value={subtask}
-                            placeholder="Add Subtask..."
-                        />
-                        <Button disabled={!subtask}>+</Button>
-                    </InputForm>
+                    <Form layout="inline" onFinish={handleAddSubtask}>
+                        <Form.Item
+                            name="name"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Input placeholder="Add Subtask..." />
+                        </Form.Item>
+                        <Form.Item>
+                            <Button
+                                htmlType="submit"
+                                type="primary"
+                                icon={<PlusOutlined />}
+                            ></Button>
+                        </Form.Item>
+                    </Form>
                 </>
             )}
         </TaskList>

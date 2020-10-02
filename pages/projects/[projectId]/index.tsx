@@ -8,13 +8,14 @@ import { getProject } from '../../../taiga-api/projects'
 import { getProjectTimeline } from '../../../taiga-api/timelines'
 import ActivityListItem from '../../../components/home/ActivityListItem'
 import Flex from '../../../components/Flex'
-import { Icon, IconButton } from 'rsuite'
+import { Button } from 'antd'
+import { EyeOutlined, LikeOutlined } from '@ant-design/icons'
 
 const StyledFlex = styled(Flex)`
     margin-top: 20px;
 `
 
-const StyledButton = styled(IconButton)`
+const StyledButton = styled(Button)`
     &:first-child {
         margin-right: 5px;
     }
@@ -45,14 +46,10 @@ const Project = () => {
                         description={data?.description}
                     />
                     <StyledFlex>
-                        <StyledButton>
-                            <Icon icon="eye" />
+                        <StyledButton icon={<EyeOutlined />}>
                             Watch
                         </StyledButton>
-                        <StyledButton>
-                            <Icon icon="thumbs-up" />
-                            Like
-                        </StyledButton>
+                        <StyledButton icon={<LikeOutlined />}>Like</StyledButton>
                     </StyledFlex>
                 </>
             </PageHeader>
@@ -60,7 +57,10 @@ const Project = () => {
                 <Flex>
                     <div>
                         {timeline?.map((item) => (
-                            <ActivityListItem activityItem={item} />
+                            <ActivityListItem
+                                key={item.id}
+                                activityItem={item}
+                            />
                         ))}
                     </div>
                     <div>

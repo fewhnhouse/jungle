@@ -1,16 +1,8 @@
+import { Button, Card, Checkbox, Form, Input, message, Skeleton } from 'antd'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { queryCache, useQuery } from 'react-query'
-import {
-    Form,
-    Panel,
-    FormGroup,
-    FormControl,
-    Button,
-    Checkbox,
-    Placeholder,
-    Alert,
-} from 'rsuite'
+
 import styled from 'styled-components'
 import {
     changeLogo,
@@ -21,9 +13,7 @@ import {
 } from '../../taiga-api/projects'
 import Flex from '../Flex'
 
-const { Paragraph } = Placeholder
-
-const StyledPanel = styled(Panel)`
+const StyledCard = styled(Card)`
     margin: 30px 0px;
     &:first-child {
         margin-top: 0px;
@@ -81,8 +71,12 @@ const Footer = styled.div`
     background: #fafafa;
 `
 
-const StyledFormGroup = styled(FormGroup)`
-    padding: 10px 20px;
+const CardContent = styled.div`
+    padding: 20px;
+`
+
+const StyledFormItem = styled(Form.Item)`
+    padding: 20px;
 `
 
 const ProjectDetails = () => {
@@ -95,8 +89,6 @@ const ProjectDetails = () => {
             return getProject(projectId as string)
         }
     )
-    const [name, setName] = useState(data?.name ?? '')
-    const [description, setDescription] = useState(data?.description ?? '')
     const [isPrivate, setIsPrivate] = useState(data?.is_private ?? false)
     const [confirmDeletion, setConfirmDeletion] = useState(false)
     const [logo, setLogo] = useState(
@@ -105,30 +97,34 @@ const ProjectDetails = () => {
     )
 
     if (!data) {
-        return <Paragraph rows={5} active />
+        return <Skeleton paragraph={{ rows: 5 }} active />
     }
 
-    const handleNameSubmit = () => {
+    const handleNameSubmit = (values: { name: string }) => {
+        const { name } = values
         queryCache.setQueryData(
             ['project', { projectId }],
             (prevData: Project) => ({ ...prevData, name })
         )
         updateProject(projectId as string, { name }).then(() =>
-            Alert.info('Project name successfully updated')
+            message.success('Project name successfully updated')
         )
     }
 
-    const handleDescriptionSubmit = () => {
+    const handleDescriptionSubmit = (values: { description: string }) => {
+        const { description } = values
+
         queryCache.setQueryData(
             ['project', { projectId }],
             (prevData: Project) => ({ ...prevData, description })
         )
         updateProject(projectId as string, { description }).then(() =>
-            Alert.info('Project description successfully updated')
+            message.success('Project description successfully updated')
         )
     }
 
-    const handleVisibilityToggle = () => {
+    const handleVisibilityToggle = (values: { visibility: string }) => {
+        const { visibility } = values
         queryCache.setQueryData(
             ['project', { projectId }],
             (prevData: Project) => ({
@@ -138,8 +134,10 @@ const ProjectDetails = () => {
         )
         setIsPrivate((isPrivate) => !isPrivate)
         updateProject(projectId as string, {
-            is_private: !isPrivate,
-        }).then(() => Alert.info('Project visibility successfully updated'))
+            is_private: visibility === 'private',
+        }).then(() =>
+            message.success('Project visibility successfully updated')
+        )
     }
 
     const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -153,7 +151,7 @@ const ProjectDetails = () => {
 
     const handleDeleteProject = () => {
         deleteProject(projectId as string).then(() => {
-            Alert.info('Project successfully deleted.')
+            message.success('Project successfully deleted.')
             queryCache.invalidateQueries('projects')
             replace('/projects')
         })
@@ -161,52 +159,37 @@ const ProjectDetails = () => {
 
     return (
         <div>
-            <StyledPanel bodyFill bordered header="Project Name">
-                <Form
-                    onChange={(formValue) => setName(formValue.name)}
-                    formValue={{ name }}
-                    onSubmit={handleNameSubmit}
-                >
-                    <StyledFormGroup>
-                        <FormControl name="name" />
-                    </StyledFormGroup>
+            <StyledCard bodyStyle={{ padding: 0 }} title="Project Name">
+                <Form layout="vertical" onFinish={handleNameSubmit}>
+                    <StyledFormItem name="name">
+                        <Input defaultValue={data.name} />
+                    </StyledFormItem>
                     <Footer>
                         <span>Your Project name is visible to everyone.</span>
-                        <Button type="submit" appearance="ghost">
-                            Save
-                        </Button>
+                        <Button htmlType="submit">Save</Button>
                     </Footer>
                 </Form>
-            </StyledPanel>
-            <StyledPanel bodyFill bordered header="Project Description">
-                <Form
-                    onChange={(formValue) =>
-                        setDescription(formValue.description)
-                    }
-                    formValue={{ description }}
-                    onSubmit={handleDescriptionSubmit}
-                >
-                    <StyledFormGroup>
-                        <FormControl
+            </StyledCard>
+            <StyledCard bodyStyle={{ padding: 0 }} title="Project Description">
+                <Form layout="vertical" onFinish={handleDescriptionSubmit}>
+                    <StyledFormItem name="description">
+                        <Input.TextArea
+                            defaultValue={data.description}
                             rows={5}
-                            name="description"
-                            componentClass="textarea"
                         />
-                    </StyledFormGroup>
+                    </StyledFormItem>
                     <Footer>
                         <span>
-                            Your Project description makes others understand
-                            what this project is about.
+                            The Description makes others understand what this
+                            project is about.
                         </span>
-                        <Button type="submit" appearance="ghost">
-                            Save
-                        </Button>
+                        <Button htmlType="submit">Save</Button>
                     </Footer>
                 </Form>
-            </StyledPanel>
-            <StyledPanel bodyFill bordered header="Project Avatar">
-                <Form>
-                    <StyledFormGroup>
+            </StyledCard>
+            <StyledCard bodyStyle={{ padding: 0 }} title="Project Avatar">
+                <Form layout="vertical">
+                    <StyledFormItem>
                         <Flex align="center" justify="space-between">
                             <span>
                                 Click the icon to change the Avatar.
@@ -224,7 +207,7 @@ const ProjectDetails = () => {
                                 />
                             </AvatarWrapper>
                         </Flex>
-                    </StyledFormGroup>
+                    </StyledFormItem>
 
                     <Footer>
                         <span>
@@ -233,56 +216,55 @@ const ProjectDetails = () => {
                         </span>
                     </Footer>
                 </Form>
-            </StyledPanel>
-            <StyledPanel bodyFill bordered header="Visibility">
-                <Form onSubmit={handleVisibilityToggle}>
-                    <StyledFormGroup>
+            </StyledCard>
+            <StyledCard bodyStyle={{ padding: 0 }} title="Visibility">
+                <Form layout="vertical" onFinish={handleVisibilityToggle}>
+                    <CardContent>
                         <span>
                             {isPrivate
                                 ? 'Your project can only be seen by invited members.'
                                 : 'Your Project is currently is visible to everyone.'}
                         </span>
-                    </StyledFormGroup>
+                    </CardContent>
                     <Footer>
                         <span>
                             {isPrivate
                                 ? 'Your Project is currently set to private.'
                                 : 'Your Project is currently set to public.'}
                         </span>
-                        <Button type="submit" appearance="ghost">
+                        <Button htmlType="submit">
                             {isPrivate ? 'Take Public' : 'Take Private'}
                         </Button>
                     </Footer>
                 </Form>
-            </StyledPanel>
-            <StyledPanel bodyFill bordered header="Delete Project">
-                <Form>
-                    <StyledFormGroup>
+            </StyledCard>
+            <StyledCard bodyStyle={{ padding: 0 }} title="Delete Project">
+                <Form layout="vertical">
+                    <CardContent>
                         <span>
                             If you delete your project, you wont be able to
                             restore it later.
                         </span>
-                    </StyledFormGroup>
+                    </CardContent>
                     <Footer>
                         <Checkbox
                             value={confirmDeletion}
-                            onChange={(e, checked) =>
-                                setConfirmDeletion(checked)
+                            onChange={(e) =>
+                                setConfirmDeletion(e.target.checked)
                             }
                         >
                             Confirm that you want to delete your project.
                         </Checkbox>
                         <Button
                             disabled={!confirmDeletion}
-                            color="red"
                             onClick={handleDeleteProject}
-                            appearance="ghost"
+                            danger
                         >
                             Delete Project
                         </Button>
                     </Footer>
                 </Form>
-            </StyledPanel>
+            </StyledCard>
         </div>
     )
 }

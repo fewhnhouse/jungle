@@ -3,19 +3,10 @@ import Link from 'next/link'
 import { useState } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/router'
-import {
-    Panel,
-    Button,
-    Checkbox,
-    Form,
-    FormGroup,
-    ButtonToolbar,
-    ControlLabel,
-    FormControl,
-    Alert,
-    CheckboxGroup,
-} from 'rsuite'
+
 import { User } from '../../taiga-api/users'
+import { Button, Card, Checkbox, Form, Input, message } from 'antd'
+import { LockOutlined, UserOutlined } from '@ant-design/icons'
 
 const Container = styled.div`
     display: flex;
@@ -28,22 +19,20 @@ const Container = styled.div`
     align-items: center;
 `
 
-const StyledPanel = styled(Panel)`
+const StyledCard = styled(Card)`
     background: white;
     box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.15);
 `
 
 export default function Home() {
-    const [formState, setFormState] = useState({
-        username: '',
-        password: '',
-        remember: false,
-    })
-
     const { push } = useRouter()
 
-    const handleLogin = async () => {
-        const { username, password, remember } = formState
+    const handleLogin = async (values: {
+        username: string
+        password: string
+        remember: boolean
+    }) => {
+        const { username, password, remember } = values
         try {
             const { data } = await axios.post<unknown, { data: User }>(
                 '/auth',
@@ -62,54 +51,70 @@ export default function Home() {
             localStorage.setItem('auth-token', auth_token)
             push('/')
         } catch (e) {
-            Alert.error('Login failed.')
+            message.error('Login failed.')
         }
     }
     return (
         <Container>
-            <StyledPanel bordered title="Into the Jungle">
+            <StyledCard title="Into the Jungle">
                 <Form
-                    onSubmit={handleLogin}
-                    value={formState}
-                    onChange={(value: {
-                        username: string
-                        password: string
-                        remember: boolean
-                    }) => setFormState(value)}
+                    layout="vertical"
+                    onFinish={handleLogin}
+                    initialValues={{ remember: true }}
                 >
-                    <FormGroup>
-                        <ControlLabel>Username</ControlLabel>
-                        <FormControl name="username" />
-                    </FormGroup>
-                    <FormGroup>
-                        <ControlLabel>Password</ControlLabel>
-                        <FormControl name="password" type="password" />
-                    </FormGroup>
-                    <p>
-                        Forgot your password? Reset it{' '}
-                        <Link href="reset-password">
-                            <a>here</a>
-                        </Link>
-                        .
-                    </p>
-                    <FormGroup>
-                        <FormControl
-                            accepter={CheckboxGroup}
+                    <Form.Item
+                        name="username"
+                        label="Username"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please input your username!',
+                            },
+                        ]}
+                    >
+                        <Input
+                            prefix={
+                                <UserOutlined className="site-form-item-icon" />
+                            }
+                            placeholder="Username"
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please input your password!',
+                            },
+                        ]}
+                        name="password"
+                        label="Password"
+                    >
+                        <Input.Password
+                            prefix={
+                                <LockOutlined className="site-form-item-icon" />
+                            }
+                            placeholder="Password"
+                        />
+                    </Form.Item>
+                    <Form.Item>
+                        <Form.Item
                             name="remember"
-                            inline
+                            valuePropName="checked"
+                            noStyle
                         >
                             <Checkbox>Remember me</Checkbox>
-                        </FormControl>
-                    </FormGroup>
-                    <FormGroup>
-                        <ButtonToolbar>
-                            <Button type="submit" appearance="primary">
-                                Log In &rarr;
-                            </Button>
-                        </ButtonToolbar>
-                    </FormGroup>
+                        </Form.Item>
+
+                        <Link href="reset-password">Forgot password?</Link>
+                    </Form.Item>
+
+                    <Form.Item>
+                        <Button htmlType="submit" type="primary">
+                            Log In &rarr;
+                        </Button>
+                    </Form.Item>
                 </Form>
-            </StyledPanel>
+            </StyledCard>
         </Container>
     )
 }

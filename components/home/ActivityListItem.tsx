@@ -1,8 +1,8 @@
 import styled from 'styled-components'
 import ListItem from '../ListItem'
-import { Tag } from 'rsuite'
 import { Timeline, TimelineType } from '../../taiga-api/timelines'
 import Link from 'next/link'
+import { Tag } from 'antd'
 
 const IssueName = styled.span`
     margin: 0px ${({ theme }) => `${theme.spacing.small}`};
@@ -58,7 +58,6 @@ export default function ActivityListItem({ activityItem }: Props) {
                             {type === TimelineType.Change
                                 ? 'updated'
                                 : 'created'}{' '}
-                            
                             <Link
                                 as={`/${source}/${affectedItem?.id}`}
                                 href={`/${source}/[id]`}

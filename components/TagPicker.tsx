@@ -1,19 +1,15 @@
+import { Select, Tag } from 'antd'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { queryCache, useQuery } from 'react-query'
-import { Tag, TagPicker } from 'rsuite'
 import styled from 'styled-components'
 import { getTagColors, TagObject } from '../taiga-api/projects'
 import { getUserstory, updateUserstory } from '../taiga-api/userstories'
 
-const StyledTagPicker = styled(TagPicker)`
+const StyledTagPicker = styled(Select)`
     width: 100%;
 `
 
-const ColoredTag = styled(Tag)<{ backgroundColor?: string }>`
-    background-color: ${({ backgroundColor }) => backgroundColor};
-    font-weight: bold;
-`
 interface Props {
     id: number
 }
@@ -79,25 +75,14 @@ const CustomTagPicker = ({ id }: Props) => {
     }
     return (
         <StyledTagPicker
-            creatable
+            mode="tags"
             value={selected}
             disabled={isUpdating}
-            renderValue={(values, items) => {
-                return items.map((tag, index) => (
-                    <ColoredTag backgroundColor={tag?.color} key={index}>
-                        {tag?.label}
-                    </ColoredTag>
-                ))
+            tagRender={({ label, value, color }) => {
+                return <Tag color={color} key={value}>{label}</Tag>
             }}
             onChange={handleChange}
-            renderMenuItem={(label, item) => {
-                return (
-                    <ColoredTag backgroundColor={item?.color}>
-                        {label}
-                    </ColoredTag>
-                )
-            }}
-            data={tagsArray}
+            options={tagsArray}
         />
     )
 }

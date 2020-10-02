@@ -6,12 +6,11 @@ import { useState, useEffect } from 'react'
 import YourWork from '../components/home/YourWork'
 import { useRouter } from 'next/router'
 import ProjectCreationModal from '../components/home/ProjectCreationModal'
-import { Button, Progress } from 'rsuite'
 import { getMe, User } from '../taiga-api/users'
 import PageTitle from '../components/PageTitle'
 import { PageBody, PageHeader } from '../components/Layout'
 import { useQuery } from 'react-query'
-const { Line } = Progress
+import { Button, Progress } from 'antd'
 
 const Container = styled.div`
     padding: ${({ theme }) => `${theme.spacing.huge} ${theme.spacing.crazy}`};
@@ -131,7 +130,7 @@ export default function Home() {
                             {!isMobile && (
                                 <LevelContainer>
                                     <LevelIcon>5</LevelIcon>
-                                    <Line
+                                    <Progress
                                         strokeColor="#2ecc71"
                                         showInfo={false}
                                         percent={30}
@@ -151,7 +150,7 @@ export default function Home() {
                     <MobileButtonContainer>
                         <LevelContainer>
                             <LevelIcon>5</LevelIcon>
-                            <Line
+                            <Progress
                                 strokeColor="#2ecc71"
                                 showInfo={false}
                                 percent={30}

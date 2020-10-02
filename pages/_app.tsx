@@ -8,6 +8,7 @@ import 'rsuite/lib/styles/index.less'
 import { useRouter } from 'next/router'
 import 'draft-js/dist/Draft.css'
 import 'react-markdown-editor-lite/lib/index.css'
+import 'antd/dist/antd.css'
 
 export interface Theme {
     colors: {

@@ -1,46 +1,48 @@
 import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
 import { getProject } from '../taiga-api/projects'
-import { Button, Loader, SelectPicker } from 'rsuite'
-import { SyntheticEvent } from 'react'
-import { ItemDataType } from 'rsuite/lib/@types/common'
+import { Select, Spin } from 'antd'
 import styled from 'styled-components'
 
-const StyledSelect = styled(SelectPicker)`
+const { Option } = Select
+
+const StyledSelect = styled(Select)`
     width: 100%;
 `
 
 interface Props {
-    onSelect: (
-        value: number,
-        item: ItemDataType,
-        event: SyntheticEvent<HTMLElement, Event>
-    ) => void
+    onChange: (id: number) => void
     value: number
 }
 
-const AssigneeDropdown = ({ onSelect, value }: Props) => {
+const AssigneeDropdown = ({ onChange, value }: Props) => {
     const { projectId } = useRouter().query
     const { data } = useQuery(
         ['project', { projectId }],
         (key, { projectId }) => getProject(projectId as string),
         { enabled: projectId }
     )
-    if (!data) {
-        return <Loader />
-    }
+
     return (
         <StyledSelect
-            data={data?.members.map((member) => ({
-                value: member.id,
-                label: member.full_name,
-            }))}
+            showSearch
+            filterOption={(input, option) =>
+                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+            loading={!data}
+            onChange={onChange}
             value={value}
-            onSelect={onSelect}
-            toggleComponentClass={Button}
-            appearance="default"
-            title="Select..."
-        />
+        >
+            {data?.members.map((member) => (
+                <Option
+                    title={member.full_name}
+                    key={member.id}
+                    value={member.id}
+                >
+                    {member.full_name}
+                </Option>
+            ))}
+        </StyledSelect>
     )
 }
 

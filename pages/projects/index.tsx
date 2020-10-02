@@ -1,10 +1,10 @@
-import { Button } from 'rsuite'
 import { PageBody, PageHeader } from '../../components/Layout'
 import PageTitle from '../../components/PageTitle'
 import { useQuery } from 'react-query'
 import { getProjects } from '../../taiga-api/projects'
 import ProjectListItem from '../../components/home/ProjectListItem'
 import Flex from '../../components/Flex'
+import { Button } from 'antd'
 
 const Projects = () => {
     const { data, error } = useQuery('projects', () => {

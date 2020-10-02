@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import styled from 'styled-components'
-import EditButtonGroup from './EditButtonGroup'
 import MarkdownIt from 'markdown-it'
 import dynamic from 'next/dynamic'
 import ReactMarkdown from 'react-markdown'
+import Flex from './Flex'
+import ClearIcon from '@material-ui/icons/Clear'
+import CheckIcon from '@material-ui/icons/Check'
+import { Button } from 'antd'
 
 const mdParser = new MarkdownIt(/* Markdown-it options */)
 const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
@@ -18,6 +21,15 @@ const DisplayContainer = styled.div`
     &:hover {
         background: #eee;
     }
+`
+
+const StyledButton = styled(Button)`
+    margin-left: 5px;
+    width: 40px;
+    padding: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `
 
 const InputContainer = styled.div`
@@ -59,10 +71,14 @@ export default function EditableDescription({ initialValue }: Props) {
                 onChange={handleEditorChange}
                 renderHTML={(text) => mdParser.render(text)}
             />
-            <EditButtonGroup
-                onCancel={toggleEditable}
-                onAccept={toggleEditable}
-            />
+            <Flex>
+                <StyledButton size="large" onClick={toggleEditable}>
+                    <ClearIcon />
+                </StyledButton>
+                <StyledButton size="large" onClick={toggleEditable}>
+                    <CheckIcon />
+                </StyledButton>
+            </Flex>
         </InputContainer>
     ) : (
         <DisplayContainer onClick={toggleEditable}>

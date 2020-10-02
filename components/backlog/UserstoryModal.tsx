@@ -3,15 +3,6 @@ import styled from 'styled-components'
 import EditableTitle from '../EditableTitle'
 import EditableDescription from '../EditableDescription'
 import EditableNumber from '../EditableNumber'
-import {
-    Modal,
-    Button,
-    Dropdown,
-    Placeholder,
-    Uploader,
-    Divider,
-    TagPicker,
-} from 'rsuite'
 import { queryCache, useQuery } from 'react-query'
 import AssigneeDropdown from '../AssigneeDropdown'
 import StatusDropdown from '../StatusDropdown'
@@ -25,21 +16,20 @@ import Breadcrumbs from './Breadcrumbs'
 import SubtaskList from './SubtaskList'
 import CustomTagPicker from '../TagPicker'
 import { useRouter } from 'next/router'
+import { Divider, Modal, Select, Skeleton, Upload } from 'antd'
+import Flex from '../Flex'
+import { UploadOutlined } from '@ant-design/icons'
 
-const { Paragraph } = Placeholder
-
+const StyledFlex = styled(Flex)`
+    margin: 0px 10px;
+    span {
+        &:first-child {
+            margin-right: 5px;
+        }
+    }
+`
 const Label = styled.span`
     margin-top: ${({ theme }) => theme.spacing.mini};
-`
-
-const StyledModalBody = styled(Modal.Body)`
-    margin-top: 0px;
-`
-
-const StyledModal = styled(Modal)`
-    @media only screen and (max-width: 600px) {
-        max-width: 90%;
-    }
 `
 
 const Main = styled.div`
@@ -66,11 +56,6 @@ const Sidebar = styled.aside`
     flex-direction: column;
     align-items: flex-start;
     min-width: 180px;
-`
-
-const UploadContent = styled.div`
-    width: 100%;
-    margin: 10px 0px;
 `
 
 interface Props {
@@ -133,66 +118,60 @@ export default function IssueModal({ id, open, onClose }: Props) {
     }
 
     return data ? (
-        <StyledModal show={open} onHide={onClose}>
+        <Modal footer={null} visible={open} onCancel={onClose} onOk={onClose}>
             {isLoading ? (
-                <Paragraph active rows={10} />
+                <Skeleton active paragraph={{ rows: 5 }} />
             ) : (
-                <>
-                    <Modal.Header>
-                        <Breadcrumbs data={data} />
-                    </Modal.Header>
-                    <StyledModalBody>
-                        <Main>
-                            <Content>
-                                <EditableTitle
-                                    onSubmit={handleTitleSubmit}
-                                    initialValue={data?.subject}
-                                />
-                                <EditableDescription
-                                    initialValue={data?.description}
-                                />
-                                <Uploader
-                                    data={{
-                                        object_id: data.id,
-                                        project: data.project,
-                                    }}
-                                    name="attached_file"
-                                    headers={{
-                                        Authorization:
-                                            token && `Bearer ${token}`,
-                                    }}
-                                    action={`${process.env.NEXT_PUBLIC_TAIGA_API_URL}/tasks/attachments`}
-                                    draggable
-                                >
-                                    <UploadContent>
-                                        Click or Drag files to this area to
-                                        upload
-                                    </UploadContent>
-                                </Uploader>
-                                <Divider />
-                                <SubtaskList id={id} />
-                            </Content>
-                            <Sidebar>
-                                <Label>Status</Label>
-                                <StatusDropdown
-                                    data={statusData}
-                                    value={data?.status}
-                                    onSelect={updateStatus}
-                                />
-                                <Label>Assignee</Label>
-                                <AssigneeDropdown
-                                    value={data?.assigned_to}
-                                    onSelect={updateAssignee}
-                                />
-                                <Label>Tags</Label>
-                                <CustomTagPicker id={id} />
-                                <Label>Story Points</Label>
-                                <EditableNumber initialValue={1} />
-                            </Sidebar>
-                        </Main>
-                    </StyledModalBody>
-                </>
+                <Flex direction="column">
+                    <Breadcrumbs data={data} />
+                    <Main>
+                        <Content>
+                            <EditableTitle
+                                onSubmit={handleTitleSubmit}
+                                initialValue={data?.subject}
+                            />
+                            <EditableDescription
+                                initialValue={data?.description}
+                            />
+                            <Upload.Dragger
+                                data={{
+                                    object_id: data.id,
+                                    project: data.project,
+                                }}
+                                name="attached_file"
+                                headers={{
+                                    Authorization: token && `Bearer ${token}`,
+                                }}
+                                action={`${process.env.NEXT_PUBLIC_TAIGA_API_URL}/tasks/attachments`}
+                            >
+                                <StyledFlex align="center">
+                                    <UploadOutlined size={32} />
+                                    <p>Click or Drag files to upload</p>
+                                </StyledFlex>
+                            </Upload.Dragger>
+                            <Divider />
+                            <SubtaskList id={id} />
+                        </Content>
+                        <Sidebar>
+                            <Label>Status</Label>
+                            <StatusDropdown
+                                data={statusData}
+                                value={data?.status}
+                                onChange={updateStatus}
+                            />
+                            <Label>Assignee</Label>
+                            <AssigneeDropdown
+                                value={data?.assigned_to}
+                                onChange={updateAssignee}
+                            />
+                            <Label>Tags</Label>
+                            <CustomTagPicker id={id} />
+                            <Label>Story Points</Label>
+                            <EditableNumber initialValue={1} />
+                        </Sidebar>
+                    </Main>
+                </Flex>
             )}
-        </StyledModal>
+        </Modal>
     ) : null
 }

@@ -1,44 +1,24 @@
-import {
-    Modal,
-    Button,
-    Form,
-    FormGroup,
-    ControlLabel,
-    FormControl,
-    DateRangePicker,
-    ButtonToolbar,
-} from 'rsuite'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { queryCache } from 'react-query'
 import { createMilestone, Milestone } from '../../taiga-api/milestones'
+import { Button, DatePicker, Form, Input, Modal } from 'antd'
 
 const SprintCreation = () => {
     const [show, setShow] = useState(false)
+    const [form] = Form.useForm()
     const { projectId } = useRouter().query
-    const [formState, setFormState] = useState({
-        name: '',
-        dateRange: [new Date(), new Date()],
-    })
-
-    const handleChange = (value) => {
-        setFormState(value)
-    }
 
     const handleOpen = () => setShow(true)
     const handleClose = () => setShow(false)
 
-    const handleSubmit = async (
-        checkStatus: boolean,
-        e: React.FormEvent<HTMLFormElement>
-    ) => {
-        e.preventDefault()
+    const handleSubmit = async (values: { name: string; date: [any, any] }) => {
+        const startDate = values.date[0]
+        const endDate = values.date[1]
         const newMilestone = await createMilestone({
-            name: formState.name,
-            estimated_start: formState.dateRange[0].toISOString().split('T')[0],
-            estimated_finish: formState.dateRange[1]
-                .toISOString()
-                .split('T')[0],
+            name: values.name,
+            estimated_start: startDate._d.toISOString().split('T')[0],
+            estimated_finish: endDate._d.toISOString().split('T')[0],
             project: projectId,
         })
         queryCache.setQueryData('milestones', (oldMilestones?: Milestone[]) =>
@@ -46,49 +26,27 @@ const SprintCreation = () => {
         )
         handleClose()
     }
+
+    const handleFormSubmit = () => {
+        form.submit()
+    }
     return (
         <>
-            <Button size="sm" appearance="ghost" onClick={handleOpen}>
-                Create Sprint
-            </Button>
-            <Modal size="xs" show={show} onHide={handleClose}>
-                <Modal.Header>
-                    <Modal.Title>Create Sprint</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form
-                        fluid
-                        formValue={formState}
-                        onChange={handleChange}
-                        onSubmit={handleSubmit}
-                    >
-                        <FormGroup>
-                            <ControlLabel>Name</ControlLabel>
-                            <FormControl style={{ width: 300 }} name="name" />
-                        </FormGroup>
-                        <FormGroup>
-                            <ControlLabel>Date</ControlLabel>
-                            <FormControl
-                                style={{ width: 300 }}
-                                accepter={DateRangePicker}
-                                name="dateRange"
-                            />
-                        </FormGroup>
-                        <FormGroup>
-                            <ButtonToolbar>
-                                <Button type="submit" appearance="primary">
-                                    Create
-                                </Button>
-                                <Button
-                                    onClick={handleClose}
-                                    appearance="default"
-                                >
-                                    Cancel
-                                </Button>
-                            </ButtonToolbar>
-                        </FormGroup>
-                    </Form>
-                </Modal.Body>
+            <Button onClick={handleOpen}>Create Sprint</Button>
+            <Modal
+                title="Create Sprint"
+                visible={show}
+                onOk={handleFormSubmit}
+                onCancel={handleClose}
+            >
+                <Form layout="vertical" form={form} onFinish={handleSubmit}>
+                    <Form.Item name="name" label="Name">
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="date" label="Duration">
+                        <DatePicker.RangePicker />
+                    </Form.Item>
+                </Form>
             </Modal>
         </>
     )

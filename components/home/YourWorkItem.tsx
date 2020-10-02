@@ -1,6 +1,6 @@
+import { Tag } from 'antd'
 import styled from 'styled-components'
 import ListItem from '../ListItem'
-import { Tag } from 'rsuite'
 
 const IssueName = styled.span`
     margin: 0px ${({ theme }) => `${theme.spacing.small}`};

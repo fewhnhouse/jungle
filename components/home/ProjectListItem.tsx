@@ -2,13 +2,14 @@ import styled from 'styled-components'
 import useMedia from 'use-media'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { Button, Tag, Panel, IconButton, Icon } from 'rsuite'
+import { SettingOutlined } from '@ant-design/icons'
+import { Button, Card, Tag } from 'antd'
 
 const StyledButton = styled(Button)`
     margin: 0px 4px;
 `
 
-const StyledPanel = styled(Panel)`
+const StyledCard = styled(Card)`
     min-width: 300px;
     max-width: 500px;
     background: white;
@@ -57,7 +58,7 @@ const InfoContainer = styled.div`
     align-items: center;
 `
 
-const SettingsButton = styled(IconButton)`
+const SettingsButton = styled(Button)`
     float: right;
 `
 
@@ -104,12 +105,11 @@ export default function ProjectListItem({
 }: Props) {
     const isMobile = useMedia({ maxWidth: '400px' })
     const { push } = useRouter()
-    const handleSettingsClick = () =>
-        push('/projects/[id]/settings', `/projects/${id}/settings`)
+    const handleSettingsClick = () => push(`/projects/${id}/settings`)
     return (
-        <StyledPanel bordered>
+        <StyledCard bordered>
             <SettingsButton
-                icon={<Icon icon="cog" />}
+                icon={<SettingOutlined />}
                 onClick={handleSettingsClick}
             />
             <ItemContainer>
@@ -137,20 +137,13 @@ export default function ProjectListItem({
             </ItemContainer>
 
             <StyledFooter>
-                <Link
-                    href="/projects/[id]/backlog"
-                    as={`/projects/${id}/backlog`}
-                >
-                    <StyledButton id="dashboard" theme="dark" outline>
-                        Backlog &rarr;
-                    </StyledButton>
+                <Link href={`/projects/${id}/backlog`}>
+                    <StyledButton id="dashboard">Backlog &rarr;</StyledButton>
                 </Link>
-                <Link href="/projects/[id]/board" as={`/projects/${id}/board`}>
-                    <StyledButton id="board" theme="dark" outline>
-                        Board &rarr;
-                    </StyledButton>
+                <Link href={`/projects/${id}/board`}>
+                    <StyledButton id="board">Board &rarr;</StyledButton>
                 </Link>
             </StyledFooter>
-        </StyledPanel>
+        </StyledCard>
     )
 }

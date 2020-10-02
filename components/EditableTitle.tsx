@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import styled from 'styled-components'
-import { Input, InputGroup } from 'rsuite'
 import ClearIcon from '@material-ui/icons/Clear'
 import CheckIcon from '@material-ui/icons/Check'
+import Flex from './Flex'
+import { Button, Input } from 'antd'
+
 const Title = styled.h3`
     border-radius: 4px;
     height: 42px;
@@ -16,6 +18,15 @@ const Title = styled.h3`
     color: #495057;
     cursor: pointer;
     margin: ${({ theme }) => theme.spacing.mini} 0px;
+`
+
+const StyledButton = styled(Button)`
+    margin-left: 5px;
+    width: 40px;
+    padding: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `
 
 const InputContainer = styled.form`
@@ -33,7 +44,7 @@ export default function EditableTitle({ initialValue, onSubmit }: Props) {
     const [value, setValue] = useState(initialValue)
 
     const toggleEditable = () => setEditable((editable) => !editable)
-    
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
         onSubmit(value)
@@ -42,21 +53,21 @@ export default function EditableTitle({ initialValue, onSubmit }: Props) {
 
     return editable ? (
         <InputContainer onSubmit={handleSubmit}>
-            <InputGroup size="lg">
+            <Flex>
                 <Input
-                    autofocus
-                    size="lg"
+                    size="large"
                     value={value}
-                    onChange={(value) => setValue(value)}
+                    onChange={(e) => setValue(e.target.value)}
                 />
-                <InputGroup.Button onClick={toggleEditable}>
-                    <ClearIcon />
-                </InputGroup.Button>
-
-                <InputGroup.Button type="submit">
-                    <CheckIcon />
-                </InputGroup.Button>
-            </InputGroup>
+                <Flex>
+                    <StyledButton size="large" onClick={toggleEditable}>
+                        <ClearIcon />
+                    </StyledButton>
+                    <StyledButton size="large" onClick={toggleEditable}>
+                        <CheckIcon />
+                    </StyledButton>
+                </Flex>
+            </Flex>
         </InputContainer>
     ) : (
         <Title onClick={toggleEditable}>{value}</Title>

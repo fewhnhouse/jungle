@@ -1,15 +1,6 @@
 import { useState } from 'react'
 import { queryCache, useQuery } from 'react-query'
-import {
-    Form,
-    Panel,
-    FormGroup,
-    FormControl,
-    Button,
-    Checkbox,
-    Placeholder,
-    Alert,
-} from 'rsuite'
+import { Button, Card, Checkbox, Form, Input, message, Skeleton } from 'antd'
 import styled from 'styled-components'
 import {
     changeAvatar,
@@ -20,9 +11,7 @@ import {
 } from '../../taiga-api/users'
 import Flex from '../Flex'
 
-const { Paragraph } = Placeholder
-
-const StyledPanel = styled(Panel)`
+const StyledCard = styled(Card)`
     margin: 30px 0px;
     &:first-child {
         margin-top: 0px;
@@ -30,7 +19,6 @@ const StyledPanel = styled(Panel)`
     padding: 0px;
     max-width: 500px;
 `
-
 const Avatar = styled.img`
     height: 100%;
     width: 100%;
@@ -84,8 +72,12 @@ const Footer = styled.div`
     background: #fafafa;
 `
 
-const StyledFormGroup = styled(FormGroup)`
+const CardContent = styled.div`
     padding: 10px 20px;
+`
+
+const StyledFormItem = styled(Form.Item)`
+    padding: 20px;
 `
 
 const UserDetails = () => {
@@ -105,20 +97,18 @@ const UserDetails = () => {
     )
 
     if (!data) {
-        return <Paragraph rows={5} active />
+        return <Skeleton paragraph={{ rows: 5 }} active />
     }
 
-    const handleFieldSubmit = (
-        field: string,
-        value: unknown,
-        fieldName: string
-    ) => () => {
+    const handleFieldSubmit = (field: string, fieldName: string) => (values: {
+        [key: string]: any
+    }) => {
         queryCache.setQueryData('me', (prevData: User) => ({
             ...prevData,
-            [field]: value,
+            [field]: values[field],
         }))
-        updateUser(data?.id, { [field]: value }).then(() =>
-            Alert.info(`${fieldName} successfully updated`)
+        updateUser(data?.id, { [field]: values[field] }).then(() =>
+            message.success(`${fieldName} successfully updated`)
         )
     }
 
@@ -136,7 +126,7 @@ const UserDetails = () => {
         newPassword: string
     ) => {
         changePassword(currentPassword, newPassword).then((res) => {
-            Alert.info(`Password successfully updated`)
+            message.success(`Password successfully updated`)
         })
     }
 
@@ -146,106 +136,86 @@ const UserDetails = () => {
 
     return (
         <div>
-            <StyledPanel bodyFill bordered header="Username">
-                <Form
-                    formValue={{ username }}
-                    onSubmit={handleFieldSubmit(
-                        'username',
-                        username,
-                        'Username'
-                    )}
-                    onChange={(formValue) => setUsername(formValue.username)}
-                >
-                    <StyledFormGroup>
-                        <FormControl name="username" />
-                    </StyledFormGroup>
+            <StyledCard bodyStyle={{ padding: 0 }} title="Username">
+                <Form onFinish={handleFieldSubmit('username', 'Username')}>
+                    <StyledFormItem name="username">
+                        <Input defaultValue={data.username} />
+                    </StyledFormItem>
                     <Footer>
                         <span>Your username name is visible to everyone.</span>
-                        <Button type="submit" appearance="ghost">
-                            Save
-                        </Button>
+                        <Button htmlType="submit">Save</Button>
                     </Footer>
                 </Form>
-            </StyledPanel>
-            <StyledPanel bodyFill bordered header="Full Name">
-                <Form
-                    formValue={{ fullName }}
-                    onSubmit={handleFieldSubmit(
-                        'full_name',
-                        fullName,
-                        'Full Name'
-                    )}
-                    onChange={(formValue) => setFullName(formValue.fullName)}
-                >
-                    <StyledFormGroup>
-                        <FormControl name="fullName" />
-                    </StyledFormGroup>
+            </StyledCard>
+            <StyledCard bodyStyle={{ padding: 0 }} title="Full Name">
+                <Form onFinish={handleFieldSubmit('full_name', 'Full Name')}>
+                    <StyledFormItem name="fullName">
+                        <Input defaultValue={data.full_name} />
+                    </StyledFormItem>
+
                     <Footer>
                         <span>
                             Your full name is important for others to recognize
                             you.
                         </span>
-                        <Button type="submit" appearance="ghost">
-                            Save
-                        </Button>
+                        <Button htmlType="submit">Save</Button>
                     </Footer>
                 </Form>
-            </StyledPanel>
-            <StyledPanel bodyFill bordered header="Email">
-                <Form
-                    formValue={{ email }}
-                    onSubmit={handleFieldSubmit('email', email, 'Email')}
-                    onChange={(formValue) => setEmail(formValue.email)}
-                >
-                    <StyledFormGroup>
+            </StyledCard>
+            <StyledCard bodyStyle={{ padding: 0 }} title="Email">
+                <Form onFinish={handleFieldSubmit('email', 'Email')}>
+                    <CardContent>
                         <Description>
                             Please enter your email address used to log in to
                             Taiga.
                         </Description>
-                        <FormControl type="email" name="email" />
-                    </StyledFormGroup>
+                        <Form.Item name="email">
+                            <Input defaultValue={data.email} type="email" />
+                        </Form.Item>
+                    </CardContent>
                     <Footer>
                         <span>We will send you a verification email.</span>
-                        <Button type="submit" appearance="ghost">
-                            Save
-                        </Button>
+                        <Button htmlType="submit">Save</Button>
                     </Footer>
                 </Form>
-            </StyledPanel>
-            <StyledPanel bodyFill bordered header="Password">
+            </StyledCard>
+            <StyledCard bodyStyle={{ padding: 0 }} title="Password">
                 <Form
-                    onSubmit={() =>
-                        handlePasswordChange(currentPassword, newPassword)
+                    onFinish={(values: {
+                        currentPassword: string
+                        newPassword: string
+                    }) =>
+                        handlePasswordChange(
+                            values.currentPassword,
+                            values.newPassword
+                        )
                     }
-                    onChange={({ currentPassword, newPassword }) =>
-                        setPasswordFormState({ currentPassword, newPassword })
-                    }
-                    formValue={{ currentPassword, newPassword }}
                 >
-                    <StyledFormGroup>
+                    <CardContent>
                         <Description>
                             Please enter your current password and a new one in
                             order to update it.
                         </Description>
-                        <FormControl
-                            type="password"
+                        <Form.Item
                             style={{ marginBottom: 10 }}
                             name="currentPassword"
-                        />
-                        <FormControl type="password" name="newPassword" />
-                    </StyledFormGroup>
+                        >
+                            <Input.Password />
+                        </Form.Item>
+                        <Form.Item name="newPassword">
+                            <Input.Password />
+                        </Form.Item>
+                    </CardContent>
                     <Footer>
                         <span>We will send you a verification email.</span>
-                        <Button type="submit" appearance="ghost">
-                            Save
-                        </Button>
+                        <Button htmlType="submit">Save</Button>
                     </Footer>
                 </Form>
-            </StyledPanel>
+            </StyledCard>
 
-            <StyledPanel bodyFill bordered header="Avatar">
+            <StyledCard bodyStyle={{ padding: 0 }} title="Avatar">
                 <Form>
-                    <StyledFormGroup>
+                    <CardContent>
                         <Flex align="center" justify="space-between">
                             <Description>
                                 Click the icon to change your Avatar.
@@ -263,7 +233,7 @@ const UserDetails = () => {
                                 />
                             </AvatarWrapper>
                         </Flex>
-                    </StyledFormGroup>
+                    </CardContent>
 
                     <Footer>
                         <span>
@@ -271,42 +241,32 @@ const UserDetails = () => {
                         </span>
                     </Footer>
                 </Form>
-            </StyledPanel>
-            <StyledPanel bodyFill bordered header="Bio">
-                <Form
-                    formValue={{ bio }}
-                    onSubmit={handleFieldSubmit('bio', bio, 'Bio')}
-                    onChange={(formValue) => setBio(formValue.bio)}
-                >
-                    <StyledFormGroup>
-                        <FormControl
-                            rows={5}
-                            name="bio"
-                            componentClass="textarea"
-                        />
-                    </StyledFormGroup>
+            </StyledCard>
+            <StyledCard bodyStyle={{ padding: 0 }} title="Bio">
+                <Form onFinish={handleFieldSubmit('bio', 'Bio')}>
+                    <StyledFormItem name="bio">
+                        <Input.TextArea defaultValue={data.bio} rows={5} />
+                    </StyledFormItem>
                     <Footer>
                         <span>Your bio lets others know what you can do.</span>
-                        <Button type="submit" appearance="ghost">
-                            Save
-                        </Button>
+                        <Button htmlType="submit">Save</Button>
                     </Footer>
                 </Form>
-            </StyledPanel>
+            </StyledCard>
 
-            <StyledPanel bodyFill bordered header="Delete Account">
+            <StyledCard bodyStyle={{ padding: 0 }} title="Delete Account">
                 <Form>
-                    <StyledFormGroup>
+                    <CardContent>
                         <span>
                             If you delete your account, you wont be able to
                             restore it later.
                         </span>
-                    </StyledFormGroup>
+                    </CardContent>
                     <Footer>
                         <Checkbox
                             value={confirmDeletion}
-                            onChange={(e, checked) =>
-                                setConfirmDeletion(checked)
+                            onChange={(e) =>
+                                setConfirmDeletion(e.target.checked)
                             }
                         >
                             Confirm that you want to delete your account.
@@ -314,14 +274,13 @@ const UserDetails = () => {
                         <Button
                             disabled={!confirmDeletion}
                             onClick={handleDeleteUser}
-                            color="red"
-                            appearance="ghost"
+                            danger
                         >
                             Delete Account
                         </Button>
                     </Footer>
                 </Form>
-            </StyledPanel>
+            </StyledCard>
         </div>
     )
 }

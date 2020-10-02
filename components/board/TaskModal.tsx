@@ -3,27 +3,26 @@ import styled from 'styled-components'
 import EditableTitle from '../EditableTitle'
 import EditableDescription from '../EditableDescription'
 import EditableNumber from '../EditableNumber'
-import { Modal, Button, Dropdown, Loader, Uploader, Placeholder } from 'rsuite'
 import { queryCache, useQuery } from 'react-query'
 import { getFiltersData, getTask, updateTask } from '../../taiga-api/tasks'
 import AssigneeDropdown from '../AssigneeDropdown'
 import StatusDropdown from '../StatusDropdown'
 import Breadcrumbs from './Breadcrumbs'
 import { useRouter } from 'next/router'
-
-const { Paragraph } = Placeholder
+import { Modal, Select, Skeleton, Upload } from 'antd'
+import Flex from '../Flex'
+import { UploadOutlined } from '@ant-design/icons'
 
 const Label = styled.span`
     margin-top: ${({ theme }) => theme.spacing.mini};
 `
 
-const StyledModalBody = styled(Modal.Body)`
-    margin-top: 0px;
-`
-
-const StyledModal = styled(Modal)`
-    @media only screen and (max-width: 600px) {
-        max-width: 90%;
+const StyledFlex = styled(Flex)`
+    margin: 0px 10px;
+    span {
+        &:first-child {
+            margin-right: 5px;
+        }
     }
 `
 
@@ -53,11 +52,6 @@ const Sidebar = styled.aside`
     min-width: 180px;
 `
 
-const UploadContent = styled.div`
-    width: 100%;
-    margin: 10px 0px;
-`
-
 interface Props {
     open: boolean
     onClose: () => void
@@ -80,7 +74,7 @@ export default function IssueModal({ id, open, onClose }: Props) {
     )
     const statusData =
         taskFilters?.statuses.map((status) => ({
-            value: status.id.toString(),
+            value: status.id,
             label: status.name,
         })) ?? []
 
@@ -94,6 +88,7 @@ export default function IssueModal({ id, open, onClose }: Props) {
     }
 
     const updateStatus = async (status: number) => {
+        console.log(status)
         const updatedTask = await updateTask(id, {
             status,
             version: data.version,
@@ -106,65 +101,55 @@ export default function IssueModal({ id, open, onClose }: Props) {
     const token = localStorage.getItem('auth-token')
 
     return (
-        <StyledModal show={open} onHide={onClose}>
+        <Modal footer={null} visible={open} onCancel={onClose} onOk={onClose}>
             {isLoading ? (
-                <Paragraph active rows={10} />
+                <Skeleton active paragraph={{ rows: 5 }} />
             ) : (
-                <>
-                    <Modal.Header>
-                        <Breadcrumbs data={data} />
-                    </Modal.Header>
-                    <StyledModalBody>
-                        <Main>
-                            <Content>
-                                <EditableTitle initialValue={data?.subject} />
-                                <EditableDescription
-                                    initialValue={data?.description}
-                                />
-                                <Uploader
-                                    data={{
-                                        object_id: data?.id,
-                                        project: data?.project,
-                                    }}
-                                    name="attached_file"
-                                    headers={{
-                                        Authorization:
-                                            token && `Bearer ${token}`,
-                                    }}
-                                    action={`${process.env.NEXT_PUBLIC_TAIGA_API_URL}/tasks/attachments`}
-                                    draggable
-                                >
-                                    <UploadContent>
-                                        Click or Drag files to this area to
-                                        upload
-                                    </UploadContent>
-                                </Uploader>
-                            </Content>
-                            <Sidebar>
-                                <Label>Status</Label>
-                                <StatusDropdown
-                                    data={statusData}
-                                    value={data?.status}
-                                    onSelect={updateStatus}
-                                />
-                                <Label>Assignee</Label>
-                                <AssigneeDropdown
-                                    value={data?.assigned_to}
-                                    onSelect={updateAssignee}
-                                />
-                                <Label>Priority</Label>
-                                <Dropdown
-                                    toggleComponentClass={Button}
-                                    appearance="default"
-                                    title="Select..."
-                                />
-                                <Label>Story Points</Label>
-                                <EditableNumber initialValue={1} />
-                            </Sidebar>
-                        </Main>
-                    </StyledModalBody>
-                </>
+                <Flex direction="column">
+                    <Breadcrumbs data={data} />
+                    <Main>
+                        <Content>
+                            <EditableTitle initialValue={data?.subject} />
+                            <EditableDescription
+                                initialValue={data?.description}
+                            />
+                            <Upload.Dragger
+                                data={{
+                                    object_id: data?.id,
+                                    project: data?.project,
+                                }}
+                                name="attached_file"
+                                headers={{
+                                    Authorization: token && `Bearer ${token}`,
+                                }}
+                                action={`${process.env.NEXT_PUBLIC_TAIGA_API_URL}/tasks/attachments`}
+                            >
+                                <StyledFlex align="center">
+                                    <UploadOutlined size={32} />
+                                    <p>Click or Drag files to upload</p>
+                                </StyledFlex>
+                            </Upload.Dragger>
+                        </Content>
+                        <Sidebar>
+                            <Label>Status</Label>
+                            <StatusDropdown
+                                data={statusData}
+                                value={data?.status}
+                                onChange={updateStatus}
+                            />
+                            <Label>Assignee</Label>
+                            <AssigneeDropdown
+                                value={data?.assigned_to}
+                                onChange={updateAssignee}
+                            />
+                            <Label>Priority</Label>
+                            <Select style={{ width: '100%' }} />
+                            <Label>Story Points</Label>
+                            <EditableNumber initialValue={1} />
+                        </Sidebar>
+                    </Main>
+                </Flex>
             )}
-        </StyledModal>
+        </Modal>
     )
 }

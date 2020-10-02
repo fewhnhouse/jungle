@@ -2,9 +2,10 @@ import styled from 'styled-components'
 import React, { useState } from 'react'
 import type { DraggableProvided } from 'react-beautiful-dnd'
 import IssueModal from './UserstoryModal'
-import { Icon, Tag } from 'rsuite'
 import { UserStory } from '../../taiga-api/userstories'
 import { Task } from '../../taiga-api/tasks'
+import { Tag } from 'antd'
+import { PicLeftOutlined } from '@ant-design/icons'
 
 const getBackgroundColor = (isDragging: boolean, isGroupedOver: boolean) => {
     if (isDragging) {
@@ -144,7 +145,7 @@ function IssueItem({
                 data-index={index}
                 aria-label={`${issue.subject}`}
             >
-                <Icon icon="task" />
+                <PicLeftOutlined />
                 <Content>
                     <BlockQuote>{issue.subject}</BlockQuote>
                     <Footer>
@@ -152,11 +153,7 @@ function IssueItem({
                     </Footer>
                 </Content>
             </Container>
-            <IssueModal
-                id={issue.id}
-                open={expanded}
-                onClose={handleClose}
-            />
+            <IssueModal id={issue.id} open={expanded} onClose={handleClose} />
         </>
     )
 }

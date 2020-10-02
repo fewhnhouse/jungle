@@ -1,9 +1,9 @@
 import styled from 'styled-components'
 import { useState } from 'react'
-import { Avatar, Dropdown } from 'rsuite'
 import Link from 'next/link'
 import { useQuery } from 'react-query'
 import { getMe } from '../../taiga-api/users'
+import { Avatar, Dropdown, Menu } from 'antd'
 
 const ProfileBadge = styled.img`
     border-radius: 50%;
@@ -22,24 +22,23 @@ export default function Profile() {
     const { data } = useQuery('me', () => getMe())
     const toggle = () => setOpen((open) => !open)
 
-    return (
-        <Dropdown
-            placement="bottomEnd"
-            renderTitle={() => (
-                <Avatar circle src={data?.photo}>
-                    {data?.username.charAt(0)}
-                </Avatar>
-            )}
-            noCaret
-        >
-            <Dropdown.Item>
+    const menu = (
+        <Menu>
+            <Menu.Item>
                 <Link as={`/user/${data?.id}`} href="/user/[id]">
                     Profile
                 </Link>
-            </Dropdown.Item>
-            <Dropdown.Item>
+            </Menu.Item>
+            <Menu.Item>
                 <Link href="/user/settings">Settings</Link>
-            </Dropdown.Item>
+            </Menu.Item>
+        </Menu>
+    )
+    return (
+        <Dropdown trigger={['click']} overlay={menu}>
+            <Avatar role="button" shape="circle" src={data?.photo}>
+                {data?.username.charAt(0)}
+            </Avatar>
         </Dropdown>
     )
 }
