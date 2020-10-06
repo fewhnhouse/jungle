@@ -23,13 +23,15 @@ const Breadcrumbs = ({ data }: Props) => {
                     <a>{data.project_extra_info.name}</a>
                 </Link>
             </Breadcrumb.Item>
-            <Breadcrumb.Item>
-                <Link
-                    href={`/projects/${data.project}/stories/${data.user_story}`}
-                >
-                    <a>{data.user_story_extra_info.subject}</a>
-                </Link>
-            </Breadcrumb.Item>
+            {data.user_story && (
+                <Breadcrumb.Item>
+                    <Link
+                        href={`/projects/${data.project}/stories/${data.user_story}`}
+                    >
+                        <a>{data.user_story_extra_info?.subject}</a>
+                    </Link>
+                </Breadcrumb.Item>
+            )}
             <Breadcrumb.Item>
                 <Link href={`/projects/${data.project}/tasks/${data.id}`}>
                     <a>{data.subject}</a>

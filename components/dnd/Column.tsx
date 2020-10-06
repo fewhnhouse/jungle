@@ -14,6 +14,7 @@ const Container = styled.div`
     margin: ${({ theme }) => theme.spacing.small};
     display: flex;
     flex-direction: column;
+    width: 250px;
 `
 
 interface HeaderProps {

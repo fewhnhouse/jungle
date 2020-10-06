@@ -52,13 +52,11 @@ const Wrapper = styled.div<WrapperProps>`
     padding-bottom: 0;
     transition: background-color 0.2s ease, opacity 0.1s ease;
     user-select: none;
-    width: 250px;
     height: 100%;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
+    border-radius: 4px;
 `
 
-const scrollContainerHeight = 250
+const scrollContainerHeight = 150
 
 const DropZone = styled.div`
     /* stop the list collapsing when empty */
@@ -88,7 +86,7 @@ const InnerIssueList = React.memo(({ issues }: IssueListProps) => {
                         dragProvided: DraggableProvided,
                         dragSnapshot: DraggableStateSnapshot
                     ) =>
-                        (issue as Task).user_story ? (
+                        (issue as Task).user_story !== undefined ? (
                             <TaskItem
                                 key={issue.id}
                                 issue={issue}

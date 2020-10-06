@@ -5,7 +5,7 @@ import IssueModal from './UserstoryModal'
 import { UserStory } from '../../taiga-api/userstories'
 import { Task } from '../../taiga-api/tasks'
 import { Tag } from 'antd'
-import { PicLeftOutlined } from '@ant-design/icons'
+import { BookOutlined } from '@ant-design/icons'
 
 const getBackgroundColor = (isDragging: boolean, isGroupedOver: boolean) => {
     if (isDragging) {
@@ -18,6 +18,13 @@ const getBackgroundColor = (isDragging: boolean, isGroupedOver: boolean) => {
 
     return '#ecf0f1'
 }
+
+const StyledUserStoryIcon = styled(BookOutlined)`
+    background: #2ecc71;
+    border-radius: 3px;
+    padding: 5px;
+    color: #2c3e50;
+`
 
 const getBorderColor = (isDragging: boolean) =>
     isDragging ? '#2c3e50' : 'transparent'
@@ -145,7 +152,7 @@ function IssueItem({
                 data-index={index}
                 aria-label={`${issue.subject}`}
             >
-                <PicLeftOutlined />
+                <StyledUserStoryIcon />
                 <Content>
                     <BlockQuote>{issue.subject}</BlockQuote>
                     <Footer>

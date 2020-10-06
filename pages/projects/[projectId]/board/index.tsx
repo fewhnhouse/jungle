@@ -1,4 +1,3 @@
-import styled from 'styled-components'
 import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
 import { getMilestones } from '../../../../taiga-api/milestones'
@@ -8,22 +7,11 @@ import { PageBody, PageHeader } from '../../../../components/Layout'
 import PageTitle from '../../../../components/PageTitle'
 import TaskBoard from '../../../../components/board/TaskBoard'
 import StoryBoard from '../../../../components/board/StoryBoard'
-import { Divider, Empty, Form, Select } from 'antd'
-import AssigneeDropdown from '../../../../components/AssigneeDropdown'
+import { Empty } from 'antd'
 import Flex from '../../../../components/Flex'
 import { useState } from 'react'
 import { getProject } from '../../../../taiga-api/projects'
-const { Option } = Select
-const { Item } = Form
-
-const ParentContainer = styled.div``
-
-const DateDescription = styled.span`
-    font-size: 12px;
-    color: #ccc;
-`
-
-type GroupBy = 'none' | 'epic' | 'subtask' | 'assignee'
+import FilterBoard, { GroupBy } from '../../../../components/board/FilterBoard'
 
 export default function BoardContainer() {
     const router = useRouter()
@@ -96,12 +84,12 @@ export default function BoardContainer() {
                     )
                 } else {
                     return [
-                        ...prev,
                         {
                             storyId: curr.user_story,
                             storySubject: curr.user_story_extra_info.subject,
                             tasks: [curr],
                         },
+                        ...prev,
                     ]
                 }
             },
@@ -144,66 +132,19 @@ export default function BoardContainer() {
             <PageHeader>
                 <PageTitle title="Board" />
                 <Flex>
-                    <Form layout="inline">
-                        <Item label="Group by">
-                            <Select
-                                style={{ width: 120 }}
-                                value={groupBy}
-                                onChange={(value: GroupBy) => setGroupBy(value)}
-                                placeholder="Group by..."
-                            >
-                                <Option value="none">None</Option>
-                                <Option value="assignee">Assignee</Option>
-                                <Option value="epic">Epic</Option>
-                                <Option value="subtask">Subtask</Option>
-                            </Select>
-                        </Item>
-                        <Item label="Sprints">
-                            <Select
-                                value={selectedSprint}
-                                onChange={(value) => setSelectedSprint(value)}
-                                style={{ width: 160 }}
-                                placeholder="Select sprint..."
-                            >
-                                <Option value={-1}>All</Option>
-                                {milestones?.map((ms) => (
-                                    <Option value={ms.id} key={ms.id}>
-                                        {ms.name}
-                                        <br />
-                                        <DateDescription>
-                                            {new Date(
-                                                ms.estimated_start
-                                            ).toLocaleDateString(undefined, {
-                                                year: '2-digit',
-                                                month: 'numeric',
-                                                day: 'numeric',
-                                            })}{' '}
-                                            -{' '}
-                                            {new Date(
-                                                ms.estimated_finish
-                                            ).toLocaleDateString(undefined, {
-                                                year: '2-digit',
-                                                month: 'numeric',
-                                                day: 'numeric',
-                                            })}
-                                        </DateDescription>
-                                    </Option>
-                                ))}
-                            </Select>
-                        </Item>
-                        {groupBy !== 'assignee' && (
-                            <Item label="Assignee">
-                                <AssigneeDropdown
-                                    value={assignee}
-                                    onChange={(id) => setAssignee(id)}
-                                />
-                            </Item>
-                        )}
-                    </Form>
+                    <FilterBoard
+                        groupBy={groupBy}
+                        setGroupBy={setGroupBy}
+                        assignee={assignee}
+                        setAssignee={setAssignee}
+                        sprint={selectedSprint}
+                        setSprint={setSelectedSprint}
+                        milestones={milestones}
+                    />
                 </Flex>
             </PageHeader>
             <PageBody>
-                <ParentContainer>
+                <div>
                     {groupBy === 'subtask' &&
                         orderedTasks?.map((orderedTask) => {
                             return (
@@ -274,7 +215,7 @@ export default function BoardContainer() {
                             columns={storyFiltersData?.statuses ?? []}
                         />
                     )}
-                </ParentContainer>
+                </div>
             </PageBody>
         </>
     )

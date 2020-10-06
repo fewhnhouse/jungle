@@ -18,7 +18,7 @@ import CustomTagPicker from '../TagPicker'
 import { useRouter } from 'next/router'
 import { Divider, Modal, Skeleton, Upload } from 'antd'
 import Flex from '../Flex'
-import { UploadOutlined } from '@ant-design/icons'
+import { BookOutlined, UploadOutlined } from '@ant-design/icons'
 
 const StyledFlex = styled(Flex)`
     margin: 0px 10px;
@@ -57,6 +57,14 @@ const Sidebar = styled.aside`
     flex-direction: column;
     align-items: flex-start;
     min-width: 180px;
+`
+
+const StyledUserStoryIcon = styled(BookOutlined)`
+    background: #2ecc71;
+    font-size: 20px;
+    border-radius: 3px;
+    padding: 5px;
+    color: #2c3e50;
 `
 
 interface Props {
@@ -127,10 +135,13 @@ export default function IssueModal({ id, open, onClose }: Props) {
                     <Breadcrumbs data={data} />
                     <Main>
                         <Content>
-                            <EditableTitle
-                                onSubmit={handleTitleSubmit}
-                                initialValue={data?.subject}
-                            />
+                            <Flex align="center">
+                                <StyledUserStoryIcon />
+                                <EditableTitle
+                                    onSubmit={handleTitleSubmit}
+                                    initialValue={data?.subject}
+                                />
+                            </Flex>
                             <EditableDescription
                                 initialValue={data?.description}
                             />

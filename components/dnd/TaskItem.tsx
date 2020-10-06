@@ -4,7 +4,7 @@ import type { DraggableProvided } from 'react-beautiful-dnd'
 import IssueModal from './TaskModal'
 import { Task } from '../../taiga-api/tasks'
 import { Tag } from 'antd'
-import { PicLeftOutlined } from '@ant-design/icons'
+import { ProfileOutlined } from '@ant-design/icons'
 import { UserStory } from '../../taiga-api/userstories'
 
 const getBackgroundColor = (isDragging: boolean, isGroupedOver: boolean) => {
@@ -18,6 +18,13 @@ const getBackgroundColor = (isDragging: boolean, isGroupedOver: boolean) => {
 
     return '#ecf0f1'
 }
+
+const StyledTaskIcon = styled(ProfileOutlined)`
+    background: #3498db;
+    border-radius: 3px;
+    padding: 5px;
+    color: #2c3e50;
+`
 
 const getBorderColor = (isDragging: boolean) =>
     isDragging ? '#2c3e50' : 'transparent'
@@ -145,7 +152,7 @@ function IssueItem({
                 data-index={index}
                 aria-label={`${issue.subject}`}
             >
-                <PicLeftOutlined />
+                <StyledTaskIcon />
                 <Content>
                     <BlockQuote>{issue.subject}</BlockQuote>
                     <TagContainer>

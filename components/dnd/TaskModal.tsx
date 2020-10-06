@@ -11,7 +11,7 @@ import Breadcrumbs from '../TaskBreadcrumbs'
 import { useRouter } from 'next/router'
 import { Modal, Select, Skeleton, Upload } from 'antd'
 import Flex from '../Flex'
-import { UploadOutlined } from '@ant-design/icons'
+import { ProfileOutlined, UploadOutlined } from '@ant-design/icons'
 
 const Label = styled.span`
     margin-top: ${({ theme }) => theme.spacing.mini};
@@ -24,6 +24,14 @@ const StyledFlex = styled(Flex)`
             margin-right: 5px;
         }
     }
+`
+
+const StyledTaskIcon = styled(ProfileOutlined)`
+    background: #3498db;
+    border-radius: 3px;
+    font-size: 20px;
+    padding: 5px;
+    color: #2c3e50;
 `
 
 const Main = styled.div`
@@ -110,7 +118,10 @@ export default function IssueModal({ id, open, onClose }: Props) {
                     <Breadcrumbs data={data} />
                     <Main>
                         <Content>
-                            <EditableTitle initialValue={data?.subject} />
+                            <Flex align="center">
+                                <StyledTaskIcon />
+                                <EditableTitle initialValue={data?.subject} />
+                            </Flex>
                             <EditableDescription
                                 initialValue={data?.description}
                             />
