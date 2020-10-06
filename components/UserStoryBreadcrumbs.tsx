@@ -1,7 +1,7 @@
 import { Breadcrumb } from 'antd'
 import Link from 'next/link'
 import styled from 'styled-components'
-import { UserStory } from '../../taiga-api/userstories'
+import { UserStory } from '../taiga-api/userstories'
 
 const StyledBreadcrumb = styled(Breadcrumb)`
     margin: 0px;

@@ -8,11 +8,12 @@ import {
     DraggableProvided,
     DraggableStateSnapshot,
 } from 'react-beautiful-dnd'
-import IssueItem from './TaskItem'
 import Title from '../Title'
 import { Theme } from '../../pages/_app'
 import { Task } from '../../taiga-api/tasks'
 import { UserStory } from '../../taiga-api/userstories'
+import TaskItem from './TaskItem'
+import UserstoryItem from './UserstoryItem'
 
 export const getBackgroundColor = (
     isDraggingOver: boolean,
@@ -69,10 +70,6 @@ const DropZone = styled.div`
     padding-bottom: ${({ theme }) => `${theme.spacing.mini}`};
 `
 
-/* stylelint-disable block-no-empty */
-const Container = styled.div``
-/* stylelint-enable */
-
 type IssueListProps = {
     issues: (Task | UserStory)[]
 }
@@ -90,17 +87,29 @@ const InnerIssueList = React.memo(({ issues }: IssueListProps) => {
                     {(
                         dragProvided: DraggableProvided,
                         dragSnapshot: DraggableStateSnapshot
-                    ) => (
-                        <IssueItem
-                            key={issue.id}
-                            issue={issue}
-                            isDragging={dragSnapshot.isDragging}
-                            isGroupedOver={Boolean(
-                                dragSnapshot.combineTargetFor
-                            )}
-                            provided={dragProvided}
-                        />
-                    )}
+                    ) =>
+                        (issue as Task).user_story ? (
+                            <TaskItem
+                                key={issue.id}
+                                issue={issue}
+                                isDragging={dragSnapshot.isDragging}
+                                isGroupedOver={Boolean(
+                                    dragSnapshot.combineTargetFor
+                                )}
+                                provided={dragProvided}
+                            />
+                        ) : (
+                            <UserstoryItem
+                                key={issue.id}
+                                issue={issue}
+                                isDragging={dragSnapshot.isDragging}
+                                isGroupedOver={Boolean(
+                                    dragSnapshot.combineTargetFor
+                                )}
+                                provided={dragProvided}
+                            />
+                        )
+                    }
                 </Draggable>
             ))}
         </>
@@ -109,26 +118,26 @@ const InnerIssueList = React.memo(({ issues }: IssueListProps) => {
 
 type InnerListProps = {
     dropProvided: DroppableProvided
-    issues: Task[]
+    issues: (Task | UserStory)[]
     title?: string
 }
 
 function InnerListContainer({ issues, title, dropProvided }: InnerListProps) {
     return (
-        <Container>
+        <div>
             {title ? <Title>{title}</Title> : null}
             <DropZone ref={dropProvided.innerRef}>
                 <InnerIssueList issues={issues} />
                 {dropProvided.placeholder}
             </DropZone>
-        </Container>
+        </div>
     )
 }
 
 type Props = {
     listId?: string
     listType?: string
-    issues: Task[]
+    issues: (Task | UserStory)[]
     title?: string
     isDropDisabled?: boolean
     style?: Record<string, unknown>

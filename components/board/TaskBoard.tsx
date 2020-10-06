@@ -1,4 +1,4 @@
-import Column from './Column'
+import Column from '../dnd/Column'
 import {
     DragDropContext,
     DropResult,
@@ -8,8 +8,8 @@ import {
 } from 'react-beautiful-dnd'
 import styled from 'styled-components'
 import CustomCollapse from '../Collapse'
-import { useQuery, queryCache } from 'react-query'
-import { getTasks, TaskStatus, updateTask, Task } from '../../taiga-api/tasks'
+import { queryCache } from 'react-query'
+import { TaskStatus, updateTask, Task } from '../../taiga-api/tasks'
 import { useRouter } from 'next/router'
 import { memo } from 'react'
 import { Empty } from 'antd'

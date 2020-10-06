@@ -4,18 +4,21 @@ import EditableTitle from '../EditableTitle'
 import EditableDescription from '../EditableDescription'
 import EditableNumber from '../EditableNumber'
 import { queryCache, useQuery } from 'react-query'
-import { getFiltersData, getTask, updateTask } from '../../taiga-api/tasks'
 import AssigneeDropdown from '../AssigneeDropdown'
 import StatusDropdown from '../StatusDropdown'
-import Breadcrumbs from './Breadcrumbs'
+import {
+    getFiltersData,
+    getUserstory,
+    updateUserstory,
+    UserStory,
+} from '../../taiga-api/userstories'
+import Breadcrumbs from '../UserStoryBreadcrumbs'
+import SubtaskList from './SubtaskList'
+import CustomTagPicker from '../TagPicker'
 import { useRouter } from 'next/router'
-import { Modal, Select, Skeleton, Upload } from 'antd'
+import { Divider, Modal, Skeleton, Upload } from 'antd'
 import Flex from '../Flex'
 import { UploadOutlined } from '@ant-design/icons'
-
-const Label = styled.span`
-    margin-top: ${({ theme }) => theme.spacing.mini};
-`
 
 const StyledFlex = styled(Flex)`
     margin: 0px 10px;
@@ -24,6 +27,9 @@ const StyledFlex = styled(Flex)`
             margin-right: 5px;
         }
     }
+`
+const Label = styled.span`
+    margin-top: ${({ theme }) => theme.spacing.mini};
 `
 
 const Main = styled.div`
@@ -61,47 +67,58 @@ interface Props {
 
 export default function IssueModal({ id, open, onClose }: Props) {
     const { projectId } = useRouter().query
-
     const { isLoading, data, isError } = useQuery(
-        ['task', { id }],
-        (key, { id }) => getTask(id),
+        ['story', { id }],
+        (key, { id }) => getUserstory(id),
         { enabled: open }
     )
-
-    const { data: taskFilters } = useQuery(
-        ['taskFilters', { projectId }],
+    const { data: storyFilters } = useQuery(
+        ['storyFilters', { projectId }],
         (key, { projectId }) => getFiltersData(projectId as string),
         { enabled: projectId }
     )
     const statusData =
-        taskFilters?.statuses.map((status) => ({
+        storyFilters?.statuses.map((status) => ({
             value: status.id,
             label: status.name,
         })) ?? []
-
-    const updateAssignee = async (assigneeId: number) => {
-        const updatedTask = await updateTask(id, {
-            assigned_to: assigneeId,
-            assigned_users: [assigneeId],
-            version: data.version,
-        })
-        queryCache.setQueryData(['task', { id }], () => updatedTask)
-    }
-
-    const updateStatus = async (status: number) => {
-        console.log(status)
-        const updatedTask = await updateTask(id, {
-            status,
-            version: data.version,
-        })
-        queryCache.setQueryData(['task', { id }], () => updatedTask)
-    }
 
     if (isError) return <div>Error</div>
 
     const token = localStorage.getItem('auth-token')
 
-    return (
+    const updateAssignee = async (assigneeId: number) => {
+        const updatedStory = await updateUserstory(id, {
+            assigned_to: assigneeId,
+            assigned_users: [assigneeId],
+            version: data.version,
+        })
+        queryCache.setQueryData(['story', { id }], () => updatedStory)
+    }
+
+    const updateStatus = async (status: number) => {
+        const updatedStory = await updateUserstory(id, {
+            status,
+            version: data.version,
+        })
+        queryCache.setQueryData(['story', { id }], () => updatedStory)
+    }
+
+    const handleTitleSubmit = async (subject: string) => {
+        queryCache.setQueryData(['story', { id }], (prevData: UserStory) => ({
+            ...prevData,
+            subject,
+        }))
+
+        await updateUserstory(id, {
+            subject,
+            version: data.version,
+        })
+        queryCache.invalidateQueries('backlog')
+        queryCache.invalidateQueries('milestones')
+    }
+
+    return data ? (
         <Modal footer={null} visible={open} onCancel={onClose} onOk={onClose}>
             {isLoading ? (
                 <Skeleton active paragraph={{ rows: 5 }} />
@@ -110,14 +127,17 @@ export default function IssueModal({ id, open, onClose }: Props) {
                     <Breadcrumbs data={data} />
                     <Main>
                         <Content>
-                            <EditableTitle initialValue={data?.subject} />
+                            <EditableTitle
+                                onSubmit={handleTitleSubmit}
+                                initialValue={data?.subject}
+                            />
                             <EditableDescription
                                 initialValue={data?.description}
                             />
                             <Upload.Dragger
                                 data={{
-                                    object_id: data?.id,
-                                    project: data?.project,
+                                    object_id: data.id,
+                                    project: data.project,
                                 }}
                                 name="attached_file"
                                 headers={{
@@ -130,6 +150,8 @@ export default function IssueModal({ id, open, onClose }: Props) {
                                     <p>Click or Drag files to upload</p>
                                 </StyledFlex>
                             </Upload.Dragger>
+                            <Divider />
+                            <SubtaskList id={id} />
                         </Content>
                         <Sidebar>
                             <Label>Status</Label>
@@ -143,8 +165,8 @@ export default function IssueModal({ id, open, onClose }: Props) {
                                 value={data?.assigned_to}
                                 onChange={updateAssignee}
                             />
-                            <Label>Priority</Label>
-                            <Select style={{ width: '100%' }} />
+                            <Label>Tags</Label>
+                            <CustomTagPicker id={id} />
                             <Label>Story Points</Label>
                             <EditableNumber initialValue={1} />
                         </Sidebar>
@@ -152,5 +174,5 @@ export default function IssueModal({ id, open, onClose }: Props) {
                 </Flex>
             )}
         </Modal>
-    )
+    ) : null
 }

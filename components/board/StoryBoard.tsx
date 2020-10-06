@@ -1,4 +1,4 @@
-import Column from './Column'
+import Column from '../dnd/Column'
 import {
     DragDropContext,
     DropResult,

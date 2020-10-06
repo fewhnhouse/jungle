@@ -1,7 +1,7 @@
 import CustomCollapse from '../Collapse'
-import IssueList from './UserstoryList'
 import { queryCache } from 'react-query'
 import { deleteMilestone, Milestone } from '../../taiga-api/milestones'
+import IssueList from '../dnd/List'
 
 const Sprint = ({ sprint }: { sprint: Milestone }) => {
     const handleRemove = async () => {

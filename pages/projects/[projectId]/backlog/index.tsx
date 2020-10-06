@@ -1,5 +1,4 @@
 import { DragDropContext, DropResult } from 'react-beautiful-dnd'
-import IssueList from '../../../../components/backlog/UserstoryList'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
 import Sprint from '../../../../components/backlog/Sprint'
@@ -14,6 +13,7 @@ import {
 import { getMilestones, Milestone } from '../../../../taiga-api/milestones'
 import { PageBody, PageHeader } from '../../../../components/Layout'
 import PageTitle from '../../../../components/PageTitle'
+import IssueList from '../../../../components/dnd/List'
 
 const IssueContainer = styled.div`
     flex: 2;
