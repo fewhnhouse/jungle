@@ -8,7 +8,7 @@ import { PageBody, PageHeader } from '../../../../components/Layout'
 import PageTitle from '../../../../components/PageTitle'
 import TaskBoard from '../../../../components/board/TaskBoard'
 import StoryBoard from '../../../../components/board/StoryBoard'
-import { Empty, Form, Select } from 'antd'
+import { Divider, Empty, Form, Select } from 'antd'
 import AssigneeDropdown from '../../../../components/AssigneeDropdown'
 import Flex from '../../../../components/Flex'
 import { useState } from 'react'
@@ -17,6 +17,11 @@ const { Option } = Select
 const { Item } = Form
 
 const ParentContainer = styled.div``
+
+const DateDescription = styled.span`
+    font-size: 12px;
+    color: #ccc;
+`
 
 type GroupBy = 'none' | 'epic' | 'subtask' | 'assignee'
 
@@ -157,13 +162,31 @@ export default function BoardContainer() {
                             <Select
                                 value={selectedSprint}
                                 onChange={(value) => setSelectedSprint(value)}
-                                style={{ width: 120 }}
+                                style={{ width: 160 }}
                                 placeholder="Select sprint..."
                             >
                                 <Option value={-1}>All</Option>
                                 {milestones?.map((ms) => (
                                     <Option value={ms.id} key={ms.id}>
                                         {ms.name}
+                                        <br />
+                                        <DateDescription>
+                                            {new Date(
+                                                ms.estimated_start
+                                            ).toLocaleDateString(undefined, {
+                                                year: '2-digit',
+                                                month: 'numeric',
+                                                day: 'numeric',
+                                            })}{' '}
+                                            -{' '}
+                                            {new Date(
+                                                ms.estimated_finish
+                                            ).toLocaleDateString(undefined, {
+                                                year: '2-digit',
+                                                month: 'numeric',
+                                                day: 'numeric',
+                                            })}
+                                        </DateDescription>
                                     </Option>
                                 ))}
                             </Select>

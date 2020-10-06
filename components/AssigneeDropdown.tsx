@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
 import { getProject } from '../taiga-api/projects'
-import { Select, Spin } from 'antd'
+import { Avatar, Select, Spin } from 'antd'
 import styled from 'styled-components'
 
 const { Option } = Select
@@ -15,6 +15,10 @@ interface Props {
     value: number
     fluid?: boolean
 }
+
+const StyledAvatar = styled(Avatar)`
+    margin-right: 5px;
+`
 
 const AssigneeDropdown = ({ onChange, value, fluid }: Props) => {
     const { projectId } = useRouter().query
@@ -30,8 +34,9 @@ const AssigneeDropdown = ({ onChange, value, fluid }: Props) => {
             placeholder="Assignee..."
             fluid={fluid}
             showSearch
+            style={{ width: 160 }}
             filterOption={(input, option) =>
-                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                option.title.toLowerCase().indexOf(input.toLowerCase()) >= 0
             }
             loading={!data}
             onChange={onChange}
@@ -43,6 +48,9 @@ const AssigneeDropdown = ({ onChange, value, fluid }: Props) => {
                     key={member.id}
                     value={member.id}
                 >
+                    <StyledAvatar size="small" src={member.photo}>
+                        {member.full_name.charAt(0)}
+                    </StyledAvatar>
                     {member.full_name}
                 </Option>
             ))}
