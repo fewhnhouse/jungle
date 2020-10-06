@@ -8,8 +8,7 @@ import {
 } from 'react-beautiful-dnd'
 import styled from 'styled-components'
 import CustomCollapse from '../Collapse'
-import { useQuery, queryCache } from 'react-query'
-import { getTasks, TaskStatus, updateTask, Task } from '../../taiga-api/tasks'
+import { TaskStatus } from '../../taiga-api/tasks'
 import { useRouter } from 'next/router'
 import { memo } from 'react'
 import { updateUserstory, UserStory } from '../../taiga-api/userstories'
@@ -25,7 +24,7 @@ const BoardContainer = styled.div`
 `
 
 type Props = {
-    milestoneId: string
+    milestoneIds: number[]
     stories: UserStory[]
     columns: TaskStatus[]
     withScrollableColumns?: boolean
@@ -33,11 +32,11 @@ type Props = {
 }
 
 const Board = ({
-    milestoneId,
     stories = [],
     columns = [],
     withScrollableColumns,
     title,
+    milestoneIds,
 }: Props) => {
     const router = useRouter()
     const { projectId } = router.query

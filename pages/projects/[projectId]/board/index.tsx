@@ -11,27 +11,34 @@ import StoryBoard from '../../../../components/board/StoryBoard'
 import { Select } from 'antd'
 import AssigneeDropdown from '../../../../components/AssigneeDropdown'
 import Flex from '../../../../components/Flex'
+import { useState } from 'react'
 const { Option } = Select
 
 const ParentContainer = styled.div``
 
+type GroupBy = 'none' | 'epic' | 'subtask' | 'assignee'
+
 export default function BoardContainer() {
     const router = useRouter()
+    const [groupBy, setGroupBy] = useState<GroupBy>('none')
+    const [selectedSprint, setSelectedSprint] = useState<number>(-1)
+    const [assignee, setAssignee] = useState<number>()
     const { projectId } = router.query
     const { data: milestones } = useQuery(
         'milestones',
         () => getMilestones({ projectId: projectId as string, closed: false }),
         { enabled: projectId }
     )
-    const milestone = milestones?.length ? milestones[0] : undefined
-    const { data: sprint } = useQuery(
-        ['milestone', { milestoneId: milestone?.id }],
-        async (key, { milestoneId }) => {
-            return getMilestone(milestoneId)
-        },
-        { enabled: milestones }
-    )
-
+    const sprint =
+        selectedSprint !== -1
+            ? milestones?.find((ms) => ms.id === selectedSprint)
+            : {
+                  name: 'All',
+                  user_stories:
+                      milestones?.flatMap((ms) => ms.user_stories) ?? [],
+                  id: -1,
+              }
+    console.log(sprint?.user_stories)
     const { data: taskFiltersData } = useQuery(
         ['taskFilters', { projectId }],
         async (key, { projectId }) => {
@@ -58,34 +65,69 @@ export default function BoardContainer() {
             <PageHeader>
                 <PageTitle title="Board" />
                 <Flex>
-                    <Select placeholder="Group by...">
+                    <Select
+                        style={{ width: 100 }}
+                        value={groupBy}
+                        onChange={(value: GroupBy) => setGroupBy(value)}
+                        placeholder="Group by..."
+                    >
                         <Option value="none">None</Option>
                         <Option value="assignee">Assignee</Option>
                         <Option value="epic">Epic</Option>
                         <Option value="subtask">Subtask</Option>
                     </Select>
-                    <AssigneeDropdown />
+                    <Select
+                        value={selectedSprint}
+                        onChange={(value) => setSelectedSprint(value)}
+                        style={{ width: 100 }}
+                        placeholder="Select sprint..."
+                    >
+                        <Option value={-1}>All</Option>
+                        {milestones?.map((ms) => (
+                            <Option value={ms.id} key={ms.id}>
+                                {ms.name}
+                            </Option>
+                        ))}
+                    </Select>
+                    <AssigneeDropdown
+                        value={assignee}
+                        onChange={(id) => setAssignee(id)}
+                    />
                 </Flex>
             </PageHeader>
             <PageBody>
                 <ParentContainer>
-                    {sprint?.user_stories.map((story) => {
-                        return (
-                            <Board
-                                title={story.subject}
-                                key={story.id}
-                                storyId={story.id.toString()}
-                                milestoneId={sprint.id.toString()}
-                                columns={taskFiltersData?.statuses}
-                            />
-                        )
-                    })}
-                    <StoryBoard
-                        title={`TODO: SPRINT: ${sprint.name}`}
-                        stories={sprint.user_stories}
-                        milestoneId={sprint.id.toString()}
-                        columns={storyFiltersData?.statuses}
-                    />
+                    {groupBy === 'subtask' &&
+                        sprint?.user_stories
+                            .filter(
+                                (story) =>
+                                    !assignee || story.assigned_to === assignee
+                            )
+                            .map((story) => {
+                                return (
+                                    <Board
+                                        title={story.subject}
+                                        key={story.id}
+                                        storyId={story.id.toString()}
+                                        milestoneId={story.milestone.toString()}
+                                        columns={taskFiltersData?.statuses}
+                                    />
+                                )
+                            })}
+                    {groupBy === 'none' && (
+                        <StoryBoard
+                            title={`${sprint?.name}`}
+                            stories={
+                                sprint?.user_stories.filter(
+                                    (story) =>
+                                        !assignee ||
+                                        story.assigned_to === assignee
+                                ) ?? []
+                            }
+                            milestoneIds={[sprint?.id ?? -1]}
+                            columns={storyFiltersData?.statuses ?? []}
+                        />
+                    )}
                 </ParentContainer>
             </PageBody>
         </>

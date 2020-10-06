@@ -26,6 +26,7 @@ const AssigneeDropdown = ({ onChange, value, fluid }: Props) => {
 
     return (
         <StyledSelect
+            allowClear
             placeholder="Assignee..."
             fluid={fluid}
             showSearch
