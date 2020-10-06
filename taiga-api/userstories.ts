@@ -87,7 +87,7 @@ export const getUserstories = ({
     excludeRole,
     excludeEpic,
 }: {
-    projectId?: number
+    projectId?: string
     milestone?: string
     milestoneIsNull?: boolean
     status?: string

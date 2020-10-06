@@ -15,7 +15,7 @@ const StyledUserStoryIcon = styled(BookOutlined)`
 `
 
 const StyledTaskIcon = styled(ProfileOutlined)`
-    background: #45aaf2;
+    background: #45aaff;
     border-radius: 3px;
     padding: 2px;
     color: #2c3e50;

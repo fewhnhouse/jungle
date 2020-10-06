@@ -16,6 +16,7 @@ import PageTitle from '../../../../components/PageTitle'
 import IssueList from '../../../../components/dnd/List'
 import { Form } from 'antd'
 import IssueCreation from '../../../../components/backlog/IssueCreation'
+import { getTasks } from '../../../../taiga-api/tasks'
 
 const IssueContainer = styled.div`
     flex: 2;
@@ -57,10 +58,20 @@ export default function Backlog() {
     const { data: backlogData = [] } = useQuery(
         ['backlog', { projectId }],
         async (key, { projectId }) => {
-            return getUserstories({
-                projectId: parseInt(projectId as string, 10),
+            const userstories = await getUserstories({
+                projectId,
                 milestoneIsNull: true,
             })
+            const tasks = await getTasks({
+                projectId,
+            })
+            return [
+                ...userstories,
+                ...tasks.filter(
+                    (task) =>
+                        task.user_story === null && task.milestone === null
+                ),
+            ]
         }
     )
     const { data: sprintsData = [] } = useQuery(

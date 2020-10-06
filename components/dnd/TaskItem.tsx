@@ -16,11 +16,11 @@ const getBackgroundColor = (isDragging: boolean, isGroupedOver: boolean) => {
         return 'red'
     }
 
-    return '#45aaf2'
+    return '#9ed2fd'
 }
 
 const StyledTaskIcon = styled(ProfileOutlined)`
-    background: #3498db;
+    background: #45aaff;
     border-radius: 3px;
     padding: 5px;
     color: #2c3e50;

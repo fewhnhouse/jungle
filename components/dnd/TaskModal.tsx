@@ -27,7 +27,7 @@ const StyledFlex = styled(Flex)`
 `
 
 const StyledTaskIcon = styled(ProfileOutlined)`
-    background: #45aaf2;
+    background: #45aaff;
     border-radius: 3px;
     font-size: 20px;
     padding: 5px;

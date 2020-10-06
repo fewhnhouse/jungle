@@ -77,6 +77,7 @@ export const getTasks = ({
     role,
     owner,
     milestone,
+    milestoneIsNull,
     watchers,
     assignedTo,
     statusIsClosed,
@@ -108,6 +109,9 @@ export const getTasks = ({
     const params = new URLSearchParams()
     projectId && params.append('project', projectId)
     milestone && params.append('milestone', milestone)
+    milestoneIsNull &&
+        params.append('milestone__isnull', milestoneIsNull.toString())
+
     status && params.append('status', status)
     owner && params.append('owner', owner)
     tags && params.append('tags', tags.toString())
