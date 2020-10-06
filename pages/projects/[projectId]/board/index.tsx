@@ -41,7 +41,7 @@ export default function BoardContainer() {
 
     const milestoneIds =
         selectedSprint !== -1
-            ? [milestones[selectedSprint].id]
+            ? [milestones.find((m) => m.id === selectedSprint).id]
             : milestones?.map((m) => m.id)
 
     const { data: tasks } = useQuery(
@@ -168,12 +168,14 @@ export default function BoardContainer() {
                                 ))}
                             </Select>
                         </Item>
-                        <Item label="Assignee">
-                            <AssigneeDropdown
-                                value={assignee}
-                                onChange={(id) => setAssignee(id)}
-                            />
-                        </Item>
+                        {groupBy !== 'assignee' && (
+                            <Item label="Assignee">
+                                <AssigneeDropdown
+                                    value={assignee}
+                                    onChange={(id) => setAssignee(id)}
+                                />
+                            </Item>
+                        )}
                     </Form>
                 </Flex>
             </PageHeader>
