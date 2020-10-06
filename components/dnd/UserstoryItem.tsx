@@ -16,7 +16,7 @@ const getBackgroundColor = (isDragging: boolean, isGroupedOver: boolean) => {
         return 'red'
     }
 
-    return '#ecf0f1'
+    return '#b4f0cd'
 }
 
 const StyledUserStoryIcon = styled(BookOutlined)`

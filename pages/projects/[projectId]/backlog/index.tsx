@@ -14,6 +14,8 @@ import { getMilestones, Milestone } from '../../../../taiga-api/milestones'
 import { PageBody, PageHeader } from '../../../../components/Layout'
 import PageTitle from '../../../../components/PageTitle'
 import IssueList from '../../../../components/dnd/List'
+import { Form } from 'antd'
+import IssueCreation from '../../../../components/backlog/IssueCreation'
 
 const IssueContainer = styled.div`
     flex: 2;
@@ -45,7 +47,7 @@ const ListContainer = styled.div`
     margin-top: ${({ theme }) => theme.spacing.medium};
 `
 
-const Title = styled.h3`
+const Title = styled.h2`
     margin: 0;
 `
 
@@ -181,10 +183,15 @@ export default function Backlog() {
                                 </TitleContainer>
                                 <ListContainer>
                                     {sprintsData?.map((sprint) => (
-                                        <Sprint
-                                            key={sprint.id}
-                                            sprint={sprint}
-                                        />
+                                        <>
+                                            <Sprint
+                                                key={sprint.id}
+                                                sprint={sprint}
+                                            />
+                                            <IssueCreation
+                                                milestone={sprint.id}
+                                            />
+                                        </>
                                     ))}
                                 </ListContainer>
                             </Container>
@@ -198,6 +205,7 @@ export default function Backlog() {
                                         listId="backlog"
                                         issues={backlogData ?? []}
                                     />
+                                    <IssueCreation milestone={null} />
                                 </ListContainer>
                             </Container>
                         </DragDropContext>
