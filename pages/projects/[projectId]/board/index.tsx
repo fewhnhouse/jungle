@@ -1,14 +1,14 @@
-import Board from '../../../../components/board/Board'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
-import { getMilestones, getMilestone } from '../../../../taiga-api/milestones'
-import { getFiltersData } from '../../../../taiga-api/tasks'
+import { getMilestones } from '../../../../taiga-api/milestones'
+import { getFiltersData, getTasks, Task } from '../../../../taiga-api/tasks'
 import { getFiltersData as getStoryFiltersData } from '../../../../taiga-api/userstories'
 import { PageBody, PageHeader } from '../../../../components/Layout'
 import PageTitle from '../../../../components/PageTitle'
+import TaskBoard from '../../../../components/board/TaskBoard'
 import StoryBoard from '../../../../components/board/StoryBoard'
-import { Form, Select } from 'antd'
+import { Empty, Form, Select } from 'antd'
 import AssigneeDropdown from '../../../../components/AssigneeDropdown'
 import Flex from '../../../../components/Flex'
 import { useState } from 'react'
@@ -38,6 +38,71 @@ export default function BoardContainer() {
         () => getMilestones({ projectId: projectId as string, closed: false }),
         { enabled: projectId }
     )
+
+    const milestoneIds =
+        selectedSprint !== -1
+            ? [milestones[selectedSprint].id]
+            : milestones?.map((m) => m.id)
+
+    const { data: tasks } = useQuery(
+        [
+            'tasks',
+            {
+                projectId,
+                milestoneIds,
+            },
+        ],
+        (
+            key,
+            {
+                projectId,
+                milestoneIds,
+            }: { projectId: string; milestoneIds: number[] }
+        ) =>
+            Promise.all(
+                milestoneIds.map(
+                    async (milestone) =>
+                        await getTasks({
+                            projectId,
+                            milestone: milestone.toString(),
+                        })
+                )
+            ).then((res) => res.flat()),
+        { enabled: !!milestones && groupBy === 'subtask' }
+    )
+
+    const orderedTasks: {
+        storySubject: string
+        tasks: Task[]
+        storyId: number
+    }[] =
+        tasks?.reduce(
+            (prev, curr) => {
+                if (!curr.user_story) {
+                    return prev.map((p) =>
+                        !p.storyId ? { ...p, tasks: [...p.tasks, curr] } : p
+                    )
+                }
+                if (prev.find((p) => p.storyId === curr.user_story)) {
+                    return prev.map((p) =>
+                        p.storyId === curr.user_story
+                            ? { ...p, tasks: [...p.tasks, curr] }
+                            : p
+                    )
+                } else {
+                    return [
+                        ...prev,
+                        {
+                            storyId: curr.user_story,
+                            storySubject: curr.user_story_extra_info.subject,
+                            tasks: [curr],
+                        },
+                    ]
+                }
+            },
+            [{ storyId: null, storySubject: 'Tasks without Story', tasks: [] }]
+        ) ?? []
+
     const sprint =
         selectedSprint !== -1
             ? milestones?.find((ms) => ms.id === selectedSprint)
@@ -47,7 +112,7 @@ export default function BoardContainer() {
                       milestones?.flatMap((ms) => ms.user_stories) ?? [],
                   id: -1,
               }
-    console.log(sprint?.user_stories)
+
     const { data: taskFiltersData } = useQuery(
         ['taskFilters', { projectId }],
         async (key, { projectId }) => {
@@ -57,7 +122,7 @@ export default function BoardContainer() {
     )
 
     const { data: storyFiltersData } = useQuery(
-        ['taskFilters', { projectId }],
+        ['storyFilters', { projectId }],
         async (key, { projectId }) => {
             return getStoryFiltersData(projectId as string)
         },
@@ -66,7 +131,7 @@ export default function BoardContainer() {
 
     // TODO: Figure out if we can use the active sprint to query data rather than userstories endpoint
     if (milestones && !milestones.length) {
-        return <div>No sprint active.</div>
+        return <Empty description="No sprint active" />
     }
 
     return (
@@ -77,7 +142,7 @@ export default function BoardContainer() {
                     <Form layout="inline">
                         <Item label="Group by">
                             <Select
-                                style={{ width: 100 }}
+                                style={{ width: 120 }}
                                 value={groupBy}
                                 onChange={(value: GroupBy) => setGroupBy(value)}
                                 placeholder="Group by..."
@@ -92,7 +157,7 @@ export default function BoardContainer() {
                             <Select
                                 value={selectedSprint}
                                 onChange={(value) => setSelectedSprint(value)}
-                                style={{ width: 100 }}
+                                style={{ width: 120 }}
                                 placeholder="Select sprint..."
                             >
                                 <Option value={-1}>All</Option>
@@ -115,22 +180,33 @@ export default function BoardContainer() {
             <PageBody>
                 <ParentContainer>
                     {groupBy === 'subtask' &&
-                        sprint?.user_stories
-                            .filter(
-                                (story) =>
-                                    !assignee || story.assigned_to === assignee
+                        orderedTasks?.map((orderedTask) => {
+                            return (
+                                <TaskBoard
+                                    milestoneIds={milestoneIds}
+                                    title={orderedTask.storySubject}
+                                    key={orderedTask.storyId}
+                                    tasks={orderedTask.tasks.filter(
+                                        (t) =>
+                                            !assignee ||
+                                            t.assigned_to === assignee
+                                    )}
+                                    columns={taskFiltersData?.statuses}
+                                />
                             )
-                            .map((story) => {
-                                return (
-                                    <Board
-                                        title={story.subject}
-                                        key={story.id}
-                                        storyId={story.id.toString()}
-                                        milestoneId={story.milestone.toString()}
-                                        columns={taskFiltersData?.statuses}
-                                    />
-                                )
-                            })}
+                        })}
+                    {groupBy === 'subtask' && (
+                        <StoryBoard
+                            title="Issues without Subtask"
+                            stories={
+                                sprint?.user_stories.filter(
+                                    (story) => story.tasks?.length === 0
+                                ) ?? []
+                            }
+                            milestoneIds={milestoneIds}
+                            columns={storyFiltersData?.statuses ?? []}
+                        />
+                    )}
                     {groupBy === 'none' && (
                         <StoryBoard
                             title={`${sprint?.name}`}
@@ -141,10 +217,11 @@ export default function BoardContainer() {
                                         story.assigned_to === assignee
                                 ) ?? []
                             }
-                            milestoneIds={[sprint?.id ?? -1]}
+                            milestoneIds={milestoneIds}
                             columns={storyFiltersData?.statuses ?? []}
                         />
                     )}
+
                     {groupBy === 'assignee' &&
                         project?.members.map((member) => (
                             <StoryBoard
@@ -156,10 +233,22 @@ export default function BoardContainer() {
                                             story.assigned_to === member.id
                                     ) ?? []
                                 }
-                                milestoneIds={[sprint?.id ?? -1]}
+                                milestoneIds={milestoneIds}
                                 columns={storyFiltersData?.statuses ?? []}
                             />
                         ))}
+                    {groupBy === 'assignee' && (
+                        <StoryBoard
+                            title="Unassigned"
+                            stories={
+                                sprint?.user_stories.filter(
+                                    (story) => story.assigned_to === null
+                                ) ?? []
+                            }
+                            milestoneIds={milestoneIds}
+                            columns={storyFiltersData?.statuses ?? []}
+                        />
+                    )}
                 </ParentContainer>
             </PageBody>
         </>

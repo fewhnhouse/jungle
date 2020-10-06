@@ -12,6 +12,7 @@ import { useQuery, queryCache } from 'react-query'
 import { getTasks, TaskStatus, updateTask, Task } from '../../taiga-api/tasks'
 import { useRouter } from 'next/router'
 import { memo } from 'react'
+import { Empty } from 'antd'
 
 const Container = styled.div`
     min-width: 100vw;
@@ -24,33 +25,23 @@ const BoardContainer = styled.div`
 `
 
 type Props = {
-    milestoneId: string
-    storyId: string
     columns: TaskStatus[]
+    tasks: Task[]
+    milestoneIds: number[]
     withScrollableColumns?: boolean
     title: string
 }
 
 const Board = ({
-    milestoneId,
-    storyId,
     columns = [],
+    tasks = [],
+    milestoneIds,
     withScrollableColumns,
     title,
 }: Props) => {
     const router = useRouter()
     const { projectId } = router.query
-    const { data: tasks = [] } = useQuery(
-        ['tasks', { milestoneId, storyId, projectId }],
-        async (key, { milestoneId, storyId, projectId }) => {
-            return getTasks({
-                milestone: milestoneId,
-                userStory: storyId,
-                projectId: projectId as string,
-            })
-        },
-        { enabled: projectId && milestoneId && storyId }
-    )
+
     /* eslint-disable react/sort-comp */
 
     function onDragStart() {
@@ -80,8 +71,15 @@ const Board = ({
         const task = tasks.find(
             (task) => task.id.toString() === result.draggableId
         )
+        console.log(task)
         queryCache.setQueryData(
-            ['tasks', { milestoneId, storyId, projectId }],
+            [
+                'tasks',
+                {
+                    projectId,
+                    milestoneIds,
+                },
+            ],
             (prevData: Task[]) =>
                 prevData.map((t) =>
                     t.id === task.id
@@ -98,14 +96,17 @@ const Board = ({
         }).then(() => {
             queryCache.invalidateQueries([
                 'tasks',
-                { milestoneId, storyId, projectId },
+                {
+                    projectId,
+                    milestoneIds,
+                },
             ])
         })
     }
 
     return (
-        <>
-            <CustomCollapse title={title}>
+        <CustomCollapse title={title}>
+            {tasks.length ? (
                 <BoardContainer>
                     <DragDropContext
                         onDragStart={onDragStart}
@@ -140,8 +141,10 @@ const Board = ({
                         </Droppable>
                     </DragDropContext>
                 </BoardContainer>
-            </CustomCollapse>
-        </>
+            ) : (
+                <Empty />
+            )}
+        </CustomCollapse>
     )
 }
 

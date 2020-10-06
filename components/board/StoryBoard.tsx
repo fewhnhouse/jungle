@@ -12,6 +12,8 @@ import { TaskStatus } from '../../taiga-api/tasks'
 import { useRouter } from 'next/router'
 import { memo } from 'react'
 import { updateUserstory, UserStory } from '../../taiga-api/userstories'
+import { queryCache } from 'react-query'
+import { Milestone } from '../../taiga-api/milestones'
 
 const Container = styled.div`
     min-width: 100vw;
@@ -70,34 +72,35 @@ const Board = ({
         const story = stories.find(
             (story) => story.id.toString() === result.draggableId
         )
-        /*
-        queryCache.setQueryData(
-            ['userstories', { milestoneId, projectId }],
-            (prevData: Task[]) =>
-                prevData.map((t) =>
-                    t.id === task.id
-                        ? {
-                              ...task,
-                              status: parseInt(destination.droppableId, 10),
-                          }
-                        : t
-                )
+        queryCache.setQueryData('milestones', (prevData: Milestone[]) =>
+            prevData.map((m) =>
+                m.id === story.milestone
+                    ? {
+                          ...m,
+                          user_stories: m.user_stories.map((s) =>
+                              s.id === story.id
+                                  ? {
+                                        ...story,
+                                        status: parseInt(
+                                            destination.droppableId,
+                                            10
+                                        ),
+                                    }
+                                  : s
+                          ),
+                      }
+                    : m
+            )
         )
-        */
         updateUserstory(story.id, {
             status: destination.droppableId,
             version: story.version,
         }).then(() => {
-            /*
-            queryCache.invalidateQueries([
-                'tasks',
-                { milestoneId, storyId, projectId },
-            ])
-            */
+            queryCache.invalidateQueries('milestones')
         })
     }
 
-    return (
+    return stories.length ? (
         <>
             <CustomCollapse title={title}>
                 <BoardContainer>
@@ -136,7 +139,7 @@ const Board = ({
                 </BoardContainer>
             </CustomCollapse>
         </>
-    )
+    ) : null
 }
 
 export default memo(Board)
