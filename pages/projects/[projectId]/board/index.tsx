@@ -8,11 +8,13 @@ import { getFiltersData as getStoryFiltersData } from '../../../../taiga-api/use
 import { PageBody, PageHeader } from '../../../../components/Layout'
 import PageTitle from '../../../../components/PageTitle'
 import StoryBoard from '../../../../components/board/StoryBoard'
-import { Select } from 'antd'
+import { Form, Select } from 'antd'
 import AssigneeDropdown from '../../../../components/AssigneeDropdown'
 import Flex from '../../../../components/Flex'
 import { useState } from 'react'
+import { getProject } from '../../../../taiga-api/projects'
 const { Option } = Select
+const { Item } = Form
 
 const ParentContainer = styled.div``
 
@@ -24,6 +26,13 @@ export default function BoardContainer() {
     const [selectedSprint, setSelectedSprint] = useState<number>(-1)
     const [assignee, setAssignee] = useState<number>()
     const { projectId } = router.query
+
+    const { data: project } = useQuery(
+        ['project', { projectId }],
+        (key, { projectId }) => getProject(projectId as string),
+        { enabled: projectId }
+    )
+
     const { data: milestones } = useQuery(
         'milestones',
         () => getMilestones({ projectId: projectId as string, closed: false }),
@@ -65,34 +74,42 @@ export default function BoardContainer() {
             <PageHeader>
                 <PageTitle title="Board" />
                 <Flex>
-                    <Select
-                        style={{ width: 100 }}
-                        value={groupBy}
-                        onChange={(value: GroupBy) => setGroupBy(value)}
-                        placeholder="Group by..."
-                    >
-                        <Option value="none">None</Option>
-                        <Option value="assignee">Assignee</Option>
-                        <Option value="epic">Epic</Option>
-                        <Option value="subtask">Subtask</Option>
-                    </Select>
-                    <Select
-                        value={selectedSprint}
-                        onChange={(value) => setSelectedSprint(value)}
-                        style={{ width: 100 }}
-                        placeholder="Select sprint..."
-                    >
-                        <Option value={-1}>All</Option>
-                        {milestones?.map((ms) => (
-                            <Option value={ms.id} key={ms.id}>
-                                {ms.name}
-                            </Option>
-                        ))}
-                    </Select>
-                    <AssigneeDropdown
-                        value={assignee}
-                        onChange={(id) => setAssignee(id)}
-                    />
+                    <Form layout="inline">
+                        <Item label="Group by">
+                            <Select
+                                style={{ width: 100 }}
+                                value={groupBy}
+                                onChange={(value: GroupBy) => setGroupBy(value)}
+                                placeholder="Group by..."
+                            >
+                                <Option value="none">None</Option>
+                                <Option value="assignee">Assignee</Option>
+                                <Option value="epic">Epic</Option>
+                                <Option value="subtask">Subtask</Option>
+                            </Select>
+                        </Item>
+                        <Item label="Sprints">
+                            <Select
+                                value={selectedSprint}
+                                onChange={(value) => setSelectedSprint(value)}
+                                style={{ width: 100 }}
+                                placeholder="Select sprint..."
+                            >
+                                <Option value={-1}>All</Option>
+                                {milestones?.map((ms) => (
+                                    <Option value={ms.id} key={ms.id}>
+                                        {ms.name}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </Item>
+                        <Item label="Assignee">
+                            <AssigneeDropdown
+                                value={assignee}
+                                onChange={(id) => setAssignee(id)}
+                            />
+                        </Item>
+                    </Form>
                 </Flex>
             </PageHeader>
             <PageBody>
@@ -128,6 +145,21 @@ export default function BoardContainer() {
                             columns={storyFiltersData?.statuses ?? []}
                         />
                     )}
+                    {groupBy === 'assignee' &&
+                        project?.members.map((member) => (
+                            <StoryBoard
+                                key={member.id}
+                                title={`${member?.full_name}`}
+                                stories={
+                                    sprint?.user_stories.filter(
+                                        (story) =>
+                                            story.assigned_to === member.id
+                                    ) ?? []
+                                }
+                                milestoneIds={[sprint?.id ?? -1]}
+                                columns={storyFiltersData?.statuses ?? []}
+                            />
+                        ))}
                 </ParentContainer>
             </PageBody>
         </>
