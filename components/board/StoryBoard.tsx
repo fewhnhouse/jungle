@@ -16,7 +16,7 @@ import { queryCache } from 'react-query'
 import { Milestone } from '../../taiga-api/milestones'
 
 const Container = styled.div`
-    min-width: 100vw;
+    min-width: 100%;
     display: inline-flex;
 `
 

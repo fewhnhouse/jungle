@@ -15,7 +15,7 @@ import { memo } from 'react'
 import { Empty } from 'antd'
 
 const Container = styled.div`
-    min-width: 100vw;
+    min-width: 100%;
     display: inline-flex;
 `
 
