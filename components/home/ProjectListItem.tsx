@@ -121,10 +121,10 @@ export default function ProjectListItem({
                     </TextContainer>
                 </InfoContainer>
                 <BadgeContainer>
-                    <Tag id="issues-todo" outline>
+                    <Tag id="issues-todo">
                         {!isMobile && 'To Do: '}16
                     </Tag>
-                    <Tag id="issues-in-progress" outline theme="dark">
+                    <Tag id="issues-in-progress">
                         {!isMobile && 'In Progress: '} 32
                     </Tag>
                 </BadgeContainer>

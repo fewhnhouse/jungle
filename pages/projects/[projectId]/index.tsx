@@ -8,21 +8,45 @@ import { getProject } from '../../../taiga-api/projects'
 import { getProjectTimeline } from '../../../taiga-api/timelines'
 import ActivityListItem from '../../../components/home/ActivityListItem'
 import Flex from '../../../components/Flex'
-import { Button } from 'antd'
+import { Avatar, Button } from 'antd'
 import { EyeOutlined, LikeOutlined } from '@ant-design/icons'
 
 const StyledFlex = styled(Flex)`
     margin-top: 20px;
 `
 
-const StyledButton = styled(Button)`
+const Container = styled.div`
     &:first-child {
-        margin-right: 5px;
+        margin-right: 10px;
     }
     &:last-child {
-        margin-left: 5px;
+        margin-left: 10px;
     }
 `
+
+const StyledButton = styled(Button)`
+    &:first-child {
+        margin-left: 0px;
+    }
+    margin: 0px 2.5px;
+    &:last-child {
+        margin-right: 0px;
+    }
+`
+
+const StyledAvatar = styled(Avatar)`
+    margin: 0px 10px;
+    &:first-child {
+        margin: 0px;
+    }
+    box-sizing: border-box;
+    transition: 0.2s all ease-in-out;
+    cursor: pointer;
+    &:hover {
+        box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.3);
+    }
+`
+
 const Project = () => {
     const router = useRouter()
     const { projectId } = router.query
@@ -49,34 +73,58 @@ const Project = () => {
                         <StyledButton icon={<EyeOutlined />}>
                             Watch
                         </StyledButton>
-                        <StyledButton icon={<LikeOutlined />}>Like</StyledButton>
+                        <StyledButton icon={<LikeOutlined />}>
+                            Like
+                        </StyledButton>
+                        <Link
+                            href="/projects/[id]/board"
+                            as={`/projects/${projectId}/board`}
+                        >
+                            <StyledButton icon={<LikeOutlined />}>
+                                Board
+                            </StyledButton>
+                        </Link>
+                        <Link
+                            href="/projects/[id]/board"
+                            as={`/projects/${projectId}/board`}
+                        >
+                            <StyledButton icon={<LikeOutlined />}>
+                                Backlog
+                            </StyledButton>
+                        </Link>
+                    </StyledFlex>
+                    <StyledFlex>
+                        {data.members.map((member) => (
+                            <StyledAvatar
+                                size="large"
+                                key={member.id}
+                                src={member.photo}
+                            >
+                                {member.full_name
+                                    .split(' ')
+                                    .reduce(
+                                        (prev, curr) => prev + curr.charAt(0),
+                                        ''
+                                    )}
+                            </StyledAvatar>
+                        ))}
                     </StyledFlex>
                 </>
             </PageHeader>
             <PageBody>
                 <Flex>
-                    <div>
+                    <Container>
+                        <h2>Activity</h2>
                         {timeline?.map((item) => (
                             <ActivityListItem
                                 key={item.id}
                                 activityItem={item}
                             />
                         ))}
-                    </div>
-                    <div>
-                        <Link
-                            href="/projects/[id]/board"
-                            as={`/projects/${projectId}/board`}
-                        >
-                            <a>Board</a>
-                        </Link>
-                        <Link
-                            href="/projects/[id]/backlog"
-                            as={`/projects/${projectId}/backlog`}
-                        >
-                            <a>Backlog</a>
-                        </Link>
-                    </div>
+                    </Container>
+                    <Container>
+                        <h2>Recent Tasks</h2>
+                    </Container>
                 </Flex>
             </PageBody>
         </>

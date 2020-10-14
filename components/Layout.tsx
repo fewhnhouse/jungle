@@ -8,7 +8,7 @@ const PageHeaderInner = styled.div`
 
 const PageHeaderOuter = styled.div`
     width: 100%;
-    margin-top: 100px;
+    margin-top: 60px;
     border-bottom: 1px solid #e5e5ea;
 `
 

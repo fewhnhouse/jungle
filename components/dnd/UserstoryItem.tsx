@@ -4,8 +4,9 @@ import type { DraggableProvided } from 'react-beautiful-dnd'
 import IssueModal from './UserstoryModal'
 import { UserStory } from '../../taiga-api/userstories'
 import { Task } from '../../taiga-api/tasks'
-import { Tag } from 'antd'
+import { Avatar, Tag } from 'antd'
 import { BookOutlined } from '@ant-design/icons'
+import { getNameInitials } from '../../util/getNameInitials'
 
 const getBackgroundColor = (isDragging: boolean, isGroupedOver: boolean) => {
     if (isDragging) {
@@ -156,7 +157,17 @@ function IssueItem({
                 <Content>
                     <BlockQuote>{issue.subject}</BlockQuote>
                     <Footer>
-                        <Tag>ID-{issue.id}</Tag>
+                        {issue.assigned_to && (
+                            <Avatar
+                                size="small"
+                                src={issue.assigned_to_extra_info.photo}
+                            >
+                                {getNameInitials(
+                                    issue.assigned_to_extra_info
+                                        .full_name_display
+                                )}
+                            </Avatar>
+                        )}
                     </Footer>
                 </Content>
             </Container>

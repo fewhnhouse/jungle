@@ -21,29 +21,20 @@ interface HeaderProps {
     scrolled: boolean
 }
 const StyledHeader = styled.header<HeaderProps>`
-    height: 60px;
-    padding: 0px 10px;
-    border-radius: 8px;
+    padding: 10px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     background-color: white;
     z-index: 100;
-    margin: 20px auto;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+    box-shadow: ${({ scrolled }) =>
+        scrolled ? '0px 0px 10px rgba(0, 0, 0, 0.25)' : ''};
     transition: box-shadow 0.3s ease-in-out;
-    min-width: 400px;
-    width: 90%;
-    max-width: 1000px;
-`
-
-const HeaderContainer = styled.div`
-    height: 100px;
     width: 100%;
     position: fixed;
-    top: 0px;
     z-index: 1000;
+    top: 0px;
 `
 
 const Links = styled.div`
@@ -120,76 +111,74 @@ const Header = () => {
     const { y } = useScrollPosition()
 
     return (
-        <HeaderContainer>
-            <StyledHeader ref={ref} landing={pathname === '/'} scrolled={y > 0}>
-                {pathname.includes('/projects/') ? (
-                    <Links>
-                        <Tab href="/" icon={<HomeIcon />} label="Home" />
+        <StyledHeader ref={ref} landing={pathname === '/'} scrolled={y > 0}>
+            {pathname.includes('/projects/') ? (
+                <Links>
+                    <Tab href="/" icon={<HomeIcon />} label="Home" />
 
-                        <Tab
-                            href="/projects/[projectId]/board"
-                            as={`/projects/${projectId}/board`}
-                            icon={<DashboardIcon />}
-                            label="Board"
-                        />
-                        <Tab
-                            href="/projects/[projectId]/backlog"
-                            as={`/projects/${projectId}/backlog`}
-                            icon={<HistoryIcon />}
-                            label="Backlog"
-                        />
+                    <Tab
+                        href="/projects/[projectId]/board"
+                        as={`/projects/${projectId}/board`}
+                        icon={<DashboardIcon />}
+                        label="Board"
+                    />
+                    <Tab
+                        href="/projects/[projectId]/backlog"
+                        as={`/projects/${projectId}/backlog`}
+                        icon={<HistoryIcon />}
+                        label="Backlog"
+                    />
 
-                        <Tab
-                            href="/projects/[projectId]/reports"
-                            as={`/projects/${projectId}/reports`}
-                            icon={<AssessmentIcon />}
-                            label="Reports"
-                        />
-                    </Links>
-                ) : pathname === '/login' ? (
-                    <h3></h3>
-                ) : pathname.includes('/') ? (
-                    <Links>
-                        <Tab
-                            href="/projects"
-                            icon={<AppsIcon />}
-                            label="Projects"
-                        />
-                        <Tab
-                            href="/activity"
-                            icon={<SyncIcon />}
-                            label="Activity"
-                        />
-                        <Tab
-                            href="/your-work"
-                            icon={<WorkOutlineIcon />}
-                            label="Your Work"
-                        />
-                    </Links>
-                ) : null}
+                    <Tab
+                        href="/projects/[projectId]/reports"
+                        as={`/projects/${projectId}/reports`}
+                        icon={<AssessmentIcon />}
+                        label="Reports"
+                    />
+                </Links>
+            ) : pathname === '/login' ? (
+                <h3></h3>
+            ) : pathname.includes('/') ? (
+                <Links>
+                    <Tab
+                        href="/projects"
+                        icon={<AppsIcon />}
+                        label="Projects"
+                    />
+                    <Tab
+                        href="/activity"
+                        icon={<SyncIcon />}
+                        label="Activity"
+                    />
+                    <Tab
+                        href="/your-work"
+                        icon={<WorkOutlineIcon />}
+                        label="Your Work"
+                    />
+                </Links>
+            ) : null}
 
-                <Options>
-                    {!isTablet && (
-                        <InputContainer
-                            headerWidth={
-                                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                                // @ts-ignore
-                                (ref?.current?.clientWidth ?? 400) as number
-                            }
-                            opened={open}
-                        >
-                            <Input
-                                onFocus={onFocus}
-                                onBlur={onBlur}
-                                placeholder="Search..."
-                            />
-                        </InputContainer>
-                    )}
-                    <Notifications />
-                    <Profile />
-                </Options>
-            </StyledHeader>
-        </HeaderContainer>
+            <Options>
+                {!isTablet && (
+                    <InputContainer
+                        headerWidth={
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                            // @ts-ignore
+                            (ref?.current?.clientWidth ?? 400) as number
+                        }
+                        opened={open}
+                    >
+                        <Input
+                            onFocus={onFocus}
+                            onBlur={onBlur}
+                            placeholder="Search..."
+                        />
+                    </InputContainer>
+                )}
+                <Notifications />
+                <Profile />
+            </Options>
+        </StyledHeader>
     )
 }
 
