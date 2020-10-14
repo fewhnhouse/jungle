@@ -94,7 +94,7 @@ const Project = () => {
                         </Link>
                     </StyledFlex>
                     <StyledFlex>
-                        {data.members.map((member) => (
+                        {data?.members.map((member) => (
                             <StyledAvatar
                                 size="large"
                                 key={member.id}

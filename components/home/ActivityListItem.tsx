@@ -3,19 +3,23 @@ import ListItem from '../ListItem'
 import { Timeline, TimelineType } from '../../taiga-api/timelines'
 import Link from 'next/link'
 import { Tag } from 'antd'
+import { getActivityDate } from '../../util/getActivityDate'
 
-const IssueName = styled.span`
+const Description = styled.p`
     margin: 0px ${({ theme }) => `${theme.spacing.small}`};
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 `
 
-const Description = styled.span`
-    margin: 0px ${({ theme }) => `${theme.spacing.small}`};
+const DateSpan = styled.div`
+    font-size: 12px;
+    white-space: nowrap;
 `
 
 const ItemContainer = styled.div`
     display: flex;
     padding: ${({ theme }) => `${theme.spacing.small}`};
-    min-width: 300px;
     justify-content: space-between;
     align-items: center;
     &:hover > #link-buttons {
@@ -27,6 +31,7 @@ const Content = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
+    width: calc(100% - 60px);
 `
 
 interface Props {
@@ -50,29 +55,21 @@ export default function ActivityListItem({ activityItem }: Props) {
             <ItemContainer>
                 <Content>
                     <Tag id="issues-todo">{type}</Tag>
-                    <IssueName>
-                        <Description>
-                            <Link as={`/user/${user?.id}`} href="/user/[id]">
-                                {user.name}
-                            </Link>{' '}
-                            {type === TimelineType.Change
-                                ? 'updated'
-                                : 'created'}{' '}
-                            <Link
-                                as={`/${source}/${affectedItem?.id}`}
-                                href={`/${source}/[id]`}
-                            >
-                                {getItemName()}
-                            </Link>
-                            .
-                        </Description>
-                    </IssueName>
+                    <Description>
+                        <Link as={`/user/${user?.id}`} href="/user/[id]">
+                            {user.name}
+                        </Link>{' '}
+                        {type === TimelineType.Change ? 'updated' : 'created'}{' '}
+                        <Link
+                            as={`/${source}/${affectedItem?.id}`}
+                            href={`/${source}/[id]`}
+                        >
+                            {getItemName()}
+                        </Link>
+                        .
+                    </Description>
                 </Content>
-                <div>
-                    <span>
-                        {`${date.toLocaleDateString()}, ${date.toLocaleTimeString()}`}
-                    </span>
-                </div>
+                <DateSpan>{getActivityDate(date)}</DateSpan>
             </ItemContainer>
         </ListItem>
     )
