@@ -4,16 +4,13 @@ import Link from 'next/link'
 import { useQuery } from 'react-query'
 import { getMe } from '../../taiga-api/users'
 import { Avatar, Dropdown, Menu } from 'antd'
+import { getNameInitials } from '../../util/getNameInitials'
 
-const ProfileBadge = styled.img`
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    margin: 0px ${({ theme }) => `${theme.spacing.small}`};
+const ProfileBadge = styled(Avatar)`
     cursor: pointer;
-    transition: box-shadow 0.3s ease-in-out;
+    transition: box-shadow 0.2s ease-in-out;
     &:hover {
-        box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 15px 0px;
+        box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.3);
     }
 `
 
@@ -36,9 +33,9 @@ export default function Profile() {
     )
     return (
         <Dropdown trigger={['click']} overlay={menu}>
-            <Avatar role="button" shape="circle" src={data?.photo}>
-                {data?.username.charAt(0)}
-            </Avatar>
+            <ProfileBadge src={data?.photo}>
+                {getNameInitials(data?.full_name)}
+            </ProfileBadge>
         </Dropdown>
     )
 }

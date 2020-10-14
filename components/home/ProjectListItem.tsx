@@ -30,11 +30,13 @@ const StyledImage = styled.img`
     margin: 0px ${({ theme }) => `${theme.spacing.mini}`};
 `
 
-const ProjectName = styled.h5`
+const ProjectName = styled.h2`
     margin: 0px;
 `
 
-const ProjectDescription = styled.span``
+const ProjectDescription = styled.span`
+    color: #777;
+`
 
 const TextContainer = styled.div`
     margin: 0px ${({ theme }) => `${theme.spacing.medium}`};

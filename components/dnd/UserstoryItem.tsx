@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import type { DraggableProvided } from 'react-beautiful-dnd'
 import IssueModal from './UserstoryModal'
 import { UserStory } from '../../taiga-api/userstories'
-import { Task } from '../../taiga-api/tasks'
 import { Avatar, Tag } from 'antd'
 import { BookOutlined } from '@ant-design/icons'
 import { getNameInitials } from '../../util/getNameInitials'
@@ -110,7 +109,7 @@ function getStyle(
 }
 
 interface IssueItemProps {
-    issue: UserStory | Task
+    issue: UserStory
     isDragging: boolean
     provided: DraggableProvided
     isGroupedOver?: boolean
@@ -137,7 +136,11 @@ function IssueItem({
 
     const handleClick = () => setExpanded(true)
     const handleClose = () => setExpanded(false)
-
+    const points =
+        Object.keys(issue.points).reduce(
+            (prev: number, curr: string) => prev + issue.points[curr],
+            0
+        ) ?? 0
     return (
         <>
             <Container
@@ -157,14 +160,15 @@ function IssueItem({
                 <Content>
                     <BlockQuote>{issue.subject}</BlockQuote>
                     <Footer>
+                        {points && <Tag>{points}</Tag>}
                         {issue.assigned_to && (
                             <Avatar
                                 size="small"
-                                src={issue.assigned_to_extra_info.photo}
+                                src={issue.assigned_to_extra_info?.photo}
                             >
                                 {getNameInitials(
                                     issue.assigned_to_extra_info
-                                        .full_name_display
+                                        ?.full_name_display
                                 )}
                             </Avatar>
                         )}

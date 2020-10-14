@@ -3,9 +3,8 @@ import React, { useState } from 'react'
 import type { DraggableProvided } from 'react-beautiful-dnd'
 import IssueModal from './TaskModal'
 import { Task } from '../../taiga-api/tasks'
-import { Avatar, Tag } from 'antd'
+import { Avatar } from 'antd'
 import { ProfileOutlined } from '@ant-design/icons'
-import { UserStory } from '../../taiga-api/userstories'
 import { getNameInitials } from '../../util/getNameInitials'
 
 const getBackgroundColor = (isDragging: boolean, isGroupedOver: boolean) => {
@@ -110,7 +109,7 @@ function getStyle(
 }
 
 interface IssueItemProps {
-    issue: Task | UserStory
+    issue: Task
     isDragging: boolean
     provided: DraggableProvided
     isGroupedOver?: boolean

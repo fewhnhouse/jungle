@@ -42,7 +42,9 @@ export interface UserStory {
     origin_task: null
     owner: number
     owner_extra_info: User
-    points: any
+    points: {
+        [key: string]: number
+    }
     project: number
     project_extra_info: {
         name: string
