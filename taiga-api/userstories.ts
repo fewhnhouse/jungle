@@ -10,9 +10,17 @@ export interface StoryStatus {
 }
 
 export interface UserStory {
-    assigned_to: null
-    assigned_to_extra_info: null
-    assigned_users: []
+    assigned_to: number
+    assigned_to_extra_info: null | {
+        big_photo: string
+        full_name_display: string
+        gravatar_id: string
+        id: number
+        is_active: boolean
+        photo: string
+        username: string
+    }
+    assigned_users: number[]
     attachments: []
     backlog_order: number
     blocked_note: string

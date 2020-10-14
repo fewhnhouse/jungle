@@ -12,13 +12,14 @@ export interface TaskStatus {
 }
 
 type TinyUser = { id: number | null, full_name: string, count: number }
+
 type Assignee = {
-    big_photo: null
+    big_photo: string
     full_name_display: string
     gravatar_id: string
     id: number
     is_active: boolean
-    photo: null
+    photo: string
     username: string
 }
 export interface TaskFiltersData {
