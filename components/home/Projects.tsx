@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useQuery } from 'react-query'
 import { getProjects } from '../../taiga-api/projects'
 import Link from 'next/link'
-import { Skeleton } from 'antd'
+import { Card, Skeleton } from 'antd'
 
 const Container = styled.div`
     display: flex;
@@ -31,7 +31,11 @@ export default function Projects() {
 
     return (
         <Container>
-            {isLoading && <Skeleton active paragraph={{ rows: 5 }} />}
+            {isLoading && (
+                <Card>
+                    <Skeleton active paragraph={{ rows: 5 }} />
+                </Card>
+            )}
             {data
                 ?.sort(
                     (a, b) =>

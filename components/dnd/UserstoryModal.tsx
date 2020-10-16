@@ -19,6 +19,7 @@ import { useRouter } from 'next/router'
 import { Divider, Modal, Skeleton, Upload } from 'antd'
 import Flex from '../Flex'
 import { BookOutlined, UploadOutlined } from '@ant-design/icons'
+import Comments from './comments/Comments'
 
 const StyledFlex = styled(Flex)`
     margin: 0px 10px;
@@ -182,6 +183,11 @@ export default function IssueModal({ id, open, onClose }: Props) {
                             <EditableNumber initialValue={1} />
                         </Sidebar>
                     </Main>
+                    <Comments
+                        version={data?.version}
+                        type="userstory"
+                        id={id}
+                    />
                 </Flex>
             )}
         </Modal>

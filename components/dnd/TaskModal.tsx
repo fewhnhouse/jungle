@@ -12,6 +12,7 @@ import { useRouter } from 'next/router'
 import { Modal, Select, Skeleton, Upload } from 'antd'
 import Flex from '../Flex'
 import { ProfileOutlined, UploadOutlined } from '@ant-design/icons'
+import Comments from './comments/Comments'
 
 const Label = styled.span`
     margin-top: ${({ theme }) => theme.spacing.mini};
@@ -163,6 +164,7 @@ export default function IssueModal({ id, open, onClose }: Props) {
                             <EditableNumber initialValue={1} />
                         </Sidebar>
                     </Main>
+                    <Comments type="task" id={id} version={data?.version} />
                 </Flex>
             )}
         </Modal>
