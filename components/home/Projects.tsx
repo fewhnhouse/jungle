@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { useQuery } from 'react-query'
 import { getProjects } from '../../taiga-api/projects'
 import Link from 'next/link'
+import { Skeleton } from 'antd'
 
 const Container = styled.div`
     display: flex;
@@ -12,13 +13,13 @@ const Container = styled.div`
     top: -120px;
     margin-right: ${({ theme }) => `${theme.spacing.crazy}`};
     position: relative;
-    @media screen and (max-width: 400px) {
+    @media screen and (max-width: 960px) {
         margin-right: 0px;
     }
 `
 
 export default function Projects() {
-    const { data, error } = useQuery('projects', async () => {
+    const { data, error, isLoading } = useQuery('projects', async () => {
         return getProjects()
     })
 
@@ -30,6 +31,7 @@ export default function Projects() {
 
     return (
         <Container>
+            {isLoading && <Skeleton active paragraph={{ rows: 5 }} />}
             {data
                 ?.sort(
                     (a, b) =>
@@ -37,8 +39,9 @@ export default function Projects() {
                         new Date(a.modified_date).getTime()
                 )
                 .filter((_, index) => index < 6)
-                .map(({ id, name, description, logo_small_url }) => (
+                .map(({ id, name, description, logo_small_url, members }) => (
                     <ProjectListItem
+                        members={members}
                         avatar={logo_small_url}
                         key={id}
                         id={id}

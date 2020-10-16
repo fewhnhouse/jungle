@@ -1,7 +1,7 @@
 import authInstance from '../util/axiosInstance'
 import { User } from './users'
 
-interface Member {
+export interface Member {
     color: string
     full_name: string
     full_name_display: string
@@ -17,6 +17,15 @@ interface Member {
 export interface TagObject {
     [key: string]: string;
 }
+
+export interface SingleProjectInterface extends Project {
+    members: Member[]
+}
+
+export interface MultiProjectInterface extends Project {
+    members: number[]
+}
+
 export interface Project {
     anon_permissions: string[]
     blocked_code: number | null
@@ -49,7 +58,6 @@ export interface Project {
     logo_big_url: string | null
     logo_small_url: string | null
     looking_for_people_note: ''
-    members: Member[]
     modified_date: string
     my_homepage: string
     my_permissions: string[]
@@ -78,27 +86,27 @@ export interface Project {
 }
 
 export const getProjects = () => {
-    return authInstance.get<Project[]>(`/projects`).then(res => res.data)
+    return authInstance.get<MultiProjectInterface[]>(`/projects`).then(res => res.data)
 }
 
 export const getProject = (id: string) => {
-    return authInstance.get<Project>(`/projects/${id}`).then(res => res.data)
+    return authInstance.get<SingleProjectInterface>(`/SingleProjectInterfaces/${id}`).then(res => res.data)
 }
 
 export const addProject = (data: any) => {
-    return authInstance.post<Project>(`/projects`, data).then(res => res.data)
+    return authInstance.post<SingleProjectInterface>(`/projects`, data).then(res => res.data)
 }
 
 export const replaceProject = (id: string, data: any) => {
-    return authInstance.put<Project>(`/projects/${id}`, data).then(res => res.data)
+    return authInstance.put<SingleProjectInterface>(`/projects/${id}`, data).then(res => res.data)
 }
 
 export const updateProject = (id: string, data: any) => {
-    return authInstance.patch<Project>(`/projects/${id}`, data).then(res => res.data)
+    return authInstance.patch<SingleProjectInterface>(`/projects/${id}`, data).then(res => res.data)
 }
 
 export const deleteProject = (id: string) => {
-    return authInstance.delete<Project>(`/projects/${id}`).then(res => res.data)
+    return authInstance.delete<SingleProjectInterface>(`/projects/${id}`).then(res => res.data)
 }
 
 export const getProjectStats = (id: string) => {
@@ -162,9 +170,9 @@ export const leaveProject = (id: string) => {
 }
 
 export const changeLogo = (id: string, data: any) => {
-    return authInstance.post<Project>(`/projects/${id}/change_logo`, data).then(res => res.data)
+    return authInstance.post<SingleProjectInterface>(`/projects/${id}/change_logo`, data).then(res => res.data)
 }
 
 export const removeLogo = (id: string) => {
-    return authInstance.post<Project>(`/projects/${id}/remove_logo`).then(res => res.data)
+    return authInstance.post<SingleProjectInterface>(`/projects/${id}/remove_logo`).then(res => res.data)
 }

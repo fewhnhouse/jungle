@@ -24,8 +24,9 @@ const Projects = () => {
             </PageHeader>
             <PageBody>
                 <Flex wrap align="center" justify="center">
-                    {data?.map(({ id, name, description, logo_small_url }) => (
+                    {data?.map(({ id, name, description, logo_small_url, members }) => (
                         <ProjectListItem
+                            members={members}
                             avatar={logo_small_url}
                             key={id}
                             id={id}

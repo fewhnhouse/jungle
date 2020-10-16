@@ -11,6 +11,11 @@ const Container = styled.li<{ theme: Theme }>`
     &:hover {
         background: ${({ theme }) => theme.colors.grey.normal};
     }
+    @media screen and (max-width: 400px) {
+        width: 350px;
+        min-width: unset;
+        max-width: unset;
+    }
 `
 
 interface Props {

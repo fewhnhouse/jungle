@@ -1,3 +1,3 @@
 export const getNameInitials = (name: string) => {
-    return name.split(' ').reduce((prev, curr) => prev + curr.charAt(0), '')
+    return name?.split(' ').reduce((prev, curr) => prev + curr.charAt(0), '') ?? ''
 }

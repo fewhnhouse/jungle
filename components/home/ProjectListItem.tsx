@@ -3,7 +3,10 @@ import useMedia from 'use-media'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { SettingOutlined } from '@ant-design/icons'
-import { Button, Card, Tag } from 'antd'
+import { Avatar, Button, Card, Tag } from 'antd'
+import { getUser, User } from '../../taiga-api/users'
+import { useEffect, useState } from 'react'
+import { getNameInitials } from '../../util/getNameInitials'
 
 const StyledButton = styled(Button)`
     margin: 0px 4px;
@@ -17,9 +20,15 @@ const StyledCard = styled(Card)`
     margin: ${({ theme }) => `${theme.spacing.medium}`};
 `
 
+const Body = styled.div`
+    padding: 20px;
+`
+
 const StyledFooter = styled.div`
-    padding: 10px;
+    padding: 10px 20px;
+    border-top: 1px solid #e5e5ea;
     display: flex;
+    background: #fafafa;
     justify-content: flex-end;
 `
 
@@ -69,10 +78,7 @@ const MembersContainer = styled.div`
     margin: ${({ theme }) => `${theme.spacing.mini}`} 0px;
 `
 
-const Member = styled.img`
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
+const StyledAvatar = styled(Avatar)`
     margin: 0px 2px;
     transition: box-shadow 0.3s ease-in-out;
     cursor: pointer;
@@ -97,46 +103,65 @@ interface Props {
     id: string | number
     name: string
     description: string
+    members: number[]
     avatar?: string
 }
 export default function ProjectListItem({
     id,
     name,
     description,
+    members,
     avatar,
 }: Props) {
     const isMobile = useMedia({ maxWidth: '400px' })
     const { push } = useRouter()
     const handleSettingsClick = () => push(`/projects/${id}/settings`)
+
+    const [actualMembers, setActualMembers] = useState<User[]>([])
+
+    useEffect(() => {
+        if (members) {
+            Promise.all(
+                members?.map((id) => getUser(id.toString()))
+            ).then((res) => setActualMembers(res))
+        }
+    }, [members])
+
     return (
-        <StyledCard bordered>
-            <SettingsButton
-                icon={<SettingOutlined />}
-                onClick={handleSettingsClick}
-            />
-            <ItemContainer>
-                <InfoContainer>
-                    <StyledImage src={avatar ?? 'bmo.png'} />
-                    <TextContainer>
-                        <ProjectName>{name}</ProjectName>
-                        <ProjectDescription>{description}</ProjectDescription>
-                    </TextContainer>
-                </InfoContainer>
-                <BadgeContainer>
-                    <Tag id="issues-todo">
-                        {!isMobile && 'To Do: '}16
-                    </Tag>
-                    <Tag id="issues-in-progress">
-                        {!isMobile && 'In Progress: '} 32
-                    </Tag>
-                </BadgeContainer>
-                <Divider />
-                <MembersContainer>
-                    <Member src="bmo.png" />
-                    <Member src="bmo.png" />
-                    <Member src="bmo.png" />
-                </MembersContainer>
-            </ItemContainer>
+        <StyledCard bordered bodyStyle={{ padding: 0 }}>
+            <Body>
+                <SettingsButton
+                    icon={<SettingOutlined />}
+                    onClick={handleSettingsClick}
+                />
+                <ItemContainer>
+                    <InfoContainer>
+                        <StyledImage src={avatar ?? 'bmo.png'} />
+                        <TextContainer>
+                            <ProjectName>{name}</ProjectName>
+                            <ProjectDescription>
+                                {description}
+                            </ProjectDescription>
+                        </TextContainer>
+                    </InfoContainer>
+                    <BadgeContainer>
+                        <Tag id="issues-todo">{!isMobile && 'To Do: '}16</Tag>
+                        <Tag id="issues-in-progress">
+                            {!isMobile && 'In Progress: '} 32
+                        </Tag>
+                    </BadgeContainer>
+                    <Divider />
+                    <MembersContainer>
+                        {actualMembers.map((member) => (
+                            <Link href={`/users/${member.id}`} key={member.id}>
+                                <StyledAvatar src={member.photo}>
+                                    {getNameInitials(member.full_name)}
+                                </StyledAvatar>
+                            </Link>
+                        ))}
+                    </MembersContainer>
+                </ItemContainer>
+            </Body>
 
             <StyledFooter>
                 <Link href={`/projects/${id}/backlog`}>

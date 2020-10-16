@@ -1,3 +1,4 @@
+import { Skeleton } from 'antd'
 import Link from 'next/link'
 import { useQuery } from 'react-query'
 import styled from 'styled-components'
@@ -12,6 +13,14 @@ const Container = styled.div`
     margin-bottom: ${({ theme }) => theme.spacing.big};
 `
 
+const List = styled.ul`
+    list-style: none;
+    padding: 0;
+    @media screen and (max-width: 400px) {
+        width: 350px;
+    }
+`
+
 const Title = styled.h3`
     width: 100%;
     overflow: hidden;
@@ -21,20 +30,25 @@ const Title = styled.h3`
 export default function Activities() {
     const { data: me } = useQuery('me', () => getMe())
 
-    const { data } = useQuery(['timeline', { id: me?.id }], (key, { id }) =>
-        getUserTimeline(id)
+    const { data, isLoading } = useQuery(
+        ['timeline', { id: me?.id }],
+        (key, { id }) => getUserTimeline(id),
+        { enabled: !!me?.id }
     )
     return (
         <Container>
             <Title>Your recent Activity</Title>
-            {data
-                ?.filter((_, index) => index < 10)
-                .map((activityItem) => (
-                    <ActivityListItem
-                        key={activityItem.id}
-                        activityItem={activityItem}
-                    ></ActivityListItem>
-                ))}
+            {isLoading && <Skeleton active paragraph={{ rows: 5 }} />}
+            <List>
+                {data
+                    ?.filter((_, index) => index < 10)
+                    .map((activityItem) => (
+                        <ActivityListItem
+                            key={activityItem.id}
+                            activityItem={activityItem}
+                        ></ActivityListItem>
+                    ))}
+            </List>
             {data?.length > 10 && (
                 <Link href="/activity">See all activity</Link>
             )}

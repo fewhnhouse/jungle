@@ -8,8 +8,10 @@ import { getMe } from '../../taiga-api/users'
 export default function Activity() {
     const { data: me } = useQuery('me', () => getMe())
 
-    const { data } = useQuery(['timeline', { id: me?.id }], (key, { id }) =>
-        getUserTimeline(id)
+    const { data } = useQuery(
+        ['timeline', { id: me?.id }],
+        (key, { id }) => getUserTimeline(id),
+        { enabled: !!me?.id }
     )
 
     return (
