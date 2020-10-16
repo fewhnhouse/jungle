@@ -78,8 +78,8 @@ const CustomTagPicker = ({ id }: Props) => {
             mode="tags"
             value={selected}
             disabled={isUpdating}
-            tagRender={({ label, value, color }) => {
-                return <Tag color={color} key={value}>{label}</Tag>
+            tagRender={({ label, value }) => {
+                return <Tag key={value}>{label}</Tag>
             }}
             onChange={handleChange}
             options={tagsArray}
