@@ -169,7 +169,6 @@ export default function BoardContainer() {
                                     (story) => story.tasks?.length === 0
                                 ) ?? []
                             }
-                            milestoneIds={milestoneIds}
                             columns={storyFiltersData?.statuses ?? []}
                         />
                     )}
@@ -183,7 +182,6 @@ export default function BoardContainer() {
                                         story.assigned_to === assignee
                                 ) ?? []
                             }
-                            milestoneIds={milestoneIds}
                             columns={storyFiltersData?.statuses ?? []}
                         />
                     )}
@@ -199,7 +197,6 @@ export default function BoardContainer() {
                                             story.assigned_to === member.id
                                     ) ?? []
                                 }
-                                milestoneIds={milestoneIds}
                                 columns={storyFiltersData?.statuses ?? []}
                             />
                         ))}
@@ -211,7 +208,6 @@ export default function BoardContainer() {
                                     (story) => story.assigned_to === null
                                 ) ?? []
                             }
-                            milestoneIds={milestoneIds}
                             columns={storyFiltersData?.statuses ?? []}
                         />
                     )}

@@ -120,7 +120,10 @@ export default function IssueModal({ id, open, onClose }: Props) {
                         <Content>
                             <Flex align="center">
                                 <StyledTaskIcon />
-                                <EditableTitle initialValue={data?.subject} />
+                                <EditableTitle
+                                    onSubmit={() => console.log('submit')}
+                                    initialValue={data?.subject}
+                                />
                             </Flex>
                             <EditableDescription
                                 initialValue={data?.description}

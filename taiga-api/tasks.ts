@@ -90,6 +90,7 @@ export const getTasks = ({
 }: {
     projectId?: string
     milestone?: string
+    milestoneIsNull?: boolean
     userStory?: string
     owner?: string
     status?: string
