@@ -4,6 +4,7 @@ import { useQuery } from 'react-query'
 import { getMe } from '../../taiga-api/users'
 import { Avatar, Dropdown, Menu } from 'antd'
 import { getNameInitials } from '../../util/getNameInitials'
+import Flex from '../Flex'
 
 const ProfileBadge = styled(Avatar)`
     cursor: pointer;
@@ -18,14 +19,23 @@ export default function Profile() {
 
     const menu = (
         <Menu>
-            <Menu.Item>
-                <Link as={`/user/${data?.id}`} href="/user/[id]">
-                    Profile
-                </Link>
-            </Menu.Item>
-            <Menu.Item>
-                <Link href="/user/settings">Settings</Link>
-            </Menu.Item>
+            <Menu.ItemGroup
+                title={
+                    <Flex direction="column">
+                        <span>{data?.full_name}</span>
+                        <span>{data?.email} </span>
+                    </Flex>
+                }
+            >
+                <Menu.Item>
+                    <Link as={`/users/${data?.id}`} href="/user/[id]">
+                        Profile
+                    </Link>
+                </Menu.Item>
+                <Menu.Item>
+                    <Link href="/users/settings">Settings</Link>
+                </Menu.Item>
+            </Menu.ItemGroup>
         </Menu>
     )
     return (
