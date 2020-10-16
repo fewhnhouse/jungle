@@ -89,7 +89,7 @@ const InnerIssueList = React.memo(({ issues }: IssueListProps) => {
                         (issue as Task).user_story !== undefined ? (
                             <TaskItem
                                 key={issue.id}
-                                issue={issue}
+                                issue={issue as Task}
                                 isDragging={dragSnapshot.isDragging}
                                 isGroupedOver={Boolean(
                                     dragSnapshot.combineTargetFor
@@ -99,7 +99,7 @@ const InnerIssueList = React.memo(({ issues }: IssueListProps) => {
                         ) : (
                             <UserstoryItem
                                 key={issue.id}
-                                issue={issue}
+                                issue={issue as UserStory}
                                 isDragging={dragSnapshot.isDragging}
                                 isGroupedOver={Boolean(
                                     dragSnapshot.combineTargetFor
