@@ -105,19 +105,7 @@ export default function Home() {
     const toggleModal = () => {
         setIsModalOpen((open) => !open)
     }
-    const [user, setUser] = useState<User | undefined>()
     const { data, error } = useQuery('me', () => getMe())
-
-    const { push } = useRouter()
-
-    useEffect(() => {
-        const userString = localStorage.getItem('user')
-        const user = JSON.parse(userString)
-        if (!user) {
-            push('/login')
-        }
-        setUser(user)
-    }, [])
 
     return (
         <>
