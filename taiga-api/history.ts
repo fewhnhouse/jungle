@@ -41,9 +41,9 @@ export const getUserstoryCommentVersions = (id: number, commentId: string) => {
     )
 }
 
-export const editUserstoryComment = (id: number, commentId: string) => {
+export const editUserstoryComment = (id: number, commentId: string, comment: string) => {
     return authInstance.post(
-        `/history/userstory/${id}/edit_comment?id=${commentId}`
+        `/history/userstory/${id}/edit_comment?id=${commentId}`, { comment }
     )
 }
 
@@ -67,9 +67,9 @@ export const getIssueCommentVersions = (id: number, commentId: string) => {
     return authInstance.get(`/history/issue/${id}/commentVersions${commentId}`)
 }
 
-export const editIssueComment = (id: number, commentId: string) => {
+export const editIssueComment = (id: number, commentId: string, comment: string) => {
     return authInstance.post(
-        `/history/issue/${id}/edit_comment?id=${commentId}`
+        `/history/issue/${id}/edit_comment?id=${commentId}`, { comment }
     )
 }
 
@@ -93,9 +93,9 @@ export const getTaskCommentVersions = (id: number, commentId: string) => {
     return authInstance.get(`/history/task/${id}/commentVersions${commentId}`)
 }
 
-export const editTaskComment = (id: number, commentId: string) => {
+export const editTaskComment = (id: number, commentId: string, comment: string) => {
     return authInstance.post(
-        `/history/task/${id}/edit_comment?id=${commentId}`
+        `/history/task/${id}/edit_comment?id=${commentId}`, { comment }
     )
 }
 
@@ -119,9 +119,9 @@ export const getWikiCommentVersions = (id: number, commentId: string) => {
     return authInstance.get(`/history/wiki/${id}/commentVersions${commentId}`)
 }
 
-export const editWikiComment = (id: number, commentId: string) => {
+export const editWikiComment = (id: number, commentId: string, comment: string) => {
     return authInstance.post(
-        `/history/wiki/${id}/edit_comment?id=${commentId}`
+        `/history/wiki/${id}/edit_comment?id=${commentId}`, { comment }
     )
 }
 

@@ -11,6 +11,8 @@ import styled, { css } from 'styled-components'
 import {
     deleteTaskComment,
     deleteUserstoryComment,
+    editTaskComment,
+    editUserstoryComment,
     TaigaHistory,
     undeleteTaskComment,
     undeleteUserstoryComment,
@@ -19,10 +21,12 @@ import { getActivityDate } from '../../../util/getActivityDate'
 import { getNameInitials } from '../../../util/getNameInitials'
 import Flex from '../../Flex'
 import {
+    CloseOutlined,
     DeleteOutlined,
     EditOutlined,
     EllipsisOutlined,
     RetweetOutlined,
+    SaveOutlined,
 } from '@ant-design/icons'
 import { useState } from 'react'
 import { queryCache } from 'react-query'
@@ -47,6 +51,17 @@ const DisabledText = styled(Typography.Text)`
     ${textStyle}
 `
 
+const EditContainer = styled(Flex)`
+    margin: 0px 10px;
+    flex: 1;
+    button {
+        margin: 0px 5px;
+        &:last-child {
+            margin: 0px;
+        }
+    }
+`
+
 const CommentContainer = styled(Flex)`
     width: 100%;
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
@@ -58,6 +73,8 @@ const CommentContainer = styled(Flex)`
 
 const DateText = styled.span`
     margin-right: 5px;
+    font-size: 12px;
+    color: #777;
 `
 
 const Comment = ({
@@ -70,7 +87,10 @@ const Comment = ({
     type: 'task' | 'userstory'
 }) => {
     const [edit, setEdit] = useState(false)
-    const date = new Date(comment.edit_comment_date ?? comment.created_at)
+    const [editedText, setEditedText] = useState(comment.comment)
+    const date = new Date(comment.created_at)
+    const editDate = new Date(comment.edit_comment_date)
+
     const handleDelete = async () => {
         queryCache.setQueryData(
             ['comments', { id, type }],
@@ -94,6 +114,30 @@ const Comment = ({
         }
     }
 
+    const toggleEdit = () => {
+        setEditedText(comment.comment)
+        setEdit((edit) => !edit)
+    }
+
+    const handleEdit = async () => {
+        setEdit(false)
+        if (type === 'task') {
+            queryCache.setQueryData(
+                ['comments', { id, type }],
+                (comments: TaigaHistory[]) =>
+                    comments.map((c) =>
+                        comment.id === c.id ? { ...c, comment: editedText } : c
+                    )
+            )
+
+            await editTaskComment(id, comment.id, editedText)
+            queryCache.invalidateQueries(['comments', { id, type }])
+        } else {
+            await editUserstoryComment(id, comment.id, editedText)
+            queryCache.invalidateQueries(['comments', { id, type }])
+        }
+    }
+
     const menu = (
         <Menu>
             {comment.delete_comment_user ? (
@@ -102,7 +146,7 @@ const Comment = ({
                 </Menu.Item>
             ) : (
                 <>
-                    <Menu.Item key="0" onClick={() => setEdit((edit) => !edit)}>
+                    <Menu.Item key="0" onClick={toggleEdit}>
                         <EditOutlined />
                         Edit
                     </Menu.Item>
@@ -125,15 +169,36 @@ const Comment = ({
                     {`Comment deleted by ${comment.delete_comment_user.name}`}{' '}
                 </DisabledText>
             ) : edit ? (
-                <Input />
+                <EditContainer>
+                    <Input
+                        value={editedText}
+                        onChange={(e) => setEditedText(e.target.value)}
+                    />
+                    <Button onClick={toggleEdit} icon={<CloseOutlined />} />
+                    <Button
+                        onClick={handleEdit}
+                        type="primary"
+                        icon={<SaveOutlined />}
+                    />
+                </EditContainer>
             ) : (
                 <Text>{comment.comment}</Text>
             )}
-            <Tooltip
-                title={`${date.toLocaleDateString()}, ${date.toLocaleTimeString()}`}
-            >
-                <DateText>{getActivityDate(date)}</DateText>
-            </Tooltip>
+            <Flex direction="column" align="flex-end">
+                <Tooltip
+                    title={`${date.toLocaleDateString()}, ${date.toLocaleTimeString()}`}
+                >
+                    <DateText>{getActivityDate(date)}</DateText>
+                </Tooltip>
+                <Tooltip
+                    title={`${date.toLocaleDateString()}, ${date.toLocaleTimeString()}`}
+                >
+                    <DateText>
+                        {comment.edit_comment_date ? 'Edited ' : ''}
+                        {comment.edit_comment_date && getActivityDate(editDate)}
+                    </DateText>
+                </Tooltip>
+            </Flex>
             <Dropdown overlay={menu} trigger={['click']}>
                 <Button type="text" icon={<EllipsisOutlined />}></Button>
             </Dropdown>
