@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
 import { getProject } from '../taiga-api/projects'
-import { Avatar, Select, Spin } from 'antd'
+import { Avatar, Select } from 'antd'
 import styled from 'styled-components'
 
 const { Option } = Select

@@ -46,7 +46,7 @@ export default function EditableDescription({ initialValue }: Props) {
     const [editable, setEditable] = useState(false)
     const [value, setValue] = useState(initialValue)
 
-    function handleEditorChange({ html, text }) {
+    function handleEditorChange({ text }) {
         setValue(text)
     }
 

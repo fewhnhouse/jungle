@@ -26,7 +26,6 @@ const BoardContainer = styled.div`
 `
 
 type Props = {
-    milestoneIds: number[]
     stories: UserStory[]
     columns: TaskStatus[]
     withScrollableColumns?: boolean
@@ -38,7 +37,6 @@ const Board = ({
     columns = [],
     withScrollableColumns,
     title,
-    milestoneIds,
 }: Props) => {
     const router = useRouter()
     const { projectId } = router.query

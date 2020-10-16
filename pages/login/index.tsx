@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import Link from 'next/link'
-import { useState } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 
@@ -32,7 +31,7 @@ export default function Home() {
         password: string
         remember: boolean
     }) => {
-        const { username, password, remember } = values
+        const { username, password } = values
         try {
             const { data } = await axios.post<unknown, { data: User }>(
                 '/auth',

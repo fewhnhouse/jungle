@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import ClearIcon from '@material-ui/icons/Clear'
 import CheckIcon from '@material-ui/icons/Check'
 import { Button, Input } from 'antd'
-import { ClearOutlined } from '@ant-design/icons'
 import Flex from './Flex'
 
 const Title = styled.span`

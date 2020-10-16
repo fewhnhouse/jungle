@@ -81,15 +81,8 @@ const StyledFormItem = styled(Form.Item)`
 `
 
 const UserDetails = () => {
-    const { data, error } = useQuery('me', () => getMe())
-    const [email, setEmail] = useState(data?.email ?? '')
-    const [username, setUsername] = useState(data?.username ?? '')
-    const [fullName, setFullName] = useState(data?.full_name ?? '')
-    const [bio, setBio] = useState(data?.bio ?? '')
-    const [{ currentPassword, newPassword }, setPasswordFormState] = useState({
-        currentPassword: '',
-        newPassword: '',
-    })
+    const { data } = useQuery('me', () => getMe())
+
     const [confirmDeletion, setConfirmDeletion] = useState(false)
     const [logo, setLogo] = useState(
         data?.photo ??
@@ -101,7 +94,7 @@ const UserDetails = () => {
     }
 
     const handleFieldSubmit = (field: string, fieldName: string) => (values: {
-        [key: string]: any
+        [key: string]: unknown
     }) => {
         queryCache.setQueryData('me', (prevData: User) => ({
             ...prevData,
@@ -125,7 +118,7 @@ const UserDetails = () => {
         currentPassword: string,
         newPassword: string
     ) => {
-        changePassword(currentPassword, newPassword).then((res) => {
+        changePassword(currentPassword, newPassword).then(() => {
             message.success(`Password successfully updated`)
         })
     }

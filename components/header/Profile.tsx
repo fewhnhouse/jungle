@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import { useState } from 'react'
 import Link from 'next/link'
 import { useQuery } from 'react-query'
 import { getMe } from '../../taiga-api/users'
@@ -15,9 +14,7 @@ const ProfileBadge = styled(Avatar)`
 `
 
 export default function Profile() {
-    const [open, setOpen] = useState(false)
     const { data } = useQuery('me', () => getMe())
-    const toggle = () => setOpen((open) => !open)
 
     const menu = (
         <Menu>

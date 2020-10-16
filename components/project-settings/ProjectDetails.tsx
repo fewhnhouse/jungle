@@ -83,7 +83,7 @@ const ProjectDetails = () => {
     const { query, replace } = useRouter()
     const { projectId } = query
 
-    const { data, error } = useQuery(
+    const { data } = useQuery(
         ['project', { projectId }],
         async (key, { projectId }) => {
             return getProject(projectId as string)

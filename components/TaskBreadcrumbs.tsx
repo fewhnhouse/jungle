@@ -2,7 +2,6 @@ import { Breadcrumb } from 'antd'
 import Link from 'next/link'
 import styled from 'styled-components'
 import { Task } from '../taiga-api/tasks'
-import { WrappedLink } from './header/Header'
 
 const StyledBreadcrumb = styled(Breadcrumb)`
     margin: 0px;

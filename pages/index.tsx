@@ -2,11 +2,10 @@ import styled from 'styled-components'
 import Projects from '../components/home/Projects'
 import Activities from '../components/home/Activities'
 import useMedia from 'use-media'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import YourWork from '../components/home/YourWork'
-import { useRouter } from 'next/router'
 import ProjectCreationModal from '../components/home/ProjectCreationModal'
-import { getMe, User } from '../taiga-api/users'
+import { getMe } from '../taiga-api/users'
 import PageTitle from '../components/PageTitle'
 import { PageBody, PageHeader } from '../components/Layout'
 import { useQuery } from 'react-query'
@@ -105,7 +104,7 @@ export default function Home() {
     const toggleModal = () => {
         setIsModalOpen((open) => !open)
     }
-    const { data, error } = useQuery('me', () => getMe())
+    const { data } = useQuery('me', () => getMe())
 
     return (
         <>

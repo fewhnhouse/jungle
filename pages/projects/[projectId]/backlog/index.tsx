@@ -14,7 +14,6 @@ import { getMilestones, Milestone } from '../../../../taiga-api/milestones'
 import { PageBody, PageHeader } from '../../../../components/Layout'
 import PageTitle from '../../../../components/PageTitle'
 import IssueList from '../../../../components/dnd/List'
-import { Form } from 'antd'
 import IssueCreation from '../../../../components/backlog/IssueCreation'
 import { getTasks } from '../../../../taiga-api/tasks'
 

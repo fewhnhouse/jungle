@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { addProject, Project } from '../../taiga-api/projects'
 import { queryCache } from 'react-query'
