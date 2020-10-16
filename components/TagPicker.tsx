@@ -74,12 +74,12 @@ const CustomTagPicker = ({ id }: Props) => {
         setIsUpdating(false)
     }
     return (
-        <StyledTagPicker
+        <Select
             mode="tags"
             value={selected}
             disabled={isUpdating}
-            tagRender={({ label, value }) => {
-                return <Tag key={value}>{label}</Tag>
+            tagRender={({ label }) => {
+                return <Tag>{label}</Tag>
             }}
             onChange={handleChange}
             options={tagsArray}
