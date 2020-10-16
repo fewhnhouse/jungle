@@ -21,18 +21,23 @@ const StyledTaskIcon = styled(ProfileOutlined)`
     color: #2c3e50;
 `
 
-const StyledForm = styled(Form)`
-    * {
+const StyledForm = styled.form`
+    display: flex;
+    input {
         flex: 1;
+        margin: 0px 5px;
     }
     margin: 10px 0px;
 `
 
 const IssueCreation = ({ milestone }: { milestone: number | null }) => {
-    const [issueType, setIssueType] = useState<'task' | 'story'>('task')
+    const [issueType, setIssueType] = useState<'task' | 'story'>('story')
+    const [subject, setSubject] = useState('')
     const { projectId } = useRouter().query
 
-    const handleSubmit = async ({ subject }: { subject: string }) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        setSubject('')
         if (issueType === 'task') {
             await createTask({ subject, milestone, project: projectId })
         } else if (issueType === 'story') {
@@ -46,28 +51,26 @@ const IssueCreation = ({ milestone }: { milestone: number | null }) => {
     }
 
     return (
-        <StyledForm onFinish={handleSubmit} layout="inline">
-            <Form.Item required>
-                <Select
-                    value={issueType}
-                    onChange={(val) => setIssueType(val)}
-                    style={{ width: 120 }}
-                >
-                    <Select.Option value="task">
-                        <StyledTaskIcon /> Task
-                    </Select.Option>
-                    <Select.Option value="story">
-                        <StyledUserStoryIcon /> Story
-                    </Select.Option>
-                </Select>
-            </Form.Item>
+        <StyledForm onSubmit={handleSubmit}>
+            <Select
+                value={issueType}
+                onChange={(val) => setIssueType(val)}
+                style={{ width: 60 }}
+            >
+                <Select.Option value="task">
+                    <StyledTaskIcon />
+                </Select.Option>
+                <Select.Option value="story">
+                    <StyledUserStoryIcon />
+                </Select.Option>
+            </Select>
 
-            <Form.Item name="subject">
-                <Input />
-            </Form.Item>
-            <Form.Item>
-                <Button htmlType="submit" icon={<PlusOutlined />}></Button>
-            </Form.Item>
+            <Input
+                placeholder={`Create ${issueType}...`}
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+            />
+            <Button htmlType="submit" icon={<PlusOutlined />}></Button>
         </StyledForm>
     )
 }
