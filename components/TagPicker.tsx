@@ -74,7 +74,7 @@ const CustomTagPicker = ({ id }: Props) => {
         setIsUpdating(false)
     }
     return (
-        <Select
+        <StyledTagPicker
             mode="tags"
             value={selected}
             disabled={isUpdating}
