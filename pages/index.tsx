@@ -127,7 +127,7 @@ export default function Home() {
                     <HeaderContainer>
                         <TitleContainer>
                             <PageTitle
-                                title={user?.username ?? ''}
+                                title={data?.full_name ?? ''}
                                 description="Scrum Destroyer"
                             />
                             {!isMobile && (

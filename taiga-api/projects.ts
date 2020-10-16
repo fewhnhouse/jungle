@@ -90,7 +90,7 @@ export const getProjects = () => {
 }
 
 export const getProject = (id: string) => {
-    return authInstance.get<SingleProjectInterface>(`/SingleProjectInterfaces/${id}`).then(res => res.data)
+    return authInstance.get<SingleProjectInterface>(`/projects/${id}`).then(res => res.data)
 }
 
 export const addProject = (data: any) => {
