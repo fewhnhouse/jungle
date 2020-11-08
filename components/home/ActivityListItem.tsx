@@ -56,14 +56,9 @@ export default function ActivityListItem({ activityItem }: Props) {
                 <Content>
                     <Tag id="issues-todo">{type}</Tag>
                     <Description>
-                        <Link as={`/user/${user?.id}`} href="/user/[id]">
-                            {user.name}
-                        </Link>{' '}
+                        <Link href={`/user/${user?.id}`}>{user.name}</Link>{' '}
                         {type === TimelineType.Change ? 'updated' : 'created'}{' '}
-                        <Link
-                            as={`/${source}/${affectedItem?.id}`}
-                            href={`/${source}/[id]`}
-                        >
+                        <Link href={`/${source}/${affectedItem?.id}`}>
                             {getItemName()}
                         </Link>
                         .

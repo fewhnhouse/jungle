@@ -28,9 +28,7 @@ export default function Profile() {
                 }
             >
                 <Menu.Item>
-                    <Link as={`/users/${data?.id}`} href="/user/[id]">
-                        Profile
-                    </Link>
+                    <Link href={`/users/${data?.id}`}>Profile</Link>
                 </Menu.Item>
                 <Menu.Item>
                     <Link href="/users/settings">Settings</Link>

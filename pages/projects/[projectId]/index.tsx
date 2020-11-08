@@ -76,18 +76,12 @@ const Project = () => {
                         <StyledButton icon={<LikeOutlined />}>
                             Like
                         </StyledButton>
-                        <Link
-                            href="/projects/[id]/board"
-                            as={`/projects/${projectId}/board`}
-                        >
+                        <Link href={`/projects/${projectId}/board`}>
                             <StyledButton icon={<LikeOutlined />}>
                                 Board
                             </StyledButton>
                         </Link>
-                        <Link
-                            href="/projects/[id]/board"
-                            as={`/projects/${projectId}/board`}
-                        >
+                        <Link href={`/projects/${projectId}/board`}>
                             <StyledButton icon={<LikeOutlined />}>
                                 Backlog
                             </StyledButton>
