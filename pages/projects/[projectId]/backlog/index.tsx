@@ -93,11 +93,15 @@ export default function Backlog() {
     }
 
     function onDragEnd({ source, destination, draggableId }: DropResult) {
+        console.log(source, destination, draggableId)
         // dropped outside the list
         if (!destination) {
             return
         }
-        if (destination.index === source.index) {
+        if (
+            source.droppableId === destination.droppableId &&
+            destination.index === source.index
+        ) {
             return
         }
 
