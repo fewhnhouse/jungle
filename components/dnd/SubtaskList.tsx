@@ -13,6 +13,10 @@ const TaskList = styled.ul`
     padding: 0;
 `
 
+const StyledInput = styled(Input)`
+    flex: 1;
+`
+
 const StyledForm = styled(Form)`
     width: 100%;
     display: flex;
@@ -148,7 +152,7 @@ const SubtaskList = ({ id }: Props) => {
                                 },
                             ]}
                         >
-                            <Input placeholder="Add Subtask..." />
+                            <StyledInput placeholder="Add Subtask..." />
                         </Form.Item>
                         <Button
                             htmlType="submit"
