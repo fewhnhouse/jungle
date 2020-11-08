@@ -30,6 +30,7 @@ type Props = {
     columns: TaskStatus[]
     withScrollableColumns?: boolean
     title: string
+    hasHeader?: boolean
 }
 
 const Board = ({
@@ -37,6 +38,7 @@ const Board = ({
     columns = [],
     withScrollableColumns,
     title,
+    hasHeader,
 }: Props) => {
     const router = useRouter()
     const { projectId } = router.query
@@ -118,6 +120,7 @@ const Board = ({
                                 >
                                     {columns.map((status, index: number) => (
                                         <Column
+                                            hasHeader={hasHeader}
                                             id={status.id}
                                             key={status.id}
                                             index={index}

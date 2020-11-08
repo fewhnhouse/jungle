@@ -43,9 +43,10 @@ type Props = {
     isScrollable?: boolean
     isCombineEnabled?: boolean
     useClone?: boolean
+    hasHeader?: boolean
 }
 
-const Column = ({ title, issues, index, id }: Props) => {
+const Column = ({ title, issues, index, id, hasHeader }: Props) => {
     return (
         <Draggable draggableId={title + id} index={index}>
             {(
@@ -53,14 +54,16 @@ const Column = ({ title, issues, index, id }: Props) => {
                 snapshot: DraggableStateSnapshot
             ) => (
                 <Container ref={provided.innerRef} {...provided.draggableProps}>
-                    <Header isDragging={snapshot.isDragging}>
-                        <Title
-                            {...provided.dragHandleProps}
-                            aria-label={`${title} task list`}
-                        >
-                            {title}
-                        </Title>
-                    </Header>
+                    {hasHeader && (
+                        <Header isDragging={snapshot.isDragging}>
+                            <Title
+                                {...provided.dragHandleProps}
+                                aria-label={`${title} task list`}
+                            >
+                                {title}
+                            </Title>
+                        </Header>
+                    )}
                     <IssueList
                         listId={id + ''}
                         listType="QUOTE"

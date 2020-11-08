@@ -144,9 +144,10 @@ export default function BoardContainer() {
                 {milestones?.length ? (
                     <div>
                         {groupBy === 'subtask' &&
-                            orderedTasks?.map((orderedTask) => {
+                            orderedTasks?.map((orderedTask, index) => {
                                 return (
                                     <TaskBoard
+                                        hasHeader={index === 0}
                                         milestoneIds={milestoneIds}
                                         title={orderedTask.storySubject}
                                         key={orderedTask.storyId}
@@ -172,6 +173,7 @@ export default function BoardContainer() {
                         )}
                         {groupBy === 'none' && (
                             <StoryBoard
+                                hasHeader
                                 title={`${sprint?.name}`}
                                 stories={
                                     sprint?.user_stories.filter(
@@ -185,8 +187,9 @@ export default function BoardContainer() {
                         )}
 
                         {groupBy === 'assignee' &&
-                            project?.members.map((member) => (
+                            project?.members.map((member, index) => (
                                 <StoryBoard
+                                    hasHeader={index === 0}
                                     key={member.id}
                                     title={`${member?.full_name}`}
                                     stories={
