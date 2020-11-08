@@ -16,6 +16,7 @@ import PageTitle from '../../../../components/PageTitle'
 import IssueList from '../../../../components/dnd/List'
 import IssueCreation from '../../../../components/backlog/IssueCreation'
 import { getTasks } from '../../../../taiga-api/tasks'
+import { Empty } from 'antd'
 
 const IssueContainer = styled.div`
     flex: 2;
@@ -195,17 +196,21 @@ export default function Backlog() {
                                     <SprintCreation />
                                 </TitleContainer>
                                 <ListContainer>
-                                    {sprintsData?.map((sprint) => (
-                                        <>
-                                            <Sprint
-                                                key={sprint.id}
-                                                sprint={sprint}
-                                            />
-                                            <IssueCreation
-                                                milestone={sprint.id}
-                                            />
-                                        </>
-                                    ))}
+                                    {sprintsData?.length ? (
+                                        sprintsData.map((sprint) => (
+                                            <>
+                                                <Sprint
+                                                    key={sprint.id}
+                                                    sprint={sprint}
+                                                />
+                                                <IssueCreation
+                                                    milestone={sprint.id}
+                                                />
+                                            </>
+                                        ))
+                                    ) : (
+                                        <Empty description="No Sprint created yet." />
+                                    )}
                                 </ListContainer>
                             </Container>
                             <Container>
