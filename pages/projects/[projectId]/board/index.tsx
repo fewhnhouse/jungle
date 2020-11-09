@@ -7,7 +7,7 @@ import { PageBody, PageHeader } from '../../../../components/Layout'
 import PageTitle from '../../../../components/PageTitle'
 import TaskBoard from '../../../../components/board/TaskBoard'
 import StoryBoard from '../../../../components/board/StoryBoard'
-import { Empty } from 'antd'
+import { Empty, Skeleton } from 'antd'
 import Flex from '../../../../components/Flex'
 import { useState } from 'react'
 import { getProject } from '../../../../taiga-api/projects'
@@ -20,15 +20,34 @@ export default function BoardContainer() {
     const [assignee, setAssignee] = useState<number>()
     const { projectId } = router.query
 
-    const { data: project } = useQuery(
+    const { data: project, isLoading: isProjectLoading } = useQuery(
         ['project', { projectId }],
         (key, { projectId }) => getProject(projectId as string),
         { enabled: projectId }
     )
 
-    const { data: milestones } = useQuery(
+    const {
+        data: milestones,
+        isLoading: isMilestonesLoading,
+    } = useQuery(
         'milestones',
         () => getMilestones({ projectId: projectId as string, closed: false }),
+        { enabled: projectId }
+    )
+
+    const { data: taskFiltersData } = useQuery(
+        ['taskFilters', { projectId }],
+        async (key, { projectId }) => {
+            return getFiltersData(projectId as string)
+        },
+        { enabled: projectId }
+    )
+
+    const { data: storyFiltersData } = useQuery(
+        ['storyFilters', { projectId }],
+        async (key, { projectId }) => {
+            return getStoryFiltersData(projectId as string)
+        },
         { enabled: projectId }
     )
 
@@ -37,7 +56,7 @@ export default function BoardContainer() {
             ? [milestones.find((m) => m.id === selectedSprint).id]
             : milestones?.map((m) => m.id)
 
-    const { data: tasks } = useQuery(
+    const { data: tasks, isLoading: isTasksLoading } = useQuery(
         [
             'tasks',
             {
@@ -105,22 +124,6 @@ export default function BoardContainer() {
                       milestones?.flatMap((ms) => ms.user_stories) ?? [],
                   id: -1,
               }
-
-    const { data: taskFiltersData } = useQuery(
-        ['taskFilters', { projectId }],
-        async (key, { projectId }) => {
-            return getFiltersData(projectId as string)
-        },
-        { enabled: projectId }
-    )
-
-    const { data: storyFiltersData } = useQuery(
-        ['storyFilters', { projectId }],
-        async (key, { projectId }) => {
-            return getStoryFiltersData(projectId as string)
-        },
-        { enabled: projectId }
-    )
 
     return (
         <>
@@ -213,6 +216,8 @@ export default function BoardContainer() {
                             />
                         )}
                     </div>
+                ) : isMilestonesLoading || !projectId ? (
+                    <Skeleton active />
                 ) : (
                     <Empty description="No sprint active" />
                 )}

@@ -16,7 +16,7 @@ import PageTitle from '../../../../components/PageTitle'
 import IssueList from '../../../../components/dnd/List'
 import IssueCreation from '../../../../components/backlog/IssueCreation'
 import { getTasks } from '../../../../taiga-api/tasks'
-import { Empty } from 'antd'
+import { Empty, Skeleton } from 'antd'
 
 const IssueContainer = styled.div`
     flex: 2;
@@ -55,7 +55,7 @@ const Title = styled.h2`
 export default function Backlog() {
     const { projectId } = useRouter().query
 
-    const { data: backlogData = [] } = useQuery(
+    const { data: backlogData = [], isLoading: isBacklogLoading } = useQuery(
         ['backlog', { projectId }],
         async (key, { projectId }) => {
             const userstories = await getUserstories({
@@ -74,7 +74,7 @@ export default function Backlog() {
             ]
         }
     )
-    const { data: sprintsData = [] } = useQuery(
+    const { data: sprintsData = [], isLoading: isSprintsLoading } = useQuery(
         ['milestones', { projectId }],
         async (key, { projectId }) => {
             return getMilestones({
@@ -208,6 +208,8 @@ export default function Backlog() {
                                                 />
                                             </>
                                         ))
+                                    ) : isSprintsLoading ? (
+                                        <Skeleton active />
                                     ) : (
                                         <Empty description="No Sprints exist for this Project. Create one to get started!" />
                                     )}
@@ -227,6 +229,8 @@ export default function Backlog() {
                                             />
                                             <IssueCreation milestone={null} />
                                         </>
+                                    ) : isBacklogLoading ? (
+                                        <Skeleton active />
                                     ) : (
                                         <Empty description="The backlog is empty. Create a userstory to get started!" />
                                     )}
