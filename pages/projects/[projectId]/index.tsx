@@ -17,7 +17,12 @@ import { getProjectTimeline } from '../../../taiga-api/timelines'
 import ActivityListItem from '../../../components/home/ActivityListItem'
 import Flex from '../../../components/Flex'
 import { Avatar, Badge, Button } from 'antd'
-import { EyeOutlined, LikeOutlined } from '@ant-design/icons'
+import {
+    EyeFilled,
+    EyeOutlined,
+    LikeFilled,
+    LikeOutlined,
+} from '@ant-design/icons'
 
 const StyledFlex = styled(Flex)`
     margin-top: 20px;
@@ -125,27 +130,41 @@ const Project = () => {
                     <StyledFlex>
                         <BadgeButtonContainer>
                             <Badge
-                                style={{ backgroundColor: '#3498db' }}
+                                style={{ backgroundColor: '#1890FF' }}
                                 count={watchersData.length ?? 0}
                             >
                                 <Button
                                     onClick={handleWatch}
-                                    icon={<EyeOutlined />}
+                                    type={data?.is_watcher ? 'primary' : 'default'}
+                                    icon={
+                                        data?.is_watcher ? (
+                                            <EyeFilled />
+                                        ) : (
+                                            <EyeOutlined />
+                                        )
+                                    }
                                 >
-                                    {data?.is_watcher ? 'Unwatch' : 'Watch'}
+                                    {data?.is_watcher ? 'Watching' : 'Watch'}
                                 </Button>
                             </Badge>
                         </BadgeButtonContainer>
                         <BadgeButtonContainer>
                             <Badge
-                                style={{ backgroundColor: '#52c41a' }}
+                                style={{ backgroundColor: '#1890FF' }}
                                 count={fansData.length ?? 0}
                             >
                                 <Button
                                     onClick={handleLike}
-                                    icon={<LikeOutlined />}
+                                    type={data?.is_fan ? 'primary' : 'default'}
+                                    icon={
+                                        data?.is_fan ? (
+                                            <LikeFilled />
+                                        ) : (
+                                            <LikeOutlined />
+                                        )
+                                    }
                                 >
-                                    {data?.is_fan ? 'Unlike' : 'Like'}
+                                    {data?.is_fan ? 'Liked' : 'Like'}
                                 </Button>
                             </Badge>
                         </BadgeButtonContainer>
