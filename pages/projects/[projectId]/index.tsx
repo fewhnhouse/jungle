@@ -53,22 +53,31 @@ const Project = () => {
 
     const { data } = useQuery(
         ['project', { projectId }],
-        (key, { projectId }) => getProject(projectId as string)
+        (key, { projectId }) => getProject(projectId as string),
+        {
+            enabled: !!projectId,
+        }
     )
 
     const { data: timeline } = useQuery(
         ['projectTimeline', { projectId }],
-        (key, { projectId }) => getProjectTimeline(projectId)
+        (key, { projectId }) => getProjectTimeline(projectId),
+        {
+            enabled: !!projectId,
+        }
     )
 
     return (
         <>
             <PageHeader>
                 <>
-                    <PageTitle
-                        title={data?.name}
-                        description={data?.description}
-                    />
+                    <Flex align="center">
+                        <PageTitle
+                            avatarUrl={data?.logo_big_url ?? 'bmo.png'}
+                            title={data?.name}
+                            description={data?.description}
+                        />
+                    </Flex>
                     <StyledFlex>
                         <StyledButton icon={<EyeOutlined />}>
                             Watch
@@ -76,32 +85,33 @@ const Project = () => {
                         <StyledButton icon={<LikeOutlined />}>
                             Like
                         </StyledButton>
-                        <Link href={`/projects/${projectId}/board`}>
-                            <StyledButton icon={<LikeOutlined />}>
-                                Board
-                            </StyledButton>
-                        </Link>
-                        <Link href={`/projects/${projectId}/board`}>
-                            <StyledButton icon={<LikeOutlined />}>
-                                Backlog
-                            </StyledButton>
-                        </Link>
                     </StyledFlex>
-                    <StyledFlex>
-                        {data?.members.map((member) => (
-                            <StyledAvatar
-                                size="large"
-                                key={member.id}
-                                src={member.photo}
-                            >
-                                {member.full_name
-                                    .split(' ')
-                                    .reduce(
-                                        (prev, curr) => prev + curr.charAt(0),
-                                        ''
-                                    )}
-                            </StyledAvatar>
-                        ))}
+                    <StyledFlex justify="space-between">
+                        <Flex>
+                            {data?.members.map((member) => (
+                                <StyledAvatar
+                                    size="large"
+                                    key={member.id}
+                                    src={member.photo}
+                                >
+                                    {member.full_name
+                                        .split(' ')
+                                        .reduce(
+                                            (prev, curr) =>
+                                                prev + curr.charAt(0),
+                                            ''
+                                        )}
+                                </StyledAvatar>
+                            ))}
+                        </Flex>
+                        <Flex>
+                            <Link href={`/projects/${projectId}/board`}>
+                                <StyledButton>Board</StyledButton>
+                            </Link>
+                            <Link href={`/projects/${projectId}/board`}>
+                                <StyledButton>Backlog</StyledButton>
+                            </Link>
+                        </Flex>
                     </StyledFlex>
                 </>
             </PageHeader>

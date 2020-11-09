@@ -112,31 +112,11 @@ const Header = () => {
 
     return (
         <StyledHeader ref={ref} landing={pathname === '/'} scrolled={y > 0}>
-            {pathname.includes('/projects/') ? (
-                <Links>
-                    <Tab href="/" icon={<HomeIcon />} label="Home" />
-
-                    <Tab
-                        href={`/projects/${projectId}/board`}
-                        icon={<DashboardIcon />}
-                        label="Board"
-                    />
-                    <Tab
-                        href={`/projects/${projectId}/backlog`}
-                        icon={<HistoryIcon />}
-                        label="Backlog"
-                    />
-
-                    <Tab
-                        href={`/projects/${projectId}/reports`}
-                        icon={<AssessmentIcon />}
-                        label="Reports"
-                    />
-                </Links>
-            ) : pathname === '/login' ? (
+            {pathname === '/login' ? (
                 <h3></h3>
             ) : pathname.includes('/') ? (
                 <Links>
+                    <Tab href="/" icon={<HomeIcon />} label="Home" />
                     <Tab
                         href="/projects"
                         icon={<AppsIcon />}

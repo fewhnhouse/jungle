@@ -110,10 +110,10 @@ export default function Home() {
         <>
             <PageHeader>
                 <HomeContainer>
-                    <Avatar src={data?.big_photo ?? 'bmo.png'} />
                     <HeaderContainer>
                         <TitleContainer>
                             <PageTitle
+                                avatarUrl={data?.big_photo ?? 'bmo.png'}
                                 title={data?.full_name ?? ''}
                                 description="Scrum Destroyer"
                             />

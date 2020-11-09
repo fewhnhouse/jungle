@@ -41,6 +41,10 @@ const StyledImage = styled.img`
 
 const ProjectName = styled.h2`
     margin: 0px;
+    cursor: pointer;
+    &:hover {
+        text-decoration: underline;
+    }
 `
 
 const ProjectDescription = styled.span`
@@ -93,12 +97,6 @@ const BadgeContainer = styled.div`
     display: flex;
 `
 
-const Divider = styled.div`
-    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
-    width: 100%;
-    margin: ${({ theme }) => `${theme.spacing.medium}`} 0px;
-`
-
 interface Props {
     id: string | number
     name: string
@@ -138,7 +136,9 @@ export default function ProjectListItem({
                     <InfoContainer>
                         <StyledImage src={avatar ?? 'bmo.png'} />
                         <TextContainer>
-                            <ProjectName>{name}</ProjectName>
+                            <Link href={`/projects/${id}`}>
+                                <ProjectName>{name}</ProjectName>
+                            </Link>
                             <ProjectDescription>
                                 {description}
                             </ProjectDescription>
@@ -150,7 +150,6 @@ export default function ProjectListItem({
                             {!isMobile && 'In Progress: '} 32
                         </Tag>
                     </BadgeContainer>
-                    <Divider />
                     <MembersContainer>
                         {actualMembers.map((member) => (
                             <Link href={`/users/${member.id}`} key={member.id}>

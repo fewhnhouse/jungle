@@ -209,7 +209,7 @@ export default function Backlog() {
                                             </>
                                         ))
                                     ) : (
-                                        <Empty description="No Sprint created yet." />
+                                        <Empty description="No Sprints exist for this Project. Create one to get started!" />
                                     )}
                                 </ListContainer>
                             </Container>
@@ -219,11 +219,17 @@ export default function Backlog() {
                                     <UserstoryCreation />
                                 </TitleContainer>
                                 <ListContainer>
-                                    <IssueList
-                                        listId="backlog"
-                                        issues={backlogData ?? []}
-                                    />
-                                    <IssueCreation milestone={null} />
+                                    {backlogData?.length ? (
+                                        <>
+                                            <IssueList
+                                                listId="backlog"
+                                                issues={backlogData ?? []}
+                                            />
+                                            <IssueCreation milestone={null} />
+                                        </>
+                                    ) : (
+                                        <Empty description="The backlog is empty. Create a userstory to get started!" />
+                                    )}
                                 </ListContainer>
                             </Container>
                         </DragDropContext>
