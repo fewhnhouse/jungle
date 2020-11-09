@@ -2,11 +2,16 @@ import styled from 'styled-components'
 import useMedia from 'use-media'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { SettingOutlined } from '@ant-design/icons'
-import { Avatar, Button, Card, Tag } from 'antd'
+import {
+    LockOutlined,
+    SettingOutlined,
+    UnlockOutlined,
+} from '@ant-design/icons'
+import { Avatar, Button, Card, Tag, Tooltip } from 'antd'
 import { getUser, User } from '../../taiga-api/users'
 import { useEffect, useState } from 'react'
 import { getNameInitials } from '../../util/getNameInitials'
+import Flex from '../Flex'
 
 const StyledButton = styled(Button)`
     margin: 0px 4px;
@@ -67,6 +72,16 @@ const ItemContainer = styled.div`
     }
 `
 
+const StyledLock = styled(LockOutlined)`
+    margin-left: 10px;
+    font-size: 14px;
+`
+
+const StyledUnlock = styled(UnlockOutlined)`
+    margin-left: 10px;
+    font-size: 14px;
+`
+
 const InfoContainer = styled.div`
     margin: ${({ theme }) => `${theme.spacing.small}`} 0px;
     display: flex;
@@ -103,6 +118,7 @@ interface Props {
     description: string
     members: number[]
     avatar?: string
+    isPrivate?: boolean
 }
 export default function ProjectListItem({
     id,
@@ -110,6 +126,7 @@ export default function ProjectListItem({
     description,
     members,
     avatar,
+    isPrivate,
 }: Props) {
     const isMobile = useMedia({ maxWidth: '400px' })
     const { push } = useRouter()
@@ -137,7 +154,20 @@ export default function ProjectListItem({
                         <StyledImage src={avatar ?? 'bmo.png'} />
                         <TextContainer>
                             <Link href={`/projects/${id}`}>
-                                <ProjectName>{name}</ProjectName>
+                                <Flex align="center">
+                                    <ProjectName>{name} </ProjectName>
+                                    <Tooltip
+                                        title={`This project is ${
+                                            isPrivate ? 'private' : 'public'
+                                        }`}
+                                    >
+                                        {isPrivate ? (
+                                            <StyledLock />
+                                        ) : (
+                                            <StyledUnlock />
+                                        )}
+                                    </Tooltip>
+                                </Flex>
                             </Link>
                             <ProjectDescription>
                                 {description}

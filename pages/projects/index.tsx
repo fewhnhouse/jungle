@@ -24,7 +24,7 @@ const Projects = () => {
             </PageHeader>
             <PageBody>
                 <Flex wrap align="center" justify="center">
-                    {data?.map(({ id, name, description, logo_small_url, members }) => (
+                    {data?.map(({ id, name, description, logo_small_url, members, is_private }) => (
                         <ProjectListItem
                             members={members}
                             avatar={logo_small_url}
@@ -32,6 +32,7 @@ const Projects = () => {
                             id={id}
                             name={name}
                             description={description}
+                            isPrivate={is_private}
                         />
                     ))}
                 </Flex>

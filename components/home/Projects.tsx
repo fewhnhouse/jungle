@@ -43,7 +43,7 @@ export default function Projects() {
                         new Date(a.modified_date).getTime()
                 )
                 .filter((_, index) => index < 6)
-                .map(({ id, name, description, logo_small_url, members }) => (
+                .map(({ id, name, description, logo_small_url, members, is_private }) => (
                     <ProjectListItem
                         members={members}
                         avatar={logo_small_url}
@@ -51,6 +51,7 @@ export default function Projects() {
                         id={id}
                         name={name}
                         description={description}
+                        isPrivate={is_private}
                     />
                 ))}
             {isMax && (
