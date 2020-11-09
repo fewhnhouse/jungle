@@ -3,12 +3,20 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { PageBody, PageHeader } from '../../../components/Layout'
 import PageTitle from '../../../components/PageTitle'
-import { useQuery } from 'react-query'
-import { getProject } from '../../../taiga-api/projects'
+import { queryCache, useQuery } from 'react-query'
+import {
+    getProject,
+    like,
+    watch,
+    watchers,
+    fans,
+    unlike,
+    unwatch,
+} from '../../../taiga-api/projects'
 import { getProjectTimeline } from '../../../taiga-api/timelines'
 import ActivityListItem from '../../../components/home/ActivityListItem'
 import Flex from '../../../components/Flex'
-import { Avatar, Button } from 'antd'
+import { Avatar, Badge, Button } from 'antd'
 import { EyeOutlined, LikeOutlined } from '@ant-design/icons'
 
 const StyledFlex = styled(Flex)`
@@ -32,6 +40,10 @@ const StyledButton = styled(Button)`
     &:last-child {
         margin-right: 0px;
     }
+`
+
+const BadgeButtonContainer = styled.div`
+    margin: 0px 10px;
 `
 
 const StyledAvatar = styled(Avatar)`
@@ -67,6 +79,38 @@ const Project = () => {
         }
     )
 
+    const { data: watchersData } = useQuery(
+        ['watchers', { projectId }],
+        (key, { projectId }) => watchers(projectId),
+        {
+            enabled: !!projectId,
+        }
+    )
+
+    const { data: fansData } = useQuery(
+        ['fans', { projectId }],
+        (key, { projectId }) => fans(projectId),
+        {
+            enabled: !!projectId,
+        }
+    )
+
+    const handleWatch = async () => {
+        await (data?.is_watcher
+            ? unwatch(projectId.toString())
+            : watch(projectId.toString()))
+        queryCache.invalidateQueries(['watchers', { projectId }])
+        queryCache.invalidateQueries(['project', { projectId }])
+    }
+
+    const handleLike = async () => {
+        await (data?.is_fan
+            ? unlike(projectId.toString())
+            : like(projectId.toString()))
+        queryCache.invalidateQueries(['fans', { projectId }])
+        queryCache.invalidateQueries(['project', { projectId }])
+    }
+
     return (
         <>
             <PageHeader>
@@ -79,12 +123,32 @@ const Project = () => {
                         />
                     </Flex>
                     <StyledFlex>
-                        <StyledButton icon={<EyeOutlined />}>
-                            Watch
-                        </StyledButton>
-                        <StyledButton icon={<LikeOutlined />}>
-                            Like
-                        </StyledButton>
+                        <BadgeButtonContainer>
+                            <Badge
+                                style={{ backgroundColor: '#3498db' }}
+                                count={watchersData.length ?? 0}
+                            >
+                                <Button
+                                    onClick={handleWatch}
+                                    icon={<EyeOutlined />}
+                                >
+                                    {data?.is_watcher ? 'Unwatch' : 'Watch'}
+                                </Button>
+                            </Badge>
+                        </BadgeButtonContainer>
+                        <BadgeButtonContainer>
+                            <Badge
+                                style={{ backgroundColor: '#52c41a' }}
+                                count={fansData.length ?? 0}
+                            >
+                                <Button
+                                    onClick={handleLike}
+                                    icon={<LikeOutlined />}
+                                >
+                                    {data?.is_fan ? 'Unlike' : 'Like'}
+                                </Button>
+                            </Badge>
+                        </BadgeButtonContainer>
                     </StyledFlex>
                     <StyledFlex justify="space-between">
                         <Flex>

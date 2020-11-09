@@ -158,7 +158,7 @@ export const watch = (id: string) => {
 }
 
 export const unwatch = (id: string) => {
-    return authInstance.post(`/projects/${id}/undwatch`).then(res => res.data)
+    return authInstance.post(`/projects/${id}/unwatch`).then(res => res.data)
 }
 
 export const createTemplate = (id: string) => {
