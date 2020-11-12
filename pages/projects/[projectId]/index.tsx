@@ -1,28 +1,35 @@
 import styled from 'styled-components'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { PageBody, PageHeader } from '../../../components/Layout'
 import PageTitle from '../../../components/PageTitle'
-import { queryCache, useQuery } from 'react-query'
-import {
-    getProject,
-    like,
-    watch,
-    watchers,
-    fans,
-    unlike,
-    unwatch,
-} from '../../../taiga-api/projects'
+import { useQuery } from 'react-query'
+import { getProject } from '../../../taiga-api/projects'
 import { getProjectTimeline } from '../../../taiga-api/timelines'
 import ActivityListItem from '../../../components/home/ActivityListItem'
 import Flex from '../../../components/Flex'
-import { Avatar, Badge, Button } from 'antd'
+import { Avatar, Button } from 'antd'
+
+import useMedia from 'use-media'
+import LevelDisplay from '../../../components/LevelDisplay/LevelDisplay'
+import Actions from '../../../components/project/Actions'
+import AchievementBadge from '../../../components/Badge/Badge'
 import {
-    EyeFilled,
-    EyeOutlined,
-    LikeFilled,
-    LikeOutlined,
+    BugFilled,
+    BugOutlined,
+    CarryOutFilled,
+    CarryOutOutlined,
+    CommentOutlined,
+    DashboardOutlined,
+    EditFilled,
+    FireFilled,
+    FireOutlined,
+    NumberOutlined,
+    RobotOutlined,
+    TagsOutlined,
 } from '@ant-design/icons'
+import { PersonOutline } from '@material-ui/icons'
 
 const StyledFlex = styled(Flex)`
     margin-top: 20px;
@@ -47,10 +54,6 @@ const StyledButton = styled(Button)`
     }
 `
 
-const BadgeButtonContainer = styled.div`
-    margin: 0px 10px;
-`
-
 const StyledAvatar = styled(Avatar)`
     margin: 0px 10px;
     &:first-child {
@@ -67,6 +70,7 @@ const StyledAvatar = styled(Avatar)`
 const Project = () => {
     const router = useRouter()
     const { projectId } = router.query
+    const isMobile = useMedia('screen and (max-width: 845px)')
 
     const { data } = useQuery(
         ['project', { projectId }],
@@ -84,90 +88,55 @@ const Project = () => {
         }
     )
 
-    const { data: watchersData } = useQuery(
-        ['watchers', { projectId }],
-        (key, { projectId }) => watchers(projectId),
-        {
-            enabled: !!projectId,
-        }
-    )
-
-    const { data: fansData } = useQuery(
-        ['fans', { projectId }],
-        (key, { projectId }) => fans(projectId),
-        {
-            enabled: !!projectId,
-        }
-    )
-
-    const handleWatch = async () => {
-        await (data?.is_watcher
-            ? unwatch(projectId.toString())
-            : watch(projectId.toString()))
-        queryCache.invalidateQueries(['watchers', { projectId }])
-        queryCache.invalidateQueries(['project', { projectId }])
-    }
-
-    const handleLike = async () => {
-        await (data?.is_fan
-            ? unlike(projectId.toString())
-            : like(projectId.toString()))
-        queryCache.invalidateQueries(['fans', { projectId }])
-        queryCache.invalidateQueries(['project', { projectId }])
-    }
-
     return (
         <>
             <PageHeader>
                 <>
-                    <Flex align="center">
+                    <Flex direction="column" align="flex-start">
                         <PageTitle
-                            avatarUrl={data?.logo_big_url ?? 'bmo.png'}
+                            avatarUrl={data?.logo_big_url ?? '/bmo.png'}
                             title={data?.name}
                             description={data?.description}
+                            actions={data && <Actions project={data} />}
                         />
+                        <LevelDisplay />
                     </Flex>
                     <StyledFlex>
-                        <BadgeButtonContainer>
-                            <Badge
-                                style={{ backgroundColor: '#1890FF' }}
-                                count={watchersData.length ?? 0}
-                            >
-                                <Button
-                                    onClick={handleWatch}
-                                    type={data?.is_watcher ? 'primary' : 'default'}
-                                    icon={
-                                        data?.is_watcher ? (
-                                            <EyeFilled />
-                                        ) : (
-                                            <EyeOutlined />
-                                        )
-                                    }
-                                >
-                                    {data?.is_watcher ? 'Watching' : 'Watch'}
-                                </Button>
-                            </Badge>
-                        </BadgeButtonContainer>
-                        <BadgeButtonContainer>
-                            <Badge
-                                style={{ backgroundColor: '#1890FF' }}
-                                count={fansData.length ?? 0}
-                            >
-                                <Button
-                                    onClick={handleLike}
-                                    type={data?.is_fan ? 'primary' : 'default'}
-                                    icon={
-                                        data?.is_fan ? (
-                                            <LikeFilled />
-                                        ) : (
-                                            <LikeOutlined />
-                                        )
-                                    }
-                                >
-                                    {data?.is_fan ? 'Liked' : 'Like'}
-                                </Button>
-                            </Badge>
-                        </BadgeButtonContainer>
+                        <AchievementBadge
+                            level={2}
+                            icon={<CommentOutlined />}
+                            title="Author"
+                        />
+                        <AchievementBadge
+                            level={1}
+                            icon={<DashboardOutlined />}
+                            title="Sprinter"
+                        />
+                        <AchievementBadge
+                            level={3}
+                            icon={<TagsOutlined />}
+                            title="Sale!"
+                        />
+                        <AchievementBadge
+                            level={3}
+                            icon={<BugOutlined />}
+                            title="Bug Basher"
+                        />
+                        <AchievementBadge
+                            level={2}
+                            icon={<FireOutlined />}
+                            title="Burn it down!"
+                        />
+                        <AchievementBadge
+                            level={4}
+                            icon={<NumberOutlined />}
+                            title="Estimation? This is guaranteed."
+                        />
+                        <AchievementBadge
+                            level={2}
+                            icon={<RobotOutlined />}
+                            title="Ticket Machine"
+                        />
                     </StyledFlex>
                     <StyledFlex justify="space-between">
                         <Flex>

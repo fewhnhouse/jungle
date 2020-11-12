@@ -153,22 +153,22 @@ export default function ProjectListItem({
                     <InfoContainer>
                         <StyledImage src={avatar ?? 'bmo.png'} />
                         <TextContainer>
-                            <Link href={`/projects/${id}`}>
-                                <Flex align="center">
+                            <Flex align="center">
+                                <Link href={`/projects/${id}`}>
                                     <ProjectName>{name} </ProjectName>
-                                    <Tooltip
-                                        title={`This project is ${
-                                            isPrivate ? 'private' : 'public'
-                                        }`}
-                                    >
-                                        {isPrivate ? (
-                                            <StyledLock />
-                                        ) : (
-                                            <StyledUnlock />
-                                        )}
-                                    </Tooltip>
-                                </Flex>
-                            </Link>
+                                </Link>
+                                <Tooltip
+                                    title={`This project is ${
+                                        isPrivate ? 'private' : 'public'
+                                    }`}
+                                >
+                                    {isPrivate ? (
+                                        <StyledLock />
+                                    ) : (
+                                        <StyledUnlock />
+                                    )}
+                                </Tooltip>
+                            </Flex>
                             <ProjectDescription>
                                 {description}
                             </ProjectDescription>

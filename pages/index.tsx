@@ -9,7 +9,7 @@ import { getMe } from '../taiga-api/users'
 import PageTitle from '../components/PageTitle'
 import { PageBody, PageHeader } from '../components/Layout'
 import { useQuery } from 'react-query'
-import { Button, Progress } from 'antd'
+import { Button } from 'antd'
 
 const Container = styled.div`
     padding: ${({ theme }) => `${theme.spacing.huge} ${theme.spacing.crazy}`};
@@ -26,15 +26,6 @@ const Container = styled.div`
         padding: ${({ theme }) =>
             `${theme.spacing.small} ${theme.spacing.medium}`};
     }
-`
-
-const Avatar = styled.img`
-    width: 100px;
-    min-width: 100px;
-    height: 100px;
-    min-height: 100px;
-    border-radius: 50%;
-    margin-right: 30px;
 `
 
 const HomeContainer = styled.div`
@@ -65,31 +56,6 @@ const InnerContainer = styled.div`
     flex: 1;
 `
 
-const LevelContainer = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: ${({ theme }) => theme.spacing.small} 0px;
-`
-
-const LevelIcon = styled.div`
-    background: #2ecc71;
-    border-radius: 50%;
-    width: 30px;
-    min-width: 30px;
-    height: 30px;
-    min-height: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    &:first-child {
-        margin-right: ${({ theme }) => theme.spacing.mini};
-    }
-    &:last-child {
-        margin-left: ${({ theme }) => theme.spacing.mini};
-    }
-`
 
 const TitleContainer = styled.div`
     display: flex;
@@ -117,18 +83,6 @@ export default function Home() {
                                 title={data?.full_name ?? ''}
                                 description="Scrum Destroyer"
                             />
-                            {!isMobile && (
-                                <LevelContainer>
-                                    <LevelIcon>5</LevelIcon>
-                                    <Progress
-                                        strokeColor="#2ecc71"
-                                        showInfo={false}
-                                        percent={30}
-                                        status="active"
-                                    />
-                                    <LevelIcon>6</LevelIcon>
-                                </LevelContainer>
-                            )}
                         </TitleContainer>
 
                         {!isMobile && (
@@ -138,17 +92,6 @@ export default function Home() {
                 </HomeContainer>
                 {isMobile && (
                     <MobileButtonContainer>
-                        <LevelContainer>
-                            <LevelIcon>5</LevelIcon>
-                            <Progress
-                                strokeColor="#2ecc71"
-                                showInfo={false}
-                                percent={30}
-                                status="active"
-                            />
-
-                            <LevelIcon>6</LevelIcon>
-                        </LevelContainer>
                         <Button onClick={toggleModal}>New Project</Button>
                     </MobileButtonContainer>
                 )}
