@@ -53,9 +53,7 @@ export default function BoardContainer() {
     )
 
     const milestoneIds =
-        selectedSprint !== -1
-            ? [milestones.find((m) => m.id === selectedSprint).id]
-            : milestones?.map((m) => m.id)
+        selectedSprint !== -1 ? [selectedSprint] : milestones?.map((m) => m.id)
 
     const { data: tasks, isLoading: isTasksLoading } = useQuery(
         [
@@ -175,6 +173,22 @@ export default function BoardContainer() {
                                 columns={storyFiltersData?.statuses ?? []}
                             />
                         )}
+                        {groupBy === 'sprint' &&
+                            milestones.map((ms) => (
+                                <StoryBoard
+                                    key={ms.id}
+                                    hasHeader
+                                    title={`${ms?.name}`}
+                                    stories={
+                                        ms?.user_stories.filter(
+                                            (story) =>
+                                                !assignee ||
+                                                story.assigned_to === assignee
+                                        ) ?? []
+                                    }
+                                    columns={storyFiltersData?.statuses ?? []}
+                                />
+                            ))}
                         {groupBy === 'none' && (
                             <StoryBoard
                                 hasHeader

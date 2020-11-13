@@ -1,5 +1,5 @@
-import { Form, Select } from 'antd'
-import { Dispatch, SetStateAction } from 'react'
+import { Form, Select, Tag } from 'antd'
+import { Dispatch, SetStateAction, useEffect } from 'react'
 import styled from 'styled-components'
 import { Milestone } from '../../taiga-api/milestones'
 import AssigneeDropdown from '../AssigneeDropdown'
@@ -12,7 +12,7 @@ const DateDescription = styled.span`
     color: #ccc;
 `
 
-export type GroupBy = 'none' | 'epic' | 'subtask' | 'assignee'
+export type GroupBy = 'none' | 'epic' | 'subtask' | 'assignee' | 'sprint'
 
 interface Props {
     groupBy: GroupBy
@@ -33,6 +33,22 @@ const FilterBoard = ({
     setAssignee,
     milestones,
 }: Props) => {
+    const today = new Date()
+    useEffect(() => {
+        const activeMilestone = milestones?.find((ms) => {
+            const start = new Date(ms.estimated_start)
+            const end = new Date(ms.estimated_finish)
+            return start <= today && today <= end
+        })
+        setSprint(activeMilestone.id)
+    }, [milestones])
+
+    useEffect(() => {
+        if (sprint !== -1 && groupBy === 'sprint') {
+            setGroupBy('none')
+        }
+    }, [sprint, groupBy])
+
     return (
         <Form layout="inline">
             <Item label="Group by">
@@ -46,6 +62,7 @@ const FilterBoard = ({
                     <Option value="assignee">Assignee</Option>
                     <Option value="epic">Epic</Option>
                     <Option value="subtask">Subtask</Option>
+                    {sprint === -1 && <Option value="sprint">Sprint</Option>}
                 </Select>
             </Item>
             <Item label="Sprints">
@@ -56,29 +73,37 @@ const FilterBoard = ({
                     placeholder="Select sprint..."
                 >
                     <Option value={-1}>All</Option>
-                    {milestones?.map((ms) => (
-                        <Option value={ms.id} key={ms.id}>
-                            {ms.name}
-                            <br />
-                            <DateDescription>
-                                {new Date(
-                                    ms.estimated_start
-                                ).toLocaleDateString(undefined, {
-                                    year: '2-digit',
-                                    month: 'numeric',
-                                    day: 'numeric',
-                                })}{' '}
-                                -{' '}
-                                {new Date(
-                                    ms.estimated_finish
-                                ).toLocaleDateString(undefined, {
-                                    year: '2-digit',
-                                    month: 'numeric',
-                                    day: 'numeric',
-                                })}
-                            </DateDescription>
-                        </Option>
-                    ))}
+                    {milestones?.map((ms) => {
+                        const start = new Date(ms.estimated_start)
+                        const end = new Date(ms.estimated_finish)
+                        const isActive = start <= today && today <= end
+
+                        return (
+                            <Option value={ms.id} key={ms.id}>
+                                {isActive && <Tag color="blue">Active</Tag>}
+                                {ms.name}
+
+                                <br />
+                                <DateDescription>
+                                    {new Date(
+                                        ms.estimated_start
+                                    ).toLocaleDateString(undefined, {
+                                        year: '2-digit',
+                                        month: 'numeric',
+                                        day: 'numeric',
+                                    })}{' '}
+                                    -{' '}
+                                    {new Date(
+                                        ms.estimated_finish
+                                    ).toLocaleDateString(undefined, {
+                                        year: '2-digit',
+                                        month: 'numeric',
+                                        day: 'numeric',
+                                    })}
+                                </DateDescription>
+                            </Option>
+                        )
+                    })}
                 </Select>
             </Item>
             {groupBy !== 'assignee' && (
