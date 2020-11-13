@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import Link from 'next/link'
-import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { PageBody, PageHeader } from '../../../components/Layout'
 import PageTitle from '../../../components/PageTitle'
@@ -10,26 +9,18 @@ import { getProjectTimeline } from '../../../taiga-api/timelines'
 import ActivityListItem from '../../../components/home/ActivityListItem'
 import Flex from '../../../components/Flex'
 import { Avatar, Button } from 'antd'
-
-import useMedia from 'use-media'
 import LevelDisplay from '../../../components/LevelDisplay/LevelDisplay'
 import Actions from '../../../components/project/Actions'
 import AchievementBadge from '../../../components/Badge/Badge'
 import {
-    BugFilled,
     BugOutlined,
-    CarryOutFilled,
-    CarryOutOutlined,
     CommentOutlined,
     DashboardOutlined,
-    EditFilled,
-    FireFilled,
     FireOutlined,
     NumberOutlined,
     RobotOutlined,
     TagsOutlined,
 } from '@ant-design/icons'
-import { PersonOutline } from '@material-ui/icons'
 
 const StyledFlex = styled(Flex)`
     margin-top: 20px;
@@ -70,7 +61,6 @@ const StyledAvatar = styled(Avatar)`
 const Project = () => {
     const router = useRouter()
     const { projectId } = router.query
-    const isMobile = useMedia('screen and (max-width: 845px)')
 
     const { data } = useQuery(
         ['project', { projectId }],

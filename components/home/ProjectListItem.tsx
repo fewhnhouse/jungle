@@ -3,15 +3,20 @@ import useMedia from 'use-media'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import {
+    EyeFilled,
+    EyeOutlined,
+    LikeFilled,
+    LikeOutlined,
     LockOutlined,
     SettingOutlined,
     UnlockOutlined,
 } from '@ant-design/icons'
-import { Avatar, Button, Card, Tag, Tooltip } from 'antd'
+import { Avatar, Button, Card, Skeleton, Tag, Tooltip } from 'antd'
 import { getUser, User } from '../../taiga-api/users'
 import { useEffect, useState } from 'react'
 import { getNameInitials } from '../../util/getNameInitials'
 import Flex from '../Flex'
+import { useQuery } from 'react-query'
 
 const StyledButton = styled(Button)`
     margin: 0px 4px;
@@ -27,6 +32,12 @@ const StyledCard = styled(Card)`
 
 const Body = styled.div`
     padding: 20px;
+`
+
+const StyledTag = styled(Tag)`
+    svg {
+        margin-right: 5px;
+    }
 `
 
 const StyledFooter = styled.div`
@@ -110,6 +121,14 @@ const BadgeContainer = styled.div`
     width: 100%;
     margin: ${({ theme }) => `${theme.spacing.mini}`} 0px;
     display: flex;
+    button {
+        span {
+            margin-right: 5px;
+        }
+        &:first-child {
+            margin-right: 5px;
+        }
+    }
 `
 
 interface Props {
@@ -118,7 +137,11 @@ interface Props {
     description: string
     members: number[]
     avatar?: string
+    fans: number
+    watchers: number
     isPrivate?: boolean
+    isFan?: boolean
+    isWatcher?: boolean
 }
 export default function ProjectListItem({
     id,
@@ -127,20 +150,20 @@ export default function ProjectListItem({
     members,
     avatar,
     isPrivate,
+    fans,
+    watchers,
+    isFan,
+    isWatcher,
 }: Props) {
     const isMobile = useMedia({ maxWidth: '400px' })
     const { push } = useRouter()
     const handleSettingsClick = () => push(`/projects/${id}/settings`)
 
-    const [actualMembers, setActualMembers] = useState<User[]>([])
-
-    useEffect(() => {
-        if (members) {
-            Promise.all(
-                members?.map((id) => getUser(id.toString()))
-            ).then((res) => setActualMembers(res))
-        }
-    }, [members])
+    const { data: actualMembers, isLoading } = useQuery(
+        ['actualMembers', members],
+        (key, ...members) =>
+            Promise.all(members?.map((id) => getUser(id.toString())))
+    )
 
     return (
         <StyledCard bordered bodyStyle={{ padding: 0 }}>
@@ -175,13 +198,24 @@ export default function ProjectListItem({
                         </TextContainer>
                     </InfoContainer>
                     <BadgeContainer>
-                        <Tag id="issues-todo">{!isMobile && 'To Do: '}16</Tag>
-                        <Tag id="issues-in-progress">
-                            {!isMobile && 'In Progress: '} 32
-                        </Tag>
+                        <Button
+                            type={isFan ? 'primary' : 'default'}
+                            size="small"
+                            icon={isFan ? <LikeFilled /> : <LikeOutlined />}
+                        >
+                            {fans}
+                        </Button>
+                        <Button
+                            type={isWatcher ? 'primary' : 'default'}
+                            size="small"
+                            icon={isWatcher ? <EyeFilled /> : <EyeOutlined />}
+                        >
+                            {watchers}
+                        </Button>
                     </BadgeContainer>
                     <MembersContainer>
-                        {actualMembers.map((member) => (
+                        {isLoading && <Skeleton.Avatar active />}
+                        {actualMembers?.map((member) => (
                             <Link href={`/users/${member.id}`} key={member.id}>
                                 <StyledAvatar src={member.photo}>
                                     {getNameInitials(member.full_name)}

@@ -1,5 +1,5 @@
-import { PageBody, PageHeader } from '../../components/Layout'
-import PageTitle from '../../components/PageTitle'
+import { PageBody, PageHeader } from '../../../components/Layout'
+import PageTitle from '../../../components/PageTitle'
 
 const User = () => {
     return (

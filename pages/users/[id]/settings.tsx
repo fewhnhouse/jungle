@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import styled from 'styled-components'
-import { PageBody, PageHeader } from '../../components/Layout'
-import PageTitle from '../../components/PageTitle'
-import Settings from '../../components/Settings'
-import UserDetails from '../../components/user-settings/UserDetails'
+import { PageBody, PageHeader } from '../../../components/Layout'
+import PageTitle from '../../../components/PageTitle'
+import Settings from '../../../components/Settings'
+import UserDetails from '../../../components/user-settings/UserDetails'
 
 const HeaderContainer = styled.div`
     margin: auto;

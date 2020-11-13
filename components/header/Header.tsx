@@ -10,9 +10,6 @@ import WorkOutlineIcon from '@material-ui/icons/WorkOutline'
 import AppsIcon from '@material-ui/icons/Apps'
 import HomeIcon from '@material-ui/icons/Home'
 import SyncIcon from '@material-ui/icons/Sync'
-import DashboardIcon from '@material-ui/icons/Dashboard'
-import HistoryIcon from '@material-ui/icons/History'
-import AssessmentIcon from '@material-ui/icons/Assessment'
 import Tab from './Tab'
 import { Button, Input } from 'antd'
 
@@ -100,8 +97,7 @@ const Header = () => {
     const router = useRouter()
     const isTablet = useMedia('screen and (max-width: 720px)')
 
-    const { pathname, query } = router
-    const { projectId } = query
+    const { pathname } = router
 
     const [open, setOpen] = useState(false)
 

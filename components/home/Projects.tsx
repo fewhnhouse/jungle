@@ -43,17 +43,34 @@ export default function Projects() {
                         new Date(a.modified_date).getTime()
                 )
                 .filter((_, index) => index < 6)
-                .map(({ id, name, description, logo_small_url, members, is_private }) => (
-                    <ProjectListItem
-                        members={members}
-                        avatar={logo_small_url}
-                        key={id}
-                        id={id}
-                        name={name}
-                        description={description}
-                        isPrivate={is_private}
-                    />
-                ))}
+                .map(
+                    ({
+                        id,
+                        name,
+                        total_fans,
+                        total_watchers,
+                        description,
+                        logo_small_url,
+                        members,
+                        is_private,
+                        is_fan,
+                        is_watcher,
+                    }) => (
+                        <ProjectListItem
+                            members={members}
+                            avatar={logo_small_url}
+                            key={id}
+                            id={id}
+                            name={name}
+                            description={description}
+                            isPrivate={is_private}
+                            fans={total_fans}
+                            watchers={total_watchers}
+                            isFan={is_fan}
+                            isWatcher={is_watcher}
+                        />
+                    )
+                )}
             {isMax && (
                 <Link href="/projects">
                     <a>See all Projects</a>

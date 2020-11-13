@@ -10,6 +10,9 @@ import PageTitle from '../components/PageTitle'
 import { PageBody, PageHeader } from '../components/Layout'
 import { useQuery } from 'react-query'
 import { Button } from 'antd'
+import { SettingOutlined } from '@ant-design/icons'
+import Link from 'next/link'
+import { ActionContainer } from '../components/project/Actions'
 
 const Container = styled.div`
     padding: ${({ theme }) => `${theme.spacing.huge} ${theme.spacing.crazy}`};
@@ -56,7 +59,6 @@ const InnerContainer = styled.div`
     flex: 1;
 `
 
-
 const TitleContainer = styled.div`
     display: flex;
     flex: 3;
@@ -81,20 +83,31 @@ export default function Home() {
                             <PageTitle
                                 avatarUrl={data?.big_photo ?? 'bmo.png'}
                                 title={data?.full_name ?? ''}
-                                description="Scrum Destroyer"
+                                description={data?.email}
+                                actions={
+                                    <>
+                                        <ActionContainer>
+                                            <Button onClick={toggleModal}>
+                                                New Project
+                                            </Button>
+                                        </ActionContainer>
+                                        <ActionContainer>
+                                            <Link
+                                                href={`/users/${data?.id}/settings`}
+                                            >
+                                                <Button
+                                                    icon={<SettingOutlined />}
+                                                >
+                                                    Settings
+                                                </Button>
+                                            </Link>
+                                        </ActionContainer>
+                                    </>
+                                }
                             />
                         </TitleContainer>
-
-                        {!isMobile && (
-                            <Button onClick={toggleModal}>New Project</Button>
-                        )}
                     </HeaderContainer>
                 </HomeContainer>
-                {isMobile && (
-                    <MobileButtonContainer>
-                        <Button onClick={toggleModal}>New Project</Button>
-                    </MobileButtonContainer>
-                )}
             </PageHeader>
             <PageBody>
                 <Container>

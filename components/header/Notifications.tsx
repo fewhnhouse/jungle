@@ -1,47 +1,36 @@
 import { NotificationOutlined } from '@ant-design/icons'
-import { Button, Dropdown, Menu } from 'antd'
+import { Button, Dropdown, Typography } from 'antd'
 import styled from 'styled-components'
-
+import Flex from '../Flex'
 
 const Container = styled.div`
     margin: 0px 10px;
 `
+
+const MenuContainer = styled(Flex)`
+    width: 500px;
+    height: 300px;
+    background: white;
+    border-radius: 2px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+    padding: 20px;
+`
+
 const menu = (
-    <Menu>
-        <Menu.Item>
-            <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href="http://www.alipay.com/"
-            >
-                1st menu item
-            </a>
-        </Menu.Item>
-        <Menu.Item>
-            <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href="http://www.taobao.com/"
-            >
-                2nd menu item
-            </a>
-        </Menu.Item>
-        <Menu.Item>
-            <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href="http://www.tmall.com/"
-            >
-                3rd menu item
-            </a>
-        </Menu.Item>
-    </Menu>
+    <MenuContainer>
+        <Flex direction="column">
+            <Typography.Title level={3}>Notifications</Typography.Title>
+            <Typography.Text>
+                You have 7 Notifications across 5 Projects
+            </Typography.Text>
+        </Flex>
+    </MenuContainer>
 )
 
 export default function Notifications() {
     return (
         <Container>
-            <Dropdown overlay={menu}>
+            <Dropdown trigger={['click']} overlay={menu}>
                 <Button icon={<NotificationOutlined />}></Button>
             </Dropdown>
         </Container>

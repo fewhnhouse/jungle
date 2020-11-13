@@ -31,7 +31,7 @@ export default function Profile() {
                     <Link href={`/users/${data?.id}`}>Profile</Link>
                 </Menu.Item>
                 <Menu.Item>
-                    <Link href="/users/settings">Settings</Link>
+                    <Link href={`/users/${data?.id}/settings`}>Settings</Link>
                 </Menu.Item>
             </Menu.ItemGroup>
         </Menu>

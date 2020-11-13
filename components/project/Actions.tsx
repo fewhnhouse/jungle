@@ -19,7 +19,7 @@ import styled from 'styled-components'
 import { Badge, Button } from 'antd'
 import Link from 'next/link'
 
-const BadgeButtonContainer = styled.div`
+export const ActionContainer = styled.div`
     margin: 6px 0px;
     &:first-child {
         margin-top: 0px;
@@ -75,13 +75,13 @@ const Actions = ({ project }: { project: Project }) => {
     }
     return (
         <>
-            <BadgeButtonContainer>
-                <Link href={`/project/${project.id}/settings`}>
+            <ActionContainer>
+                <Link href={`/projects/${project.id}/settings`}>
                     <Button icon={<SettingOutlined />}>Settings</Button>
                 </Link>
-            </BadgeButtonContainer>
+            </ActionContainer>
 
-            <BadgeButtonContainer>
+            <ActionContainer>
                 <Badge
                     style={{ backgroundColor: '#1890FF' }}
                     count={watchersData?.length ?? 0}
@@ -100,8 +100,8 @@ const Actions = ({ project }: { project: Project }) => {
                         {project?.is_watcher ? 'Watching' : 'Watch'}
                     </Button>
                 </Badge>
-            </BadgeButtonContainer>
-            <BadgeButtonContainer>
+            </ActionContainer>
+            <ActionContainer>
                 <Badge
                     style={{ backgroundColor: '#1890FF' }}
                     count={fansData?.length ?? 0}
@@ -116,7 +116,7 @@ const Actions = ({ project }: { project: Project }) => {
                         {project?.is_fan ? 'Liked' : 'Like'}
                     </Button>
                 </Badge>
-            </BadgeButtonContainer>
+            </ActionContainer>
         </>
     )
 }
