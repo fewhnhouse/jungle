@@ -65,6 +65,7 @@ const Column = ({ title, issues, index, id, hasHeader }: Props) => {
                         </Header>
                     )}
                     <IssueList
+                        hasHeader={hasHeader}
                         listId={id + ''}
                         listType="QUOTE"
                         style={{

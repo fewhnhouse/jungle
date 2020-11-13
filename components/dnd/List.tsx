@@ -30,6 +30,7 @@ export const getBackgroundColor = (
 }
 
 type WrapperProps = {
+    hasHeader?: boolean
     isDraggingOver: boolean
     isDraggingFrom: boolean
     isDropDisabled: boolean
@@ -49,11 +50,13 @@ const Wrapper = styled.div<WrapperProps>`
     opacity: ${({ isDropDisabled }) => (isDropDisabled ? 0.5 : 'inherit')};
     padding: ${({ theme }) => `${theme.spacing.mini}`};
     border: 4px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-radius: ${({ hasHeader }) => (hasHeader ? 'unset' : '4px')};
     padding-bottom: 0;
     transition: background-color 0.2s ease, opacity 0.1s ease;
     user-select: none;
     height: 100%;
-    border-radius: 4px;
 `
 
 const scrollContainerHeight = 150
@@ -123,8 +126,8 @@ type Props = {
     title?: string
     isDropDisabled?: boolean
     style?: Record<string, unknown>
-    // may not be provided - and might be null
     ignoreContainerClipping?: boolean
+    hasHeader?: boolean
 }
 
 export default function IssueList({
@@ -135,6 +138,7 @@ export default function IssueList({
     style,
     issues,
     title,
+    hasHeader,
 }: Props) {
     return (
         <Droppable
@@ -148,6 +152,7 @@ export default function IssueList({
                 dropSnapshot: DroppableStateSnapshot
             ) => (
                 <Wrapper
+                    hasHeader={hasHeader}
                     style={style}
                     isDropDisabled={isDropDisabled}
                     isDraggingOver={dropSnapshot.isDraggingOver}
