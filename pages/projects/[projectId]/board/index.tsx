@@ -174,10 +174,10 @@ export default function BoardContainer() {
                             />
                         )}
                         {groupBy === 'sprint' &&
-                            milestones.map((ms) => (
+                            milestones.map((ms, index) => (
                                 <StoryBoard
                                     key={ms.id}
-                                    hasHeader
+                                    hasHeader={index === 0}
                                     title={`${ms?.name}`}
                                     stories={
                                         ms?.user_stories.filter(
