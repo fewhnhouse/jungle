@@ -22,7 +22,6 @@ import {
     TagsOutlined,
 } from '@ant-design/icons'
 import useMedia from 'use-media'
-import { AppsOutlined } from '@material-ui/icons'
 
 const StyledFlex = styled(Flex)`
     margin-top: 20px;

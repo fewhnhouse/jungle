@@ -27,11 +27,8 @@ export default function BoardContainer() {
         { enabled: projectId }
     )
 
-    const {
-        data: milestones,
-        isLoading: isMilestonesLoading,
-    } = useQuery(
-        'milestones',
+    const { data: milestones, isLoading: isMilestonesLoading } = useQuery(
+        ['milestones', { projectId }],
         () => getMilestones({ projectId: projectId as string, closed: false }),
         { enabled: projectId }
     )

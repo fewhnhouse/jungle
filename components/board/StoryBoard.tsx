@@ -72,8 +72,8 @@ const Board = ({
         const story = stories.find(
             (story) => story.id.toString() === result.draggableId
         )
-        queryCache.setQueryData('milestones', (prevData: Milestone[]) =>
-            prevData.map((m) =>
+        queryCache.setQueryData(['milestones', { projectId }], (prevData: Milestone[]) =>
+            prevData?.map((m) =>
                 m.id === story.milestone
                     ? {
                           ...m,
@@ -90,13 +90,13 @@ const Board = ({
                           ),
                       }
                     : m
-            )
+            ) ?? []
         )
         updateUserstory(story.id, {
             status: destination.droppableId,
             version: story.version,
         }).then(() => {
-            queryCache.invalidateQueries('milestones')
+            queryCache.invalidateQueries(['milestones', { projectId }])
         })
     }
 

@@ -1,5 +1,5 @@
 import { Form, Select, Tag } from 'antd'
-import { Dispatch, SetStateAction, useEffect } from 'react'
+import { Dispatch, memo, SetStateAction, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { Milestone } from '../../taiga-api/milestones'
 import AssigneeDropdown from '../AssigneeDropdown'
@@ -34,6 +34,7 @@ const FilterBoard = ({
     milestones,
 }: Props) => {
     const today = new Date()
+
     useEffect(() => {
         const activeMilestone = milestones?.find((ms) => {
             const start = new Date(ms.estimated_start)
@@ -41,7 +42,7 @@ const FilterBoard = ({
             return start <= today && today <= end
         })
         setSprint(activeMilestone.id)
-    }, [milestones])
+    }, [])
 
     useEffect(() => {
         if (sprint !== -1 && groupBy === 'sprint') {
@@ -118,4 +119,4 @@ const FilterBoard = ({
     )
 }
 
-export default FilterBoard
+export default memo(FilterBoard)

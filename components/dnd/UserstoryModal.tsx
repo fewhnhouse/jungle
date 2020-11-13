@@ -123,8 +123,8 @@ export default function IssueModal({ id, open, onClose }: Props) {
             subject,
             version: data.version,
         })
-        queryCache.invalidateQueries('backlog')
-        queryCache.invalidateQueries('milestones')
+        queryCache.invalidateQueries(['backlog', { projectId }])
+        queryCache.invalidateQueries(['milestones', { projectId }])
     }
 
     return data ? (

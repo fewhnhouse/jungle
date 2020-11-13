@@ -73,7 +73,6 @@ const Board = ({
         const task = tasks.find(
             (task) => task.id.toString() === result.draggableId
         )
-        console.log(task)
         queryCache.setQueryData(
             [
                 'tasks',
