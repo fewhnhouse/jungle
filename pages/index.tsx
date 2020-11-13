@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 import Projects from '../components/home/Projects'
 import Activities from '../components/home/Activities'
-import useMedia from 'use-media'
 import { useState } from 'react'
 import YourWork from '../components/home/YourWork'
 import ProjectCreationModal from '../components/home/ProjectCreationModal'
@@ -46,13 +45,6 @@ const HeaderContainer = styled.div`
     width: 100%;
     justify-content: space-between;
 `
-
-const MobileButtonContainer = styled.div`
-    padding: ${({ theme }) => theme.spacing.medium};
-    padding-top: 0px;
-    padding-bottom: 80px;
-`
-
 const InnerContainer = styled.div`
     display: flex;
     flex-direction: column;
@@ -67,7 +59,6 @@ const TitleContainer = styled.div`
 `
 
 export default function Home() {
-    const isMobile = useMedia('screen and (max-width: 845px)')
     const [isModalOpen, setIsModalOpen] = useState(false)
     const toggleModal = () => {
         setIsModalOpen((open) => !open)
