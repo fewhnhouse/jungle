@@ -21,10 +21,13 @@ import {
     RobotOutlined,
     TagsOutlined,
 } from '@ant-design/icons'
+import useMedia from 'use-media'
 
 const StyledFlex = styled(Flex)`
     margin-top: 20px;
 `
+
+const AchievemntContainer = styled(Flex)``
 
 const Container = styled.div`
     &:first-child {
@@ -78,6 +81,8 @@ const Project = () => {
         }
     )
 
+    const isMobile = useMedia('(max-width: 700px)')
+
     return (
         <>
             <PageHeader>
@@ -91,7 +96,12 @@ const Project = () => {
                         />
                         <LevelDisplay />
                     </Flex>
-                    <StyledFlex>
+                    <AchievemntContainer
+                        wrap
+                        direction="row"
+                        justify={isMobile ? 'center' : 'flex-start'}
+                        align="center"
+                    >
                         <AchievementBadge
                             level={2}
                             icon={<CommentOutlined />}
@@ -120,14 +130,14 @@ const Project = () => {
                         <AchievementBadge
                             level={4}
                             icon={<NumberOutlined />}
-                            title="Estimation? This is guaranteed."
+                            title="Even the Odds"
                         />
                         <AchievementBadge
                             level={2}
                             icon={<RobotOutlined />}
                             title="Ticket Machine"
                         />
-                    </StyledFlex>
+                    </AchievemntContainer>
                     <StyledFlex justify="space-between">
                         <Flex>
                             {data?.members.map((member) => (

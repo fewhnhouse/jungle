@@ -6,7 +6,6 @@ import { StarFilled } from '@ant-design/icons'
 const BadgeShell = styled.div`
     border-radius: 8px;
     width: 100px;
-    height: 100px;
     transition: transform 0.2s ease-in-out;
     &:hover {
         transform: scale(1.1);
