@@ -29,7 +29,7 @@ export default function ProjectCreationModal({ open, toggle }: Props) {
             ...prevData,
             project,
         ])
-        push('/projects/[id]/settings', `/projects/${project.id}/settings`)
+        push(`/projects/${project.id}`)
     }
 
     const handleFormSubmit = () => {

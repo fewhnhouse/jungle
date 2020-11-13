@@ -5,22 +5,33 @@ import { getProjects } from '../../taiga-api/projects'
 import ProjectListItem from '../../components/home/ProjectListItem'
 import Flex from '../../components/Flex'
 import { Button, Skeleton } from 'antd'
+import ProjectCreationModal from '../../components/home/ProjectCreationModal'
+import { useState } from 'react'
 
 const Projects = () => {
+    const [isModalOpen, setIsModalOpen] = useState(false)
     const { data, isLoading, error } = useQuery('projects', () => {
         return getProjects()
     })
     if (error) {
         localStorage.removeItem('user')
     }
+
+    const toggleModal = () => setIsModalOpen((open) => !open)
     return (
         <>
             <PageHeader>
                 <PageTitle
                     title="Projects"
                     description="All your projects are listed here."
+                    actions={
+                        <>
+                            <Button onClick={toggleModal}>
+                                Create Project
+                            </Button>
+                        </>
+                    }
                 />
-                <Button>Create Project</Button>
             </PageHeader>
             <PageBody>
                 <Flex wrap align="center" justify="center">
@@ -55,6 +66,7 @@ const Projects = () => {
                     )}
                 </Flex>
             </PageBody>
+            <ProjectCreationModal toggle={toggleModal} open={isModalOpen} />
         </>
     )
 }

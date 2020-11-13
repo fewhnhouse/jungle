@@ -22,6 +22,7 @@ import {
     TagsOutlined,
 } from '@ant-design/icons'
 import useMedia from 'use-media'
+import { AppsOutlined } from '@material-ui/icons'
 
 const StyledFlex = styled(Flex)`
     margin-top: 20px;
@@ -39,6 +40,7 @@ const Container = styled.div`
 `
 
 const StyledButton = styled(Button)`
+    width: 130px;
     &:first-child {
         margin-left: 0px;
     }
@@ -158,10 +160,14 @@ const Project = () => {
                         </Flex>
                         <Flex>
                             <Link href={`/projects/${projectId}/board`}>
-                                <StyledButton>Board</StyledButton>
+                                <StyledButton size="large">
+                                    Board &rarr;
+                                </StyledButton>
                             </Link>
                             <Link href={`/projects/${projectId}/board`}>
-                                <StyledButton>Backlog</StyledButton>
+                                <StyledButton size="large">
+                                    Backlog &rarr;
+                                </StyledButton>
                             </Link>
                         </Flex>
                     </StyledFlex>
