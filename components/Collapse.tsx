@@ -4,7 +4,7 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 import styled from 'styled-components'
 import { useState } from 'react'
 import { Collapse } from 'react-collapse'
-import { Dropdown, Menu } from 'antd'
+import { Dropdown, Menu, Tag } from 'antd'
 
 const StoryHeader = styled.div`
     display: flex;
@@ -52,12 +52,14 @@ interface CollapseProps {
     title: string | React.ReactNode
     description?: string
     actions?: { title: string; action: () => void }[]
+    active?: boolean
 }
 export default function CustomCollapse({
     children,
     title,
     description,
     actions,
+    active,
 }: CollapseProps) {
     const [expanded, setExpanded] = useState(true)
     const toggleVisibility = () => setExpanded((expanded) => !expanded)
@@ -76,6 +78,7 @@ export default function CustomCollapse({
             <StoryHeader>
                 <InnerContainer onClick={toggleVisibility}>
                     {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                    {active && <Tag color="blue">Active</Tag>}
                     <HeaderContainer>
                         <StoryTitle>{title}</StoryTitle>
                         <Description>{description}</Description>

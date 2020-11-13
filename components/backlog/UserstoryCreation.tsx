@@ -33,7 +33,7 @@ const UserstoryCreation = () => {
             tags,
             project: projectId,
         })
-        queryCache.setQueryData('backlog', (prevData?: UserStory[]) =>
+        queryCache.setQueryData(['backlog', { projectId }], (prevData?: UserStory[]) =>
             prevData ? [...prevData, newUserstory] : [newUserstory]
         )
         handleClose()

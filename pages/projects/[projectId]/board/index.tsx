@@ -12,6 +12,7 @@ import Flex from '../../../../components/Flex'
 import { useState } from 'react'
 import { getProject } from '../../../../taiga-api/projects'
 import FilterBoard, { GroupBy } from '../../../../components/board/FilterBoard'
+import Link from 'next/link'
 
 export default function BoardContainer() {
     const router = useRouter()
@@ -219,7 +220,17 @@ export default function BoardContainer() {
                 ) : isMilestonesLoading || !projectId ? (
                     <Skeleton active />
                 ) : (
-                    <Empty description="No sprint active" />
+                    <Empty
+                        description={
+                            <>
+                                No Sprint active. Go to the{' '}
+                                <Link href={`/projects/${projectId}/backlog`}>
+                                    Backlog
+                                </Link>{' '}
+                                to create one.
+                            </>
+                        }
+                    />
                 )}
             </PageBody>
         </>

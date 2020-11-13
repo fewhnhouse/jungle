@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { queryCache } from 'react-query'
 import { createMilestone, Milestone } from '../../taiga-api/milestones'
 import { Button, DatePicker, Form, Input, Modal } from 'antd'
+import moment from 'moment'
 
 const SprintCreation = () => {
     const [show, setShow] = useState(false)
@@ -21,8 +22,12 @@ const SprintCreation = () => {
             estimated_finish: endDate._d.toISOString().split('T')[0],
             project: projectId,
         })
-        queryCache.setQueryData('milestones', (oldMilestones?: Milestone[]) =>
-            oldMilestones ? [...oldMilestones, newMilestone] : [newMilestone]
+        queryCache.setQueryData(
+            ['milestones', { projectId }],
+            (oldMilestones?: Milestone[]) =>
+                oldMilestones
+                    ? [...oldMilestones, newMilestone]
+                    : [newMilestone]
         )
         handleClose()
     }
@@ -39,7 +44,15 @@ const SprintCreation = () => {
                 onOk={handleFormSubmit}
                 onCancel={handleClose}
             >
-                <Form layout="vertical" form={form} onFinish={handleSubmit}>
+                <Form
+                    layout="vertical"
+                    form={form}
+                    initialValues={{
+                        date: [moment(), moment().add(14, 'days')],
+                        name: ''
+                    }}
+                    onFinish={handleSubmit}
+                >
                     <Form.Item required name="name" label="Name">
                         <Input />
                     </Form.Item>

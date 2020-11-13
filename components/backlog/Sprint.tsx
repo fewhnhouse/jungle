@@ -9,8 +9,10 @@ const Sprint = ({ sprint }: { sprint: Milestone }) => {
     const { projectId } = useRouter().query
 
     const handleRemove = async () => {
-        queryCache.setQueryData('milestones', (oldMilestones: Milestone[]) =>
-            oldMilestones.filter((m) => m.id !== sprint.id)
+        queryCache.setQueryData(
+            ['milestones', { projectId }],
+            (oldMilestones: Milestone[]) =>
+                oldMilestones.filter((m) => m.id !== sprint.id)
         )
         await deleteMilestone(sprint.id)
     }
@@ -22,16 +24,18 @@ const Sprint = ({ sprint }: { sprint: Milestone }) => {
             return tasks.filter((t) => t.user_story === null)
         }
     )
+
+    const startDate = new Date(sprint.estimated_start)
+    const endDate = new Date(sprint.estimated_finish)
+    const today = new Date()
+
     return (
         <CustomCollapse
             actions={[{ title: 'Remove Sprint', action: handleRemove }]}
             key={sprint.id}
             title={sprint.name}
-            description={`${new Date(
-                sprint.estimated_start
-            ).toLocaleDateString()}-${new Date(
-                sprint.estimated_finish
-            ).toLocaleDateString()}`}
+            description={`${startDate.toLocaleDateString()}-${endDate.toLocaleDateString()}`}
+            active={startDate <= today && today <= endDate}
         >
             <IssueList
                 style={{ minHeight: 100 }}
