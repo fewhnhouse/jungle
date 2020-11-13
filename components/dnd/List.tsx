@@ -21,12 +21,12 @@ export const getBackgroundColor = (
     theme: Theme
 ): string => {
     if (isDraggingOver) {
-        return theme.colors.darkgrey.normal
+        return theme.colors.grey.normal
     }
     if (isDraggingFrom) {
-        return theme.colors.darkgrey.normal
+        return theme.colors.grey.normal
     }
-    return theme.colors.darkgrey.light
+    return theme.colors.grey.light
 }
 
 type WrapperProps = {
@@ -88,6 +88,7 @@ const InnerIssueList = React.memo(({ issues }: IssueListProps) => {
                     ) =>
                         (issue as Task).user_story !== undefined ? (
                             <TaskItem
+                                showStatus={!issue.milestone}
                                 key={issue.id}
                                 issue={issue as Task}
                                 isDragging={dragSnapshot.isDragging}
@@ -98,6 +99,7 @@ const InnerIssueList = React.memo(({ issues }: IssueListProps) => {
                             />
                         ) : (
                             <UserstoryItem
+                                showStatus={!issue.milestone}
                                 key={issue.id}
                                 issue={issue as UserStory}
                                 isDragging={dragSnapshot.isDragging}
@@ -113,24 +115,6 @@ const InnerIssueList = React.memo(({ issues }: IssueListProps) => {
         </>
     )
 })
-
-type InnerListProps = {
-    dropProvided: DroppableProvided
-    issues: (Task | UserStory)[]
-    title?: string
-}
-
-function InnerListContainer({ issues, title, dropProvided }: InnerListProps) {
-    return (
-        <div>
-            {title ? <Title>{title}</Title> : null}
-            <DropZone ref={dropProvided.innerRef}>
-                <InnerIssueList issues={issues} />
-                {dropProvided.placeholder}
-            </DropZone>
-        </div>
-    )
-}
 
 type Props = {
     listId?: string
@@ -170,11 +154,13 @@ export default function IssueList({
                     isDraggingFrom={!!dropSnapshot.draggingFromThisWith}
                     {...dropProvided.droppableProps}
                 >
-                    <InnerListContainer
-                        issues={issues}
-                        title={title}
-                        dropProvided={dropProvided}
-                    />
+                    <div>
+                        {title ? <Title>{title}</Title> : null}
+                        <DropZone ref={dropProvided.innerRef}>
+                            <InnerIssueList issues={issues} />
+                            {dropProvided.placeholder}
+                        </DropZone>
+                    </div>
                 </Wrapper>
             )}
         </Droppable>

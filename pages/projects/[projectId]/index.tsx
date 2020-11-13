@@ -164,7 +164,7 @@ const Project = () => {
                                     Board &rarr;
                                 </StyledButton>
                             </Link>
-                            <Link href={`/projects/${projectId}/board`}>
+                            <Link href={`/projects/${projectId}/backlog`}>
                                 <StyledButton size="large">
                                     Backlog &rarr;
                                 </StyledButton>

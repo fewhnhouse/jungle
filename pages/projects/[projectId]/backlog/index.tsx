@@ -221,7 +221,9 @@ export default function Backlog() {
                                     <UserstoryCreation />
                                 </TitleContainer>
                                 <ListContainer>
-                                    {backlogData?.length ? (
+                                    {isBacklogLoading ? (
+                                        <Skeleton active />
+                                    ) : (
                                         <>
                                             <IssueList
                                                 listId="backlog"
@@ -229,10 +231,6 @@ export default function Backlog() {
                                             />
                                             <IssueCreation milestone={null} />
                                         </>
-                                    ) : isBacklogLoading ? (
-                                        <Skeleton active />
-                                    ) : (
-                                        <Empty description="The backlog is empty. Create a userstory to get started!" />
                                     )}
                                 </ListContainer>
                             </Container>

@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import type { DraggableProvided } from 'react-beautiful-dnd'
 import IssueModal from './UserstoryModal'
 import { UserStory } from '../../taiga-api/userstories'
-import { Avatar, Tag } from 'antd'
+import { Avatar, Tag, Tooltip } from 'antd'
 import { BookOutlined } from '@ant-design/icons'
 import { getNameInitials } from '../../util/getNameInitials'
 
@@ -71,6 +71,7 @@ const Container = styled.div<IContainerProps>`
 
 const Content = styled.div`
     /* flex child */
+    max-width: calc(100% - 20px);
     flex-grow: 1;
     /*
     Needed to wrap text in ie11
@@ -86,6 +87,9 @@ const Content = styled.div`
 
 const BlockQuote = styled.p`
     margin: 0px 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 `
 
 const Footer = styled.div`
@@ -115,6 +119,7 @@ interface IssueItemProps {
     isGroupedOver?: boolean
     style?: Record<string, unknown>
     index?: number
+    showStatus?: boolean
 }
 
 // Previously this extended React.Component
@@ -126,6 +131,7 @@ interface IssueItemProps {
 // will be using PureComponent
 function IssueItem({
     issue,
+    showStatus,
     isDragging,
     isGroupedOver,
     provided,
@@ -160,17 +166,32 @@ function IssueItem({
                 <Content>
                     <BlockQuote>{issue.subject}</BlockQuote>
                     <Footer>
-                        {points && <Tag>{points}</Tag>}
-                        {issue.assigned_to && (
-                            <Avatar
-                                size="small"
-                                src={issue.assigned_to_extra_info?.photo}
+                        {showStatus && issue.status && (
+                            <Tooltip
+                                title={`Status: ${issue.status_extra_info?.name}`}
                             >
-                                {getNameInitials(
-                                    issue.assigned_to_extra_info
-                                        ?.full_name_display
-                                )}
-                            </Avatar>
+                                <Tag>{issue.status_extra_info?.name}</Tag>
+                            </Tooltip>
+                        )}
+                        {points && (
+                            <Tooltip title={`Story Points: ${points}`}>
+                                <Tag>{points}</Tag>
+                            </Tooltip>
+                        )}
+                        {issue.assigned_to && (
+                            <Tooltip
+                                title={`Assigned to ${issue.assigned_to_extra_info?.full_name_display}`}
+                            >
+                                <Avatar
+                                    size="small"
+                                    src={issue.assigned_to_extra_info?.photo}
+                                >
+                                    {getNameInitials(
+                                        issue.assigned_to_extra_info
+                                            ?.full_name_display
+                                    )}
+                                </Avatar>
+                            </Tooltip>
                         )}
                     </Footer>
                 </Content>

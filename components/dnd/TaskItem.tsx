@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import type { DraggableProvided } from 'react-beautiful-dnd'
 import IssueModal from './TaskModal'
 import { Task } from '../../taiga-api/tasks'
-import { Avatar } from 'antd'
+import { Avatar, Tag, Tooltip } from 'antd'
 import { ProfileOutlined } from '@ant-design/icons'
 import { getNameInitials } from '../../util/getNameInitials'
 
@@ -115,6 +115,7 @@ interface IssueItemProps {
     isGroupedOver?: boolean
     style?: Record<string, unknown>
     index?: number
+    showStatus?: boolean
 }
 
 // Previously this extended React.Component
@@ -131,6 +132,7 @@ function IssueItem({
     provided,
     style,
     index,
+    showStatus,
 }: IssueItemProps) {
     const [expanded, setExpanded] = useState(false)
 
@@ -156,16 +158,27 @@ function IssueItem({
                 <Content>
                     <BlockQuote>{issue.subject}</BlockQuote>
                     <TagContainer>
-                        {issue.assigned_to && (
-                            <Avatar
-                                size="small"
-                                src={issue.assigned_to_extra_info.photo}
+                        {showStatus && issue.status && (
+                            <Tooltip
+                                title={`Status: ${issue.status_extra_info?.name}`}
                             >
-                                {getNameInitials(
-                                    issue.assigned_to_extra_info
-                                        .full_name_display
-                                )}
-                            </Avatar>
+                                <Tag>{issue.status_extra_info?.name}</Tag>
+                            </Tooltip>
+                        )}
+                        {issue.assigned_to && (
+                            <Tooltip
+                                title={`Assigned to ${issue.assigned_to_extra_info?.full_name_display}`}
+                            >
+                                <Avatar
+                                    size="small"
+                                    src={issue.assigned_to_extra_info.photo}
+                                >
+                                    {getNameInitials(
+                                        issue.assigned_to_extra_info
+                                            .full_name_display
+                                    )}
+                                </Avatar>
+                            </Tooltip>
                         )}
                     </TagContainer>
                 </Content>
