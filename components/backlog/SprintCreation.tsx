@@ -80,18 +80,37 @@ const SprintCreation = () => {
                         }`,
                     }}
                 >
-                    <Form.Item required name="name" label="Name">
+                    <Form.Item
+                        rules={[
+                            () => ({
+                                validator(rule, value: string) {
+                                    const isConflictingName = milestones?.some(
+                                        (ms) => ms.name === value
+                                    )
+                                    if (isConflictingName) {
+                                        return Promise.reject(
+                                            'Please choose a unique name.'
+                                        )
+                                    } else {
+                                        return Promise.resolve()
+                                    }
+                                },
+                            }),
+                        ]}
+                        required
+                        name="name"
+                        label="Name"
+                    >
                         <Input />
                     </Form.Item>
                     <Form.Item
                         required
                         rules={[
-                            ({ getFieldValue }) => ({
+                            () => ({
                                 validator(
                                     rule,
                                     value: [moment.Moment, moment.Moment]
                                 ) {
-                                    console.log(value)
                                     const startDate = value[0]
                                     const endDate = value[1]
                                     const isConflictingDate = milestones
