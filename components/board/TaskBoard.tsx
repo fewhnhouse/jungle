@@ -2,7 +2,6 @@ import Column from '../dnd/Column'
 import {
     DragDropContext,
     DropResult,
-    DraggableLocation,
     DroppableProvided,
     Droppable,
 } from 'react-beautiful-dnd'

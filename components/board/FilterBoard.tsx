@@ -1,5 +1,5 @@
 import { Form, Select, Tag } from 'antd'
-import { Dispatch, memo, SetStateAction, useEffect, useRef } from 'react'
+import { Dispatch, memo, SetStateAction, useEffect } from 'react'
 import styled from 'styled-components'
 import { Milestone } from '../../taiga-api/milestones'
 import AssigneeDropdown from '../AssigneeDropdown'

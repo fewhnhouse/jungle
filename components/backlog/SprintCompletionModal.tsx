@@ -3,7 +3,6 @@ import { useRouter } from 'next/router'
 import { queryCache, useQuery } from 'react-query'
 import { Button, Divider, Form, Modal, Select, Typography } from 'antd'
 import Image from 'next/image'
-import { getProject } from '../../taiga-api/projects'
 import Flex from '../Flex'
 import styled from 'styled-components'
 import { getTasks, updateTask } from '../../taiga-api/tasks'
@@ -26,12 +25,6 @@ const SprintCompletionModal = ({ milestoneId }: Props) => {
     const [loading, setLoading] = useState(false)
     const [form] = Form.useForm()
     const { projectId } = useRouter().query
-
-    const { data: project } = useQuery(
-        ['project', { projectId }],
-        (key, { projectId }) => getProject(projectId as string),
-        { enabled: projectId }
-    )
 
     const { data: milestones } = useQuery(
         ['milestones', { projectId }],
