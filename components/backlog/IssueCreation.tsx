@@ -44,10 +44,11 @@ const IssueCreation = ({ milestone }: { milestone: number | null }) => {
             await createUserstory({ subject, milestone, project: projectId })
         }
         if (!milestone) {
-            queryCache.refetchQueries(['backlog', { projectId }])
+            queryCache.invalidateQueries(['backlog', { projectId }])
         } else {
-            queryCache.refetchQueries(['milestones', { projectId }])
+            queryCache.invalidateQueries(['milestones', { projectId }])
         }
+        queryCache.invalidateQueries(['tasks', { projectId, milestone }])
     }
 
     return (

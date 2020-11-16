@@ -54,14 +54,11 @@ const Board = ({
         }
     }
 
-    const onDragEnd = (result: DropResult) => {
+    const onDragEnd = ({ source, destination, draggableId }: DropResult) => {
         // dropped nowhere
-        if (!result.destination) {
+        if (!destination) {
             return
         }
-
-        const source: DraggableLocation = result.source
-        const destination: DraggableLocation = result.destination
 
         // did not move anywhere - can bail early
         if (
@@ -70,8 +67,11 @@ const Board = ({
         ) {
             return
         }
+
+        const actualDraggableId = draggableId.split('-')[1]
+
         const task = tasks.find(
-            (task) => task.id.toString() === result.draggableId
+            (task) => task.id.toString() === actualDraggableId
         )
         queryCache.setQueryData(
             [
@@ -106,7 +106,7 @@ const Board = ({
     }
 
     return (
-        <CustomCollapse title={title}>
+        <CustomCollapse title={title} status="default">
             {tasks.length ? (
                 <BoardContainer>
                     <DragDropContext

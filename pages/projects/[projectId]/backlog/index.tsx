@@ -101,7 +101,7 @@ export default function Backlog() {
         }
     }
 
-    function onDragEnd({ source, destination, draggableId }: DropResult) {
+    async function onDragEnd({ source, destination, draggableId }: DropResult) {
         // dropped outside the list
         if (!destination) {
             return
@@ -109,13 +109,19 @@ export default function Backlog() {
 
         const isStory = draggableId.includes('story')
         const actualDraggableId = draggableId.split('-')[1]
-        console.log(destination, draggableId, source)
+
         if (
             source.droppableId === destination.droppableId &&
             destination.index === source.index
         ) {
             return
         }
+
+        const tasks = await getTasks({
+            projectId: projectId.toString(),
+            milestone:
+                source.droppableId === 'backlog' ? null : source.droppableId,
+        })
 
         const currentSprint = sprintsData.find(
             (sprint) => sprint.id.toString() === source.droppableId
@@ -125,9 +131,9 @@ export default function Backlog() {
             ? backlogData
             : isStory
             ? currentSprint.user_stories
-            : []
-        ).find((story) => story.id.toString() === actualDraggableId)
-
+            : tasks
+        ).find((issue) => issue.id.toString() === actualDraggableId)
+        console.log(currentIssue)
         queryCache.setQueryData(
             ['backlog', { projectId }],
             (prevData: (UserStory | Task)[]) => {
@@ -191,20 +197,30 @@ export default function Backlog() {
             destination.droppableId === 'backlog'
                 ? null
                 : parseInt(destination.droppableId, 10)
-        const { id: issueId, version } = currentIssue
         const order = destination.index
+        const { id: issueId, version } = currentIssue
         if (isStory) {
-            updateUserstory(issueId, {
+            await updateUserstory(issueId, {
                 milestone,
                 sprint_order: order,
                 version,
-            }).then(() => {
-                queryCache.invalidateQueries(['backlog', { projectId }])
-                queryCache.invalidateQueries(['milestones', { projectId }])
             })
         } else {
-            // TODO
-            // updateTask(parseInt(actualDraggableId, 10), { milestone })
+            await updateTask(issueId, { milestone, version })
+        }
+        queryCache.invalidateQueries(['backlog', { projectId }])
+        if (isStory) {
+            queryCache.invalidateQueries(['milestones', { projectId }])
+        } else {
+            console.log(milestone, source.droppableId)
+            queryCache.invalidateQueries(['tasks', { projectId, milestone }])
+            queryCache.invalidateQueries([
+                'tasks',
+                {
+                    projectId,
+                    milestone: parseInt(source.droppableId, 10),
+                },
+            ])
         }
     }
 

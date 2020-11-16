@@ -53,14 +53,11 @@ const Board = ({
         }
     }
 
-    const onDragEnd = (result: DropResult) => {
+    const onDragEnd = ({ source, destination, draggableId }: DropResult) => {
         // dropped nowhere
-        if (!result.destination) {
+        if (!destination) {
             return
         }
-
-        const source: DraggableLocation = result.source
-        const destination: DraggableLocation = result.destination
 
         // did not move anywhere - can bail early
         if (
@@ -69,28 +66,33 @@ const Board = ({
         ) {
             return
         }
+
+        const actualDraggableId = draggableId.split('-')[1]
+
         const story = stories.find(
-            (story) => story.id.toString() === result.draggableId
+            (story) => story.id.toString() === actualDraggableId
         )
-        queryCache.setQueryData(['milestones', { projectId }], (prevData: Milestone[]) =>
-            prevData?.map((m) =>
-                m.id === story.milestone
-                    ? {
-                          ...m,
-                          user_stories: m.user_stories.map((s) =>
-                              s.id === story.id
-                                  ? {
-                                        ...story,
-                                        status: parseInt(
-                                            destination.droppableId,
-                                            10
-                                        ),
-                                    }
-                                  : s
-                          ),
-                      }
-                    : m
-            ) ?? []
+        queryCache.setQueryData(
+            ['milestones', { projectId }],
+            (prevData: Milestone[]) =>
+                prevData?.map((m) =>
+                    m.id === story.milestone
+                        ? {
+                              ...m,
+                              user_stories: m.user_stories.map((s) =>
+                                  s.id === story.id
+                                      ? {
+                                            ...story,
+                                            status: parseInt(
+                                                destination.droppableId,
+                                                10
+                                            ),
+                                        }
+                                      : s
+                              ),
+                          }
+                        : m
+                ) ?? []
         )
         updateUserstory(story.id, {
             status: destination.droppableId,

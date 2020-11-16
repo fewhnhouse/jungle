@@ -83,7 +83,7 @@ const InnerIssueList = React.memo(({ issues }: IssueListProps) => {
                 const isTask = (issue as Task).user_story !== undefined
                 return (
                     <Draggable
-                        key={issue.id}
+                        key={`${isTask ? 'task' : 'story'}-${issue.id}`}
                         draggableId={`${isTask ? 'task' : 'story'}-${issue.id}`}
                         index={index}
                     >
@@ -94,7 +94,7 @@ const InnerIssueList = React.memo(({ issues }: IssueListProps) => {
                             isTask ? (
                                 <TaskItem
                                     showStatus={!issue.milestone}
-                                    key={issue.id}
+                                    key={`task-${issue.id}`}
                                     issue={issue as Task}
                                     isDragging={dragSnapshot.isDragging}
                                     isGroupedOver={Boolean(
@@ -105,7 +105,7 @@ const InnerIssueList = React.memo(({ issues }: IssueListProps) => {
                             ) : (
                                 <UserstoryItem
                                     showStatus={!issue.milestone}
-                                    key={issue.id}
+                                    key={`story-${issue.id}`}
                                     issue={issue as UserStory}
                                     isDragging={dragSnapshot.isDragging}
                                     isGroupedOver={Boolean(
