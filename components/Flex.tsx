@@ -18,40 +18,63 @@ export interface FlexProps {
         | 'space-around'
         | 'space-between'
     fluid?: boolean
-    style?: React.CSSProperties
     wrap?: boolean
-    children?: React.ReactNode | React.ReactNode[]
+    style?: React.CSSProperties
     className?: string
+    children?: React.ReactNode | React.ReactNode[]
 }
 
-const StyledFlex = styled.div<FlexProps>`
+interface OwnFlexProps {
+    $direction?: 'column' | 'row'
+    $justify?:
+        | 'center'
+        | 'flex-start'
+        | 'flex-end'
+        | 'space-evenly'
+        | 'space-around'
+        | 'space-between'
+    $align?:
+        | 'center'
+        | 'flex-start'
+        | 'flex-end'
+        | 'space-evenly'
+        | 'space-around'
+        | 'space-between'
+    $fluid?: boolean
+    $wrap?: boolean
+    style?: React.CSSProperties
+    className?: string
+    children?: React.ReactNode | React.ReactNode[]
+}
+
+const StyledFlex = styled.div<OwnFlexProps>`
     display: flex;
-    width: ${({ fluid }) => (fluid ? '100%' : '')};
-    height: ${({ fluid }) => (fluid ? '100%' : '')};
-    flex-direction: ${({ direction }) => direction || 'row'};
-    align-items: ${({ align }) => align || 'flex-start'};
-    justify-content: ${({ justify }) => justify || 'flex-start'};
-    flex-wrap: ${({ wrap }) => (wrap ? 'wrap' : '')};
+    width: ${({ $fluid }) => ($fluid ? '100%' : '')};
+    height: ${({ $fluid }) => ($fluid ? '100%' : '')};
+    flex-direction: ${({ $direction }) => $direction || 'row'};
+    align-items: ${({ $align }) => $align || 'flex-start'};
+    justify-content: ${({ $justify }) => $justify || 'flex-start'};
+    flex-wrap: ${({ $wrap }) => ($wrap ? 'wrap' : '')};
 `
 
 const Flex = ({
     wrap,
     direction,
     justify,
-    children,
     fluid,
-    style,
     align,
+    children,
     className,
+    style,
 }: FlexProps) => (
     <StyledFlex
+        $align={align}
+        $wrap={wrap}
+        $direction={direction}
+        $justify={justify}
+        $fluid={fluid}
         className={className}
-        align={align}
-        wrap={wrap}
-        direction={direction}
-        justify={justify}
         style={style}
-        fluid={fluid}
     >
         {children}
     </StyledFlex>
