@@ -61,7 +61,17 @@ export default function ProjectCreationModal({ open, toggle }: Props) {
                 >
                     <Input />
                 </Form.Item>
-                <Form.Item name="description" label="Description">
+                <Form.Item
+                    required
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please add a Description!',
+                        },
+                    ]}
+                    name="description"
+                    label="Description"
+                >
                     <Input.TextArea />
                 </Form.Item>
                 <Form.Item label="Visibility" name="visibility">

@@ -33,6 +33,9 @@ export default function Profile() {
                 <Menu.Item>
                     <Link href={`/users/${data?.id}/settings`}>Settings</Link>
                 </Menu.Item>
+                <Menu.Item onClick={() => localStorage.clear()}>
+                    <Link href={`/login`}>Logout</Link>
+                </Menu.Item>
             </Menu.ItemGroup>
         </Menu>
     )
