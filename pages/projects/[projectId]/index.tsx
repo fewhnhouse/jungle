@@ -90,6 +90,13 @@ const Project = () => {
                 <>
                     <Flex direction="column" align="flex-start">
                         <PageTitle
+                            breadcrumbs={[
+                                { href: `/projects`, label: 'Projects' },
+                                {
+                                    href: `/projects/${projectId}`,
+                                    label: data?.name,
+                                },
+                            ]}
                             avatarUrl={data?.logo_big_url ?? '/bmo.png'}
                             title={data?.name}
                             description={data?.description}

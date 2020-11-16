@@ -1,7 +1,5 @@
 import styled from 'styled-components'
-import useMedia from 'use-media'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import {
     EyeFilled,
     EyeOutlined,
@@ -11,9 +9,8 @@ import {
     SettingOutlined,
     UnlockOutlined,
 } from '@ant-design/icons'
-import { Avatar, Button, Card, Skeleton, Tag, Tooltip } from 'antd'
-import { getUser, User } from '../../taiga-api/users'
-import { useEffect, useState } from 'react'
+import { Avatar, Button, Card, Skeleton, Tooltip } from 'antd'
+import { getUser } from '../../taiga-api/users'
 import { getNameInitials } from '../../util/getNameInitials'
 import Flex from '../Flex'
 import { useQuery } from 'react-query'
@@ -34,12 +31,6 @@ const Body = styled.div`
     padding: 20px;
 `
 
-const StyledTag = styled(Tag)`
-    svg {
-        margin-right: 5px;
-    }
-`
-
 const StyledFooter = styled.div`
     padding: 10px 20px;
     border-top: 1px solid #e5e5ea;
@@ -55,8 +46,13 @@ const StyledImage = styled.img`
     margin: 0px ${({ theme }) => `${theme.spacing.mini}`};
 `
 
-const ProjectName = styled.h2`
+const ProjectName = styled.a`
     margin: 0px;
+    color: #333;
+    &:hover {
+        color: #555;
+    }
+    font-size: 21px;
     cursor: pointer;
     &:hover {
         text-decoration: underline;
@@ -155,10 +151,6 @@ export default function ProjectListItem({
     isFan,
     isWatcher,
 }: Props) {
-    const isMobile = useMedia({ maxWidth: '400px' })
-    const { push } = useRouter()
-    const handleSettingsClick = () => push(`/projects/${id}/settings`)
-
     const { data: actualMembers, isLoading } = useQuery(
         ['actualMembers', members],
         (key, ...members) =>
@@ -168,17 +160,16 @@ export default function ProjectListItem({
     return (
         <StyledCard bordered bodyStyle={{ padding: 0 }}>
             <Body>
-                <SettingsButton
-                    icon={<SettingOutlined />}
-                    onClick={handleSettingsClick}
-                />
+                <Link href={`/projects/${id}/settings`} passHref>
+                    <SettingsButton icon={<SettingOutlined />} />
+                </Link>
                 <ItemContainer>
                     <InfoContainer>
                         <StyledImage src={avatar ?? 'bmo.png'} />
                         <TextContainer>
                             <Flex align="center">
-                                <Link href={`/projects/${id}`}>
-                                    <ProjectName>{name} </ProjectName>
+                                <Link href={`/projects/${id}`} passHref>
+                                    <ProjectName>{name}</ProjectName>
                                 </Link>
                                 <Tooltip
                                     title={`This project is ${
@@ -216,7 +207,11 @@ export default function ProjectListItem({
                     <MembersContainer>
                         {isLoading && <Skeleton.Avatar active />}
                         {actualMembers?.map((member) => (
-                            <Link href={`/users/${member.id}`} key={member.id}>
+                            <Link
+                                passHref
+                                href={`/users/${member.id}`}
+                                key={member.id}
+                            >
                                 <StyledAvatar src={member.photo}>
                                     {getNameInitials(member.full_name)}
                                 </StyledAvatar>
@@ -227,10 +222,10 @@ export default function ProjectListItem({
             </Body>
 
             <StyledFooter>
-                <Link href={`/projects/${id}/backlog`}>
+                <Link passHref href={`/projects/${id}/backlog`}>
                     <StyledButton id="dashboard">Backlog &rarr;</StyledButton>
                 </Link>
-                <Link href={`/projects/${id}/board`}>
+                <Link passHref href={`/projects/${id}/board`}>
                     <StyledButton id="board">Board &rarr;</StyledButton>
                 </Link>
             </StyledFooter>

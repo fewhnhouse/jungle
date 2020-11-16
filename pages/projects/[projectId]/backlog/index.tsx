@@ -17,6 +17,7 @@ import IssueList from '../../../../components/dnd/List'
 import IssueCreation from '../../../../components/backlog/IssueCreation'
 import { getTasks } from '../../../../taiga-api/tasks'
 import { Empty, Skeleton } from 'antd'
+import { getProject } from '../../../../taiga-api/projects'
 
 const IssueContainer = styled.div`
     display: flex;
@@ -56,6 +57,11 @@ const Title = styled.h2`
 
 export default function Backlog() {
     const { projectId } = useRouter().query
+    const { data: project } = useQuery(
+        ['project', { projectId }],
+        (key, { projectId }) => getProject(projectId as string),
+        { enabled: projectId }
+    )
 
     const { data: backlogData = [], isLoading: isBacklogLoading } = useQuery(
         ['backlog', { projectId }],
@@ -181,6 +187,14 @@ export default function Backlog() {
         <>
             <PageHeader>
                 <PageTitle
+                    breadcrumbs={[
+                        { href: `/projects`, label: 'Projects' },
+                        { href: `/projects/${projectId}`, label: project?.name },
+                        {
+                            href: `/projects/${projectId}/backlog`,
+                            label: 'Backlog',
+                        },
+                    ]}
                     title="Backlog"
                     description="Adjust your backlog and your current sprints"
                 />

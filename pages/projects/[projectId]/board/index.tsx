@@ -9,7 +9,6 @@ import TaskBoard from '../../../../components/board/TaskBoard'
 import StoryBoard from '../../../../components/board/StoryBoard'
 import { Empty, Skeleton } from 'antd'
 import Flex from '../../../../components/Flex'
-import { useState } from 'react'
 import { getProject } from '../../../../taiga-api/projects'
 import FilterBoard, { GroupBy } from '../../../../components/board/FilterBoard'
 import Link from 'next/link'
@@ -25,7 +24,7 @@ export default function BoardContainer() {
     const [assignee, setAssignee] = useQueryState<number>('assignee')
     const { projectId } = router.query
 
-    const { data: project, isLoading: isProjectLoading } = useQuery(
+    const { data: project, isLoading } = useQuery(
         ['project', { projectId }],
         (key, { projectId }) => getProject(projectId as string),
         { enabled: projectId }
@@ -128,7 +127,17 @@ export default function BoardContainer() {
     return (
         <>
             <PageHeader>
-                <PageTitle title="Board" />
+                <PageTitle
+                    breadcrumbs={[
+                        { href: `/projects`, label: 'Projects' },
+                        { href: `/projects/${projectId}`, label: project?.name },
+                        {
+                            href: `/projects/${projectId}/board`,
+                            label: 'Board',
+                        },
+                    ]}
+                    title="Board"
+                />
                 <Flex>
                     {!!milestones?.length && (
                         <FilterBoard
