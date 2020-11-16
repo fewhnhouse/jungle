@@ -104,7 +104,7 @@ const Board = ({
 
     return stories.length ? (
         <>
-            <CustomCollapse title={title}>
+            <CustomCollapse status="default" title={title}>
                 <BoardContainer>
                     <DragDropContext
                         onDragStart={onDragStart}
