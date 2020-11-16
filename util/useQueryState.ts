@@ -2,7 +2,7 @@ import { useRouter } from 'next/router'
 import { useCallback } from 'react'
 
 function useQueryState<T>(key: string, initialValue?: T) {
-    const { query, push, pathname } = useRouter()
+    const { query, replace, pathname } = useRouter()
 
     const storedString = query[key]
     const storedValue = storedString
@@ -15,7 +15,7 @@ function useQueryState<T>(key: string, initialValue?: T) {
                 value instanceof Function ? value(storedValue) : value
             const stringValue = JSON.stringify(valueToStore)
             // setState(valueToStore)
-            push({
+            replace({
                 pathname,
                 query: { ...query, [key]: stringValue },
             })
