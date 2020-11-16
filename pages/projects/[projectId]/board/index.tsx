@@ -13,12 +13,16 @@ import { useState } from 'react'
 import { getProject } from '../../../../taiga-api/projects'
 import FilterBoard, { GroupBy } from '../../../../components/board/FilterBoard'
 import Link from 'next/link'
+import useQueryState from '../../../../util/useQueryState'
 
 export default function BoardContainer() {
     const router = useRouter()
-    const [groupBy, setGroupBy] = useState<GroupBy>('none')
-    const [selectedSprint, setSelectedSprint] = useState<number>(-1)
-    const [assignee, setAssignee] = useState<number>()
+    const [groupBy, setGroupBy] = useQueryState<GroupBy>('groupBy', 'none')
+    const [selectedSprint, setSelectedSprint] = useQueryState<number>(
+        'sprint',
+        -1
+    )
+    const [assignee, setAssignee] = useQueryState<number>('assignee')
     const { projectId } = router.query
 
     const { data: project, isLoading: isProjectLoading } = useQuery(
