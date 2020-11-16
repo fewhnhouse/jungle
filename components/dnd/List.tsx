@@ -79,42 +79,45 @@ type IssueListProps = {
 const InnerIssueList = React.memo(({ issues }: IssueListProps) => {
     return (
         <>
-            {issues.map((issue, index: number) => (
-                <Draggable
-                    key={issue.id}
-                    draggableId={issue.id.toString()}
-                    index={index}
-                >
-                    {(
-                        dragProvided: DraggableProvided,
-                        dragSnapshot: DraggableStateSnapshot
-                    ) =>
-                        (issue as Task).user_story !== undefined ? (
-                            <TaskItem
-                                showStatus={!issue.milestone}
-                                key={issue.id}
-                                issue={issue as Task}
-                                isDragging={dragSnapshot.isDragging}
-                                isGroupedOver={Boolean(
-                                    dragSnapshot.combineTargetFor
-                                )}
-                                provided={dragProvided}
-                            />
-                        ) : (
-                            <UserstoryItem
-                                showStatus={!issue.milestone}
-                                key={issue.id}
-                                issue={issue as UserStory}
-                                isDragging={dragSnapshot.isDragging}
-                                isGroupedOver={Boolean(
-                                    dragSnapshot.combineTargetFor
-                                )}
-                                provided={dragProvided}
-                            />
-                        )
-                    }
-                </Draggable>
-            ))}
+            {issues.map((issue, index: number) => {
+                const isTask = (issue as Task).user_story !== undefined
+                return (
+                    <Draggable
+                        key={issue.id}
+                        draggableId={`${isTask ? 'task' : 'story'}-${issue.id}`}
+                        index={index}
+                    >
+                        {(
+                            dragProvided: DraggableProvided,
+                            dragSnapshot: DraggableStateSnapshot
+                        ) =>
+                            isTask ? (
+                                <TaskItem
+                                    showStatus={!issue.milestone}
+                                    key={issue.id}
+                                    issue={issue as Task}
+                                    isDragging={dragSnapshot.isDragging}
+                                    isGroupedOver={Boolean(
+                                        dragSnapshot.combineTargetFor
+                                    )}
+                                    provided={dragProvided}
+                                />
+                            ) : (
+                                <UserstoryItem
+                                    showStatus={!issue.milestone}
+                                    key={issue.id}
+                                    issue={issue as UserStory}
+                                    isDragging={dragSnapshot.isDragging}
+                                    isGroupedOver={Boolean(
+                                        dragSnapshot.combineTargetFor
+                                    )}
+                                    provided={dragProvided}
+                                />
+                            )
+                        }
+                    </Draggable>
+                )
+            })}
         </>
     )
 })

@@ -1,10 +1,6 @@
 import CustomCollapse from '../Collapse'
 import { queryCache, useQuery } from 'react-query'
-import {
-    deleteMilestone,
-    Milestone,
-    updateMilestone,
-} from '../../taiga-api/milestones'
+import { deleteMilestone, Milestone } from '../../taiga-api/milestones'
 import IssueList from '../dnd/List'
 import { getTasks } from '../../taiga-api/tasks'
 import { useRouter } from 'next/router'
@@ -33,10 +29,6 @@ const Sprint = ({ sprint }: { sprint: Milestone }) => {
 
     const handleNavigation = () =>
         push(`/projects/${projectId}/board?sprint=${sprint.id}`)
-
-    const handleComplete = () => {
-        updateMilestone(sprint.id, { closed: true })
-    }
 
     const { data: tasks = [] } = useQuery(
         ['tasks', { projectId, milestone: sprint.id }],

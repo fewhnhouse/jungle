@@ -15,7 +15,7 @@ import { PageBody, PageHeader } from '../../../../components/Layout'
 import PageTitle from '../../../../components/PageTitle'
 import IssueList from '../../../../components/dnd/List'
 import IssueCreation from '../../../../components/backlog/IssueCreation'
-import { getTasks } from '../../../../taiga-api/tasks'
+import { getTasks, Task, updateTask } from '../../../../taiga-api/tasks'
 import { Empty, Skeleton } from 'antd'
 import { getProject } from '../../../../taiga-api/projects'
 
@@ -106,6 +106,10 @@ export default function Backlog() {
         if (!destination) {
             return
         }
+
+        const isStory = draggableId.includes('story')
+        const actualDraggableId = draggableId.split('-')[1]
+        console.log(destination, draggableId, source)
         if (
             source.droppableId === destination.droppableId &&
             destination.index === source.index
@@ -117,70 +121,91 @@ export default function Backlog() {
             (sprint) => sprint.id.toString() === source.droppableId
         )
 
-        const currentStory = (source.droppableId === 'backlog'
+        const currentIssue = (source.droppableId === 'backlog'
             ? backlogData
-            : currentSprint.user_stories
-        ).find((story) => story.id.toString() === draggableId)
+            : isStory
+            ? currentSprint.user_stories
+            : []
+        ).find((story) => story.id.toString() === actualDraggableId)
 
         queryCache.setQueryData(
             ['backlog', { projectId }],
-            (prevData: UserStory[]) => {
+            (prevData: (UserStory | Task)[]) => {
                 if (source.droppableId === destination.droppableId) {
                     return prevData
                 }
                 if (source.droppableId === 'backlog') {
-                    return prevData.filter(
-                        (story) => story.id !== currentStory.id
-                    )
+                    return prevData.filter((issue) => {
+                        const isTask = (issue as Task).user_story !== undefined
+                        if (isStory) {
+                            return (
+                                isTask ||
+                                issue.id.toString() !== actualDraggableId
+                            )
+                        } else {
+                            return (
+                                !isTask ||
+                                issue.id.toString() !== actualDraggableId
+                            )
+                        }
+                    })
                 } else if (destination.droppableId === 'backlog') {
-                    return [...prevData, currentStory]
+                    return [...prevData, currentIssue]
                 }
                 return prevData
             }
         )
-        queryCache.setQueryData(
-            ['milestones', { projectId }],
-            (prevData: Milestone[]) => {
-                if (source.droppableId === destination.droppableId) {
-                    return prevData
-                }
-                return prevData.map((milestone) => {
-                    if (milestone.id.toString() === source.droppableId) {
-                        return {
-                            ...milestone,
-                            user_stories: milestone.user_stories.filter(
-                                (story) => story.id !== currentStory.id
-                            ),
-                        }
-                    } else if (
-                        milestone.id.toString() === destination.droppableId
-                    ) {
-                        return {
-                            ...milestone,
-                            user_stories: [
-                                ...milestone.user_stories,
-                                currentStory,
-                            ],
-                        }
+        if (isStory) {
+            queryCache.setQueryData(
+                ['milestones', { projectId }],
+                (prevData: Milestone[]) => {
+                    if (source.droppableId === destination.droppableId) {
+                        return prevData
                     }
-                    return milestone
-                })
-            }
-        )
+                    return prevData.map((milestone) => {
+                        if (milestone.id.toString() === source.droppableId) {
+                            return {
+                                ...milestone,
+                                user_stories: milestone.user_stories.filter(
+                                    (story) => story.id !== currentIssue.id
+                                ),
+                            }
+                        } else if (
+                            milestone.id.toString() === destination.droppableId
+                        ) {
+                            return {
+                                ...milestone,
+                                user_stories: [
+                                    ...milestone.user_stories,
+                                    currentIssue,
+                                ],
+                            }
+                        }
+                        return milestone
+                    })
+                }
+            )
+        }
+
         const milestone =
             destination.droppableId === 'backlog'
                 ? null
                 : parseInt(destination.droppableId, 10)
-        const { id: storyId, version } = currentStory
+        const { id: issueId, version } = currentIssue
         const order = destination.index
-        updateUserstory(storyId, {
-            milestone,
-            sprint_order: order,
-            version,
-        }).then(() => {
-            queryCache.invalidateQueries(['backlog', { projectId }])
-            queryCache.invalidateQueries(['milestones', { projectId }])
-        })
+        if (isStory) {
+            updateUserstory(issueId, {
+                milestone,
+                sprint_order: order,
+                version,
+            }).then(() => {
+                queryCache.invalidateQueries(['backlog', { projectId }])
+                queryCache.invalidateQueries(['milestones', { projectId }])
+            })
+        } else {
+            // TODO
+            // updateTask(parseInt(actualDraggableId, 10), { milestone })
+        }
     }
 
     return (
@@ -216,7 +241,7 @@ export default function Backlog() {
                             <ListContainer>
                                 {sprintsData?.length ? (
                                     sprintsData
-                                        .filter((sprint) => !sprint.closed)
+                                        //.filter((sprint) => !sprint.closed)
                                         .map((sprint) => (
                                             <>
                                                 <Sprint
