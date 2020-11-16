@@ -4,10 +4,19 @@ import { deleteMilestone, Milestone } from '../../taiga-api/milestones'
 import IssueList from '../dnd/List'
 import { getTasks } from '../../taiga-api/tasks'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
+import styled from 'styled-components'
+
+const StyledLink = styled.a`
+    color: rgba(0, 0, 0, 0.85);
+    &:hover {
+        color: rgba(0, 0, 0, 0.6);
+    }
+`
 
 const Sprint = ({ sprint }: { sprint: Milestone }) => {
-    const { projectId } = useRouter().query
-
+    const { query, push } = useRouter()
+    const { projectId } = query
     const handleRemove = async () => {
         queryCache.setQueryData(
             ['milestones', { projectId }],
@@ -16,6 +25,9 @@ const Sprint = ({ sprint }: { sprint: Milestone }) => {
         )
         await deleteMilestone(sprint.id)
     }
+
+    const handleNavigation = () =>
+        push(`/projects/${projectId}/board?sprint=${sprint.id}`)
 
     const { data: tasks = [] } = useQuery(
         ['tasks', { projectId, milestone: sprint.id }],
@@ -31,9 +43,16 @@ const Sprint = ({ sprint }: { sprint: Milestone }) => {
 
     return (
         <CustomCollapse
-            actions={[{ title: 'Remove Sprint', action: handleRemove }]}
+            actions={[
+                { title: 'Remove Sprint', action: handleRemove },
+                { title: 'Go to Sprint Taskboard', action: handleNavigation },
+            ]}
             key={sprint.id}
-            title={sprint.name}
+            title={
+                <Link passHref href={`/projects/${projectId}/board?sprint=${sprint.id}`}>
+                    <StyledLink>{sprint.name}</StyledLink>
+                </Link>
+            }
             description={`${startDate.toLocaleDateString()}-${endDate.toLocaleDateString()}`}
             active={startDate <= today && today <= endDate}
         >

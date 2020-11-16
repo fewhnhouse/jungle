@@ -36,15 +36,6 @@ const FilterBoard = ({
     const today = new Date()
 
     useEffect(() => {
-        const activeMilestone = milestones?.find((ms) => {
-            const start = new Date(ms.estimated_start)
-            const end = new Date(ms.estimated_finish)
-            return start <= today && today <= end
-        })
-        setSprint(activeMilestone.id)
-    }, [])
-
-    useEffect(() => {
         if (sprint !== -1 && groupBy === 'sprint') {
             setGroupBy('none')
         }
