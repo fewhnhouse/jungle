@@ -24,14 +24,14 @@ export interface FlexProps {
     className?: string
 }
 
-const StyledFlex = styled.div`
+const StyledFlex = styled.div<FlexProps>`
     display: flex;
-    width: ${(props: FlexProps) => (props.fluid ? '100%' : '')};
-    height: ${(props: FlexProps) => (props.fluid ? '100%' : '')};
-    flex-direction: ${(props: FlexProps) => props.direction || 'row'};
-    align-items: ${(props: FlexProps) => props.align || 'flex-start'};
-    justify-content: ${(props: FlexProps) => props.justify || 'flex-start'};
-    flex-wrap: ${(props: FlexProps) => (props.wrap ? 'wrap' : '')};
+    width: ${({ fluid }) => (fluid ? '100%' : '')};
+    height: ${({ fluid }) => (fluid ? '100%' : '')};
+    flex-direction: ${({ direction }) => direction || 'row'};
+    align-items: ${({ align }) => align || 'flex-start'};
+    justify-content: ${({ justify }) => justify || 'flex-start'};
+    flex-wrap: ${({ wrap }) => (wrap ? 'wrap' : '')};
 `
 
 const Flex = ({
