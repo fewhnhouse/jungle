@@ -257,7 +257,7 @@ export default function Backlog() {
                             <ListContainer>
                                 {sprintsData?.length ? (
                                     sprintsData
-                                        //.filter((sprint) => !sprint.closed)
+                                        .filter((sprint) => !sprint.closed)
                                         .map((sprint) => (
                                             <>
                                                 <Sprint
