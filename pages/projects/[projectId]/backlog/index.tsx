@@ -19,21 +19,23 @@ import { getTasks } from '../../../../taiga-api/tasks'
 import { Empty, Skeleton } from 'antd'
 
 const IssueContainer = styled.div`
-    flex: 2;
     display: flex;
     flex-direction: row-reverse;
+    justify-content: space-between;
     flex-wrap: wrap;
-`
-
-const ContentContainer = styled.div`
-    display: flex;
-    max-width: 1000px;
-    margin: auto;
+    align-items: flex-start;
+    @media (max-width: 680px) {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
 `
 
 const Container = styled.div`
     flex: 1;
     min-width: 300px;
+    width: 100%;
+    max-width: 500px;
     margin: ${({ theme }) => theme.spacing.small};
     padding: ${({ theme }) => theme.spacing.mini};
 `
@@ -184,59 +186,57 @@ export default function Backlog() {
                 />
             </PageHeader>
             <PageBody>
-                <ContentContainer>
-                    <IssueContainer>
-                        <DragDropContext
-                            onDragStart={onDragStart}
-                            onDragEnd={onDragEnd}
-                        >
-                            <Container>
-                                <TitleContainer>
-                                    <Title>Sprints</Title>
-                                    <SprintCreation />
-                                </TitleContainer>
-                                <ListContainer>
-                                    {sprintsData?.length ? (
-                                        sprintsData.map((sprint) => (
-                                            <>
-                                                <Sprint
-                                                    key={sprint.id}
-                                                    sprint={sprint}
-                                                />
-                                                <IssueCreation
-                                                    milestone={sprint.id}
-                                                />
-                                            </>
-                                        ))
-                                    ) : isSprintsLoading ? (
-                                        <Skeleton active />
-                                    ) : (
-                                        <Empty description="No Sprints exist for this Project. Create one to get started!" />
-                                    )}
-                                </ListContainer>
-                            </Container>
-                            <Container>
-                                <TitleContainer>
-                                    <Title>Backlog</Title>
-                                    <UserstoryCreation />
-                                </TitleContainer>
-                                <ListContainer>
-                                    {isBacklogLoading ? (
-                                        <Skeleton active />
-                                    ) : (
+                <IssueContainer>
+                    <DragDropContext
+                        onDragStart={onDragStart}
+                        onDragEnd={onDragEnd}
+                    >
+                        <Container>
+                            <TitleContainer>
+                                <Title>Sprints</Title>
+                                <SprintCreation />
+                            </TitleContainer>
+                            <ListContainer>
+                                {sprintsData?.length ? (
+                                    sprintsData.map((sprint) => (
                                         <>
-                                            <IssueList
-                                                listId="backlog"
-                                                issues={backlogData ?? []}
+                                            <Sprint
+                                                key={sprint.id}
+                                                sprint={sprint}
                                             />
-                                            <IssueCreation milestone={null} />
+                                            <IssueCreation
+                                                milestone={sprint.id}
+                                            />
                                         </>
-                                    )}
-                                </ListContainer>
-                            </Container>
-                        </DragDropContext>
-                    </IssueContainer>
-                </ContentContainer>
+                                    ))
+                                ) : isSprintsLoading ? (
+                                    <Skeleton active />
+                                ) : (
+                                    <Empty description="No Sprints exist for this Project. Create one to get started!" />
+                                )}
+                            </ListContainer>
+                        </Container>
+                        <Container>
+                            <TitleContainer>
+                                <Title>Backlog</Title>
+                                <UserstoryCreation />
+                            </TitleContainer>
+                            <ListContainer>
+                                {isBacklogLoading ? (
+                                    <Skeleton active />
+                                ) : (
+                                    <>
+                                        <IssueList
+                                            listId="backlog"
+                                            issues={backlogData ?? []}
+                                        />
+                                        <IssueCreation milestone={null} />
+                                    </>
+                                )}
+                            </ListContainer>
+                        </Container>
+                    </DragDropContext>
+                </IssueContainer>
             </PageBody>
         </>
     )
