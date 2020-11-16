@@ -225,7 +225,7 @@ export default function Backlog() {
     }
 
     return (
-        <>
+        <div>
             <PageHeader>
                 <PageTitle
                     breadcrumbs={[
@@ -298,6 +298,6 @@ export default function Backlog() {
                     </DragDropContext>
                 </IssueContainer>
             </PageBody>
-        </>
+        </div>
     )
 }
