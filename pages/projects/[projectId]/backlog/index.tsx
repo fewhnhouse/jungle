@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useRouter } from 'next/router'
 import Sprint from '../../../../components/backlog/Sprint'
 import { useQuery, queryCache } from 'react-query'
-import SprintCreation from '../../../../components/backlog/SprintCreation'
+import SprintCreation from '../../../../components/backlog/SprintCreationModal'
 import UserstoryCreation from '../../../../components/backlog/UserstoryCreation'
 import {
     UserStory,

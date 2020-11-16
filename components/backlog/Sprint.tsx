@@ -10,17 +10,13 @@ import { getTasks } from '../../taiga-api/tasks'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import styled from 'styled-components'
-import { Button } from 'antd'
+import SprintCompletionModal from './SprintCompletionModal'
 
 const StyledLink = styled.a`
     color: rgba(0, 0, 0, 0.85);
     &:hover {
         color: rgba(0, 0, 0, 0.6);
     }
-`
-
-const PrimaryButton = styled(Button)`
-    margin-right: 0;
 `
 
 const Sprint = ({ sprint }: { sprint: Milestone }) => {
@@ -59,11 +55,8 @@ const Sprint = ({ sprint }: { sprint: Milestone }) => {
     return (
         <CustomCollapse
             primaryAction={
-                active && !closed && (
-                    <PrimaryButton type="primary" onClick={handleComplete}>
-                        Complete
-                    </PrimaryButton>
-                )
+                active &&
+                !closed && <SprintCompletionModal milestoneId={sprint?.id} />
             }
             actions={[
                 { title: 'Remove Sprint', action: handleRemove },
