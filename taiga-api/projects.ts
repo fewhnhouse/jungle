@@ -1,4 +1,5 @@
 import authInstance from '../util/axiosInstance'
+import { Milestone } from './milestones'
 import { User } from './users'
 
 export interface Member {
@@ -58,6 +59,7 @@ export interface Project {
     logo_big_url: string | null
     logo_small_url: string | null
     looking_for_people_note: ''
+    milestones: Milestone[]
     modified_date: string
     my_homepage: string
     my_permissions: string[]

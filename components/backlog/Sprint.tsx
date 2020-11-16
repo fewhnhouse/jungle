@@ -1,17 +1,26 @@
 import CustomCollapse from '../Collapse'
 import { queryCache, useQuery } from 'react-query'
-import { deleteMilestone, Milestone } from '../../taiga-api/milestones'
+import {
+    deleteMilestone,
+    Milestone,
+    updateMilestone,
+} from '../../taiga-api/milestones'
 import IssueList from '../dnd/List'
 import { getTasks } from '../../taiga-api/tasks'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import styled from 'styled-components'
+import { Button } from 'antd'
 
 const StyledLink = styled.a`
     color: rgba(0, 0, 0, 0.85);
     &:hover {
         color: rgba(0, 0, 0, 0.6);
     }
+`
+
+const PrimaryButton = styled(Button)`
+    margin-right: 0;
 `
 
 const Sprint = ({ sprint }: { sprint: Milestone }) => {
@@ -29,6 +38,10 @@ const Sprint = ({ sprint }: { sprint: Milestone }) => {
     const handleNavigation = () =>
         push(`/projects/${projectId}/board?sprint=${sprint.id}`)
 
+    const handleComplete = () => {
+        updateMilestone(sprint.id, { closed: true })
+    }
+
     const { data: tasks = [] } = useQuery(
         ['tasks', { projectId, milestone: sprint.id }],
         async (key, { projectId, milestone }) => {
@@ -41,20 +54,32 @@ const Sprint = ({ sprint }: { sprint: Milestone }) => {
     const endDate = new Date(sprint.estimated_finish)
     const today = new Date()
 
+    const active = startDate <= today && today <= endDate
+    const closed = sprint?.closed
     return (
         <CustomCollapse
+            primaryAction={
+                active && !closed && (
+                    <PrimaryButton type="primary" onClick={handleComplete}>
+                        Complete
+                    </PrimaryButton>
+                )
+            }
             actions={[
                 { title: 'Remove Sprint', action: handleRemove },
                 { title: 'Go to Sprint Taskboard', action: handleNavigation },
             ]}
             key={sprint.id}
             title={
-                <Link passHref href={`/projects/${projectId}/board?sprint=${sprint.id}`}>
+                <Link
+                    passHref
+                    href={`/projects/${projectId}/board?sprint=${sprint.id}`}
+                >
                     <StyledLink>{sprint.name}</StyledLink>
                 </Link>
             }
             description={`${startDate.toLocaleDateString()}-${endDate.toLocaleDateString()}`}
-            active={startDate <= today && today <= endDate}
+            status={closed ? 'closed' : active ? 'active' : 'default'}
         >
             <IssueList
                 style={{ minHeight: 100 }}

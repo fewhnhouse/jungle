@@ -4,7 +4,7 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 import styled from 'styled-components'
 import { useState } from 'react'
 import { Collapse } from 'react-collapse'
-import { Dropdown, Menu, Tag } from 'antd'
+import { Divider, Dropdown, Menu, Tag } from 'antd'
 
 const StoryHeader = styled.div`
     display: flex;
@@ -47,21 +47,27 @@ const StoryTitle = styled.h3`
     margin: 0;
 `
 
+const StyledTag = styled(Tag)`
+    margin: 0;
+`
+
 interface CollapseProps {
     children: React.ReactNode
     title: string | React.ReactNode
+    primaryAction?: React.ReactNode
     description?: string
     actions?: { title: string; action: () => void }[]
-    active?: boolean
+    status: 'default' | 'active' | 'closed'
 }
 export default function CustomCollapse({
     children,
     title,
     description,
+    primaryAction,
     actions,
-    active,
+    status = 'default',
 }: CollapseProps) {
-    const [expanded, setExpanded] = useState(true)
+    const [expanded, setExpanded] = useState(status !== 'closed')
     const toggleVisibility = () => setExpanded((expanded) => !expanded)
 
     const menu = (
@@ -78,12 +84,15 @@ export default function CustomCollapse({
             <StoryHeader>
                 <InnerContainer onClick={toggleVisibility}>
                     {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                    {active && <Tag color="blue">Active</Tag>}
+                    {status === 'active' && <StyledTag color="blue">Active</StyledTag>}
+                    {status === 'closed' && <StyledTag color="grey">Closed</StyledTag>}
                     <HeaderContainer>
                         <StoryTitle>{title}</StoryTitle>
                         <Description>{description}</Description>
                     </HeaderContainer>
                 </InnerContainer>
+                {primaryAction}
+                {primaryAction && <Divider type="vertical" />}
                 {actions && (
                     <Dropdown trigger={['click']} overlay={menu}>
                         <MoreHorizIcon />

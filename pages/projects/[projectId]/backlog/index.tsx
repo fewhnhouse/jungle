@@ -25,7 +25,7 @@ const IssueContainer = styled.div`
     justify-content: space-between;
     flex-wrap: wrap;
     align-items: flex-start;
-    @media (max-width: 680px) {
+    @media (max-width: 800px) {
         flex-direction: column;
         justify-content: center;
         align-items: center;
@@ -189,7 +189,10 @@ export default function Backlog() {
                 <PageTitle
                     breadcrumbs={[
                         { href: `/projects`, label: 'Projects' },
-                        { href: `/projects/${projectId}`, label: project?.name },
+                        {
+                            href: `/projects/${projectId}`,
+                            label: project?.name,
+                        },
                         {
                             href: `/projects/${projectId}/backlog`,
                             label: 'Backlog',
@@ -212,17 +215,19 @@ export default function Backlog() {
                             </TitleContainer>
                             <ListContainer>
                                 {sprintsData?.length ? (
-                                    sprintsData.map((sprint) => (
-                                        <>
-                                            <Sprint
-                                                key={sprint.id}
-                                                sprint={sprint}
-                                            />
-                                            <IssueCreation
-                                                milestone={sprint.id}
-                                            />
-                                        </>
-                                    ))
+                                    sprintsData
+                                        .filter((sprint) => !sprint.closed)
+                                        .map((sprint) => (
+                                            <>
+                                                <Sprint
+                                                    key={sprint.id}
+                                                    sprint={sprint}
+                                                />
+                                                <IssueCreation
+                                                    milestone={sprint.id}
+                                                />
+                                            </>
+                                        ))
                                 ) : isSprintsLoading ? (
                                     <Skeleton active />
                                 ) : (

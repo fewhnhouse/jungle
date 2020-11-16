@@ -59,7 +59,7 @@ export const replaceMilestone = (id: number, data: any) => {
 }
 
 export const updateMilestone = (id: number, data: any) => {
-    return authInstance.patch(`/milestones/${id}`).then(res => res.data)
+    return authInstance.patch(`/milestones/${id}`, data).then(res => res.data)
 }
 
 export const deleteMilestone = (id: number) => {
