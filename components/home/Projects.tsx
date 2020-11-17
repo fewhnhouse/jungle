@@ -1,7 +1,7 @@
 import ProjectListItem from './ProjectListItem'
 import styled from 'styled-components'
 import { useQuery } from 'react-query'
-import { getProjects } from '../../taiga-api/projects'
+import { getProjects, Project } from '../../taiga-api/projects'
 import Link from 'next/link'
 import { Skeleton } from 'antd'
 import Flex from '../Flex'
@@ -16,9 +16,11 @@ const Container = styled(Flex)`
         margin-right: 0px;
     }
 `
-
-export default function Projects() {
-    const { data, error, isLoading } = useQuery('projects', async () => {
+interface Props {
+    publicProjects: Project[]
+}
+export default function Projects({ publicProjects }: Props) {
+    const { data = publicProjects, error } = useQuery('projects', async () => {
         return getProjects()
     })
 
@@ -30,7 +32,6 @@ export default function Projects() {
 
     return (
         <>
-            {isLoading && <Skeleton active paragraph={{ rows: 5 }} />}
             <Container direction="column" align="center">
                 {data
                     ?.sort(

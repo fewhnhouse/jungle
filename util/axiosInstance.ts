@@ -4,6 +4,10 @@ const authInstance = axios.create({
     baseURL: process.env.NEXT_PUBLIC_TAIGA_API_URL,
 })
 
+const publicInstance = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_TAIGA_API_URL,
+})
+
 authInstance.interceptors.request.use(
     function (config) {
         const token = localStorage.getItem('auth-token')
@@ -34,4 +38,4 @@ authInstance.interceptors.response.use(
     }
 )
 
-export default authInstance
+export { authInstance, publicInstance }

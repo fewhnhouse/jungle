@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import Projects from '../components/home/Projects'
-import Activities from '../components/home/Activities'
 import { useState } from 'react'
 import YourWork from '../components/home/YourWork'
 import ProjectCreationModal from '../components/home/ProjectCreationModal'
@@ -14,6 +13,8 @@ import Link from 'next/link'
 import { ActionContainer } from '../components/project/Actions'
 import LimitedActivity from '../components/activity/LimitedActivity'
 import { getUserTimeline } from '../taiga-api/timelines'
+import { GetStaticProps, InferGetStaticPropsType } from 'next'
+import { getProjects, getPublicProjects } from '../taiga-api/projects'
 
 const Container = styled.div`
     padding: ${({ theme }) => `${theme.spacing.huge} ${theme.spacing.crazy}`};
@@ -60,11 +61,19 @@ const TitleContainer = styled.div`
     margin-right: ${({ theme }) => theme.spacing.medium};
 `
 
-export default function Home() {
+export const getStaticProps: GetStaticProps = async (context) => {
+    const publicProjects = await getPublicProjects()
+    return { props: { publicProjects }, revalidate: 1 }
+}
+
+export default function Home({
+    publicProjects,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const toggleModal = () => {
         setIsModalOpen((open) => !open)
     }
+
     const { data: me } = useQuery('me', () => getMe())
 
     const { data: activity, isLoading } = useQuery(
@@ -109,7 +118,7 @@ export default function Home() {
             </PageHeader>
             <PageBody>
                 <Container>
-                    <Projects />
+                    <Projects publicProjects={publicProjects}/>
                     <InnerContainer>
                         <LimitedActivity
                             title="Your activity"

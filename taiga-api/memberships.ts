@@ -1,4 +1,4 @@
-import authInstance from '../util/axiosInstance'
+import { authInstance } from '../util/axiosInstance'
 
 export const getMemberships = () => {
     return authInstance.get(`/memberships`)

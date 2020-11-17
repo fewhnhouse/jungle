@@ -1,4 +1,4 @@
-import authInstance from '../util/axiosInstance'
+import { authInstance, publicInstance } from '../util/axiosInstance'
 import { Milestone } from './milestones'
 import { User } from './users'
 
@@ -89,6 +89,10 @@ export interface Project {
 
 export const getProjects = () => {
     return authInstance.get<MultiProjectInterface[]>(`/projects`).then(res => res.data)
+}
+
+export const getPublicProjects = () => {
+    return publicInstance.get<MultiProjectInterface[]>(`/projects`).then(res => res.data)
 }
 
 export const getProject = (id: string) => {

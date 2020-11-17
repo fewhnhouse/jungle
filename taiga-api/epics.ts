@@ -1,4 +1,4 @@
-import authInstance from '../util/axiosInstance'
+import { authInstance } from '../util/axiosInstance'
 
 export interface Epic {
     assigned_to: number,

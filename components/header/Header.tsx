@@ -66,12 +66,12 @@ const InputContainer = styled.div<{ opened: boolean; headerWidth?: number }>`
     padding: ${({ theme }) => theme.spacing.mini};
 `
 
-const StyledLinkButton = styled(Button)<{ isCurrent?: boolean }>`
+const StyledLinkButton = styled(Button)<{ $isCurrent?: boolean }>`
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 0px;
-    color: ${({ isCurrent }) => (isCurrent ? '#2589f5' : '')};
+    color: ${({ $isCurrent }) => ($isCurrent ? '#2589f5' : '')};
 `
 
 export const WrappedLink = ({
@@ -84,7 +84,7 @@ export const WrappedLink = ({
     return (
         <StyledLinkButton
             className={className}
-            isCurrent={pathname === href}
+            $isCurrent={pathname === href}
             onClick={() => push(href, as)}
         >
             {children}

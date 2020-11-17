@@ -1,4 +1,4 @@
-import authInstance from '../util/axiosInstance'
+import { authInstance } from '../util/axiosInstance'
 
 export const getRoles = ({ projectId }: { projectId?: string }) => {
     const params = new URLSearchParams()
