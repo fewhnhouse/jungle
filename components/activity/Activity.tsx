@@ -37,17 +37,18 @@ export default function Activity({
                 />
             </PageHeader>
             <PageBody>
-                {isLoading && <Skeleton active paragraph={{ rows: 5 }} />}
-                <List>
-                    {activity
-                        ?.filter((_, index) => index < 10)
-                        .map((activityItem) => (
-                            <ActivityListItem
-                                key={activityItem.id}
-                                activityItem={activityItem}
-                            ></ActivityListItem>
-                        ))}
-                </List>
+                <Skeleton loading={isLoading} active paragraph={{ rows: 5 }}>
+                    <List>
+                        {activity
+                            ?.filter((_, index) => index < 10)
+                            .map((activityItem) => (
+                                <ActivityListItem
+                                    key={activityItem.id}
+                                    activityItem={activityItem}
+                                ></ActivityListItem>
+                            ))}
+                    </List>
+                </Skeleton>
             </PageBody>
         </div>
     )

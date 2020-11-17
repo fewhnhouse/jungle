@@ -160,9 +160,16 @@ const ProjectDetails = () => {
     return (
         <div>
             <StyledCard bodyStyle={{ padding: 0 }} title="Project Name">
-                <Form layout="vertical" onFinish={handleNameSubmit}>
+                <Form
+                    initialValues={{
+                        name: data?.name,
+                        description: data?.description,
+                    }}
+                    layout="vertical"
+                    onFinish={handleNameSubmit}
+                >
                     <StyledFormItem name="name">
-                        <Input defaultValue={data.name} />
+                        <Input />
                     </StyledFormItem>
                     <Footer>
                         <span>Your Project name is visible to everyone.</span>
@@ -173,10 +180,7 @@ const ProjectDetails = () => {
             <StyledCard bodyStyle={{ padding: 0 }} title="Project Description">
                 <Form layout="vertical" onFinish={handleDescriptionSubmit}>
                     <StyledFormItem name="description">
-                        <Input.TextArea
-                            defaultValue={data.description}
-                            rows={5}
-                        />
+                        <Input.TextArea rows={5} />
                     </StyledFormItem>
                     <Footer>
                         <span>
@@ -248,7 +252,7 @@ const ProjectDetails = () => {
                     </CardContent>
                     <Footer>
                         <Checkbox
-                            value={confirmDeletion}
+                            checked={confirmDeletion}
                             onChange={(e) =>
                                 setConfirmDeletion(e.target.checked)
                             }

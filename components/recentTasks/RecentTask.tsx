@@ -37,20 +37,22 @@ interface Props {
 export default function RecentTask({ type, title, description, id }: Props) {
     const { projectId } = useRouter().query
     return (
-        <Link passHref href={`/project/${projectId}/${type}/${id}`}>
-            <StyledCard hoverable>
-                <Meta
-                    avatar={
-                        type === 'task' ? (
-                            <StyledTaskIcon />
-                        ) : (
-                            <StyledUserStoryIcon />
-                        )
-                    }
-                    title={title}
-                    description={description}
-                />
-            </StyledCard>
-        </Link>
+        <StyledCard>
+            <Meta
+                avatar={
+                    type === 'task' ? (
+                        <StyledTaskIcon />
+                    ) : (
+                        <StyledUserStoryIcon />
+                    )
+                }
+                title={
+                    <Link href={`/project/${projectId}/${type}/${id}`}>
+                        {title}
+                    </Link>
+                }
+                description={description}
+            />
+        </StyledCard>
     )
 }

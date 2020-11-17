@@ -183,6 +183,7 @@ const Project = () => {
                         {recentTasks.map((item) =>
                             item.event_type.includes('task') ? (
                                 <RecentTask
+                                    key={item.id}
                                     type="task"
                                     title={item.data.task.subject}
                                     id={item.data.task.id}
@@ -190,6 +191,7 @@ const Project = () => {
                                 ></RecentTask>
                             ) : (
                                 <RecentTask
+                                    key={item.id}
                                     type="userstory"
                                     title={item.data.userstory.subject}
                                     id={item.data.userstory.id}
