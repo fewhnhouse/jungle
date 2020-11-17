@@ -1,9 +1,7 @@
 import { Skeleton } from 'antd'
 import Link from 'next/link'
-import { useQuery } from 'react-query'
 import styled from 'styled-components'
-import { getUserTimeline } from '../../taiga-api/timelines'
-import { getMe } from '../../taiga-api/users'
+import { Timeline } from '../../taiga-api/timelines'
 import ActivityListItem from './ActivityListItem'
 
 const Container = styled.div`
@@ -21,26 +19,33 @@ const List = styled.ul`
     }
 `
 
-const Title = styled.h3`
+const Title = styled.h2`
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
 `
 
-export default function Activities() {
-    const { data: me } = useQuery('me', () => getMe())
+interface Props {
+    title?: string
+    activity: Timeline[]
+    isLoading?: boolean
+    href: string
+    limit?: number
+}
 
-    const { data, isLoading } = useQuery(
-        ['timeline', { id: me?.id }],
-        (key, { id }) => getUserTimeline(id),
-        { enabled: !!me?.id }
-    )
+export default function LimitedActivity({
+    title,
+    activity,
+    isLoading,
+    href,
+    limit = 10,
+}: Props) {
     return (
         <Container>
-            <Title>Your recent Activity</Title>
+            <Title>{title}</Title>
             {isLoading && <Skeleton active paragraph={{ rows: 5 }} />}
             <List>
-                {data
+                {activity
                     ?.filter((_, index) => index < 10)
                     .map((activityItem) => (
                         <ActivityListItem
@@ -49,8 +54,8 @@ export default function Activities() {
                         ></ActivityListItem>
                     ))}
             </List>
-            {data?.length > 10 && (
-                <Link href="/activity">See all activity</Link>
+            {activity?.length > limit && (
+                <Link href={href}>See all activity</Link>
             )}
         </Container>
     )

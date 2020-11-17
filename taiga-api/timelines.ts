@@ -27,7 +27,12 @@ export interface Timeline {
             photo: null | string,
             username: string
         },
-        userstory: {
+        task?: {
+            id: number,
+            ref: number,
+            subject: string
+        },
+        userstory?: {
             id: number,
             ref: number,
             subject: string

@@ -5,19 +5,23 @@ import { PageBody, PageHeader } from '../../../components/Layout'
 import PageTitle from '../../../components/PageTitle'
 import { useQuery } from 'react-query'
 import { getProject } from '../../../taiga-api/projects'
-import { getProjectTimeline } from '../../../taiga-api/timelines'
-import ActivityListItem from '../../../components/home/ActivityListItem'
+import { getProjectTimeline, Timeline } from '../../../taiga-api/timelines'
 import Flex from '../../../components/Flex'
 import { Avatar, Button } from 'antd'
 import LevelDisplay from '../../../components/LevelDisplay/LevelDisplay'
 import Actions from '../../../components/project/Actions'
 import Achievements from '../../../components/achievements/Achievements'
+import LimitedActivity from '../../../components/activity/LimitedActivity'
+import useMedia from 'use-media'
+import moment from 'moment'
+import RecentTask from '../../../components/recentTasks/RecentTask'
 
 const StyledFlex = styled(Flex)`
     margin-top: 20px;
 `
 
 const Container = styled.div`
+    flex: 1;
     &:first-child {
         margin-right: 10px;
     }
@@ -53,7 +57,7 @@ const StyledAvatar = styled(Avatar)`
 const Project = () => {
     const router = useRouter()
     const { projectId } = router.query
-
+    const isMobile = useMedia('(max-width: 960px)')
     const { data } = useQuery(
         ['project', { projectId }],
         (key, { projectId }) => getProject(projectId as string),
@@ -69,12 +73,48 @@ const Project = () => {
             enabled: !!projectId,
         }
     )
-
+    const today = moment()
+    // Get all tasks which are less than 24h old, related to tasks / userstories, unique and max of 10
+    const recentTasks: Timeline[] =
+        timeline
+            ?.filter((t) => {
+                return today.diff(moment(t.created), 'days') < 1
+            })
+            ?.filter(
+                (t) =>
+                    t.event_type.includes('task') ||
+                    t.event_type.includes('userstory')
+            )
+            ?.reduce((prev, curr) => {
+                if (curr.event_type.includes('task')) {
+                    if (
+                        prev.find(
+                            (el) => el.data.task?.id === curr.data.task.id
+                        )
+                    ) {
+                        return prev
+                    } else {
+                        return [...prev, curr]
+                    }
+                } else if (curr.event_type.includes('userstory')) {
+                    if (
+                        prev.find(
+                            (el) =>
+                                el.data.userstory?.id === curr.data.userstory.id
+                        )
+                    ) {
+                        return prev
+                    } else {
+                        return [...prev, curr]
+                    }
+                }
+            }, [])
+            ?.filter((_, index) => index < 10) ?? []
 
     return (
-        <>
+        <div>
             <PageHeader>
-                <>
+                <div>
                     <Flex direction="column" align="flex-start">
                         <PageTitle
                             breadcrumbs={[
@@ -123,25 +163,46 @@ const Project = () => {
                             </Link>
                         </Flex>
                     </StyledFlex>
-                </>
+                </div>
             </PageHeader>
             <PageBody>
-                <Flex>
+                <Flex
+                    align="center"
+                    justify="space-between"
+                    direction={isMobile ? 'column' : 'row'}
+                >
                     <Container>
-                        <h2>Activity</h2>
-                        {timeline?.map((item) => (
-                            <ActivityListItem
-                                key={item.id}
-                                activityItem={item}
-                            />
-                        ))}
+                        <LimitedActivity
+                            title="Project Activity"
+                            activity={timeline}
+                            href={`/projects/${projectId}/activity`}
+                        />
                     </Container>
                     <Container>
                         <h2>Recent Tasks</h2>
+                        {recentTasks.map((item) =>
+                            item.event_type.includes('task') ? (
+                                <RecentTask
+                                    type="task"
+                                    title={item.data.task.subject}
+                                    id={item.data.task.id}
+                                    description={'Bla'}
+                                ></RecentTask>
+                            ) : (
+                                <RecentTask
+                                    type="userstory"
+                                    title={item.data.userstory.subject}
+                                    id={item.data.userstory.id}
+                                    description={`Last edited: ${new Date(
+                                        item.created
+                                    ).toDateString()}`}
+                                ></RecentTask>
+                            )
+                        )}
                     </Container>
                 </Flex>
             </PageBody>
-        </>
+        </div>
     )
 }
 

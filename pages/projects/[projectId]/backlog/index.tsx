@@ -18,6 +18,7 @@ import IssueCreation from '../../../../components/backlog/IssueCreation'
 import { getTasks, Task, updateTask } from '../../../../taiga-api/tasks'
 import { Empty, Skeleton } from 'antd'
 import { getProject } from '../../../../taiga-api/projects'
+import { Fragment } from 'react'
 
 const IssueContainer = styled.div`
     display: flex;
@@ -259,7 +260,7 @@ export default function Backlog() {
                                     sprintsData
                                         .filter((sprint) => !sprint.closed)
                                         .map((sprint) => (
-                                            <>
+                                            <Fragment key={sprint.id}>
                                                 <Sprint
                                                     key={sprint.id}
                                                     sprint={sprint}
@@ -267,7 +268,7 @@ export default function Backlog() {
                                                 <IssueCreation
                                                     milestone={sprint.id}
                                                 />
-                                            </>
+                                            </Fragment>
                                         ))
                                 ) : isSprintsLoading ? (
                                     <Skeleton active />

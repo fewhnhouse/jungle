@@ -4,15 +4,14 @@ import { useQuery } from 'react-query'
 import { getProjects } from '../../taiga-api/projects'
 import Link from 'next/link'
 import { Skeleton } from 'antd'
+import Flex from '../Flex'
 
-const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+const Container = styled(Flex)`
     flex: 1;
     top: -120px;
     margin-right: ${({ theme }) => `${theme.spacing.crazy}`};
     position: relative;
+    width: 100%;
     @media screen and (max-width: 960px) {
         margin-right: 0px;
     }
@@ -32,7 +31,7 @@ export default function Projects() {
     return (
         <>
             {isLoading && <Skeleton active paragraph={{ rows: 5 }} />}
-            <Container>
+            <Container direction="column" align="center">
                 {data
                     ?.sort(
                         (a, b) =>

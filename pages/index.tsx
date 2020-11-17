@@ -12,6 +12,8 @@ import { Button } from 'antd'
 import { SettingOutlined } from '@ant-design/icons'
 import Link from 'next/link'
 import { ActionContainer } from '../components/project/Actions'
+import LimitedActivity from '../components/activity/LimitedActivity'
+import { getUserTimeline } from '../taiga-api/timelines'
 
 const Container = styled.div`
     padding: ${({ theme }) => `${theme.spacing.huge} ${theme.spacing.crazy}`};
@@ -63,8 +65,13 @@ export default function Home() {
     const toggleModal = () => {
         setIsModalOpen((open) => !open)
     }
-    const { data } = useQuery('me', () => getMe())
+    const { data: me } = useQuery('me', () => getMe())
 
+    const { data: activity, isLoading } = useQuery(
+        ['timeline', { id: me?.id }],
+        (key, { id }) => getUserTimeline(id),
+        { enabled: !!me?.id }
+    )
     return (
         <>
             <PageHeader>
@@ -72,9 +79,9 @@ export default function Home() {
                     <HeaderContainer>
                         <TitleContainer>
                             <PageTitle
-                                avatarUrl={data?.big_photo ?? 'bmo.png'}
-                                title={data?.full_name ?? ''}
-                                description={data?.email}
+                                avatarUrl={me?.big_photo ?? 'bmo.png'}
+                                title={me?.full_name ?? ''}
+                                description={me?.email}
                                 actions={
                                     <>
                                         <ActionContainer>
@@ -84,7 +91,7 @@ export default function Home() {
                                         </ActionContainer>
                                         <ActionContainer>
                                             <Link
-                                                href={`/users/${data?.id}/settings`}
+                                                href={`/users/${me?.id}/settings`}
                                             >
                                                 <Button
                                                     icon={<SettingOutlined />}
@@ -104,7 +111,12 @@ export default function Home() {
                 <Container>
                     <Projects />
                     <InnerContainer>
-                        <Activities />
+                        <LimitedActivity
+                            title="Your activity"
+                            activity={activity ?? []}
+                            isLoading={isLoading}
+                            href={`/activity`}
+                        />
                         <YourWork />
                     </InnerContainer>
                 </Container>
