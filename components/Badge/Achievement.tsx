@@ -1,10 +1,11 @@
 import styled from 'styled-components'
 import Flex from '../Flex'
 import { StarFilled } from '@ant-design/icons'
-import { useState } from 'react'
-import { Modal, Progress } from 'antd'
+import { useEffect, useState } from 'react'
+import { Modal, notification, Progress } from 'antd'
 import useMedia from 'use-media'
 import Badge from './Badge'
+import usePrev from '../../util/usePrev'
 
 const Description = styled.p`
     margin: 10px 0px;
@@ -44,6 +45,14 @@ interface AchievementBadgeProps {
     icon: React.ReactNode
 }
 
+const getLevel = (levelRange: [number, number][], score: number) => {
+    return levelRange.findIndex((range, index) =>
+        index === levelRange.length - 1
+            ? true
+            : score >= range[0] && score < range[1]
+    )
+}
+
 const AchievementBadge = ({
     title,
     icon,
@@ -57,11 +66,23 @@ const AchievementBadge = ({
     const handleClose = () => setVisible(false)
     const isMobile = useMedia('(max-width: 480px)')
 
-    const level = levelRange.findIndex((range, index) =>
-        index === levelRange.length - 1
-            ? true
-            : score >= range[0] && score < range[1]
-    )
+    const level = getLevel(levelRange, score)
+
+    const prevScore = usePrev(score)
+
+    useEffect(() => {
+        if (!!prevScore && score > prevScore) {
+            const oldLevel = getLevel(levelRange, prevScore)
+            const newLevel = getLevel(levelRange, score)
+            if (newLevel > oldLevel) {
+                notification.open({
+                    message: `${title} Level ${level}`,
+                    description: `You leveled up your ${label} Achievement!`,
+                    icon,
+                })
+            }
+        }
+    }, [score, prevScore])
 
     const min = levelRange[level][0]
     const max = levelRange[level][1]
