@@ -3,7 +3,7 @@ import Projects from '../../../components/home/Projects'
 import { useState } from 'react'
 import YourWork from '../../../components/home/YourWork'
 import ProjectCreationModal from '../../../components/home/ProjectCreationModal'
-import { getMe } from '../../../taiga-api/users'
+import { getMe, getUser } from '../../../taiga-api/users'
 import PageTitle from '../../../components/PageTitle'
 import { PageBody, PageHeader } from '../../../components/Layout'
 import { useQuery } from 'react-query'
@@ -69,7 +69,11 @@ export const getStaticProps: GetStaticProps = async (context) => {
     const publicUserTimeline = await getPublicUserTimeline(
         context.params.id as string
     )
-    return { props: { publicProjects, publicUserTimeline }, revalidate: 1 }
+    const publicUser = getUser(context.params.id as string)
+    return {
+        props: { publicProjects, publicUserTimeline, publicUser },
+        revalidate: 1,
+    }
 }
 
 export async function getStaticPaths() {
@@ -88,13 +92,14 @@ export async function getStaticPaths() {
 export default function Home({
     publicProjects,
     publicUserTimeline,
+    publicUser,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const toggleModal = () => {
         setIsModalOpen((open) => !open)
     }
 
-    const { data: me } = useQuery('me', () => getMe())
+    const { data: me = publicUser } = useQuery('me', () => getMe())
 
     const { data: activity = publicUserTimeline, isLoading } = useQuery(
         ['timeline', { id: me?.id }],
