@@ -30,7 +30,7 @@ export interface User {
 }
 
 export const getUsers = () => {
-    return authInstance.get<User[]>(`/users`).then((res) => res.data)
+    return publicInstance.get<User[]>(`/users`).then((res) => res.data)
 }
 
 export const getPublicUser = (id: string) => {

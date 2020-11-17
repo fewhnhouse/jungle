@@ -40,7 +40,7 @@ interface Props {
 export default function ActivityListItem({ activityItem }: Props) {
     const [source, item, type] = activityItem.event_type.split('.')
     const user = activityItem.data.user
-    const affectedItem = activityItem.data[item]
+    const affectedItem = activityItem.data[item] ?? user
     const getItemName = () => {
         if (item === 'userstory' || item === 'epic' || item === 'task') {
             return affectedItem.subject

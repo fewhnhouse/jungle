@@ -3,7 +3,12 @@ import Projects from '../../../components/home/Projects'
 import { useState } from 'react'
 import YourWork from '../../../components/home/YourWork'
 import ProjectCreationModal from '../../../components/home/ProjectCreationModal'
-import { getMe, getPublicUser, getUser } from '../../../taiga-api/users'
+import {
+    getMe,
+    getPublicUser,
+    getUser,
+    getUsers,
+} from '../../../taiga-api/users'
 import PageTitle from '../../../components/PageTitle'
 import { PageBody, PageHeader } from '../../../components/Layout'
 import { useQuery } from 'react-query'
@@ -78,15 +83,9 @@ export const getStaticProps: GetStaticProps = async (context) => {
 }
 
 export async function getStaticPaths() {
+    const users = await getUsers()
     return {
-        paths: [
-            { params: { id: '0' } },
-            { params: { id: '1' } },
-            { params: { id: '2' } },
-            { params: { id: '3' } },
-            { params: { id: '4' } },
-            { params: { id: '5' } },
-        ],
+        paths: users.map((user) => ({ params: { id: user.id.toString() } })),
         fallback: true, // See the "fallback" section below
     }
 }
@@ -95,6 +94,7 @@ export default function Home({
     publicUserTimeline,
     publicUser,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+    console.log(publicUserTimeline)
     const [isModalOpen, setIsModalOpen] = useState(false)
     const toggleModal = () => {
         setIsModalOpen((open) => !open)
