@@ -12,6 +12,7 @@ import { TaskStatus, updateTask, Task } from '../../taiga-api/tasks'
 import { useRouter } from 'next/router'
 import { memo } from 'react'
 import { Empty } from 'antd'
+import { ScrollSyncPane } from 'react-scroll-sync'
 
 const Container = styled.div`
     min-width: 100%;
@@ -106,45 +107,52 @@ const Board = ({
 
     return (
         <CustomCollapse title={title} status="default">
-            {tasks.length ? (
-                <BoardContainer>
-                    <DragDropContext
-                        onDragStart={onDragStart}
-                        onDragEnd={onDragEnd}
-                    >
-                        <Droppable
-                            droppableId={`board-${projectId}`}
-                            type="COLUMN"
-                            direction="horizontal"
+            <ScrollSyncPane>
+                {tasks.length ? (
+                    <BoardContainer>
+                        <DragDropContext
+                            onDragStart={onDragStart}
+                            onDragEnd={onDragEnd}
                         >
-                            {(provided: DroppableProvided) => (
-                                <Container
-                                    ref={provided.innerRef}
-                                    {...provided.droppableProps}
-                                >
-                                    {columns.map((status, index: number) => (
-                                        <Column
-                                            hasHeader={hasHeader}
-                                            id={status.id}
-                                            key={status.id}
-                                            index={index}
-                                            title={status.name}
-                                            issues={tasks.filter(
-                                                (data) =>
-                                                    data.status === status.id
-                                            )}
-                                            isScrollable={withScrollableColumns}
-                                        />
-                                    ))}
-                                    {provided.placeholder}
-                                </Container>
-                            )}
-                        </Droppable>
-                    </DragDropContext>
-                </BoardContainer>
-            ) : (
-                <Empty />
-            )}
+                            <Droppable
+                                droppableId={`board-${projectId}`}
+                                type="COLUMN"
+                                direction="horizontal"
+                            >
+                                {(provided: DroppableProvided) => (
+                                    <Container
+                                        ref={provided.innerRef}
+                                        {...provided.droppableProps}
+                                    >
+                                        {columns.map(
+                                            (status, index: number) => (
+                                                <Column
+                                                    hasHeader={hasHeader}
+                                                    id={status.id}
+                                                    key={status.id}
+                                                    index={index}
+                                                    title={status.name}
+                                                    issues={tasks.filter(
+                                                        (data) =>
+                                                            data.status ===
+                                                            status.id
+                                                    )}
+                                                    isScrollable={
+                                                        withScrollableColumns
+                                                    }
+                                                />
+                                            )
+                                        )}
+                                        {provided.placeholder}
+                                    </Container>
+                                )}
+                            </Droppable>
+                        </DragDropContext>
+                    </BoardContainer>
+                ) : (
+                    <Empty />
+                )}
+            </ScrollSyncPane>
         </CustomCollapse>
     )
 }

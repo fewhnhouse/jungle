@@ -13,6 +13,7 @@ import { memo } from 'react'
 import { updateUserstory, UserStory } from '../../taiga-api/userstories'
 import { queryCache } from 'react-query'
 import { Milestone } from '../../taiga-api/milestones'
+import { ScrollSyncPane } from 'react-scroll-sync'
 
 const Container = styled.div`
     min-width: 100%;
@@ -104,41 +105,48 @@ const Board = ({
     return stories.length ? (
         <>
             <CustomCollapse status="default" title={title}>
-                <BoardContainer>
-                    <DragDropContext
-                        onDragStart={onDragStart}
-                        onDragEnd={onDragEnd}
-                    >
-                        <Droppable
-                            droppableId={`board-${projectId}`}
-                            type="COLUMN"
-                            direction="horizontal"
+                <ScrollSyncPane>
+                    <BoardContainer>
+                        <DragDropContext
+                            onDragStart={onDragStart}
+                            onDragEnd={onDragEnd}
                         >
-                            {(provided: DroppableProvided) => (
-                                <Container
-                                    ref={provided.innerRef}
-                                    {...provided.droppableProps}
-                                >
-                                    {columns.map((status, index: number) => (
-                                        <Column
-                                            hasHeader={hasHeader}
-                                            id={status.id}
-                                            key={status.id}
-                                            index={index}
-                                            title={status.name}
-                                            issues={stories.filter(
-                                                (data) =>
-                                                    data.status === status.id
-                                            )}
-                                            isScrollable={withScrollableColumns}
-                                        />
-                                    ))}
-                                    {provided.placeholder}
-                                </Container>
-                            )}
-                        </Droppable>
-                    </DragDropContext>
-                </BoardContainer>
+                            <Droppable
+                                droppableId={`board-${projectId}`}
+                                type="COLUMN"
+                                direction="horizontal"
+                            >
+                                {(provided: DroppableProvided) => (
+                                    <Container
+                                        ref={provided.innerRef}
+                                        {...provided.droppableProps}
+                                    >
+                                        {columns.map(
+                                            (status, index: number) => (
+                                                <Column
+                                                    hasHeader={hasHeader}
+                                                    id={status.id}
+                                                    key={status.id}
+                                                    index={index}
+                                                    title={status.name}
+                                                    issues={stories.filter(
+                                                        (data) =>
+                                                            data.status ===
+                                                            status.id
+                                                    )}
+                                                    isScrollable={
+                                                        withScrollableColumns
+                                                    }
+                                                />
+                                            )
+                                        )}
+                                        {provided.placeholder}
+                                    </Container>
+                                )}
+                            </Droppable>
+                        </DragDropContext>
+                    </BoardContainer>
+                </ScrollSyncPane>
             </CustomCollapse>
         </>
     ) : null
