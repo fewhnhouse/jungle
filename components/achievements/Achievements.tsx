@@ -10,88 +10,24 @@ import {
 } from '@ant-design/icons'
 import styled from 'styled-components'
 import Flex from '../Flex'
-import { useQuery } from 'react-query'
-import { getMilestones } from '../../taiga-api/milestones'
-import { getTasks } from '../../taiga-api/tasks'
-import { getUserstories } from '../../taiga-api/userstories'
-import { useRouter } from 'next/router'
 import useMedia from 'use-media'
 import { Skeleton } from 'antd'
+import { useContext } from 'react'
+import { AchievementContext } from '../project/NotificationProvider'
 
 const AchievementContainer = styled(Flex)``
 
 const Achievements = () => {
-    const { projectId } = useRouter().query
     const isMobile = useMedia('(max-width: 700px)')
-
-    const { data: sprints = [], isLoading: milestonesLoading } = useQuery(
-        ['milestones', { projectId }],
-        async (key, { projectId }) => {
-            return getMilestones({
-                closed: false,
-                projectId: projectId as string,
-            })
-        },
-        { enabled: projectId }
-    )
-
-    const { data: tasks = [], isLoading: tasksLoading } = useQuery(
-        ['tasks', { projectId }],
-        async (key, { projectId }) => {
-            const tasks = await getTasks({ projectId })
-            return tasks.filter((t) => t.user_story === null)
-        },
-        { enabled: projectId }
-    )
-
-    const { data: stories, isLoading: storiesLoading } = useQuery(
-        ['userstories', { projectId }],
-        (key, { projectId }) => getUserstories({ projectId }),
-        { enabled: projectId }
-    )
-
-    const closedSprints =
-        sprints?.filter((sprint) => sprint.closed)?.length ?? 0
-    const closedBugs =
-        stories && tasks
-            ? [...stories, ...tasks].filter(
-                  (issue) =>
-                      issue.is_closed &&
-                      issue.tags.find(
-                          (tag) => tag.length && tag[0].includes('bug')
-                      )
-              ).length
-            : 0
-
-    const closedIssues =
-        stories && tasks
-            ? [...stories, ...tasks].filter((issue) => issue.is_closed).length
-            : 0
-
-    const storyPoints = stories
-        ? [...stories]
-              .filter((story) => story.is_closed)
-              .reduce(
-                  (prev, curr) =>
-                      prev +
-                      Object.values(curr.points).reduce(
-                          (prev, curr) => prev + curr,
-                          0
-                      ),
-                  0
-              )
-        : 0
-
-    const comments =
-        stories?.reduce((prev, curr) => prev + curr.total_comments, 0) ?? 0
-
-    const tags =
-        stories && tasks
-            ? [...stories, ...tasks].reduce(
-                  (prev, curr) => prev + curr.tags.length,
-                  0
-              )
-            : 0
+    const {
+        comments,
+        closedSprints,
+        closedBugs,
+        closedIssues,
+        storyPoints,
+        tags,
+        loading,
+    } = useContext(AchievementContext)
 
     return (
         <AchievementContainer
@@ -100,10 +36,7 @@ const Achievements = () => {
             justify={isMobile ? 'center' : 'flex-start'}
             align="center"
         >
-            <Skeleton
-                active
-                loading={milestonesLoading && tasksLoading && storiesLoading}
-            >
+            <Skeleton active loading={loading}>
                 <AchievementBadge
                     score={comments}
                     levelRange={[

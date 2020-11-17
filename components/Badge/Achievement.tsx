@@ -45,7 +45,7 @@ interface AchievementBadgeProps {
     icon: React.ReactNode
 }
 
-const getLevel = (levelRange: [number, number][], score: number) => {
+export const getLevel = (levelRange: [number, number][], score: number) => {
     return levelRange.findIndex((range, index) =>
         index === levelRange.length - 1
             ? true
