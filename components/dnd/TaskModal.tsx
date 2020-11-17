@@ -98,7 +98,6 @@ export default function IssueModal({ id, open, onClose }: Props) {
     }
 
     const updateStatus = async (status: number) => {
-        console.log(status)
         const updatedTask = await updateTask(id, {
             status,
             version: data.version,

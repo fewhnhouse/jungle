@@ -3,7 +3,7 @@ import Projects from '../../../components/home/Projects'
 import { useState } from 'react'
 import YourWork from '../../../components/home/YourWork'
 import ProjectCreationModal from '../../../components/home/ProjectCreationModal'
-import { getMe, getUser } from '../../../taiga-api/users'
+import { getMe, getPublicUser, getUser } from '../../../taiga-api/users'
 import PageTitle from '../../../components/PageTitle'
 import { PageBody, PageHeader } from '../../../components/Layout'
 import { useQuery } from 'react-query'
@@ -17,7 +17,8 @@ import {
     getUserTimeline,
 } from '../../../taiga-api/timelines'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
-import { getProjects, getPublicProjects } from '../../../taiga-api/projects'
+import { getPublicProjects } from '../../../taiga-api/projects'
+import { useRouter } from 'next/router'
 
 const Container = styled.div`
     padding: ${({ theme }) => `${theme.spacing.huge} ${theme.spacing.crazy}`};
@@ -69,7 +70,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     const publicUserTimeline = await getPublicUserTimeline(
         context.params.id as string
     )
-    const publicUser = getUser(context.params.id as string)
+    const publicUser = await getPublicUser(context.params.id as string)
     return {
         props: { publicProjects, publicUserTimeline, publicUser },
         revalidate: 1,
@@ -99,12 +100,16 @@ export default function Home({
         setIsModalOpen((open) => !open)
     }
 
-    const { data: me = publicUser } = useQuery('me', () => getMe())
+    const { id } = useRouter().query
+
+    const { data: user = publicUser } = useQuery('me', () =>
+        getUser(id.toString())
+    )
 
     const { data: activity = publicUserTimeline, isLoading } = useQuery(
-        ['timeline', { id: me?.id }],
+        ['timeline', { id }],
         (key, { id }) => getUserTimeline(id),
-        { enabled: !!me?.id }
+        { enabled: !!id }
     )
     return (
         <>
@@ -113,9 +118,9 @@ export default function Home({
                     <HeaderContainer>
                         <TitleContainer>
                             <PageTitle
-                                avatarUrl={me?.big_photo ?? 'bmo.png'}
-                                title={me?.full_name ?? ''}
-                                description={me?.email}
+                                avatarUrl={user?.big_photo ?? 'bmo.png'}
+                                title={user?.full_name ?? ''}
+                                description={user?.email}
                                 actions={
                                     <>
                                         <ActionContainer>
@@ -125,7 +130,7 @@ export default function Home({
                                         </ActionContainer>
                                         <ActionContainer>
                                             <Link
-                                                href={`/users/${me?.id}/settings`}
+                                                href={`/users/${user?.id}/settings`}
                                             >
                                                 <Button
                                                     icon={<SettingOutlined />}

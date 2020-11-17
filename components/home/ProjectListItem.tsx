@@ -152,9 +152,14 @@ export default function ProjectListItem({
     isWatcher,
 }: Props) {
     const { data: actualMembers, isLoading } = useQuery(
-        ['actualMembers', members],
-        (key, ...members) =>
-            Promise.all(members?.map((id) => getUser(id.toString())))
+        ['actualMembers', { members }],
+        (key, { members }) =>
+            Promise.all(
+                members?.map((userId) => {
+                    console.log(members)
+                    return getUser(userId.toString())
+                })
+            )
     )
 
     return (

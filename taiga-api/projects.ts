@@ -60,6 +60,7 @@ export interface Project {
     logo_small_url: string | null
     looking_for_people_note: ''
     milestones: Milestone[]
+    members: number[]
     modified_date: string
     my_homepage: string
     my_permissions: string[]
