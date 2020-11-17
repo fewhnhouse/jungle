@@ -11,7 +11,7 @@ import Flex from '../../../components/Flex'
 import { Avatar, Button } from 'antd'
 import LevelDisplay from '../../../components/LevelDisplay/LevelDisplay'
 import Actions from '../../../components/project/Actions'
-import AchievementBadge from '../../../components/Badge/Badge'
+import AchievementBadge from '../../../components/Badge/Achievement'
 import {
     BugOutlined,
     CommentOutlined,
@@ -111,39 +111,95 @@ const Project = () => {
                         align="center"
                     >
                         <AchievementBadge
-                            level={2}
+                            score={2}
+                            levelRange={[
+                                [0, 1],
+                                [1, 10],
+                                [10, 50],
+                                [50, 500],
+                            ]}
                             icon={<CommentOutlined />}
                             title="Author"
+                            label="Comments"
+                            description="Comment on issues to advance this achievement."
                         />
                         <AchievementBadge
-                            level={1}
+                            score={1}
                             icon={<DashboardOutlined />}
+                            levelRange={[
+                                [0, 1],
+                                [1, 5],
+                                [5, 20],
+                                [20, 50],
+                            ]}
                             title="Sprinter"
+                            label="Sprints"
+                            description="Close sprints to advance this achievement."
                         />
                         <AchievementBadge
-                            level={3}
+                            score={3}
                             icon={<TagsOutlined />}
+                            levelRange={[
+                                [0, 1],
+                                [1, 10],
+                                [10, 50],
+                                [50, 200],
+                            ]}
                             title="Sale!"
+                            label="Tags"
+                            description="Tag your issues to advance this achievement."
                         />
                         <AchievementBadge
-                            level={3}
+                            score={3}
                             icon={<BugOutlined />}
+                            levelRange={[
+                                [0, 1],
+                                [1, 10],
+                                [10, 50],
+                                [50, 200],
+                            ]}
                             title="Bug Basher"
+                            label="Bugs"
+                            description="Close bugs to advance this achievement."
                         />
                         <AchievementBadge
-                            level={2}
+                            score={2}
                             icon={<FireOutlined />}
+                            levelRange={[
+                                [0, 10],
+                                [10, 50],
+                                [50, 200],
+                                [200, 1000],
+                            ]}
                             title="Burn it down!"
+                            label="Story Points"
+                            description="Burn down a certain amount of story points to advance this achievement."
                         />
                         <AchievementBadge
-                            level={4}
+                            score={4}
+                            levelRange={[
+                                [0, 10],
+                                [10, 50],
+                                [50, 200],
+                                [200, 1000],
+                            ]}
                             icon={<NumberOutlined />}
                             title="Even the Odds"
+                            label="Dunno"
+                            description="Dont know yet"
                         />
                         <AchievementBadge
-                            level={2}
+                            score={2}
+                            levelRange={[
+                                [0, 10],
+                                [10, 50],
+                                [50, 200],
+                                [200, 500],
+                            ]}
                             icon={<RobotOutlined />}
                             title="Ticket Machine"
+                            label="Issues"
+                            description="Close a certain amount of issues to advance this achievement."
                         />
                     </AchievemntContainer>
                     <StyledFlex justify="space-between">
