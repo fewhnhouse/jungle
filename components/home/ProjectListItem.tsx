@@ -10,7 +10,7 @@ import {
     UnlockOutlined,
 } from '@ant-design/icons'
 import { Avatar, Button, Card, Skeleton, Tooltip } from 'antd'
-import { getUser } from '../../taiga-api/users'
+import { getUser, User } from '../../taiga-api/users'
 import { getNameInitials } from '../../util/getNameInitials'
 import Flex from '../Flex'
 import { useQuery } from 'react-query'
@@ -155,10 +155,9 @@ export default function ProjectListItem({
         ['actualMembers', { members }],
         (key, { members }) =>
             Promise.all(
-                members?.map((userId) => {
-                    console.log(members)
-                    return getUser(userId.toString())
-                })
+                members?.map(
+                    async (userId: number) => await getUser(userId.toString())
+                )
             )
     )
 
@@ -211,7 +210,7 @@ export default function ProjectListItem({
                     </BadgeContainer>
                     <MembersContainer>
                         {isLoading && <Skeleton.Avatar active />}
-                        {actualMembers?.map((member) => (
+                        {actualMembers?.map((member: User) => (
                             <Link
                                 passHref
                                 href={`/users/${member.id}`}
