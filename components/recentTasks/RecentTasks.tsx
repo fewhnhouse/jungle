@@ -4,13 +4,18 @@ import RecentTask from './RecentTask'
 
 const Container = styled.div`
     flex: 1;
-    &:first-child {
-        margin-right: 10px;
-    }
-    &:last-child {
-        margin-left: 10px;
+    @media (min-width: 960px) {
+        &:first-child {
+            margin-right: 10px;
+        }
+        &:last-child {
+            margin-left: 10px;
+        }
     }
     margin-bottom: ${({ theme }) => theme.spacing.big};
+    min-width: 400px;
+    width: 100%;
+    max-width: 500px;
 `
 interface Props {
     timeline?: Timeline[]

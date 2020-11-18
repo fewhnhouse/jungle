@@ -9,6 +9,9 @@ const Container = styled.div`
     flex-direction: column;
     flex: 1;
     margin-bottom: ${({ theme }) => theme.spacing.big};
+    min-width: 400px;
+    max-width: 500px;
+    width: 100%;
 `
 
 const List = styled.ul`
