@@ -81,30 +81,35 @@ const Project = () => {
                             ]}
                             avatarUrl={data?.logo_big_url ?? '/bmo.png'}
                             title={data?.name}
-                            description={data?.description}
+                            description={
+                                <Flex direction="column">
+                                    <p>{data?.description}</p>
+                                    <Flex>
+                                        {data?.members.map((member) => (
+                                            <StyledAvatar
+                                                size="large"
+                                                key={member.id}
+                                                src={member.photo}
+                                            >
+                                                {member.full_name
+                                                    .split(' ')
+                                                    .reduce(
+                                                        (prev, curr) =>
+                                                            prev +
+                                                            curr.charAt(0),
+                                                        ''
+                                                    )}
+                                            </StyledAvatar>
+                                        ))}
+                                    </Flex>
+                                </Flex>
+                            }
                             actions={data && <Actions project={data} />}
                         />
                         <LevelDisplay />
                     </Flex>
                     <Achievements />
-                    <StyledFlex justify="space-between">
-                        <Flex>
-                            {data?.members.map((member) => (
-                                <StyledAvatar
-                                    size="large"
-                                    key={member.id}
-                                    src={member.photo}
-                                >
-                                    {member.full_name
-                                        .split(' ')
-                                        .reduce(
-                                            (prev, curr) =>
-                                                prev + curr.charAt(0),
-                                            ''
-                                        )}
-                                </StyledAvatar>
-                            ))}
-                        </Flex>
+                    <StyledFlex justify="flex-end">
                         <Flex>
                             <Link href={`/projects/${projectId}/board`}>
                                 <StyledButton size="large">
@@ -131,7 +136,10 @@ const Project = () => {
                         activity={timeline}
                         href={`/projects/${projectId}/activity`}
                     />
-                    <RecentTasks title="Recent Activity" timeline={recentTasks} />
+                    <RecentTasks
+                        title="Recent Activity"
+                        timeline={recentTasks}
+                    />
                 </Flex>
             </PageBody>
         </div>

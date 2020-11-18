@@ -23,8 +23,8 @@ const TitleContainer = styled(Flex)`
 `
 
 interface Props {
-    title: string
-    description?: string
+    title: React.ReactNode
+    description?: React.ReactNode
     avatarUrl?: string
     actions?: React.ReactNode
     breadcrumbs?: { label: string; href: string }[]
