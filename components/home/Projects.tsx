@@ -1,9 +1,8 @@
 import ProjectListItem from './ProjectListItem'
 import styled from 'styled-components'
 import { useQuery } from 'react-query'
-import { getProjects, Project } from '../../taiga-api/projects'
+import { getProjects, MultiProjectInterface, Project } from '../../taiga-api/projects'
 import Link from 'next/link'
-import { Skeleton } from 'antd'
 import Flex from '../Flex'
 
 const Container = styled(Flex)`
@@ -17,7 +16,7 @@ const Container = styled(Flex)`
     }
 `
 interface Props {
-    publicProjects: Project[]
+    publicProjects: MultiProjectInterface[]
 }
 export default function Projects({ publicProjects }: Props) {
     const { data = publicProjects, error } = useQuery('projects', async () => {
