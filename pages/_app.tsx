@@ -5,9 +5,8 @@ import Header from '../components/header/Header'
 import axios from 'axios'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import 'draft-js/dist/Draft.css'
 import 'react-markdown-editor-lite/lib/index.css'
-import 'antd/dist/antd.css'
+// import 'antd/dist/antd.css'
 
 export interface Theme {
     colors: {
