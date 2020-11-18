@@ -1,7 +1,6 @@
 import { BookOutlined, ProfileOutlined } from '@ant-design/icons'
-import { Avatar, Card } from 'antd'
+import { Card } from 'antd'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import styled from 'styled-components'
 
 const StyledUserStoryIcon = styled(BookOutlined)`
@@ -33,9 +32,17 @@ interface Props {
     title: string
     description?: string
     id: number
+    projectName: string
+    projectId: number
 }
-export default function RecentTask({ type, title, description, id }: Props) {
-    const { projectId } = useRouter().query
+export default function RecentTask({
+    type,
+    title,
+    description,
+    id,
+    projectName,
+    projectId,
+}: Props) {
     return (
         <StyledCard>
             <Meta
@@ -51,7 +58,13 @@ export default function RecentTask({ type, title, description, id }: Props) {
                         {title}
                     </Link>
                 }
-                description={description}
+                description={
+                    <div>
+                        {projectName}
+                        <br />
+                        {description}
+                    </div>
+                }
             />
         </StyledCard>
     )

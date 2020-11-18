@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 import Projects from '../components/home/Projects'
 import { useState } from 'react'
-import YourWork from '../components/home/YourWork'
 import ProjectCreationModal from '../components/home/ProjectCreationModal'
 import { getMe } from '../taiga-api/users'
 import PageTitle from '../components/PageTitle'
@@ -14,7 +13,9 @@ import { ActionContainer } from '../components/project/Actions'
 import LimitedActivity from '../components/activity/LimitedActivity'
 import { getUserTimeline } from '../taiga-api/timelines'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
-import { getProjects, getPublicProjects } from '../taiga-api/projects'
+import { getPublicProjects } from '../taiga-api/projects'
+import { recentTaskFilter } from '../util/recentTaskFilter'
+import RecentTasks from '../components/recentTasks/RecentTasks'
 
 const Container = styled.div`
     padding: ${({ theme }) => `${theme.spacing.huge} ${theme.spacing.crazy}`};
@@ -76,11 +77,14 @@ export default function Home({
 
     const { data: me } = useQuery('me', () => getMe())
 
-    const { data: activity, isLoading } = useQuery(
+    const { data: timeline, isLoading } = useQuery(
         ['timeline', { id: me?.id }],
         (key, { id }) => getUserTimeline(id),
         { enabled: !!me?.id }
     )
+
+    const recentTasks: Timeline[] = recentTaskFilter(timeline)
+
     return (
         <>
             <PageHeader>
@@ -118,15 +122,15 @@ export default function Home({
             </PageHeader>
             <PageBody>
                 <Container>
-                    <Projects publicProjects={publicProjects}/>
+                    <Projects publicProjects={publicProjects} />
                     <InnerContainer>
                         <LimitedActivity
                             title="Your activity"
-                            activity={activity ?? []}
+                            activity={timeline ?? []}
                             isLoading={isLoading}
                             href={`/activity`}
                         />
-                        <YourWork />
+                        <RecentTasks title="Your work" timeline={recentTasks} />
                     </InnerContainer>
                 </Container>
             </PageBody>
