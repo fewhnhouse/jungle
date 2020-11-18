@@ -91,19 +91,21 @@ const SubtaskList = ({ id }: Props) => {
         { enabled: id && projectId }
     )
 
-    const handleAddSubtask = (values: { name: string }) => {
-        createTask({
-            assigned_to: null,
-            project: projectId,
-            // TODO status: 16,
-            subject: values.name,
-            user_story: id,
-        }).then((newTask) => {
+    const handleAddSubtask = () => {
+        form.validateFields().then((values) => {
             form.resetFields()
-            queryCache.setQueryData(
-                ['subtasks', { id }],
-                (prevData: Task[]) => [...prevData, newTask]
-            )
+            createTask({
+                assigned_to: null,
+                project: projectId,
+                // TODO status: 16,
+                subject: values.name,
+                user_story: id,
+            }).then((newTask) => {
+                queryCache.setQueryData(
+                    ['subtasks', { id }],
+                    (prevData: Task[]) => [...prevData, newTask]
+                )
+            })
         })
     }
 
@@ -148,7 +150,11 @@ const SubtaskList = ({ id }: Props) => {
                             </Link>
                         </TaskItem>
                     ))}
-                    <StyledForm layout="vertical" onFinish={handleAddSubtask}>
+                    <StyledForm
+                        initialValues={{ name: '' }}
+                        layout="vertical"
+                        onFinish={handleAddSubtask}
+                    >
                         <StyledFormItem
                             name="name"
                             rules={[
