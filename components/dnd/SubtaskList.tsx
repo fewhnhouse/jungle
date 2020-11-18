@@ -17,6 +17,11 @@ const StyledInput = styled(Input)`
     flex: 1;
 `
 
+const StyledFormItem = styled(Form.Item)`
+    width: 100%;
+    margin-right: 5px;
+`
+
 const StyledForm = styled(Form)`
     width: 100%;
     display: flex;
@@ -24,7 +29,7 @@ const StyledForm = styled(Form)`
 `
 
 const TaskItem = styled.li`
-    border-radius: 4px;
+    border-radius: 2px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -143,8 +148,8 @@ const SubtaskList = ({ id }: Props) => {
                             </Link>
                         </TaskItem>
                     ))}
-                    <StyledForm layout="inline" onFinish={handleAddSubtask}>
-                        <Form.Item
+                    <StyledForm layout="vertical" onFinish={handleAddSubtask}>
+                        <StyledFormItem
                             name="name"
                             rules={[
                                 {
@@ -153,7 +158,7 @@ const SubtaskList = ({ id }: Props) => {
                             ]}
                         >
                             <StyledInput placeholder="Add Subtask..." />
-                        </Form.Item>
+                        </StyledFormItem>
                         <Button
                             htmlType="submit"
                             type="primary"

@@ -137,7 +137,7 @@ const Project = () => {
                         href={`/projects/${projectId}/activity`}
                     />
                     <RecentTasks
-                        title="Recent Activity"
+                        title="Recent Tasks"
                         timeline={recentTasks}
                     />
                 </Flex>

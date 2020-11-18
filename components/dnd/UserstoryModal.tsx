@@ -16,19 +16,12 @@ import Breadcrumbs from '../UserStoryBreadcrumbs'
 import SubtaskList from './SubtaskList'
 import CustomTagPicker from '../TagPicker'
 import { useRouter } from 'next/router'
-import { Divider, Modal, Skeleton, Upload } from 'antd'
+import { Divider, message, Modal, Skeleton, Upload } from 'antd'
 import Flex from '../Flex'
 import { BookOutlined, UploadOutlined } from '@ant-design/icons'
 import Comments from './comments/Comments'
+import Uploader from '../Uploader'
 
-const StyledFlex = styled(Flex)`
-    margin: 0px 10px;
-    span {
-        &:first-child {
-            margin-right: 5px;
-        }
-    }
-`
 const Label = styled.span`
     margin-top: ${({ theme }) => theme.spacing.mini};
 `
@@ -146,24 +139,6 @@ export default function IssueModal({ id, open, onClose }: Props) {
                             <EditableDescription
                                 initialValue={data?.description}
                             />
-                            <Upload.Dragger
-                                data={{
-                                    object_id: data.id,
-                                    project: data.project,
-                                }}
-                                name="attached_file"
-                                headers={{
-                                    Authorization: token && `Bearer ${token}`,
-                                }}
-                                action={`${process.env.NEXT_PUBLIC_TAIGA_API_URL}/tasks/attachments`}
-                            >
-                                <StyledFlex align="center">
-                                    <UploadOutlined size={32} />
-                                    <p>Click or Drag files to upload</p>
-                                </StyledFlex>
-                            </Upload.Dragger>
-                            <Divider />
-                            <SubtaskList id={id} />
                         </Content>
                         <Sidebar>
                             <Label>Status</Label>
@@ -183,6 +158,18 @@ export default function IssueModal({ id, open, onClose }: Props) {
                             <EditableNumber initialValue={1} />
                         </Sidebar>
                     </Main>
+
+                    <Uploader
+                        // action={`${process.env.NEXT_PUBLIC_TAIGA_API_URL}/tasks/attachments`}
+                        data={{
+                            object_id: data.id,
+                            project: data.project,
+                        }}
+                    />
+
+                    <Divider />
+                    <SubtaskList id={id} />
+
                     <Comments
                         version={data?.version}
                         type="userstory"
