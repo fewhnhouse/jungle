@@ -1,14 +1,8 @@
 import styled from 'styled-components'
 import Projects from '../../../components/home/Projects'
 import { useState } from 'react'
-import YourWork from '../../../components/home/YourWork'
 import ProjectCreationModal from '../../../components/home/ProjectCreationModal'
-import {
-    getMe,
-    getPublicUser,
-    getUser,
-    getUsers,
-} from '../../../taiga-api/users'
+import { getPublicUser, getUser, getUsers } from '../../../taiga-api/users'
 import PageTitle from '../../../components/PageTitle'
 import { PageBody, PageHeader } from '../../../components/Layout'
 import { useQuery } from 'react-query'
@@ -20,6 +14,7 @@ import LimitedActivity from '../../../components/activity/LimitedActivity'
 import {
     getPublicUserTimeline,
     getUserTimeline,
+    Timeline,
 } from '../../../taiga-api/timelines'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { getPublicProjects } from '../../../taiga-api/projects'

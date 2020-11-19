@@ -19,8 +19,8 @@ const StyledSelect = styled(Select)`
     }
 `
 
-const SingleStorypointSelect = ({ data }: { data: UserStory | Task }) => {
-    const { version, points, id } = data
+const SingleStorypointSelect = ({ data }: { data: UserStory }) => {
+    const { version, id } = data
     const { projectId } = useRouter().query
     const { data: project } = useQuery(
         ['project', { projectId }],
