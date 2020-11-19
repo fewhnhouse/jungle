@@ -93,7 +93,7 @@ const Comments = ({
                     placeholder="Type a comment..."
                     value={text}
                     onChange={handleTextChange}
-                    style={{ flex: 1, marginRight: 5 }}
+                    style={{ flex: 1, marginRight: 10 }}
                 />
                 <Button htmlType="submit" type="primary">
                     &uarr;

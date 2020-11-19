@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { Button, Form, Input, Skeleton, Tag } from 'antd'
 import { PicLeftOutlined, PlusOutlined } from '@ant-design/icons'
+import { Store } from 'antd/lib/form/interface'
 
 const TaskList = styled.ul`
     list-style: none;
@@ -19,7 +20,7 @@ const StyledInput = styled(Input)`
 
 const StyledFormItem = styled(Form.Item)`
     width: 100%;
-    margin-right: 5px;
+    margin-right: 10px;
 `
 
 const StyledForm = styled(Form)`
@@ -91,8 +92,9 @@ const SubtaskList = ({ id }: Props) => {
         { enabled: id && projectId }
     )
 
-    const handleAddSubtask = () => {
-        form.validateFields().then((values) => {
+    const handleFinish = (values: Store) => {
+        form.validateFields().then(() => {
+            console.log(values)
             form.resetFields()
             createTask({
                 assigned_to: null,
@@ -151,9 +153,10 @@ const SubtaskList = ({ id }: Props) => {
                         </TaskItem>
                     ))}
                     <StyledForm
+                        form={form}
                         initialValues={{ name: '' }}
                         layout="vertical"
-                        onFinish={handleAddSubtask}
+                        onFinish={handleFinish}
                     >
                         <StyledFormItem
                             name="name"
