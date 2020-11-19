@@ -2,30 +2,20 @@ import React from 'react'
 import styled from 'styled-components'
 import EditableTitle from '../EditableTitle'
 import EditableDescription from '../EditableDescription'
-import EditableNumber from '../EditableNumber'
 import { queryCache, useQuery } from 'react-query'
 import { getFiltersData, getTask, updateTask } from '../../taiga-api/tasks'
 import AssigneeDropdown from '../AssigneeDropdown'
 import StatusDropdown from '../StatusDropdown'
 import Breadcrumbs from '../TaskBreadcrumbs'
 import { useRouter } from 'next/router'
-import { Modal, Select, Skeleton, Upload } from 'antd'
+import { Modal, Select, Skeleton } from 'antd'
 import Flex from '../Flex'
-import { ProfileOutlined, UploadOutlined } from '@ant-design/icons'
+import { ProfileOutlined } from '@ant-design/icons'
 import Comments from './comments/Comments'
 import Uploader from '../Uploader'
 
 const Label = styled.span`
     margin-top: ${({ theme }) => theme.spacing.mini};
-`
-
-const StyledFlex = styled(Flex)`
-    margin: 0px 10px;
-    span {
-        &:first-child {
-            margin-right: 5px;
-        }
-    }
 `
 
 const StyledTaskIcon = styled(ProfileOutlined)`
@@ -34,6 +24,7 @@ const StyledTaskIcon = styled(ProfileOutlined)`
     font-size: 20px;
     padding: 5px;
     color: #2c3e50;
+    margin-right: 5px;
 `
 
 const Main = styled.div`
@@ -51,7 +42,7 @@ const Content = styled.div`
     flex: 3;
     display: flex;
     flex-direction: column;
-    padding: 10px;
+    margin-right: 10px;
 `
 
 const Sidebar = styled.aside`
@@ -144,8 +135,6 @@ export default function IssueModal({ id, open, onClose }: Props) {
                             />
                             <Label>Priority</Label>
                             <Select style={{ width: '100%' }} />
-                            <Label>Story Points</Label>
-                            <EditableNumber initialValue={1} />
                         </Sidebar>
                     </Main>
                     <Uploader

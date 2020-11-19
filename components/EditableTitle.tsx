@@ -6,8 +6,10 @@ import Flex from './Flex'
 import { Button, Input } from 'antd'
 
 const Title = styled.h3`
-    border-radius: 4px;
+    border-radius: 2px;
+    width: 100%;
     height: 42px;
+    max-width: 280px;
     padding: ${({ theme }) => `${theme.spacing.mini} ${theme.spacing.small}`};
     line-height: 30px;
     &:hover {
@@ -18,6 +20,12 @@ const Title = styled.h3`
     color: #495057;
     cursor: pointer;
     margin: ${({ theme }) => theme.spacing.mini} 0px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    span {
+        margin-right: 5px;
+    }
 `
 
 const StyledButton = styled(Button)`

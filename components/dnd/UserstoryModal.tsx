@@ -2,7 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 import EditableTitle from '../EditableTitle'
 import EditableDescription from '../EditableDescription'
-import EditableNumber from '../EditableNumber'
 import { queryCache, useQuery } from 'react-query'
 import AssigneeDropdown from '../AssigneeDropdown'
 import StatusDropdown from '../StatusDropdown'
@@ -16,11 +15,12 @@ import Breadcrumbs from '../UserStoryBreadcrumbs'
 import SubtaskList from './SubtaskList'
 import CustomTagPicker from '../TagPicker'
 import { useRouter } from 'next/router'
-import { Divider, message, Modal, Skeleton, Upload } from 'antd'
+import { Divider, Modal, Skeleton } from 'antd'
 import Flex from '../Flex'
-import { BookOutlined, UploadOutlined } from '@ant-design/icons'
+import { BookOutlined } from '@ant-design/icons'
 import Comments from './comments/Comments'
 import Uploader from '../Uploader'
+import MultiStorypointSelect from './MultiStorypointSelect'
 
 const Label = styled.span`
     margin-top: ${({ theme }) => theme.spacing.mini};
@@ -37,11 +37,10 @@ const Main = styled.div`
     height: 100%;
 `
 
-const Content = styled.div`
+const Content = styled(Flex)`
     flex: 3;
     display: flex;
-    flex-direction: column;
-    padding: 10px;
+    margin-right: 10px;
 `
 
 const Sidebar = styled.aside`
@@ -58,6 +57,7 @@ const StyledUserStoryIcon = styled(BookOutlined)`
     font-size: 20px;
     border-radius: 3px;
     padding: 5px;
+    margin-right: 5px;
     color: #2c3e50;
 `
 
@@ -86,8 +86,6 @@ export default function IssueModal({ id, open, onClose }: Props) {
         })) ?? []
 
     if (isError) return <div>Error</div>
-
-    const token = localStorage.getItem('auth-token')
 
     const updateAssignee = async (assigneeId: number) => {
         const updatedStory = await updateUserstory(id, {
@@ -128,7 +126,7 @@ export default function IssueModal({ id, open, onClose }: Props) {
                 <Flex direction="column">
                     <Breadcrumbs data={data} />
                     <Main>
-                        <Content>
+                        <Content direction="column" justify="space-between">
                             <Flex align="center">
                                 <StyledUserStoryIcon />
                                 <EditableTitle
@@ -138,6 +136,13 @@ export default function IssueModal({ id, open, onClose }: Props) {
                             </Flex>
                             <EditableDescription
                                 initialValue={data?.description}
+                            />
+                            <Uploader
+                                // action={`${process.env.NEXT_PUBLIC_TAIGA_API_URL}/tasks/attachments`}
+                                data={{
+                                    object_id: data.id,
+                                    project: data.project,
+                                }}
                             />
                         </Content>
                         <Sidebar>
@@ -155,17 +160,9 @@ export default function IssueModal({ id, open, onClose }: Props) {
                             <Label>Tags</Label>
                             <CustomTagPicker id={id} />
                             <Label>Story Points</Label>
-                            <EditableNumber initialValue={1} />
+                            <MultiStorypointSelect data={data} />
                         </Sidebar>
                     </Main>
-
-                    <Uploader
-                        // action={`${process.env.NEXT_PUBLIC_TAIGA_API_URL}/tasks/attachments`}
-                        data={{
-                            object_id: data.id,
-                            project: data.project,
-                        }}
-                    />
 
                     <Divider />
                     <SubtaskList id={id} />

@@ -15,6 +15,7 @@ const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
 
 const DisplayContainer = styled.div`
     height: 200px;
+    width: 100%;
     padding: 10px;
     border-radius: 4px;
     cursor: pointer;
