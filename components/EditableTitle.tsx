@@ -5,7 +5,7 @@ import CheckIcon from '@material-ui/icons/Check'
 import Flex from './Flex'
 import { Button, Input } from 'antd'
 
-const Title = styled.h3`
+const Title = styled.h2`
     border-radius: 2px;
     width: 100%;
     height: 42px;
@@ -15,7 +15,7 @@ const Title = styled.h3`
     &:hover {
         background: #e9ecef;
     }
-    font-size: 1.6rem;
+    font-size: 1.2rem;
     font-weight: 300;
     color: #495057;
     cursor: pointer;
@@ -59,25 +59,29 @@ export default function EditableTitle({ initialValue, onSubmit }: Props) {
         toggleEditable()
     }
 
-    return editable ? (
-        <InputContainer onSubmit={handleSubmit}>
-            <Flex>
-                <Input
-                    size="large"
-                    value={value}
-                    onChange={(e) => setValue(e.target.value)}
-                />
-                <Flex>
-                    <StyledButton size="large" onClick={toggleEditable}>
-                        <ClearIcon />
-                    </StyledButton>
-                    <StyledButton size="large" onClick={toggleEditable}>
-                        <CheckIcon />
-                    </StyledButton>
-                </Flex>
-            </Flex>
-        </InputContainer>
-    ) : (
-        <Title onClick={toggleEditable}>{value}</Title>
+    return (
+        <div>
+            {editable ? (
+                <InputContainer onSubmit={handleSubmit}>
+                    <Flex>
+                        <Input
+                            size="large"
+                            value={value}
+                            onChange={(e) => setValue(e.target.value)}
+                        />
+                        <Flex>
+                            <StyledButton size="large" onClick={toggleEditable}>
+                                <ClearIcon />
+                            </StyledButton>
+                            <StyledButton size="large" onClick={toggleEditable}>
+                                <CheckIcon />
+                            </StyledButton>
+                        </Flex>
+                    </Flex>
+                </InputContainer>
+            ) : (
+                <Title onClick={toggleEditable}>{value}</Title>
+            )}
+        </div>
     )
 }

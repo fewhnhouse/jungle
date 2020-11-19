@@ -19,6 +19,7 @@ const Label = styled.span`
 `
 
 const StyledTaskIcon = styled(ProfileOutlined)`
+    display: block;
     background: #45aaff;
     border-radius: 3px;
     font-size: 20px;
@@ -51,7 +52,6 @@ const Sidebar = styled.aside`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    min-width: 180px;
 `
 
 interface Props {
@@ -99,8 +99,6 @@ export default function IssueModal({ id, open, onClose }: Props) {
 
     if (isError) return <div>Error</div>
 
-    const token = localStorage.getItem('auth-token')
-
     return (
         <Modal footer={null} visible={open} onCancel={onClose} onOk={onClose}>
             {isLoading ? (
@@ -111,7 +109,9 @@ export default function IssueModal({ id, open, onClose }: Props) {
                     <Main>
                         <Content>
                             <Flex align="center">
-                                <StyledTaskIcon />
+                                <div>
+                                    <StyledTaskIcon />
+                                </div>
                                 <EditableTitle
                                     onSubmit={() => console.log('submit')}
                                     initialValue={data?.subject}
