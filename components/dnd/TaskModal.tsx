@@ -8,11 +8,12 @@ import AssigneeDropdown from '../AssigneeDropdown'
 import StatusDropdown from '../StatusDropdown'
 import Breadcrumbs from '../TaskBreadcrumbs'
 import { useRouter } from 'next/router'
-import { Modal, Select, Skeleton } from 'antd'
+import { Button, Modal, Select, Skeleton } from 'antd'
 import Flex from '../Flex'
-import { ProfileOutlined } from '@ant-design/icons'
+import { ArrowUpOutlined, ProfileOutlined } from '@ant-design/icons'
 import Comments from './comments/Comments'
 import Uploader from '../Uploader'
+import UpgradeTask from './UpgradeTask'
 
 const Label = styled.span`
     margin-top: ${({ theme }) => theme.spacing.mini};
@@ -135,6 +136,7 @@ export default function IssueModal({ id, open, onClose }: Props) {
                             />
                             <Label>Priority</Label>
                             <Select style={{ width: '100%' }} />
+                            <UpgradeTask />
                         </Sidebar>
                     </Main>
                     <Uploader

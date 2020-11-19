@@ -5,13 +5,27 @@ import { getTasks, createTask, Task } from '../../taiga-api/tasks'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { Button, Form, Input, Skeleton, Tag } from 'antd'
-import { PicLeftOutlined, PlusOutlined } from '@ant-design/icons'
+import {
+    PicLeftOutlined,
+    PlusOutlined,
+    ProfileOutlined,
+} from '@ant-design/icons'
 import { Store } from 'antd/lib/form/interface'
 
 const TaskList = styled.ul`
     list-style: none;
     width: 100%;
     padding: 0;
+`
+
+const StyledTaskIcon = styled(ProfileOutlined)`
+    display: block;
+    background: #45aaff;
+    border-radius: 3px;
+    font-size: 20px;
+    padding: 5px;
+    color: #2c3e50;
+    margin-right: 5px;
 `
 
 const StyledInput = styled(Input)`
@@ -124,7 +138,7 @@ const SubtaskList = ({ id }: Props) => {
                                 href={`/projects/${projectId}/tasks/${id}`}
                             >
                                 <Flex>
-                                    <PicLeftOutlined />
+                                    <StyledTaskIcon />
                                     <TaskContent>
                                         <TaskSubject>
                                             {task.subject}
