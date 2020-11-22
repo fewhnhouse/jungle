@@ -72,7 +72,6 @@ const Comments = ({
 
     return (
         <Flex fluid direction="column">
-            <Divider />
             <CommentBox fluid direction="column">
                 {isLoading && <Skeleton active paragraph={{ rows: 5 }} />}
                 <Flex direction="column" style={{ width: '100%' }}>
