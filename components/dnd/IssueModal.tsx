@@ -118,7 +118,11 @@ export default function IssueModal({
                             <StoryBreadcrumbs data={data as UserStory} />
                         )}
                         <HeaderActionContainer>
-                            <Dropdown overlay={actions} placement="bottomRight">
+                            <Dropdown
+                                trigger={['click']}
+                                overlay={actions}
+                                placement="bottomRight"
+                            >
                                 <Button icon={<EllipsisOutlined />} />
                             </Dropdown>
                             <Button

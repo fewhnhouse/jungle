@@ -4,6 +4,7 @@ import { queryCache, useQuery } from 'react-query'
 import AssigneeDropdown from '../AssigneeDropdown'
 import StatusDropdown from '../StatusDropdown'
 import {
+    deleteUserstory,
     getFiltersData,
     getUserstory,
     updateUserstory,
@@ -12,11 +13,17 @@ import {
 import SubtaskList from './SubtaskList'
 import CustomTagPicker from '../TagPicker'
 import { useRouter } from 'next/router'
-import { Divider, Menu, Skeleton } from 'antd'
-import { BookOutlined, DeleteOutlined, UserOutlined } from '@ant-design/icons'
+import { Menu, Modal, Skeleton } from 'antd'
+import {
+    DeleteOutlined,
+    ExclamationCircleOutlined,
+    UserOutlined,
+} from '@ant-design/icons'
 import Uploader from '../Uploader'
 import MultiStorypointSelect from './MultiStorypointSelect'
 import IssueModal from './IssueModal'
+
+const { confirm } = Modal
 
 const Label = styled.span`
     margin-top: ${({ theme }) => theme.spacing.mini};
@@ -27,26 +34,6 @@ interface Props {
     onClose: () => void
     id: number
 }
-
-const menu = (
-    <Menu>
-        <Menu.Item key="1" icon={<BookOutlined />}>
-            Convert to Userstory
-        </Menu.Item>
-        <Menu.Item key="3" icon={<UserOutlined />}>
-            Move
-        </Menu.Item>
-        <Menu.Item key="3" icon={<UserOutlined />}>
-            Clone
-        </Menu.Item>
-        <Menu.Item key="3" icon={<UserOutlined />}>
-            Change Parent
-        </Menu.Item>
-        <Menu.Item key="2" icon={<DeleteOutlined />}>
-            Delete Task
-        </Menu.Item>
-    </Menu>
-)
 
 export default function UserstoryModal({ id, open, onClose }: Props) {
     const { projectId } = useRouter().query
@@ -60,6 +47,42 @@ export default function UserstoryModal({ id, open, onClose }: Props) {
         (key, { projectId }) => getFiltersData(projectId as string),
         { enabled: projectId }
     )
+
+    const handleDelete = () => {
+        confirm({
+            title: 'Are you sure you want to delete this story?',
+            icon: <ExclamationCircleOutlined />,
+            centered: true,
+            content: 'Some descriptions',
+            onOk: async () => {
+                await deleteUserstory(id)
+                queryCache.invalidateQueries(['milestones', { projectId }])
+                queryCache.invalidateQueries(['backlog', { projectId }])
+                onClose()
+            },
+            onCancel() {
+                console.log('Cancel')
+            },
+        })
+    }
+
+    const menu = (
+        <Menu>
+            <Menu.Item key="1" icon={<UserOutlined />}>
+                Move
+            </Menu.Item>
+            <Menu.Item key="2" icon={<UserOutlined />}>
+                Clone
+            </Menu.Item>
+            <Menu.Item key="3" icon={<UserOutlined />}>
+                Change Parent
+            </Menu.Item>
+            <Menu.Item onClick={handleDelete} key="4" icon={<DeleteOutlined />}>
+                Delete Task
+            </Menu.Item>
+        </Menu>
+    )
+
     const statusData =
         storyFilters?.statuses.map((status) => ({
             value: status.id,
@@ -86,10 +109,13 @@ export default function UserstoryModal({ id, open, onClose }: Props) {
     }
 
     const handleTitleSubmit = async (subject: string) => {
-        queryCache.setQueryData(['userstory', { id }], (prevData: UserStory) => ({
-            ...prevData,
-            subject,
-        }))
+        queryCache.setQueryData(
+            ['userstory', { id }],
+            (prevData: UserStory) => ({
+                ...prevData,
+                subject,
+            })
+        )
 
         await updateUserstory(id, {
             subject,
