@@ -71,7 +71,9 @@ export default function TaskModal({ id, open, onClose }: Props) {
                     'tasks',
                     { projectId, milestone: data?.id },
                 ])
+                queryCache.invalidateQueries(['tasks', { projectId }])
                 queryCache.invalidateQueries(['backlog', { projectId }])
+                queryCache.invalidateQueries(['milestones', { projectId }])
                 onClose()
             },
             onCancel() {
@@ -82,16 +84,9 @@ export default function TaskModal({ id, open, onClose }: Props) {
 
     const handleConvert = async () => {
         await promoteToUserstory(id, projectId as string)
-        queryCache.invalidateQueries([
-            'tasks',
-            { projectId, milestone: data?.id },
-        ])
+        queryCache.invalidateQueries(['tasks', { projectId }])
         queryCache.invalidateQueries(['backlog', { projectId }])
         queryCache.invalidateQueries(['milestones', { projectId }])
-        queryCache.invalidateQueries([
-            'tasks',
-            { projectId, milestone: data?.milestone },
-        ])
         onClose()
     }
     const menu = (
@@ -100,15 +95,9 @@ export default function TaskModal({ id, open, onClose }: Props) {
                 Convert to Userstory
             </Menu.Item>
             <Menu.Item key="2" icon={<UserOutlined />}>
-                Move
-            </Menu.Item>
-            <Menu.Item key="3" icon={<UserOutlined />}>
-                Clone
-            </Menu.Item>
-            <Menu.Item key="4" icon={<UserOutlined />}>
                 Change Parent
             </Menu.Item>
-            <Menu.Item onClick={handleDelete} key="5" icon={<DeleteOutlined />}>
+            <Menu.Item onClick={handleDelete} key="3" icon={<DeleteOutlined />}>
                 Delete Task
             </Menu.Item>
         </Menu>

@@ -1,12 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
 import { queryCache, useQuery } from 'react-query'
-import { getTasks, createTask, Task } from '../../taiga-api/tasks'
+import { getTasks, createTask, Task, deleteTask } from '../../taiga-api/tasks'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { Button, Form, Input, Skeleton, Tag } from 'antd'
+import { Button, Form, Input, Popconfirm, Skeleton, Tag } from 'antd'
 import {
-    PicLeftOutlined,
+    DeleteOutlined,
     PlusOutlined,
     ProfileOutlined,
 } from '@ant-design/icons'
@@ -45,7 +45,6 @@ const StyledForm = styled(Form)`
 
 const TaskItem = styled.li`
     border-radius: 2px;
-    cursor: pointer;
     display: flex;
     align-items: center;
     border: 2px solid transparent;
@@ -53,10 +52,6 @@ const TaskItem = styled.li`
     box-sizing: border-box;
     padding: ${({ theme }) => `${theme.spacing.mini}`};
     margin-bottom: ${({ theme }) => `${theme.spacing.mini}`};
-    &:hover,
-    &:active {
-        color: #7f8c8d;
-    }
     display: flex;
 `
 
@@ -77,8 +72,12 @@ const TaskContent = styled.div`
     flex-direction: row;
 `
 
-const TaskSubject = styled.p`
+const TaskSubject = styled.a`
     margin: 0px 10px;
+    color: #333;
+    &:hover {
+        color: black;
+    }
 `
 
 const TagContainer = styled.div`
@@ -125,6 +124,11 @@ const SubtaskList = ({ id }: Props) => {
         })
     }
 
+    const handleDelete = (id: number) => async () => {
+        await deleteTask(id)
+        queryCache.invalidateQueries(['subtasks', { id }])
+    }
+
     return (
         <TaskList>
             {isTasksLoading ? (
@@ -133,37 +137,44 @@ const SubtaskList = ({ id }: Props) => {
                 <>
                     {subtasks?.map((task) => (
                         <TaskItem key={task.id}>
-                            <Link
-                                key={task.id}
-                                href={`/projects/${projectId}/tasks/${id}`}
-                            >
-                                <Flex>
-                                    <StyledTaskIcon />
-                                    <TaskContent>
+                            <Flex>
+                                <StyledTaskIcon />
+                                <TaskContent>
+                                    <Link
+                                        key={task.id}
+                                        href={`/projects/${projectId}/tasks/${id}`}
+                                    >
                                         <TaskSubject>
                                             {task.subject}
                                         </TaskSubject>
-                                        <TagContainer>
-                                            {task.assigned_to_extra_info && (
-                                                <Tag>
-                                                    {
-                                                        task
-                                                            .assigned_to_extra_info
-                                                            .full_name_display
-                                                    }
-                                                </Tag>
-                                            )}
+                                    </Link>
+                                    <TagContainer>
+                                        {task.assigned_to_extra_info && (
                                             <Tag>
-                                                {task.status_extra_info.name}
+                                                {
+                                                    task.assigned_to_extra_info
+                                                        .full_name_display
+                                                }
                                             </Tag>
-                                            <Tag>
-                                                ID-
-                                                {task.id}
-                                            </Tag>
-                                        </TagContainer>
-                                    </TaskContent>
-                                </Flex>
-                            </Link>
+                                        )}
+                                        <Tag>{task.status_extra_info.name}</Tag>
+                                        <Tag>
+                                            ID-
+                                            {task.id}
+                                        </Tag>
+                                        <Popconfirm
+                                            title="Are you sure you want to delete this subtask?"
+                                            onConfirm={handleDelete(task.id)}
+                                        >
+                                            <Button
+                                                danger
+                                                size="small"
+                                                icon={<DeleteOutlined />}
+                                            />
+                                        </Popconfirm>
+                                    </TagContainer>
+                                </TaskContent>
+                            </Flex>
                         </TaskItem>
                     ))}
                     <StyledForm

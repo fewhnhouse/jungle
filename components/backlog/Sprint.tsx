@@ -76,7 +76,12 @@ const Sprint = ({ sprint }: { sprint: Milestone }) => {
                 <IssueList
                     style={{ minHeight: 100 }}
                     listId={sprint.id.toString()}
-                    issues={[...sprint.user_stories, ...tasks]}
+                    issues={[
+                        ...sprint.user_stories.filter(
+                            (story) => !story.is_closed
+                        ),
+                        ...tasks.filter((task) => !task.is_closed),
+                    ]}
                 />
             </CustomCollapse>
         </Skeleton>

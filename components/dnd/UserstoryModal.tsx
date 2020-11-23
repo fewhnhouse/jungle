@@ -68,17 +68,8 @@ export default function UserstoryModal({ id, open, onClose }: Props) {
 
     const menu = (
         <Menu>
-            <Menu.Item key="1" icon={<UserOutlined />}>
-                Move
-            </Menu.Item>
-            <Menu.Item key="2" icon={<UserOutlined />}>
-                Clone
-            </Menu.Item>
-            <Menu.Item key="3" icon={<UserOutlined />}>
-                Change Parent
-            </Menu.Item>
             <Menu.Item onClick={handleDelete} key="4" icon={<DeleteOutlined />}>
-                Delete Task
+                Delete Story
             </Menu.Item>
         </Menu>
     )
@@ -106,23 +97,6 @@ export default function UserstoryModal({ id, open, onClose }: Props) {
             version: data.version,
         })
         queryCache.setQueryData(['userstory', { id }], () => updatedStory)
-    }
-
-    const handleTitleSubmit = async (subject: string) => {
-        queryCache.setQueryData(
-            ['userstory', { id }],
-            (prevData: UserStory) => ({
-                ...prevData,
-                subject,
-            })
-        )
-
-        await updateUserstory(id, {
-            subject,
-            version: data.version,
-        })
-        queryCache.invalidateQueries(['backlog', { projectId }])
-        queryCache.invalidateQueries(['milestones', { projectId }])
     }
 
     return (

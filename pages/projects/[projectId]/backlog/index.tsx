@@ -75,10 +75,12 @@ export default function Backlog() {
                 projectId,
             })
             return [
-                ...userstories,
+                ...userstories.filter((story) => !story.is_closed),
                 ...tasks.filter(
                     (task) =>
-                        task.user_story === null && task.milestone === null
+                        task.user_story === null &&
+                        task.milestone === null &&
+                        !task.is_closed
                 ),
             ]
         }
@@ -134,7 +136,6 @@ export default function Backlog() {
             ? currentSprint.user_stories
             : tasks
         ).find((issue) => issue.id.toString() === actualDraggableId)
-        console.log(currentIssue)
         queryCache.setQueryData(
             ['backlog', { projectId }],
             (prevData: (UserStory | Task)[]) => {
