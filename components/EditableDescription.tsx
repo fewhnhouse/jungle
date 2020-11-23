@@ -7,8 +7,8 @@ import Flex from './Flex'
 import ClearIcon from '@material-ui/icons/Clear'
 import CheckIcon from '@material-ui/icons/Check'
 import { Button } from 'antd'
-import { updateTask } from '../taiga-api/tasks'
-import { updateUserstory } from '../taiga-api/userstories'
+import { Task, updateTask } from '../taiga-api/tasks'
+import { updateUserstory, UserStory } from '../taiga-api/userstories'
 import { queryCache } from 'react-query'
 import { useRouter } from 'next/router'
 
@@ -67,6 +67,13 @@ export default function EditableDescription({
     }
 
     const onSubmit = async () => {
+        queryCache.setQueryData(
+            [type, { id }],
+            (prevData: UserStory | Task) => ({
+                ...prevData,
+                description,
+            })
+        )
         if (type === 'task') {
             await updateTask(id, { version, description })
             queryCache.invalidateQueries(['tasks', { projectId, milestone }])

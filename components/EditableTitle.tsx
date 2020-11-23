@@ -4,8 +4,8 @@ import ClearIcon from '@material-ui/icons/Clear'
 import CheckIcon from '@material-ui/icons/Check'
 import Flex from './Flex'
 import { Button, Input } from 'antd'
-import { updateTask } from '../taiga-api/tasks'
-import { updateUserstory } from '../taiga-api/userstories'
+import { Task, updateTask } from '../taiga-api/tasks'
+import { updateUserstory, UserStory } from '../taiga-api/userstories'
 import { useRouter } from 'next/router'
 import { queryCache } from 'react-query'
 
@@ -70,11 +70,19 @@ export default function EditableTitle({
 
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        queryCache.setQueryData(
+            [type, { id }],
+            (prevData: UserStory | Task) => ({
+                ...prevData,
+                subject,
+            })
+        )
         if (type === 'task') {
             await updateTask(id, { version, subject })
             queryCache.invalidateQueries(['tasks', { projectId, milestone }])
         } else {
             await updateUserstory(id, { version, subject })
+            queryCache.invalidateQueries(['backlog', { projectId }])
             queryCache.invalidateQueries(['milestones', { projectId }])
         }
         toggleEditable()
