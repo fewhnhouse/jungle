@@ -4,6 +4,8 @@ import { queryCache, useQuery } from 'react-query'
 import { createUserstory, UserStory } from '../../taiga-api/userstories'
 import { getProject } from '../../taiga-api/projects'
 import { Button, Form, Input, InputNumber, Modal, Select, Upload } from 'antd'
+import { createTask } from '../../taiga-api/tasks'
+import { Store } from 'antd/lib/form/interface'
 
 const UserstoryCreation = () => {
     const [show, setShow] = useState(false)
@@ -19,39 +21,58 @@ const UserstoryCreation = () => {
     const handleOpen = () => setShow(true)
     const handleClose = () => setShow(false)
 
-    const handleSubmit = async (values: {
-        subject: string
-        assignee: number
-        description: string
-        tags: string[]
-    }) => {
-        const { subject, assignee, description, tags } = values
-        const newUserstory = await createUserstory({
-            subject,
-            assigned_to: assignee,
-            description,
-            tags,
-            project: projectId,
-        })
-        queryCache.setQueryData(['backlog', { projectId }], (prevData?: UserStory[]) =>
-            prevData ? [...prevData, newUserstory] : [newUserstory]
-        )
+    const handleSubmit = async (values: Store) => {
+        const { subject, assignee, description, tags, type } = values
+        if (type === 'userstory') {
+            const newUserstory = await createUserstory({
+                subject,
+                assigned_to: assignee,
+                description,
+                tags,
+                project: projectId,
+            })
+            queryCache.setQueryData(
+                ['backlog', { projectId }],
+                (prevData?: UserStory[]) =>
+                    prevData ? [...prevData, newUserstory] : [newUserstory]
+            )
+        } else if (type === 'task') {
+            await createTask({
+                subject,
+                assigned_to: assignee,
+                description,
+                tags,
+                project: projectId,
+            })
+            queryCache.invalidateQueries(['tasks', { projectId }])
+        }
         handleClose()
     }
 
     const handleFormSubmit = () => {
-        form.submit()
+        form.validateFields().then((fields: Store) => {
+            form.resetFields()
+            handleSubmit(fields)
+        })
     }
     return (
         <>
-            <Button onClick={handleOpen}>Create Userstory</Button>
+            <Button onClick={handleOpen}>Create Issue</Button>
             <Modal
-                title="Create Userstory"
+                title="Create Issue"
                 visible={show}
                 onCancel={handleClose}
                 onOk={handleFormSubmit}
             >
                 <Form form={form} layout="vertical" onFinish={handleSubmit}>
+                    <Form.Item name="type" label="Issue Type">
+                        <Select
+                            options={[
+                                { value: 'userstory', label: 'Userstory' },
+                                { value: 'task', label: 'Task' },
+                            ]}
+                        />
+                    </Form.Item>
                     <Form.Item name="subject" label="Subject">
                         <Input />
                     </Form.Item>
@@ -78,9 +99,6 @@ const UserstoryCreation = () => {
                     </Form.Item>
                     <Form.Item label="Description" name="description">
                         <Input.TextArea />
-                    </Form.Item>
-                    <Form.Item label="Story Points" name="storyPoints">
-                        <InputNumber />
                     </Form.Item>
                     <Form.Item label="Attachments" name="attachments">
                         <Upload.Dragger />
