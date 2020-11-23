@@ -80,8 +80,8 @@ export default function TaskModal({ id, open, onClose }: Props) {
         })
     }
 
-    const handleConvert = () => {
-        promoteToUserstory(id, projectId as string)
+    const handleConvert = async () => {
+        await promoteToUserstory(id, projectId as string)
         queryCache.invalidateQueries([
             'tasks',
             { projectId, milestone: data?.id },
@@ -92,6 +92,7 @@ export default function TaskModal({ id, open, onClose }: Props) {
             'tasks',
             { projectId, milestone: data?.milestone },
         ])
+        onClose()
     }
     const menu = (
         <Menu>

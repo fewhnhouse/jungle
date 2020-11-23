@@ -79,7 +79,7 @@ export default function EditableTitle({
         )
         if (type === 'task') {
             await updateTask(id, { version, subject })
-            queryCache.invalidateQueries(['tasks', { projectId, milestone }])
+            queryCache.invalidateQueries(['tasks', { projectId }])
         } else {
             await updateUserstory(id, { version, subject })
             queryCache.invalidateQueries(['backlog', { projectId }])

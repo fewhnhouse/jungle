@@ -76,7 +76,7 @@ export default function EditableDescription({
         )
         if (type === 'task') {
             await updateTask(id, { version, description })
-            queryCache.invalidateQueries(['tasks', { projectId, milestone }])
+            queryCache.invalidateQueries(['tasks', { projectId }])
         } else {
             await updateUserstory(id, { version, description })
             queryCache.invalidateQueries(['backlog', { projectId }])

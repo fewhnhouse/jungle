@@ -213,7 +213,6 @@ export default function Backlog() {
         if (isStory) {
             queryCache.invalidateQueries(['milestones', { projectId }])
         } else {
-            console.log(milestone, source.droppableId)
             queryCache.invalidateQueries(['tasks', { projectId, milestone }])
             queryCache.invalidateQueries([
                 'tasks',
