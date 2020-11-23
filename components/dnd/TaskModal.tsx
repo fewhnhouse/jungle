@@ -88,6 +88,10 @@ export default function TaskModal({ id, open, onClose }: Props) {
         ])
         queryCache.invalidateQueries(['backlog', { projectId }])
         queryCache.invalidateQueries(['milestones', { projectId }])
+        queryCache.invalidateQueries([
+            'tasks',
+            { projectId, milestone: data?.milestone },
+        ])
     }
     const menu = (
         <Menu>
