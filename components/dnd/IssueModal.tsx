@@ -151,11 +151,18 @@ export default function IssueModal({
                                     )}
                                 </div>
                                 <EditableTitle
-                                    onSubmit={() => console.log('submit')}
+                                    id={data?.id}
+                                    version={data?.version}
+                                    milestone={data?.milestone}
+                                    type={type}
                                     initialValue={data?.subject}
                                 />
                             </Flex>
                             <EditableDescription
+                                id={data?.id}
+                                version={data?.version}
+                                milestone={data?.milestone}
+                                type={type}
                                 initialValue={data?.description}
                             />
                             {innerContent}

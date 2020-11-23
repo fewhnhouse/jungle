@@ -5,6 +5,7 @@ import {
     deleteTask,
     getFiltersData,
     getTask,
+    promoteToUserstory,
     updateTask,
 } from '../../taiga-api/tasks'
 import AssigneeDropdown from '../AssigneeDropdown'
@@ -80,11 +81,17 @@ export default function TaskModal({ id, open, onClose }: Props) {
     }
 
     const handleConvert = () => {
-        //upgrade
+        promoteToUserstory(id, projectId as string)
+        queryCache.invalidateQueries([
+            'tasks',
+            { projectId, milestone: data?.id },
+        ])
+        queryCache.invalidateQueries(['backlog', { projectId }])
+        queryCache.invalidateQueries(['milestones', { projectId }])
     }
     const menu = (
         <Menu>
-            <Menu.Item key="1" icon={<BookOutlined />}>
+            <Menu.Item onClick={handleConvert} key="1" icon={<BookOutlined />}>
                 Convert to Userstory
             </Menu.Item>
             <Menu.Item key="2" icon={<UserOutlined />}>

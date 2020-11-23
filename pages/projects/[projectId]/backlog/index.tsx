@@ -256,25 +256,25 @@ export default function Backlog() {
                                 <SprintCreation />
                             </TitleContainer>
                             <ListContainer>
-                                {sprintsData?.length ? (
-                                    sprintsData
-                                        .filter((sprint) => !sprint.closed)
-                                        .map((sprint) => (
-                                            <Fragment key={sprint.id}>
-                                                <Sprint
-                                                    key={sprint.id}
-                                                    sprint={sprint}
-                                                />
-                                                <IssueCreation
-                                                    milestone={sprint.id}
-                                                />
-                                            </Fragment>
-                                        ))
-                                ) : isSprintsLoading ? (
-                                    <Skeleton active />
-                                ) : (
-                                    <Empty description="No Sprints exist for this Project. Create one to get started!" />
-                                )}
+                                <Skeleton active loading={isSprintsLoading}>
+                                    {sprintsData?.length &&
+                                        sprintsData
+                                            .filter((sprint) => !sprint.closed)
+                                            .map((sprint) => (
+                                                <Fragment key={sprint.id}>
+                                                    <Sprint
+                                                        key={sprint.id}
+                                                        sprint={sprint}
+                                                    />
+                                                    <IssueCreation
+                                                        milestone={sprint.id}
+                                                    />
+                                                </Fragment>
+                                            ))}
+                                    {sprintsData?.length === 0 && (
+                                        <Empty description="No Sprints exist for this Project. Create one to get started!" />
+                                    )}
+                                </Skeleton>
                             </ListContainer>
                         </Container>
                         <Container>

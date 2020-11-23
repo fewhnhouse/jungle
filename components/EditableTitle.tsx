@@ -4,6 +4,10 @@ import ClearIcon from '@material-ui/icons/Clear'
 import CheckIcon from '@material-ui/icons/Check'
 import Flex from './Flex'
 import { Button, Input } from 'antd'
+import { updateTask } from '../taiga-api/tasks'
+import { updateUserstory } from '../taiga-api/userstories'
+import { useRouter } from 'next/router'
+import { queryCache } from 'react-query'
 
 const Title = styled.h2`
     border-radius: 2px;
@@ -44,30 +48,47 @@ const InputContainer = styled.form`
 `
 interface Props {
     initialValue: string
-    onSubmit: (value: string) => void
+    id: number
+    milestone?: number
+    type: 'task' | 'userstory'
+    version: number
 }
 
-export default function EditableTitle({ initialValue, onSubmit }: Props) {
+export default function EditableTitle({
+    initialValue,
+    id,
+    milestone,
+    type,
+    version,
+}: Props) {
+    const { projectId } = useRouter().query
+
     const [editable, setEditable] = useState(false)
-    const [value, setValue] = useState(initialValue)
+    const [subject, setSubject] = useState(initialValue)
 
     const toggleEditable = () => setEditable((editable) => !editable)
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        onSubmit(value)
+        if (type === 'task') {
+            await updateTask(id, { version, subject })
+            queryCache.invalidateQueries(['tasks', { projectId, milestone }])
+        } else {
+            await updateUserstory(id, { version, subject })
+            queryCache.invalidateQueries(['milestones', { projectId }])
+        }
         toggleEditable()
     }
 
     return (
         <div>
             {editable ? (
-                <InputContainer onSubmit={handleSubmit}>
+                <InputContainer onSubmit={onSubmit}>
                     <Flex>
                         <Input
                             size="large"
-                            value={value}
-                            onChange={(e) => setValue(e.target.value)}
+                            value={subject}
+                            onChange={(e) => setSubject(e.target.value)}
                         />
                         <Flex>
                             <StyledButton size="large" onClick={toggleEditable}>
@@ -80,7 +101,7 @@ export default function EditableTitle({ initialValue, onSubmit }: Props) {
                     </Flex>
                 </InputContainer>
             ) : (
-                <Title onClick={toggleEditable}>{value}</Title>
+                <Title onClick={toggleEditable}>{subject}</Title>
             )}
         </div>
     )

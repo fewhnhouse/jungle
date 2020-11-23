@@ -7,6 +7,10 @@ import Flex from './Flex'
 import ClearIcon from '@material-ui/icons/Clear'
 import CheckIcon from '@material-ui/icons/Check'
 import { Button } from 'antd'
+import { updateTask } from '../taiga-api/tasks'
+import { updateUserstory } from '../taiga-api/userstories'
+import { queryCache } from 'react-query'
+import { useRouter } from 'next/router'
 
 const mdParser = new MarkdownIt(/* Markdown-it options */)
 const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
@@ -42,13 +46,35 @@ const InputContainer = styled.div`
 
 interface Props {
     initialValue: string
+    id: number
+    milestone?: number
+    type: 'task' | 'userstory'
+    version: number
 }
-export default function EditableDescription({ initialValue }: Props) {
+export default function EditableDescription({
+    initialValue,
+    type,
+    id,
+    milestone,
+    version,
+}: Props) {
+    const { projectId } = useRouter().query
     const [editable, setEditable] = useState(false)
-    const [value, setValue] = useState(initialValue)
+    const [description, setDescription] = useState(initialValue)
 
     function handleEditorChange({ text }) {
-        setValue(text)
+        setDescription(text)
+    }
+
+    const onSubmit = async () => {
+        if (type === 'task') {
+            await updateTask(id, { version, description })
+            queryCache.invalidateQueries(['tasks', { projectId, milestone }])
+        } else {
+            await updateUserstory(id, { version, description })
+            queryCache.invalidateQueries(['milestones', { projectId }])
+        }
+        toggleEditable()
     }
 
     const toggleEditable = () => setEditable((editable) => !editable)
@@ -68,7 +94,7 @@ export default function EditableDescription({ initialValue }: Props) {
                     },
                 }}
                 style={{ height: 200 }}
-                value={value}
+                value={description}
                 onChange={handleEditorChange}
                 renderHTML={(text) => mdParser.render(text)}
             />
@@ -76,14 +102,14 @@ export default function EditableDescription({ initialValue }: Props) {
                 <StyledButton size="large" onClick={toggleEditable}>
                     <ClearIcon />
                 </StyledButton>
-                <StyledButton size="large" onClick={toggleEditable}>
+                <StyledButton size="large" onClick={onSubmit}>
                     <CheckIcon />
                 </StyledButton>
             </Flex>
         </InputContainer>
     ) : (
         <DisplayContainer onClick={toggleEditable}>
-            <ReactMarkdown source={value}></ReactMarkdown>
+            <ReactMarkdown source={description}></ReactMarkdown>
         </DisplayContainer>
     )
 }
