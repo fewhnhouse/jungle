@@ -6,6 +6,9 @@ import { UserStory } from '../../taiga-api/userstories'
 import { Avatar, Tag, Tooltip } from 'antd'
 import { BookOutlined } from '@ant-design/icons'
 import { getNameInitials } from '../../util/getNameInitials'
+import { useQuery } from 'react-query'
+import { getPoints } from '../../taiga-api/points'
+import { useRouter } from 'next/router'
 
 const getBackgroundColor = (isDragging: boolean, isGroupedOver: boolean) => {
     if (isDragging) {
@@ -138,15 +141,23 @@ function IssueItem({
     style,
     index,
 }: IssueItemProps) {
+    const { projectId } = useRouter().query
     const [expanded, setExpanded] = useState(false)
 
     const handleClick = () => setExpanded(true)
     const handleClose = () => setExpanded(false)
+    const { data: pointsData } = useQuery(
+        'storypoints',
+        async () => await getPoints(projectId as string)
+    )
     const points =
-        Object.keys(issue.points).reduce(
-            (prev: number, curr: string) => prev + issue.points[curr],
-            0
-        ) ?? 0
+        Object.keys(issue.points).reduce((prev: number, curr: string) => {
+            const point = pointsData?.find(
+                (point) => issue.points[curr] === point.id
+            )
+            return prev + (point?.value ?? 0)
+        }, 0) ?? 0
+    
     return (
         <>
             <Container
@@ -173,7 +184,7 @@ function IssueItem({
                                 <Tag>{issue.status_extra_info?.name}</Tag>
                             </Tooltip>
                         )}
-                        {points && (
+                        {points !== undefined && (
                             <Tooltip title={`Story Points: ${points}`}>
                                 <Tag>{points}</Tag>
                             </Tooltip>
