@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
-import { getProject } from '../taiga-api/projects'
+import { getProject } from '../../taiga-api/projects'
 import { Avatar, Select } from 'antd'
 import styled from 'styled-components'
 

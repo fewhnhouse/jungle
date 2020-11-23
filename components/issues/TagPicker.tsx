@@ -3,13 +3,13 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { queryCache, useQuery } from 'react-query'
 import styled from 'styled-components'
-import { getTagColors, TagObject } from '../taiga-api/projects'
-import { getTask, Task } from '../taiga-api/tasks'
+import { getTagColors, TagObject } from '../../taiga-api/projects'
+import { getTask, Task } from '../../taiga-api/tasks'
 import {
     getUserstory,
     updateUserstory,
     UserStory,
-} from '../taiga-api/userstories'
+} from '../../taiga-api/userstories'
 
 const StyledTagPicker = styled(Select)`
     width: 100%;

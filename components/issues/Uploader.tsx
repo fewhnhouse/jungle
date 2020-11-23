@@ -1,7 +1,8 @@
 import { UploadOutlined } from '@ant-design/icons'
 import { message, Upload } from 'antd'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import Flex from './Flex'
+import Flex from '../Flex'
 
 const UploadSection = styled.div`
     width: 100%;
@@ -18,7 +19,11 @@ const StyledFlex = styled(Flex)`
 `
 
 const Uploader = ({ data }) => {
-    const token = localStorage.getItem('auth-token')
+    const [token, setToken] = useState('')
+    useEffect(() => {
+        const token = localStorage?.getItem('auth-token')
+        setToken(token)
+    }, [])
 
     const onChange = (info) => {
         const { status } = info.file

@@ -8,8 +8,8 @@ import {
     promoteToUserstory,
     updateTask,
 } from '../../taiga-api/tasks'
-import AssigneeDropdown from '../AssigneeDropdown'
-import StatusDropdown from '../StatusDropdown'
+import AssigneeDropdown from '../issues/AssigneeDropdown'
+import StatusDropdown from '../issues/StatusDropdown'
 import { useRouter } from 'next/router'
 import { Menu, Modal, Skeleton } from 'antd'
 import {
@@ -18,9 +18,9 @@ import {
     ExclamationCircleOutlined,
     UserOutlined,
 } from '@ant-design/icons'
-import Uploader from '../Uploader'
+import Uploader from '../issues/Uploader'
 import IssueModal from './IssueModal'
-import CustomTagPicker from '../TagPicker'
+import CustomTagPicker from '../issues/TagPicker'
 
 const Label = styled.span`
     margin-top: ${({ theme }) => theme.spacing.mini};

@@ -1,7 +1,7 @@
 import { Breadcrumb } from 'antd'
 import Link from 'next/link'
 import styled from 'styled-components'
-import { UserStory } from '../taiga-api/userstories'
+import { UserStory } from '../../taiga-api/userstories'
 
 const StyledBreadcrumb = styled(Breadcrumb)`
     margin: 0px;
@@ -11,7 +11,7 @@ interface Props {
     data: UserStory
 }
 
-const Breadcrumbs = ({ data }: Props) => {
+const UserStoryBreadcrumbs = ({ data }: Props) => {
     return (
         <StyledBreadcrumb>
             <Breadcrumb.Item>
@@ -20,7 +20,7 @@ const Breadcrumbs = ({ data }: Props) => {
                 </Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
-                <Link href={`/projects/${data.project}/stories/${data.id}`}>
+                <Link href={`/projects/${data.project}/userstories/${data.id}`}>
                     <a>{data.subject}</a>
                 </Link>
             </Breadcrumb.Item>
@@ -28,4 +28,4 @@ const Breadcrumbs = ({ data }: Props) => {
     )
 }
 
-export default Breadcrumbs
+export default UserStoryBreadcrumbs

@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import { queryCache, useQuery } from 'react-query'
-import AssigneeDropdown from '../AssigneeDropdown'
-import StatusDropdown from '../StatusDropdown'
+import AssigneeDropdown from '../issues/AssigneeDropdown'
+import StatusDropdown from '../issues/StatusDropdown'
 import {
     deleteUserstory,
     getFiltersData,
@@ -10,11 +10,11 @@ import {
     updateUserstory,
 } from '../../taiga-api/userstories'
 import SubtaskList from './SubtaskList'
-import CustomTagPicker from '../TagPicker'
+import CustomTagPicker from '../issues/TagPicker'
 import { useRouter } from 'next/router'
 import { Menu, Modal, Skeleton } from 'antd'
 import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
-import Uploader from '../Uploader'
+import Uploader from '../issues/Uploader'
 import MultiStorypointSelect from './MultiStorypointSelect'
 import IssueModal from './IssueModal'
 
