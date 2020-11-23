@@ -7,6 +7,7 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import 'react-markdown-editor-lite/lib/index.css'
 // import 'antd/dist/antd.css'
+import { ReactQueryDevtools } from 'react-query-devtools'
 
 export interface Theme {
     colors: {
@@ -104,6 +105,7 @@ export default function App({ Component, pageProps }: AppProps) {
             <AppContainer>
                 <Component {...pageProps} />
             </AppContainer>
+            <ReactQueryDevtools initialIsOpen />
         </ThemeProvider>
     )
 }
