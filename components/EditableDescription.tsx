@@ -47,7 +47,7 @@ const InputContainer = styled.div`
 interface Props {
     initialValue: string
     id: number
-    milestone?: number
+    milestone?: number | null
     type: 'task' | 'userstory'
     version: number
 }
@@ -72,6 +72,7 @@ export default function EditableDescription({
             queryCache.invalidateQueries(['tasks', { projectId, milestone }])
         } else {
             await updateUserstory(id, { version, description })
+            queryCache.invalidateQueries(['backlog', { projectId }])
             queryCache.invalidateQueries(['milestones', { projectId }])
         }
         toggleEditable()
