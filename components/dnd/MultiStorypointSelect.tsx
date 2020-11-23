@@ -19,7 +19,7 @@ const StyledSelect = styled(Select)`
     }
 `
 
-const StoryPointCascader = ({ data }: { data: UserStory }) => {
+const MultiStoryPointCascader = ({ data }: { data: UserStory }) => {
     const { projectId } = useRouter().query
     const { version, points, id } = data
     const [selectedPoints, setSelectedPoints] = useState(points)
@@ -77,4 +77,4 @@ const StoryPointCascader = ({ data }: { data: UserStory }) => {
     )
 }
 
-export default StoryPointCascader
+export default MultiStoryPointCascader

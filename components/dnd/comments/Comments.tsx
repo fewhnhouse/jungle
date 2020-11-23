@@ -1,4 +1,5 @@
-import { Button, Divider, Input, Skeleton } from 'antd'
+import { SendOutlined } from '@ant-design/icons'
+import { Button, Input, Skeleton } from 'antd'
 import { useState } from 'react'
 import { queryCache, useQuery } from 'react-query'
 import styled from 'styled-components'
@@ -20,7 +21,6 @@ const CommentBox = styled(Flex)`
 const InputContainer = styled.form`
     width: 100%;
     display: flex;
-    margin-top: 10px;
 `
 
 const Comments = ({
@@ -94,9 +94,11 @@ const Comments = ({
                     onChange={handleTextChange}
                     style={{ flex: 1, marginRight: 10 }}
                 />
-                <Button htmlType="submit" type="primary">
-                    &uarr;
-                </Button>
+                <Button
+                    icon={<SendOutlined />}
+                    htmlType="submit"
+                    type="primary"
+                ></Button>
             </InputContainer>
         </Flex>
     )

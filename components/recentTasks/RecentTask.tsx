@@ -43,6 +43,7 @@ export default function RecentTask({
     projectName,
     projectId,
 }: Props) {
+    const urlType = type === 'task' ? 'tasks' : 'userstories'
     return (
         <StyledCard>
             <Meta
@@ -54,7 +55,7 @@ export default function RecentTask({
                     )
                 }
                 title={
-                    <Link href={`/project/${projectId}/${type}/${id}`}>
+                    <Link href={`/projects/${projectId}/${urlType}/${id}`}>
                         {title}
                     </Link>
                 }

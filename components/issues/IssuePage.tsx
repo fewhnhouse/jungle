@@ -79,7 +79,6 @@ interface Props extends ModalProps {
     innerContent?: React.ReactNode
     outerContent?: React.ReactNode
     sidebar?: React.ReactNode
-    actions: any
     data: Task | UserStory
 }
 
@@ -88,7 +87,6 @@ export default function IssuePage({
     innerContent,
     outerContent,
     sidebar,
-    actions,
     data,
 }: Props) {
     const { id } = useRouter().query

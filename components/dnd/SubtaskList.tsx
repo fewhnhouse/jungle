@@ -16,6 +16,7 @@ const TaskList = styled.ul`
     list-style: none;
     width: 100%;
     padding: 0;
+    margin: 0;
 `
 
 const StyledTaskIcon = styled(ProfileOutlined)`
@@ -35,6 +36,7 @@ const StyledInput = styled(Input)`
 const StyledFormItem = styled(Form.Item)`
     width: 100%;
     margin-right: 10px;
+    margin-bottom: 0px;
 `
 
 const StyledForm = styled(Form)`

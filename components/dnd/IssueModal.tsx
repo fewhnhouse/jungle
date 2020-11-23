@@ -171,6 +171,7 @@ export default function IssueModal({
                     </Main>
                     <Divider />
                     {outerContent}
+                    <Divider />
                     <Comments type={type} id={id} version={data?.version} />
                 </Flex>
             </Skeleton>

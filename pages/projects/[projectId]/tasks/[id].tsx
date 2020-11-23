@@ -191,13 +191,12 @@ const TaskPage = () => {
                                     <StyledBtn icon={<UserOutlined />}>
                                         Change Parent
                                     </StyledBtn>
-                                    <StyledBtn icon={<DeleteOutlined />}>
+                                    <StyledBtn danger icon={<DeleteOutlined />}>
                                         Delete Task
                                     </StyledBtn>
                                 </BtnContainer>
                             </Skeleton>
                         }
-                        actions={menu}
                         outerContent={
                             <Skeleton loading={isLoading} active>
                                 <Uploader
