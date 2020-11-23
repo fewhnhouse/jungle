@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { queryCache, useQuery } from 'react-query'
 import {
@@ -32,17 +32,7 @@ interface Props {
     id: number
 }
 
-interface ActionMenuProps {
-    id: number
-    milestone: number
-    closeModal: () => void
-}
-
 const { confirm } = Modal
-
-const ActionMenu = ({ id, milestone, closeModal }: ActionMenuProps) => {
-    const { projectId } = useRouter().query
-}
 
 export default function TaskModal({ id, open, onClose }: Props) {
     const { projectId } = useRouter().query

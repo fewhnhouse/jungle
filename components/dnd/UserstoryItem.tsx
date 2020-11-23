@@ -157,7 +157,7 @@ function IssueItem({
             )
             return prev + (point?.value ?? 0)
         }, 0) ?? 0
-    
+
     return (
         <>
             <Container
@@ -184,7 +184,7 @@ function IssueItem({
                                 <Tag>{issue.status_extra_info?.name}</Tag>
                             </Tooltip>
                         )}
-                        {points !== undefined && (
+                        {!!points && (
                             <Tooltip title={`Story Points: ${points}`}>
                                 <Tag>{points}</Tag>
                             </Tooltip>

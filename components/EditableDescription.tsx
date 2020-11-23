@@ -75,12 +75,17 @@ export default function EditableDescription({
             })
         )
         if (type === 'task') {
-            await updateTask(id, { version, description })
+            const updatedTask = await updateTask(id, { version, description })
             queryCache.invalidateQueries(['tasks', { projectId }])
+            queryCache.setQueryData(['task', { id }], () => updatedTask)
         } else {
-            await updateUserstory(id, { version, description })
+            const updatedStory = await updateUserstory(id, {
+                version,
+                description,
+            })
             queryCache.invalidateQueries(['backlog', { projectId }])
             queryCache.invalidateQueries(['milestones', { projectId }])
+            queryCache.setQueryData(['userstory', { id }], () => updatedStory)
         }
         toggleEditable()
     }

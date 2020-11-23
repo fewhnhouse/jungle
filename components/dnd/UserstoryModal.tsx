@@ -8,17 +8,12 @@ import {
     getFiltersData,
     getUserstory,
     updateUserstory,
-    UserStory,
 } from '../../taiga-api/userstories'
 import SubtaskList from './SubtaskList'
 import CustomTagPicker from '../TagPicker'
 import { useRouter } from 'next/router'
 import { Menu, Modal, Skeleton } from 'antd'
-import {
-    DeleteOutlined,
-    ExclamationCircleOutlined,
-    UserOutlined,
-} from '@ant-design/icons'
+import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import Uploader from '../Uploader'
 import MultiStorypointSelect from './MultiStorypointSelect'
 import IssueModal from './IssueModal'

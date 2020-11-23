@@ -78,12 +78,14 @@ export default function EditableTitle({
             })
         )
         if (type === 'task') {
-            await updateTask(id, { version, subject })
+            const updatedTask = await updateTask(id, { version, subject })
             queryCache.invalidateQueries(['tasks', { projectId }])
+            queryCache.setQueryData(['task', { id }], () => updatedTask)
         } else {
-            await updateUserstory(id, { version, subject })
+            const updatedStory = await updateUserstory(id, { version, subject })
             queryCache.invalidateQueries(['backlog', { projectId }])
             queryCache.invalidateQueries(['milestones', { projectId }])
+            queryCache.setQueryData(['userstory', { id }], () => updatedStory)
         }
         toggleEditable()
     }
