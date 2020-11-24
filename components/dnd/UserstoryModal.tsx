@@ -138,7 +138,7 @@ export default function UserstoryModal({ id, open, onClose }: Props) {
             innerContent={
                 <Skeleton loading={isLoading} active>
                     <Uploader
-                        // action={`${process.env.NEXT_PUBLIC_TAIGA_API_URL}/tasks/attachments`}
+                        action={`${process.env.NEXT_PUBLIC_TAIGA_API_URL}/userstories/attachments`}
                         data={{
                             object_id: data?.id,
                             project: data?.project,

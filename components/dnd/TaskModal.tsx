@@ -148,6 +148,7 @@ export default function TaskModal({ id, open, onClose }: Props) {
             outerContent={
                 <Skeleton loading={isLoading} active>
                     <Uploader
+                        action={`${process.env.NEXT_PUBLIC_TAIGA_API_URL}/tasks/attachments`}
                         data={{
                             object_id: data?.id,
                             project: data?.project,

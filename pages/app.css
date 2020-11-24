@@ -42,3 +42,16 @@ h5,
 h6 {
     font-weight: 300 !important;
 }
+
+.ant-upload-list {
+    display: flex;
+    flex-direction: column;
+    max-width: 280px;
+}
+
+.ant-upload-list-picture,
+.ant-upload-list-item-thumbnail,
+img {
+    object-fit: cover !important;
+    border-radius: 2px !important;
+}

@@ -31,7 +31,7 @@ const Content = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    width: calc(100% - 60px);
+    width: calc(100% - 80px);
 `
 
 interface Props {

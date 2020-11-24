@@ -29,6 +29,26 @@ export interface TaskFiltersData {
     statuses: TaskStatus[]
     tags: [string, string][]
 }
+
+export interface Attachment {
+    attached_file: string
+    created_date: string
+    description: string
+    from_comment: boolean
+    id: number
+    is_deprecated: boolean
+    modified_date: string
+    name: string
+    object_id: number
+    order: number
+    owner: number
+    preview_url: string
+    project: number
+    sha1: string
+    size: number
+    thumbnail_card_url: string
+    url: string
+}
 export interface Task {
     assigned_to: number | null
     assigned_to_extra_info: Assignee | null
@@ -193,44 +213,46 @@ export const getTaskWatchers = (id: number) => {
 
 export const getTaskAttachments = ({
     projectId,
-    userstoryId,
+    taskId,
 }: {
     projectId?: number
-    userstoryId?: number
+    taskId?: number
 }) => {
     const params = new URLSearchParams()
     projectId && params.append('project', projectId.toString())
-    userstoryId && params.append('object_id', userstoryId.toString())
+    taskId && params.append('object_id', taskId.toString())
     return authInstance
-        .get(`/tasks/attachments/`, { params })
+        .get<Attachment[]>(`/tasks/attachments/`, { params })
         .then((res) => res.data)
 }
 
 export const createTaskAttachment = (data: any) => {
-    return authInstance.post(`/tasks/attachments`, data).then((res) => res.data)
+    return authInstance
+        .post<Attachment>(`/tasks/attachments`, data)
+        .then((res) => res.data)
 }
 
 export const getTaskAttachment = (attachmentId: number) => {
     return authInstance
-        .get(`/tasks/attachments/${attachmentId}`)
+        .get<Attachment>(`/tasks/attachments/${attachmentId}`)
         .then((res) => res.data)
 }
 
 export const replaceTaskAttachment = (attachmentId: number, data: any) => {
     return authInstance
-        .put(`/tasks/attachments/${attachmentId}`, data)
+        .put<Attachment>(`/tasks/attachments/${attachmentId}`, data)
         .then((res) => res.data)
 }
 
 export const updateTaskAttachment = (attachmentId: number, data: any) => {
     return authInstance
-        .patch(`/tasks/attachments/${attachmentId}`, data)
+        .patch<Attachment>(`/tasks/attachments/${attachmentId}`, data)
         .then((res) => res.data)
 }
 
 export const deleteTaskAttachment = (attachmentId: number) => {
     return authInstance
-        .delete(`/tasks/attachments/${attachmentId}`)
+        .delete<Attachment>(`/tasks/attachments/${attachmentId}`)
         .then((res) => res.data)
 }
 
