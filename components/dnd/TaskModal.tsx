@@ -6,6 +6,7 @@ import {
     getFiltersData,
     getTask,
     promoteToUserstory,
+    Task,
     updateTask,
 } from '../../taiga-api/tasks'
 import AssigneeDropdown from '../issues/AssigneeDropdown'
@@ -55,16 +56,18 @@ export default function TaskModal({ id, open, onClose }: Props) {
             title: 'Are you sure you want to delete this task?',
             icon: <ExclamationCircleOutlined />,
             centered: true,
-            content: 'Some descriptions',
+            content: 'Deleting a task is irreversible.',
             onOk: async () => {
                 await deleteTask(id)
                 queryCache.invalidateQueries([
                     'tasks',
                     { projectId, milestone: data?.id },
                 ])
-                queryCache.invalidateQueries(['tasks', { projectId }])
-                queryCache.invalidateQueries(['backlog', { projectId }])
-                queryCache.invalidateQueries(['milestones', { projectId }])
+                queryCache.setQueryData(
+                    ['tasks', { projectId }],
+                    (prevData: Task[]) =>
+                        prevData?.filter((task) => task.id !== id)
+                )
                 onClose()
             },
             onCancel() {

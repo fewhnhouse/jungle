@@ -51,11 +51,24 @@ export default function UserstoryModal({ id, open, onClose }: Props) {
             title: 'Are you sure you want to delete this story?',
             icon: <ExclamationCircleOutlined />,
             centered: true,
-            content: 'Some descriptions',
+            content: 'Deleting a Userstory is irreversible.',
             onOk: async () => {
                 await deleteUserstory(id)
-                queryCache.invalidateQueries(['milestones', { projectId }])
-                queryCache.invalidateQueries(['backlog', { projectId }])
+                queryCache.setQueryData(
+                    ['milestones', { projectId }],
+                    (prevData: Milestone[]) =>
+                        prevData?.map((ms) => ({
+                            ...ms,
+                            user_stories: ms.user_stories.filter(
+                                (story) => story.id !== id
+                            ),
+                        }))
+                )
+                queryCache.setQueryData(
+                    ['backlog', { projectId }],
+                    (prevData: UserStory[]) =>
+                        prevData?.filter((story) => story.id !== id)
+                )
                 onClose()
             },
             onCancel() {
@@ -133,11 +146,7 @@ export default function UserstoryModal({ id, open, onClose }: Props) {
                     />
                 </Skeleton>
             }
-            outerContent={
-                <>
-                    <SubtaskList id={id} />
-                </>
-            }
+            outerContent={<SubtaskList id={id} />}
             actions={menu}
         />
     )
