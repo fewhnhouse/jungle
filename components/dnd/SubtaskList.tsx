@@ -24,7 +24,7 @@ const StyledTaskIcon = styled(ProfileOutlined)`
     background: #45aaff;
     border-radius: 3px;
     font-size: 20px;
-    padding: 5px;
+    padding: 2px;
     color: #2c3e50;
     margin-right: 5px;
 `
@@ -52,7 +52,7 @@ const TaskItem = styled.li`
     border: 2px solid transparent;
     background-color: #ecf0f1;
     box-sizing: border-box;
-    padding: ${({ theme }) => `${theme.spacing.mini}`};
+    padding: ${({ theme }) => `2px ${theme.spacing.mini}`};
     margin-bottom: ${({ theme }) => `${theme.spacing.mini}`};
     display: flex;
 `
@@ -144,7 +144,7 @@ const SubtaskList = ({ id }: Props) => {
                                 <TaskContent>
                                     <Link
                                         key={task.id}
-                                        href={`/projects/${projectId}/tasks/${id}`}
+                                        href={`/projects/${projectId}/tasks/${task.id}`}
                                     >
                                         <TaskSubject>
                                             {task.subject}

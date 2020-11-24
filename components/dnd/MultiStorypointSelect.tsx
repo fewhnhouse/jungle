@@ -5,6 +5,7 @@ import { useQuery } from 'react-query'
 import styled from 'styled-components'
 import { getProject } from '../../taiga-api/projects'
 import { updateUserstory, UserStory } from '../../taiga-api/userstories'
+import { updateUserstoryCache } from '../../updateCache'
 import Flex from '../Flex'
 const { Option } = Select
 
@@ -42,10 +43,14 @@ const MultiStoryPointCascader = ({ data }: { data: UserStory }) => {
                 })),
             })) ?? []
 
-    const onChange = (role: number) => (value) => {
+    const onChange = (role: number) => async (value) => {
         const updatedPoints = { ...selectedPoints, [role]: value }
         setSelectedPoints(updatedPoints)
-        updateUserstory(id, { points: updatedPoints, version })
+        const updatedStory = await updateUserstory(id, {
+            points: updatedPoints,
+            version,
+        })
+        updateUserstoryCache(updatedStory, id, projectId as string)
     }
 
     return (

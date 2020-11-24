@@ -11,6 +11,7 @@ import { Task, updateTask } from '../../taiga-api/tasks'
 import { updateUserstory, UserStory } from '../../taiga-api/userstories'
 import { queryCache } from 'react-query'
 import { useRouter } from 'next/router'
+import { updateTaskCache, updateUserstoryCache } from '../../updateCache'
 
 const mdParser = new MarkdownIt(/* Markdown-it options */)
 const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
@@ -76,16 +77,13 @@ export default function EditableDescription({
         )
         if (type === 'task') {
             const updatedTask = await updateTask(id, { version, description })
-            queryCache.invalidateQueries(['tasks', { projectId }])
-            queryCache.setQueryData(['task', { id }], () => updatedTask)
+            updateTaskCache(updatedTask, id, projectId as string)
         } else {
             const updatedStory = await updateUserstory(id, {
                 version,
                 description,
             })
-            queryCache.invalidateQueries(['backlog', { projectId }])
-            queryCache.invalidateQueries(['milestones', { projectId }])
-            queryCache.setQueryData(['userstory', { id }], () => updatedStory)
+            updateUserstoryCache(updatedStory, id, projectId as string)
         }
         toggleEditable()
     }

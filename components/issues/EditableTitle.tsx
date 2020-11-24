@@ -8,25 +8,19 @@ import { Task, updateTask } from '../../taiga-api/tasks'
 import { updateUserstory, UserStory } from '../../taiga-api/userstories'
 import { useRouter } from 'next/router'
 import { queryCache } from 'react-query'
+import { updateTaskCache, updateUserstoryCache } from '../../updateCache'
 
 const Title = styled.h2`
     border-radius: 2px;
     width: 100%;
-    height: 42px;
-    max-width: 280px;
     padding: ${({ theme }) => `${theme.spacing.mini} ${theme.spacing.small}`};
-    line-height: 30px;
     &:hover {
         background: #e9ecef;
     }
     font-size: 1.2rem;
-    font-weight: 300;
     color: #495057;
     cursor: pointer;
     margin: ${({ theme }) => theme.spacing.mini} 0px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     span {
         margin-right: 5px;
     }
@@ -79,13 +73,10 @@ export default function EditableTitle({
         )
         if (type === 'task') {
             const updatedTask = await updateTask(id, { version, subject })
-            queryCache.invalidateQueries(['tasks', { projectId }])
-            queryCache.setQueryData(['task', { id }], () => updatedTask)
+            updateTaskCache(updatedTask, id, projectId as string)
         } else {
             const updatedStory = await updateUserstory(id, { version, subject })
-            queryCache.invalidateQueries(['backlog', { projectId }])
-            queryCache.invalidateQueries(['milestones', { projectId }])
-            queryCache.setQueryData(['userstory', { id }], () => updatedStory)
+            updateUserstoryCache(updatedStory, id, projectId as string)
         }
         toggleEditable()
     }

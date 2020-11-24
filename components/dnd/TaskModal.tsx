@@ -21,6 +21,7 @@ import {
 import Uploader from '../issues/Uploader'
 import IssueModal from './IssueModal'
 import CustomTagPicker from '../issues/TagPicker'
+import { updateTaskCache } from '../../updateCache'
 
 const Label = styled.span`
     margin-top: ${({ theme }) => theme.spacing.mini};
@@ -105,7 +106,7 @@ export default function TaskModal({ id, open, onClose }: Props) {
             assigned_users: [assigneeId],
             version: data.version,
         })
-        queryCache.setQueryData(['task', { id }], () => updatedTask)
+        updateTaskCache(updatedTask, id, projectId as string)
     }
 
     const updateStatus = async (status: number) => {
@@ -113,7 +114,7 @@ export default function TaskModal({ id, open, onClose }: Props) {
             status,
             version: data.version,
         })
-        queryCache.setQueryData(['task', { id }], () => updatedTask)
+        updateTaskCache(updatedTask, id, projectId as string)
     }
 
     if (isError) return <div>Error</div>

@@ -46,7 +46,7 @@ export default function Activity({
                                     key={activityItem.id}
                                     activityItem={activityItem}
                                 ></ActivityListItem>
-                            ))}
+                            )) ?? null}
                     </List>
                 </Skeleton>
             </PageBody>

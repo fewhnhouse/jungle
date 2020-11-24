@@ -23,7 +23,6 @@ interface Props {
 }
 
 export default function RecentTasks({ timeline = [], title }: Props) {
-    console.log(timeline)
     return (
         <Container>
             <h2>{title}</h2>

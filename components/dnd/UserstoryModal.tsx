@@ -8,6 +8,7 @@ import {
     getFiltersData,
     getUserstory,
     updateUserstory,
+    UserStory,
 } from '../../taiga-api/userstories'
 import SubtaskList from './SubtaskList'
 import CustomTagPicker from '../issues/TagPicker'
@@ -17,6 +18,8 @@ import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import Uploader from '../issues/Uploader'
 import MultiStorypointSelect from './MultiStorypointSelect'
 import IssueModal from './IssueModal'
+import { Milestone } from '../../taiga-api/milestones'
+import { updateUserstoryCache } from '../../updateCache'
 
 const { confirm } = Modal
 
@@ -83,7 +86,7 @@ export default function UserstoryModal({ id, open, onClose }: Props) {
             assigned_users: [assigneeId],
             version: data.version,
         })
-        queryCache.setQueryData(['userstory', { id }], () => updatedStory)
+        updateUserstoryCache(updatedStory, id, projectId as string)
     }
 
     const updateStatus = async (status: number) => {
@@ -91,7 +94,7 @@ export default function UserstoryModal({ id, open, onClose }: Props) {
             status,
             version: data.version,
         })
-        queryCache.setQueryData(['userstory', { id }], () => updatedStory)
+        updateUserstoryCache(updatedStory, id, projectId as string)
     }
 
     return (

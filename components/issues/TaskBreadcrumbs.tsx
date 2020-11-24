@@ -27,13 +27,13 @@ const TaskBreadcrumbs = ({ data }: Props) => {
                     <Link
                         href={`/projects/${data.project}/userstories/${data.user_story}`}
                     >
-                        <a>{data.user_story_extra_info?.subject}</a>
+                        <a>Userstory {data.user_story}</a>
                     </Link>
                 </Breadcrumb.Item>
             )}
             <Breadcrumb.Item>
                 <Link href={`/projects/${data.project}/tasks/${data.id}`}>
-                    <a>{data.subject}</a>
+                    <a>Task {data.id}</a>
                 </Link>
             </Breadcrumb.Item>
         </StyledBreadcrumb>

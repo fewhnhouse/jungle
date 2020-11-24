@@ -43,9 +43,9 @@ export default function ActivityListItem({ activityItem }: Props) {
     const affectedItem = activityItem.data[item] ?? user
     const getItemName = () => {
         if (item === 'userstory' || item === 'epic' || item === 'task') {
-            return affectedItem.subject
+            return affectedItem.subject ?? ''
         } else {
-            return affectedItem.name
+            return affectedItem.name ?? ''
         }
     }
 
