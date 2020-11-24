@@ -90,9 +90,10 @@ const Content = styled.div`
 
 const BlockQuote = styled.p`
     margin: 0px 10px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 `
 
 const Footer = styled.div`
