@@ -7,7 +7,9 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import styled from 'styled-components'
 import SprintCompletionModal from './SprintCompletionModal'
-import { Skeleton } from 'antd'
+import { Modal, Skeleton } from 'antd'
+import { useState } from 'react'
+import EditSprint from './EditSprint'
 
 const StyledLink = styled.a`
     color: rgba(0, 0, 0, 0.85);
@@ -19,6 +21,7 @@ const StyledLink = styled.a`
 const Sprint = ({ sprint }: { sprint: Milestone }) => {
     const { query, push } = useRouter()
     const { projectId } = query
+    const [editOpen, setEditOpen] = useState(false)
     const handleRemove = async () => {
         queryCache.setQueryData(
             ['milestones', { projectId }],
@@ -39,6 +42,9 @@ const Sprint = ({ sprint }: { sprint: Milestone }) => {
         }
     )
 
+    const handleEdit = () => setEditOpen(true)
+    const handleEditClose = () => setEditOpen(false)
+
     const startDate = new Date(sprint.estimated_start)
     const endDate = new Date(sprint.estimated_finish)
     const today = new Date()
@@ -56,6 +62,7 @@ const Sprint = ({ sprint }: { sprint: Milestone }) => {
                 }
                 actions={[
                     { title: 'Remove Sprint', action: handleRemove },
+                    { title: 'Edit Sprint', action: handleEdit },
                     {
                         title: 'Go to Sprint Taskboard',
                         action: handleNavigation,
@@ -84,6 +91,7 @@ const Sprint = ({ sprint }: { sprint: Milestone }) => {
                     ]}
                 />
             </CustomCollapse>
+            <EditSprint onClose={handleEditClose} open={editOpen} sprint={sprint} />
         </Skeleton>
     )
 }
