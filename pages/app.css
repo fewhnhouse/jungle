@@ -46,7 +46,6 @@ h6 {
 .ant-upload-list {
     display: flex;
     flex-direction: column;
-    max-width: 280px;
 }
 
 .ant-upload-list-picture,

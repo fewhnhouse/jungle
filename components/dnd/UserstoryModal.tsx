@@ -13,7 +13,7 @@ import {
 import SubtaskList from './SubtaskList'
 import CustomTagPicker from '../issues/TagPicker'
 import { useRouter } from 'next/router'
-import { Menu, Modal, Skeleton } from 'antd'
+import { Divider, Menu, Modal, Skeleton } from 'antd'
 import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import Uploader from '../issues/Uploader'
 import MultiStorypointSelect from './MultiStorypointSelect'
@@ -135,18 +135,24 @@ export default function UserstoryModal({ id, open, onClose }: Props) {
                     <MultiStorypointSelect data={data} />
                 </Skeleton>
             }
-            innerContent={
-                <Skeleton loading={isLoading} active>
-                    <Uploader
-                        action={`${process.env.NEXT_PUBLIC_TAIGA_API_URL}/userstories/attachments`}
-                        data={{
-                            object_id: data?.id,
-                            project: data?.project,
-                        }}
-                    />
-                </Skeleton>
+            innerContent={null}
+            outerContent={
+                <>
+                    <Skeleton loading={isLoading} active>
+                        <Uploader
+                            type="userstory"
+                            action={`${process.env.NEXT_PUBLIC_TAIGA_API_URL}/userstories/attachments`}
+                            data={{
+                                object_id: data?.id,
+                                project: data?.project,
+                            }}
+                        />
+                    </Skeleton>
+                    <Divider />
+
+                    <SubtaskList id={id} />
+                </>
             }
-            outerContent={<SubtaskList id={id} />}
             actions={menu}
         />
     )

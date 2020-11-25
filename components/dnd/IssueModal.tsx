@@ -67,7 +67,6 @@ const Content = styled(Flex)`
 
 const Sidebar = styled.aside`
     flex: 1;
-    padding: ${({ theme }) => theme.spacing.small};
     display: flex;
     flex-direction: column;
     align-items: flex-start;
