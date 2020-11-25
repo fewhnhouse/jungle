@@ -4,7 +4,7 @@ import {
     FileOutlined,
     UploadOutlined,
 } from '@ant-design/icons'
-import { Avatar, Button, Card, List, message, Upload } from 'antd'
+import { Avatar, Button, List, message, Upload } from 'antd'
 import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import styled from 'styled-components'
@@ -27,13 +27,6 @@ const StyledFlex = styled(Flex)`
             margin-right: 5px;
         }
     }
-`
-
-const FileImage = styled.img`
-    width: 40px;
-    height: 40px;
-    border-radius: 2px;
-    object-fit: cover;
 `
 
 interface Props {
