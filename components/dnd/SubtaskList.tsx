@@ -4,9 +4,19 @@ import { queryCache, useQuery } from 'react-query'
 import { getTasks, createTask, Task, deleteTask } from '../../taiga-api/tasks'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { Button, Form, Input, Popconfirm, Skeleton, Tag } from 'antd'
+import {
+    Avatar,
+    Button,
+    Form,
+    Input,
+    List,
+    Popconfirm,
+    Skeleton,
+    Tag,
+} from 'antd'
 import {
     DeleteOutlined,
+    LinkOutlined,
     PlusOutlined,
     ProfileOutlined,
 } from '@ant-design/icons'
@@ -17,16 +27,6 @@ const TaskList = styled.ul`
     width: 100%;
     padding: 0;
     margin: 0;
-`
-
-const StyledTaskIcon = styled(ProfileOutlined)`
-    display: block;
-    background: #45aaff;
-    border-radius: 3px;
-    font-size: 20px;
-    padding: 2px;
-    color: #2c3e50;
-    margin-right: 5px;
 `
 
 const StyledInput = styled(Input)`
@@ -45,47 +45,20 @@ const StyledForm = styled(Form)`
     justify-content: space-between;
 `
 
-const TaskItem = styled.li`
-    border-radius: 2px;
-    display: flex;
+const Meta = styled(List.Item.Meta)`
     align-items: center;
-    border: 2px solid transparent;
-    background-color: #ecf0f1;
-    box-sizing: border-box;
-    padding: ${({ theme }) => `2px ${theme.spacing.mini}`};
-    margin-bottom: ${({ theme }) => `${theme.spacing.mini}`};
-    display: flex;
 `
 
-const Flex = styled.div`
-    display: flex;
-    align-items: center;
-    width: 100%;
+const Item = styled(List.Item)`
+    padding: 8px 0px !important;
 `
 
-const TaskContent = styled.div`
-    /* flex child */
-    flex-grow: 1;
-    flex-basis: 100%;
-    align-items: center;
-    justify-content: space-between;
-    /* flex parent */
-    display: flex;
-    flex-direction: row;
-`
-
-const TaskSubject = styled.a`
-    margin: 0px 10px;
-    color: #333;
-    &:hover {
-        color: black;
-    }
-`
-
-const TagContainer = styled.div`
-    display: flex;
-    margin-top: ${({ theme }) => `${theme.spacing.mini}`};
-    align-items: center;
+const TitleBlock = styled.span`
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+    display: block;
 `
 
 interface Props {
@@ -137,48 +110,71 @@ const SubtaskList = ({ id }: Props) => {
                 <Skeleton active paragraph={{ rows: 2 }} />
             ) : (
                 <>
-                    {subtasks?.map((task) => (
-                        <TaskItem key={task.id}>
-                            <Flex>
-                                <StyledTaskIcon />
-                                <TaskContent>
+                    <List style={{ width: '100%' }} size="small">
+                        {subtasks?.map((task) => (
+                            <Item
+                                key={task.id}
+                                actions={[
                                     <Link
-                                        key={task.id}
+                                        key="link"
                                         href={`/projects/${projectId}/tasks/${task.id}`}
+                                        passHref
                                     >
-                                        <TaskSubject>
-                                            {task.subject}
-                                        </TaskSubject>
-                                    </Link>
-                                    <TagContainer>
-                                        {task.assigned_to_extra_info && (
+                                        <Button
+                                            size="small"
+                                            icon={<LinkOutlined />}
+                                        />
+                                    </Link>,
+                                    <Popconfirm
+                                        key="delete"
+                                        title="Are you sure you want to delete this subtask?"
+                                        onConfirm={handleDelete(task.id)}
+                                    >
+                                        <Button
+                                            size="small"
+                                            danger
+                                            icon={<DeleteOutlined />}
+                                        />
+                                    </Popconfirm>,
+                                ]}
+                            >
+                                <Meta
+                                    avatar={
+                                        <Avatar
+                                            style={{
+                                                backgroundColor: '#45aaff',
+                                            }}
+                                            shape="square"
+                                            icon={<ProfileOutlined />}
+                                        />
+                                    }
+                                    title={
+                                        <TitleBlock>{task.subject}</TitleBlock>
+                                    }
+                                    description={
+                                        <>
+                                            {task.assigned_to_extra_info && (
+                                                <Tag>
+                                                    {
+                                                        task
+                                                            .assigned_to_extra_info
+                                                            .full_name_display
+                                                    }
+                                                </Tag>
+                                            )}
                                             <Tag>
-                                                {
-                                                    task.assigned_to_extra_info
-                                                        .full_name_display
-                                                }
+                                                {task.status_extra_info.name}
                                             </Tag>
-                                        )}
-                                        <Tag>{task.status_extra_info.name}</Tag>
-                                        <Tag>
-                                            ID-
-                                            {task.id}
-                                        </Tag>
-                                        <Popconfirm
-                                            title="Are you sure you want to delete this subtask?"
-                                            onConfirm={handleDelete(task.id)}
-                                        >
-                                            <Button
-                                                danger
-                                                size="small"
-                                                icon={<DeleteOutlined />}
-                                            />
-                                        </Popconfirm>
-                                    </TagContainer>
-                                </TaskContent>
-                            </Flex>
-                        </TaskItem>
-                    ))}
+                                            <Tag>
+                                                ID-
+                                                {task.id}
+                                            </Tag>
+                                        </>
+                                    }
+                                />
+                            </Item>
+                        ))}
+                    </List>
                     <StyledForm
                         form={form}
                         initialValues={{ name: '' }}
