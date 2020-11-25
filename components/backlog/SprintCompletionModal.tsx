@@ -5,9 +5,17 @@ import { Button, Divider, Form, Modal, Select, Typography } from 'antd'
 import Image from 'next/image'
 import Flex from '../Flex'
 import styled from 'styled-components'
-import { getTasks, updateTask } from '../../taiga-api/tasks'
-import { getUserstories, updateUserstory } from '../../taiga-api/userstories'
-import { getMilestones, updateMilestone } from '../../taiga-api/milestones'
+import { getTasks, Task, updateTask } from '../../taiga-api/tasks'
+import {
+    getUserstories,
+    updateUserstory,
+    UserStory,
+} from '../../taiga-api/userstories'
+import {
+    getMilestones,
+    Milestone,
+    updateMilestone,
+} from '../../taiga-api/milestones'
 
 const ImgContainer = styled.div`
     margin-right: 10px;
@@ -54,7 +62,9 @@ const SprintCompletionModal = ({ milestoneId }: Props) => {
         { enabled: milestoneId && projectId }
     )
 
-    const openTasks = tasks?.filter((task) => !task.is_closed)
+    const openTasks = tasks?.filter(
+        (task) => !task.is_closed && task.user_story === null
+    )
     const openStories = stories?.filter((story) => !story.is_closed)
 
     const handleOpen = () => setShow(true)
@@ -62,7 +72,7 @@ const SprintCompletionModal = ({ milestoneId }: Props) => {
 
     const handleComplete = async (moveId: number | null) => {
         setLoading(true)
-        await Promise.all(
+        const updatedTasks = await Promise.all(
             openTasks?.map((task) =>
                 updateTask(task.id, {
                     milestone: moveId,
@@ -70,7 +80,7 @@ const SprintCompletionModal = ({ milestoneId }: Props) => {
                 })
             ) ?? []
         )
-        await Promise.all(
+        const updatedStories = await Promise.all(
             openStories?.map((story) =>
                 updateUserstory(story.id, {
                     milestone: moveId,
@@ -78,9 +88,43 @@ const SprintCompletionModal = ({ milestoneId }: Props) => {
                 })
             ) ?? []
         )
-        await updateMilestone(milestoneId, { closed: true })
+        await updateMilestone(milestoneId, {
+            closed: true,
+        })
         setLoading(false)
-        queryCache.invalidateQueries(['milestones', { projectId }])
+        if (moveId === null) {
+            queryCache.setQueryData(
+                ['backlog', { projectId }],
+                (prevData: UserStory[]) => [...prevData, ...updatedStories]
+            )
+        } else {
+            queryCache.setQueryData(
+                ['milestones', { projectId }],
+                (prevData: Milestone[]) =>
+                    prevData
+                        ?.filter((ms) => ms.id !== milestoneId)
+                        .map((ms) =>
+                            ms.id === moveId
+                                ? {
+                                      ...ms,
+                                      user_stories: [
+                                          ...ms.user_stories,
+                                          updatedStories,
+                                      ],
+                                  }
+                                : ms
+                        )
+            )
+        }
+        queryCache.setQueryData(['tasks', { projectId }], (prevData: Task[]) =>
+            prevData?.map((task) => {
+                const found = updatedTasks.find(
+                    (updated) => updated.id === task.id
+                )
+                return found ?? task
+            })
+        )
+
         handleClose()
     }
 
