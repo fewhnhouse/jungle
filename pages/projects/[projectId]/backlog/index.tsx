@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import Sprint from '../../../../components/backlog/Sprint'
 import { useQuery, queryCache } from 'react-query'
 import SprintCreation from '../../../../components/backlog/SprintCreationModal'
-import UserstoryCreation from '../../../../components/backlog/UserstoryCreation'
+import IssueCreationModal from '../../../../components/backlog/IssueCreationModal'
 import {
     UserStory,
     getUserstories,
@@ -280,7 +280,7 @@ export default function Backlog() {
                         <Container>
                             <TitleContainer>
                                 <Title>Backlog</Title>
-                                <UserstoryCreation />
+                                <IssueCreationModal />
                             </TitleContainer>
                             <ListContainer>
                                 {isBacklogLoading ? (

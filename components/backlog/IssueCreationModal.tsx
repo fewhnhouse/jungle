@@ -1,16 +1,22 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { queryCache, useQuery } from 'react-query'
-import { createUserstory, UserStory } from '../../taiga-api/userstories'
-import { getProject } from '../../taiga-api/projects'
-import { Button, Form, Input, InputNumber, Modal, Select, Upload } from 'antd'
-import { createTask } from '../../taiga-api/tasks'
+import {
+    createUserstory,
+    createUserstoryAttachment,
+    UserStory,
+} from '../../taiga-api/userstories'
+import { getProject, getTagColors } from '../../taiga-api/projects'
+import { Button, Form, Input, Modal, Select, Tag, Upload } from 'antd'
+import { createTask, createTaskAttachment } from '../../taiga-api/tasks'
 import { Store } from 'antd/lib/form/interface'
+import { RcFile } from 'antd/lib/upload'
 
-const UserstoryCreation = () => {
+const IssueCreationModal = () => {
     const [show, setShow] = useState(false)
     const { projectId } = useRouter().query
     const [form] = Form.useForm()
+    const [fileList, setFileList] = useState<RcFile[]>([])
 
     const { data } = useQuery(
         ['project', { projectId }],
@@ -18,8 +24,38 @@ const UserstoryCreation = () => {
         { enabled: projectId }
     )
 
+    const { data: tags } = useQuery(
+        ['tags', { projectId }],
+        (key, { projectId }) => getTagColors(projectId as string)
+    )
+
+    const tagsArray = tags
+        ? Object.keys(tags).map((key) => ({
+              label: key,
+              value: key,
+              color: tags[key],
+          }))
+        : []
+
     const handleOpen = () => setShow(true)
     const handleClose = () => setShow(false)
+
+    const handleUpload = async (type: 'task' | 'userstory', id: number) => {
+        await Promise.all(
+            fileList.map(async (file) => {
+                const formData = new FormData()
+                formData.append('project', projectId as string)
+                formData.append('object_id', id.toString())
+                formData.append('attached_file', file)
+                if (type === 'task') {
+                    return await createTaskAttachment(formData)
+                } else if (type === 'userstory') {
+                    return await createUserstoryAttachment(formData)
+                }
+            })
+        )
+        setFileList([])
+    }
 
     const handleSubmit = async (values: Store) => {
         const { subject, assignee, description, tags, type } = values
@@ -31,19 +67,21 @@ const UserstoryCreation = () => {
                 tags,
                 project: projectId,
             })
+            handleUpload(type, newUserstory.id)
             queryCache.setQueryData(
                 ['backlog', { projectId }],
                 (prevData?: UserStory[]) =>
                     prevData ? [...prevData, newUserstory] : [newUserstory]
             )
         } else if (type === 'task') {
-            await createTask({
+            const newTask = await createTask({
                 subject,
                 assigned_to: assignee,
                 description,
                 tags,
                 project: projectId,
             })
+            handleUpload(type, newTask.id)
             queryCache.invalidateQueries(['tasks', { projectId }])
         }
         handleClose()
@@ -64,7 +102,12 @@ const UserstoryCreation = () => {
                 onCancel={handleClose}
                 onOk={handleFormSubmit}
             >
-                <Form form={form} layout="vertical" onFinish={handleSubmit}>
+                <Form
+                    form={form}
+                    initialValues={{ type: 'userstory' }}
+                    layout="vertical"
+                    onFinish={handleSubmit}
+                >
                     <Form.Item name="type" label="Issue Type">
                         <Select
                             options={[
@@ -88,20 +131,35 @@ const UserstoryCreation = () => {
                     </Form.Item>
                     <Form.Item name="tags" label="Tags">
                         <Select
+                            options={tagsArray}
+                            tagRender={({ label }) => {
+                                return <Tag>{label}</Tag>
+                            }}
                             mode="tags"
-                            options={
-                                data?.tags.map((tag) => ({
-                                    value: tag,
-                                    label: tag,
-                                })) ?? []
-                            }
                         />
                     </Form.Item>
                     <Form.Item label="Description" name="description">
                         <Input.TextArea />
                     </Form.Item>
                     <Form.Item label="Attachments" name="attachments">
-                        <Upload.Dragger />
+                        <Upload.Dragger
+                            onRemove={(file) => {
+                                setFileList((fileList) => {
+                                    const index = fileList.findIndex(
+                                        (f) => f.uid === file.uid
+                                    )
+                                    const newFileList = fileList.slice()
+                                    newFileList.splice(index, 1)
+                                    return newFileList
+                                })
+                            }}
+                            beforeUpload={(file) => {
+                                console.log(file)
+                                setFileList((fileList) => [...fileList, file])
+                                return false
+                            }}
+                            fileList={fileList}
+                        />
                     </Form.Item>
                 </Form>
             </Modal>
@@ -109,4 +167,4 @@ const UserstoryCreation = () => {
     )
 }
 
-export default UserstoryCreation
+export default IssueCreationModal
