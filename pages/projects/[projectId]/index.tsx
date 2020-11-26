@@ -14,10 +14,21 @@ import Achievements from '../../../components/achievements/Achievements'
 import LimitedActivity from '../../../components/activity/LimitedActivity'
 import useMedia from 'use-media'
 import { recentTaskFilter } from '../../../util/recentTaskFilter'
-import RecentTasks from '../../../components/your-work/RecentTasks'
+import LimitedYourWork from '../../../components/your-work/LimitedYourWork'
 
 const StyledFlex = styled(Flex)`
     margin-top: 20px;
+`
+
+const TimelineContainer = styled.div`
+    width: 100%;
+    margin: 0px 20px;
+    &:first-child {
+        margin-right: 20px;
+    }
+    &:last-child {
+        margin-left: 20px;
+    }
 `
 
 const StyledButton = styled(Button)`
@@ -131,15 +142,21 @@ const Project = () => {
                     justify="space-between"
                     direction={isMobile ? 'column' : 'row'}
                 >
-                    <LimitedActivity
-                        title="Project Activity"
-                        activity={timeline}
-                        href={`/projects/${projectId}/activity`}
-                    />
-                    <RecentTasks
-                        title="Recent Tasks"
-                        timeline={recentTasks}
-                    />
+                    <TimelineContainer>
+                        <LimitedActivity
+                            title="Project Activity"
+                            limit={5}
+                            activity={timeline}
+                            href={`/projects/${projectId}/activity`}
+                        />
+                    </TimelineContainer>
+                    <TimelineContainer>
+                        <LimitedYourWork
+                            limit={5}
+                            title="Recent Tasks"
+                            timeline={recentTasks}
+                        />
+                    </TimelineContainer>
                 </Flex>
             </PageBody>
         </div>

@@ -5,14 +5,6 @@ import RecentTask from './YourWorkItem'
 
 const Container = styled.div`
     flex: 1;
-    @media (min-width: 960px) {
-        &:first-child {
-            margin-right: 10px;
-        }
-        &:last-child {
-            margin-left: 10px;
-        }
-    }
     margin-bottom: ${({ theme }) => theme.spacing.big};
     width: 100%;
 `
