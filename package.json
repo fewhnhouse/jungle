@@ -5,6 +5,7 @@
         "dev": "next",
         "build": "next build",
         "start": "next start",
+        "dev-https": "node ./server.js",
         "analyze": "ANALYZE=true next build",
         "db": "prisma studio --experimental",
         "db-save": "prisma migrate save --experimental",

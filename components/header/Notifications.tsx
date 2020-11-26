@@ -1,6 +1,37 @@
-import { NotificationOutlined } from '@ant-design/icons'
-import { Button, Dropdown, Typography } from 'antd'
+import {
+    BellOutlined,
+    CommentOutlined,
+    EyeOutlined,
+    InfoOutlined,
+    NotificationOutlined,
+    ProjectOutlined,
+    UserAddOutlined,
+} from '@ant-design/icons'
+import {
+    Avatar,
+    Badge,
+    Button,
+    Divider,
+    Dropdown,
+    Empty,
+    List,
+    Popover,
+    Skeleton,
+    Tooltip,
+    Typography,
+} from 'antd'
+import Link from 'next/link'
+import { useEffect } from 'react'
+import { queryCache, useQuery } from 'react-query'
 import styled from 'styled-components'
+import {
+    getNotifications,
+    markAsRead,
+    Notification,
+    NotifiedProject,
+} from '../../taiga-api/notifications'
+import useNotifications from '../../util/useNotifications'
+import usePrev from '../../util/usePrev'
 import Flex from '../Flex'
 
 const Container = styled.div`
@@ -8,31 +39,223 @@ const Container = styled.div`
 `
 
 const MenuContainer = styled(Flex)`
+    position: relative;
     width: 500px;
     height: 300px;
     background: white;
     border-radius: 2px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
     padding: 20px;
+    overflow: auto;
 `
 
-const menu = (
-    <MenuContainer>
-        <Flex direction="column">
-            <Typography.Title level={3}>Notifications</Typography.Title>
-            <Typography.Text>
-                You have 7 Notifications across 5 Projects
-            </Typography.Text>
-        </Flex>
-    </MenuContainer>
-)
+const NotificationButton = styled(Button)`
+    margin-right: 5px;
+`
+
+const getIcon = (notification: Notification) => {
+    //1: assign member to task / userstory
+    //2:
+    //3: add as watcher to task / userstory
+    //4: add (as member) to project
+    //5:
+    //6: mentioned in comment of task / userstory
+    switch (notification.event_type) {
+        case 1:
+            return <UserAddOutlined />
+        case 3:
+            return <EyeOutlined />
+        case 4:
+            return <ProjectOutlined />
+        case 6:
+            return <CommentOutlined />
+        default:
+            return <InfoOutlined />
+    }
+}
+
+const getTitle = (notification: Notification) => {
+    switch (notification.event_type) {
+        case 1:
+            return (
+                <span>
+                    Assigned to{' '}
+                    <Link
+                        href={`/projects/${1}/tasks/${
+                            notification.data.obj?.id
+                        }`}
+                    >
+                        <a>
+                            {notification.data.obj?.content_type}{' '}
+                            {notification.data.obj?.id}
+                        </a>
+                    </Link>
+                </span>
+            )
+        case 3:
+            return (
+                <span>
+                    Added as Watcher of{' '}
+                    <Link
+                        href={`/projects/${1}/tasks/${
+                            notification.data.obj?.id
+                        }`}
+                    >
+                        <a>
+                            {notification.data.obj?.content_type}{' '}
+                            {notification.data.obj?.id}
+                        </a>
+                    </Link>
+                </span>
+            )
+        case 4:
+            return (
+                <span>
+                    Added as member of Project{' '}
+                    <Link
+                        href={`/projects/${1}/tasks/${
+                            notification.data.project.id
+                        }`}
+                    >
+                        <a>{notification.data.project.name} </a>
+                    </Link>
+                </span>
+            )
+        case 6:
+            return (
+                <span>
+                    Mentioned in comment of{' '}
+                    <Link
+                        href={`/projects/${1}/tasks/${
+                            notification.data.obj?.id
+                        }`}
+                    >
+                        <a>
+                            {notification.data.obj?.content_type}{' '}
+                            {notification.data.obj?.id}
+                        </a>
+                    </Link>
+                </span>
+            )
+        default:
+            return 'Unknown Notification'
+    }
+}
+
+const getDescription = (notification: Notification) => {
+    return (
+        <div>
+            {notification.data.project.name} <Divider type="vertical" />
+            {notification.data.user.name}
+        </div>
+    )
+}
 
 export default function Notifications() {
+    const { permission, requestPermission } = useNotifications()
+    const { data, isLoading } = useQuery(
+        'notifications',
+        () => getNotifications(true, 1),
+        { refetchInterval: 5000 }
+    )
+
+    const prevData = usePrev(data)
+
+    useEffect(() => {
+        if (prevData && prevData.objects && data && data.objects) {
+            const newNotifications = data.objects.filter(
+                (notification) =>
+                    !prevData.objects.find(
+                        (prevNotification) =>
+                            prevNotification.id === notification.id
+                    )
+            )
+            console.log(newNotifications)
+            new window.Notification('You have a new notification!')
+        }
+    }, [prevData, data])
+
+    const projects: NotifiedProject[] = data?.objects?.reduce(
+        (prev, curr) =>
+            prev.find((project) => curr.data.project.id === project.id)
+                ? prev
+                : [...prev, curr.data.project],
+        []
+    )
+
+    const handleMarkAsRead = async () => {
+        await markAsRead()
+        queryCache.setQueryData('notifications', { objects: [], total: 0 })
+    }
+
+    const menu = (
+        <MenuContainer direction="column" justify="center" align="center">
+            <Skeleton loading={isLoading} active>
+                {data?.total === 0 ? (
+                    <Empty description="You do not have any Notifications." />
+                ) : (
+                    <Flex
+                        fluid
+                        justify="flex-start"
+                        align="flex-start"
+                        direction="column"
+                    >
+                        <Flex justify="space-between" style={{ width: '100%' }}>
+                            <Typography.Title level={3}>
+                                Notifications
+                            </Typography.Title>
+                            <Flex align="center">
+                                {permission === 'default' && (
+                                    <Tooltip title="Enable Desktop Notifications">
+                                        <NotificationButton
+                                            onClick={requestPermission}
+                                            icon={<BellOutlined />}
+                                        ></NotificationButton>
+                                    </Tooltip>
+                                )}
+
+                                <Button onClick={handleMarkAsRead}>
+                                    Dismiss
+                                </Button>
+                            </Flex>
+                        </Flex>
+                        <Typography.Text>
+                            {`You have ${data?.total} Notifications across ${
+                                projects?.length
+                            } Project${projects?.length > 1 ? 's' : ''}.`}
+                        </Typography.Text>
+                        <List style={{ width: '100%' }}>
+                            {data?.objects?.map(
+                                (notification: Notification) => (
+                                    <List.Item key={notification.id}>
+                                        <List.Item.Meta
+                                            avatar={
+                                                <Avatar
+                                                    shape="square"
+                                                    icon={getIcon(notification)}
+                                                />
+                                            }
+                                            title={getTitle(notification)}
+                                            description={getDescription(
+                                                notification
+                                            )}
+                                        />
+                                    </List.Item>
+                                )
+                            )}
+                        </List>
+                    </Flex>
+                )}
+            </Skeleton>
+        </MenuContainer>
+    )
     return (
         <Container>
-            <Dropdown trigger={['click']} overlay={menu}>
-                <Button icon={<NotificationOutlined />}></Button>
-            </Dropdown>
+            <Badge count={data?.total}>
+                <Dropdown trigger={['click']} overlay={menu}>
+                    <Button icon={<NotificationOutlined />}></Button>
+                </Dropdown>
+            </Badge>
         </Container>
     )
 }
