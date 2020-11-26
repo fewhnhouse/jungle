@@ -14,6 +14,7 @@ import FilterBoard, { GroupBy } from '../../../../components/board/FilterBoard'
 import Link from 'next/link'
 import useQueryState from '../../../../util/useQueryState'
 import { ScrollSync } from 'react-scroll-sync'
+import Updater from '../../../../components/Updater'
 
 export default function BoardContainer() {
     const router = useRouter()
@@ -70,9 +71,9 @@ export default function BoardContainer() {
         { enabled: groupBy === 'subtask' }
     )
 
-    const filteredTasks = tasks.filter((task) =>
+    const filteredTasks = tasks?.filter((task) =>
         milestoneIds.includes(task.milestone)
-    )
+    ) ?? []
 
     const orderedTasks: {
         storySubject: string
