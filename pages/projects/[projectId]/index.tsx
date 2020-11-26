@@ -147,6 +147,7 @@ const Project = () => {
                             title="Project Activity"
                             limit={5}
                             activity={timeline}
+                            href={`/projects/${projectId}/activity`}
                         />
                     </TimelineContainer>
                     <TimelineContainer>
@@ -154,6 +155,7 @@ const Project = () => {
                             limit={5}
                             title="Recent Tasks"
                             timeline={recentTasks}
+                            href={`/projects/${projectId}/your-work`}
                         />
                     </TimelineContainer>
                 </Flex>

@@ -131,13 +131,14 @@ export default function Home({
                             title="Your recent activity"
                             activity={timeline ?? []}
                             isLoading={isLoading}
-                            href={`/activity`}
+                            href="/activity"
                         />
                         <LimitedYourWork
                             limit={5}
                             title="Your recent work"
                             timeline={recentTasks}
                             isLoading={isLoading}
+                            href="/your-work"
                         />
                     </InnerContainer>
                 </Container>

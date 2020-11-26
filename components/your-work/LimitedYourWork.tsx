@@ -1,4 +1,5 @@
 import { List, Skeleton } from 'antd'
+import Link from 'next/link'
 import styled from 'styled-components'
 import { Timeline } from '../../taiga-api/timelines'
 import RecentTask from './YourWorkItem'
@@ -13,6 +14,7 @@ interface Props {
     title: string
     limit: number
     isLoading?: boolean
+    href?: string
 }
 
 export default function RecentTasks({
@@ -20,6 +22,7 @@ export default function RecentTasks({
     title,
     limit = 10,
     isLoading,
+    href,
 }: Props) {
     return (
         <Container>
@@ -33,6 +36,9 @@ export default function RecentTasks({
                         ))}
                 </List>
             </Skeleton>
+            {href && timeline?.length > limit && (
+                <Link href={href}>See all work items</Link>
+            )}
         </Container>
     )
 }
