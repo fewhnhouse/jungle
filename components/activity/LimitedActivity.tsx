@@ -1,4 +1,4 @@
-import { Skeleton } from 'antd'
+import { List, Skeleton } from 'antd'
 import Link from 'next/link'
 import styled from 'styled-components'
 import { Timeline } from '../../taiga-api/timelines'
@@ -9,23 +9,7 @@ const Container = styled.div`
     flex-direction: column;
     flex: 1;
     margin-bottom: ${({ theme }) => theme.spacing.big};
-    min-width: 400px;
-    max-width: 500px;
     width: 100%;
-`
-
-const List = styled.ul`
-    list-style: none;
-    padding: 0;
-    @media screen and (max-width: 400px) {
-        width: 350px;
-    }
-`
-
-const Title = styled.h2`
-    width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
 `
 
 interface Props {
@@ -41,15 +25,15 @@ export default function LimitedActivity({
     activity,
     isLoading,
     href,
-    limit = 10,
+    limit = 6,
 }: Props) {
     return (
         <Container>
-            <Title>{title}</Title>
+            <h2>{title}</h2>
             {isLoading && <Skeleton active paragraph={{ rows: 5 }} />}
             <List>
                 {activity
-                    ?.filter((_, index) => index < 10)
+                    ?.filter((_, index) => index < limit)
                     .map((activityItem) => (
                         <ActivityListItem
                             key={activityItem.id}

@@ -22,13 +22,14 @@ const Container = styled.div`
     margin: auto;
     max-width: 1400px;
     display: flex;
+    flex-wrap: wrap;
     height: 100%;
     align-items: flex-start;
     @media screen and (max-width: 960px) {
         flex-direction: column;
         align-items: center;
     }
-    @media screen and (max-width: 400px) {
+    @media screen and (max-width: 720px) {
         padding: ${({ theme }) =>
             `${theme.spacing.small} ${theme.spacing.medium}`};
     }
@@ -53,6 +54,7 @@ const InnerContainer = styled.div`
     display: flex;
     flex-direction: column;
     flex: 1;
+    width: 100%;
 `
 
 const TitleContainer = styled.div`
@@ -121,10 +123,11 @@ export default function Home({
                 </HomeContainer>
             </PageHeader>
             <PageBody>
-                <Container>
+                <Container wrap>
                     <Projects publicProjects={publicProjects} />
                     <InnerContainer>
                         <LimitedActivity
+                            limit={6}
                             title="Your activity"
                             activity={timeline ?? []}
                             isLoading={isLoading}

@@ -1,72 +1,54 @@
-import { BookOutlined, ProfileOutlined } from '@ant-design/icons'
-import { Card } from 'antd'
+import { BookOutlined, LinkOutlined, ProfileOutlined } from '@ant-design/icons'
+import { Avatar, Button, Divider, List } from 'antd'
 import Link from 'next/link'
-import styled from 'styled-components'
-
-const StyledUserStoryIcon = styled(BookOutlined)`
-    background: #2ecc71;
-    border-radius: 3px;
-    padding: 5px;
-    color: #2c3e50;
-`
-
-const StyledTaskIcon = styled(ProfileOutlined)`
-    background: #45aaff;
-    border-radius: 3px;
-    padding: 5px;
-    color: #2c3e50;
-`
-
-const StyledCard = styled(Card)`
-    min-width: 300px;
-    max-width: 500px;
-    background: white;
-    width: 100%;
-    margin: ${({ theme }) => `${theme.spacing.medium} 0px`};
-`
-
-const { Meta } = Card
+import { Timeline } from '../../taiga-api/timelines'
+import { getActivityDate } from '../../util/getActivityDate'
 
 interface Props {
-    type: 'userstory' | 'task'
-    title: string
-    description?: string
-    id: number
-    projectName: string
-    projectId: number
+    item: Timeline
 }
-export default function RecentTask({
-    type,
-    title,
-    description,
-    id,
-    projectName,
-    projectId,
-}: Props) {
-    const urlType = type === 'task' ? 'tasks' : 'userstories'
+export default function RecentTask({ item }: Props) {
+    const isTask = item.event_type.includes('task')
+    const urlType = isTask ? 'tasks' : 'userstories'
+    const issueId = isTask ? item.data.task?.id : item.data.userstory?.id
     return (
-        <StyledCard>
-            <Meta
+        <List.Item
+            actions={[
+                <Link
+                    passHref
+                    key="link"
+                    href={`/projects/${item.project}/${urlType}/${issueId}`}
+                >
+                    <Button icon={<LinkOutlined />}></Button>
+                </Link>,
+            ]}
+        >
+            <List.Item.Meta
                 avatar={
-                    type === 'task' ? (
-                        <StyledTaskIcon />
-                    ) : (
-                        <StyledUserStoryIcon />
-                    )
+                    <Avatar
+                        shape="square"
+                        style={{
+                            backgroundColor: isTask ? '#45aaff' : '#2ecc71',
+                        }}
+                        icon={isTask ? <ProfileOutlined /> : <BookOutlined />}
+                    />
                 }
                 title={
-                    <Link href={`/projects/${projectId}/${urlType}/${id}`}>
-                        {title}
-                    </Link>
+                    isTask
+                        ? item.data.task?.subject
+                        : item.data.userstory?.subject
                 }
                 description={
-                    <div>
-                        {projectName}
-                        <br />
-                        {description}
-                    </div>
+                    <>
+                        <span>{item.data.project.name}</span>
+                        <Divider type="vertical" />
+                        <span>
+                            Last edited:{' '}
+                            {getActivityDate(new Date(item.created))}
+                        </span>
+                    </>
                 }
             />
-        </StyledCard>
+        </List.Item>
     )
 }

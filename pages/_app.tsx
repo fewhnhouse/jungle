@@ -105,7 +105,6 @@ export default function App({ Component, pageProps }: AppProps) {
             <AppContainer>
                 <Component {...pageProps} />
             </AppContainer>
-            <ReactQueryDevtools initialIsOpen />
         </ThemeProvider>
     )
 }

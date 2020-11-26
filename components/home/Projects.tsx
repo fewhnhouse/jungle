@@ -13,6 +13,7 @@ const Container = styled(Flex)`
     width: 100%;
     @media screen and (max-width: 960px) {
         margin-right: 0px;
+        position: inherit;
     }
 `
 interface Props {
