@@ -25,22 +25,24 @@ export default function LimitedActivity({
     activity,
     isLoading,
     href,
-    limit = 6,
+    limit = 10,
 }: Props) {
     return (
         <Container>
             <h2>{title}</h2>
-            {isLoading && <Skeleton active paragraph={{ rows: 5 }} />}
-            <List>
-                {activity
-                    ?.filter((_, index) => index < limit)
-                    .map((activityItem) => (
-                        <ActivityListItem
-                            key={activityItem.id}
-                            activityItem={activityItem}
-                        ></ActivityListItem>
-                    ))}
-            </List>
+            <Skeleton active paragraph={{ rows: 5 }} loading={isLoading}>
+                <List>
+                    {activity
+                        ?.filter((_, index) => index < limit)
+                        .map((activityItem) => (
+                            <ActivityListItem
+                                key={activityItem.id}
+                                activityItem={activityItem}
+                            ></ActivityListItem>
+                        ))}
+                </List>
+            </Skeleton>
+
             {activity?.length > limit && (
                 <Link href={href}>See all activity</Link>
             )}

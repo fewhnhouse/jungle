@@ -14,7 +14,7 @@ import Achievements from '../../../components/achievements/Achievements'
 import LimitedActivity from '../../../components/activity/LimitedActivity'
 import useMedia from 'use-media'
 import { recentTaskFilter } from '../../../util/recentTaskFilter'
-import RecentTasks from '../../../components/recentTasks/RecentTasks'
+import RecentTasks from '../../../components/your-work/RecentTasks'
 
 const StyledFlex = styled(Flex)`
     margin-top: 20px;

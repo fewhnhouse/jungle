@@ -19,7 +19,7 @@ import {
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { getPublicProjects } from '../../../taiga-api/projects'
 import { useRouter } from 'next/router'
-import RecentTasks from '../../../components/recentTasks/RecentTasks'
+import RecentTasks from '../../../components/your-work/RecentTasks'
 import { recentTaskFilter } from '../../../util/recentTaskFilter'
 
 const Container = styled.div`

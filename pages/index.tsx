@@ -15,7 +15,7 @@ import { getUserTimeline, Timeline } from '../taiga-api/timelines'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { getPublicProjects } from '../taiga-api/projects'
 import { recentTaskFilter } from '../util/recentTaskFilter'
-import RecentTasks from '../components/recentTasks/RecentTasks'
+import LimitedYourWork from '../components/your-work/LimitedYourWork'
 
 const Container = styled.div`
     padding: ${({ theme }) => `${theme.spacing.huge} ${theme.spacing.crazy}`};
@@ -127,13 +127,18 @@ export default function Home({
                     <Projects publicProjects={publicProjects} />
                     <InnerContainer>
                         <LimitedActivity
-                            limit={6}
-                            title="Your activity"
+                            limit={5}
+                            title="Your recent activity"
                             activity={timeline ?? []}
                             isLoading={isLoading}
                             href={`/activity`}
                         />
-                        <RecentTasks title="Your work" timeline={recentTasks} />
+                        <LimitedYourWork
+                            limit={5}
+                            title="Your recent work"
+                            timeline={recentTasks}
+                            isLoading={isLoading}
+                        />
                     </InnerContainer>
                 </Container>
             </PageBody>
