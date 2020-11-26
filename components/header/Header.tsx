@@ -132,7 +132,7 @@ const Header = () => {
             ) : null}
 
             <Options>
-                {!isTablet && (
+                {false && (
                     <InputContainer
                         headerWidth={
                             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
