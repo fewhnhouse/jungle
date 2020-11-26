@@ -1,10 +1,8 @@
-import ExpandLessIcon from '@material-ui/icons/ExpandLess'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 import styled from 'styled-components'
 import { useState } from 'react'
 import { Collapse } from 'react-collapse'
-import { Divider, Dropdown, Menu, Tag } from 'antd'
+import { Button, Divider, Dropdown, Menu, Tag } from 'antd'
+import { DownOutlined, EllipsisOutlined, UpOutlined } from '@ant-design/icons'
 
 const StoryHeader = styled.div`
     display: flex;
@@ -28,6 +26,9 @@ const HeaderContainer = styled.div`
     flex-direction: column;
     align-items: flex-start;
     padding: ${({ theme }) => `${theme.spacing.small}`};
+    &:nth-child(2) {
+        padding-left: 0px;
+    }
 `
 
 const Description = styled.span`
@@ -83,9 +84,16 @@ export default function CustomCollapse({
         <>
             <StoryHeader>
                 <InnerContainer onClick={toggleVisibility}>
-                    {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                    {status === 'active' && <StyledTag color="blue">Active</StyledTag>}
-                    {status === 'closed' && <StyledTag color="grey">Closed</StyledTag>}
+                    <Button
+                        style={{ marginRight: 5 }}
+                        icon={expanded ? <UpOutlined /> : <DownOutlined />}
+                    />
+                    {status === 'active' && (
+                        <StyledTag color="blue">Active</StyledTag>
+                    )}
+                    {status === 'closed' && (
+                        <StyledTag color="grey">Closed</StyledTag>
+                    )}
                     <HeaderContainer>
                         <StoryTitle>{title}</StoryTitle>
                         <Description>{description}</Description>
@@ -95,7 +103,10 @@ export default function CustomCollapse({
                 {primaryAction && <Divider type="vertical" />}
                 {actions && (
                     <Dropdown trigger={['click']} overlay={menu}>
-                        <MoreHorizIcon />
+                        <Button
+                            style={{ minWidth: 32 }}
+                            icon={<EllipsisOutlined />}
+                        />
                     </Dropdown>
                 )}
             </StoryHeader>

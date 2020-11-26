@@ -4,8 +4,7 @@ import MarkdownIt from 'markdown-it'
 import dynamic from 'next/dynamic'
 import ReactMarkdown from 'react-markdown'
 import Flex from '../Flex'
-import ClearIcon from '@material-ui/icons/Clear'
-import CheckIcon from '@material-ui/icons/Check'
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import { Button } from 'antd'
 import { Task, updateTask } from '../../taiga-api/tasks'
 import { updateUserstory, UserStory } from '../../taiga-api/userstories'
@@ -111,10 +110,10 @@ export default function EditableDescription({
             />
             <Flex>
                 <StyledButton size="large" onClick={toggleEditable}>
-                    <ClearIcon />
+                    <CloseOutlined />
                 </StyledButton>
                 <StyledButton size="large" onClick={onSubmit}>
-                    <CheckIcon />
+                    <CheckOutlined />
                 </StyledButton>
             </Flex>
         </InputContainer>

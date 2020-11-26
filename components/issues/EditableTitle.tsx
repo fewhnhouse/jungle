@@ -1,7 +1,5 @@
 import { useState } from 'react'
 import styled from 'styled-components'
-import ClearIcon from '@material-ui/icons/Clear'
-import CheckIcon from '@material-ui/icons/Check'
 import Flex from '../Flex'
 import { Button, Input } from 'antd'
 import { Task, updateTask } from '../../taiga-api/tasks'
@@ -9,6 +7,7 @@ import { updateUserstory, UserStory } from '../../taiga-api/userstories'
 import { useRouter } from 'next/router'
 import { queryCache } from 'react-query'
 import { updateTaskCache, updateUserstoryCache } from '../../updateCache'
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 
 const Title = styled.h2`
     border-radius: 2px;
@@ -93,10 +92,10 @@ export default function EditableTitle({
                         />
                         <Flex>
                             <StyledButton size="large" onClick={toggleEditable}>
-                                <ClearIcon />
+                                <CloseOutlined />
                             </StyledButton>
                             <StyledButton size="large" onClick={toggleEditable}>
-                                <CheckIcon />
+                                <CheckOutlined />
                             </StyledButton>
                         </Flex>
                     </Flex>
