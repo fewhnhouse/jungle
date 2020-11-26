@@ -187,7 +187,7 @@ export default function Notifications() {
             )
             if (newNotifications.length) {
                 newNotifications.forEach((notification) => {
-                    new Notification('New Notification', {
+                    new window.Notification('New Notification', {
                         body: getNotificationTitle(notification),
                     })
                 })
