@@ -35,7 +35,7 @@ export default function BoardContainer() {
     const { data: milestones, isLoading: isMilestonesLoading } = useQuery(
         ['milestones', { projectId }],
         () => getMilestones({ projectId: projectId as string, closed: false }),
-        { enabled: projectId }
+        { enabled: projectId, refetchInterval: 5000 }
     )
 
     const { data: taskFiltersData } = useQuery(
@@ -68,12 +68,11 @@ export default function BoardContainer() {
             getTasks({
                 projectId,
             }),
-        { enabled: groupBy === 'subtask' }
+        { enabled: groupBy === 'subtask', refetchInterval: 5000 }
     )
 
-    const filteredTasks = tasks?.filter((task) =>
-        milestoneIds.includes(task.milestone)
-    ) ?? []
+    const filteredTasks =
+        tasks?.filter((task) => milestoneIds.includes(task.milestone)) ?? []
 
     const orderedTasks: {
         storySubject: string

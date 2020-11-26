@@ -20,7 +20,7 @@ const useNotifications = () => {
         setPermission(permission)
         // make sure Browser stores the information
         if (!('permission' in Notification)) {
-            Notification.permission = permission
+            (Notification as any).permission = permission
         }
     }
 

@@ -1,4 +1,5 @@
 import { queryCache } from 'react-query'
+import { Milestone } from './taiga-api/milestones'
 import { Task } from './taiga-api/tasks'
 import { UserStory } from './taiga-api/userstories'
 

@@ -88,7 +88,7 @@ const UserstoryPage = () => {
             centered: true,
             content: 'Some descriptions',
             onOk: async () => {
-                await deleteUserstory(id)
+                await deleteUserstory(parseInt(id as string, 10))
                 queryCache.invalidateQueries(['milestones', { projectId }])
                 queryCache.invalidateQueries(['backlog', { projectId }])
             },
@@ -105,7 +105,7 @@ const UserstoryPage = () => {
         })) ?? []
 
     const updateAssignee = async (assigneeId: number) => {
-        const updatedStory = await updateUserstory(id, {
+        const updatedStory = await updateUserstory(parseInt(id as string, 10), {
             assigned_to: assigneeId,
             assigned_users: [assigneeId],
             version: data.version,
@@ -114,7 +114,7 @@ const UserstoryPage = () => {
     }
 
     const updateStatus = async (status: number) => {
-        const updatedStory = await updateUserstory(id, {
+        const updatedStory = await updateUserstory(parseInt(id as string, 10), {
             status,
             version: data.version,
         })
@@ -164,7 +164,7 @@ const UserstoryPage = () => {
                                         <Label>Tags</Label>
                                         <CustomTagPicker
                                             type="userstory"
-                                            id={id}
+                                            id={parseInt(id as string, 10)}
                                         />
                                         <Label>Story Points</Label>
                                         <MultiStoryPointCascader data={data} />
@@ -185,10 +185,14 @@ const UserstoryPage = () => {
                                 )}
                             </Skeleton>
                         }
-                        outerContent={<SubtaskList id={id} />}
+                        outerContent={
+                            <SubtaskList id={parseInt(id as string, 10)} />
+                        }
                         innerContent={
                             <Skeleton loading={isLoading} active>
                                 <Uploader
+                                    type="userstory"
+                                    action={`${process.env.NEXT_PUBLIC_TAIGA_API_URL}/userstories/attachments`}
                                     data={{
                                         object_id: data?.id,
                                         project: data?.project,

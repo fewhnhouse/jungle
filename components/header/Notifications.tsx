@@ -96,7 +96,7 @@ const getNotificationTitle = (notification: Notification) => {
     }
 }
 
-const getTitle = (notification: Notification, projectId: string) => {
+const getTitle = (notification: Notification) => {
     switch (notification.event_type) {
         case 1:
             return (

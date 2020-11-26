@@ -82,7 +82,7 @@ const TaskPage = () => {
             centered: true,
             content: 'Some descriptions',
             onOk: async () => {
-                await deleteTask(id)
+                await deleteTask(parseInt(id as string, 10))
                 queryCache.invalidateQueries([
                     'tasks',
                     { projectId, milestone: data?.id },
@@ -98,7 +98,10 @@ const TaskPage = () => {
     }
 
     const handleConvert = async () => {
-        await promoteToUserstory(id, projectId as string)
+        await promoteToUserstory(
+            parseInt(id as string, 10),
+            projectId as string
+        )
         queryCache.invalidateQueries(['tasks', { projectId }])
         queryCache.invalidateQueries(['backlog', { projectId }])
         queryCache.invalidateQueries(['milestones', { projectId }])
@@ -124,7 +127,7 @@ const TaskPage = () => {
         })) ?? []
 
     const updateAssignee = async (assigneeId: number) => {
-        const updatedTask = await updateTask(id, {
+        const updatedTask = await updateTask(parseInt(id as string, 10), {
             assigned_to: assigneeId,
             assigned_users: [assigneeId],
             version: data.version,
@@ -133,7 +136,7 @@ const TaskPage = () => {
     }
 
     const updateStatus = async (status: number) => {
-        const updatedTask = await updateTask(id, {
+        const updatedTask = await updateTask(parseInt(id as string, 10), {
             status,
             version: data.version,
         })
@@ -180,7 +183,10 @@ const TaskPage = () => {
                                     onChange={updateAssignee}
                                 />
                                 <Label>Tags</Label>
-                                <CustomTagPicker type="task" id={id} />
+                                <CustomTagPicker
+                                    type="task"
+                                    id={parseInt(id as string, 10)}
+                                />
                                 <Label>Actions</Label>
                                 <BtnContainer
                                     direction={isMobile ? 'column' : 'row'}
@@ -200,6 +206,8 @@ const TaskPage = () => {
                         outerContent={
                             <Skeleton loading={isLoading} active>
                                 <Uploader
+                                    action={`${process.env.NEXT_PUBLIC_TAIGA_API_URL}/tasks/attachments`}
+                                    type="task"
                                     data={{
                                         object_id: data?.id,
                                         project: data?.project,
