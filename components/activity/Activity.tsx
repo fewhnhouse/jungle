@@ -1,5 +1,4 @@
 import { List, Skeleton } from 'antd'
-import styled from 'styled-components'
 import { Timeline } from '../../taiga-api/timelines'
 import ActivityListItem from './ActivityListItem'
 import { PageBody, PageHeader } from '../Layout'
