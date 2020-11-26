@@ -74,6 +74,21 @@ const getIcon = (notification: Notification) => {
     }
 }
 
+const getNotificationTitle = (notification: Notification) => {
+    switch (notification.event_type) {
+        case 1:
+            return `You were assigned to ${notification.data.obj?.content_type} ${notification.data.obj?.id} by ${notification.data.user.name}`
+        case 3:
+            return `You were added as Watcher of ${notification.data.obj?.content_type} ${notification.data.obj?.id} by ${notification.data.user.name}`
+        case 4:
+            return `You were added as member of Project ${notification.data.project.name} by ${notification.data.user.name}`
+        case 6:
+            return `You were mentioned in comment of ${notification.data.obj?.content_type} ${notification.data.obj?.id} by ${notification.data.user.name}`
+        default:
+            return 'Unknown Notification'
+    }
+}
+
 const getTitle = (notification: Notification) => {
     switch (notification.event_type) {
         case 1:
@@ -170,8 +185,13 @@ export default function Notifications() {
                             prevNotification.id === notification.id
                     )
             )
-            console.log(newNotifications)
-            new window.Notification('You have a new notification!')
+            if (newNotifications.length) {
+                newNotifications.forEach((notification) => {
+                    new Notification('New Notification', {
+                        body: getNotificationTitle(notification),
+                    })
+                })
+            }
         }
     }, [prevData, data])
 
