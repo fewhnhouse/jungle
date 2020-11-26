@@ -147,7 +147,6 @@ const Project = () => {
                             title="Project Activity"
                             limit={5}
                             activity={timeline}
-                            href={`/projects/${projectId}/activity`}
                         />
                     </TimelineContainer>
                     <TimelineContainer>

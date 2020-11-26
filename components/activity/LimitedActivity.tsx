@@ -16,7 +16,7 @@ interface Props {
     title?: string
     activity: Timeline[]
     isLoading?: boolean
-    href: string
+    href?: string
     limit?: number
 }
 
@@ -43,7 +43,7 @@ export default function LimitedActivity({
                 </List>
             </Skeleton>
 
-            {activity?.length > limit && (
+            {href && activity?.length > limit && (
                 <Link href={href}>See all activity</Link>
             )}
         </Container>
