@@ -61,26 +61,17 @@ export default function BoardContainer() {
             'tasks',
             {
                 projectId,
-                milestoneIds,
             },
         ],
-        (
-            key,
-            {
+        (key, { projectId }: { projectId: string; milestoneIds: number[] }) =>
+            getTasks({
                 projectId,
-                milestoneIds,
-            }: { projectId: string; milestoneIds: number[] }
-        ) =>
-            Promise.all(
-                milestoneIds.map(
-                    async (milestone) =>
-                        await getTasks({
-                            projectId,
-                            milestone: milestone.toString(),
-                        })
-                )
-            ).then((res) => res.flat()),
-        { enabled: !!milestones && groupBy === 'subtask' }
+            }),
+        { enabled: groupBy === 'subtask' }
+    )
+
+    const filteredTasks = tasks.filter((task) =>
+        milestoneIds.includes(task.milestone)
     )
 
     const orderedTasks: {
@@ -88,7 +79,7 @@ export default function BoardContainer() {
         tasks: Task[]
         storyId: number
     }[] =
-        tasks?.reduce(
+        filteredTasks?.reduce(
             (prev, curr) => {
                 if (!curr.user_story) {
                     return prev.map((p) =>
@@ -115,13 +106,14 @@ export default function BoardContainer() {
             [{ storyId: null, storySubject: 'Tasks without Story', tasks: [] }]
         ) ?? []
 
+    const openMilestones = milestones?.filter((ms) => !ms.closed)
     const sprint =
         selectedSprint !== -1
-            ? milestones?.find((ms) => ms.id === selectedSprint)
+            ? openMilestones?.find((ms) => ms.id === selectedSprint)
             : {
                   name: 'All',
                   user_stories:
-                      milestones?.flatMap((ms) => ms.user_stories) ?? [],
+                      openMilestones?.flatMap((ms) => ms.user_stories) ?? [],
                   id: -1,
               }
 
@@ -144,7 +136,7 @@ export default function BoardContainer() {
                         title="Board"
                     />
                     <Flex>
-                        {!!milestones?.length && (
+                        {!!openMilestones?.length && (
                             <FilterBoard
                                 groupBy={groupBy}
                                 setGroupBy={setGroupBy}
@@ -152,13 +144,15 @@ export default function BoardContainer() {
                                 setAssignee={setAssignee}
                                 sprint={selectedSprint}
                                 setSprint={setSelectedSprint}
-                                milestones={milestones}
+                                milestones={openMilestones.filter(
+                                    (ms) => !ms.closed
+                                )}
                             />
                         )}
                     </Flex>
                 </PageHeader>
                 <PageBody>
-                    {milestones?.length ? (
+                    {openMilestones?.length ? (
                         <div>
                             {groupBy === 'subtask' &&
                                 orderedTasks?.map((orderedTask, index) => {
@@ -189,7 +183,7 @@ export default function BoardContainer() {
                                 />
                             )}
                             {groupBy === 'sprint' &&
-                                milestones.map((ms, index) => (
+                                openMilestones.map((ms, index) => (
                                     <StoryBoard
                                         key={ms.id}
                                         hasHeader={index === 0}
