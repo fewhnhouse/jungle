@@ -49,6 +49,13 @@ const MenuContainer = styled(Flex)`
     overflow: auto;
 `
 
+const StyledAnchor = styled.a`
+    color: rgba(0, 0, 0, 0.45);
+    &:hover {
+        color: rgba(0, 0, 0, 0.75);
+    }
+`
+
 const NotificationButton = styled(Button)`
     margin-right: 5px;
 `
@@ -89,21 +96,20 @@ const getNotificationTitle = (notification: Notification) => {
     }
 }
 
-const getTitle = (notification: Notification) => {
+const getTitle = (notification: Notification, projectId: string) => {
     switch (notification.event_type) {
         case 1:
             return (
                 <span>
                     Assigned to{' '}
                     <Link
-                        href={`/projects/${1}/tasks/${
-                            notification.data.obj?.id
-                        }`}
+                        href={`/projects/${notification.data.project.id}/${
+                            notification.data.obj?.content_type === 'task'
+                                ? 'tasks'
+                                : 'userstories'
+                        }/${notification.data.obj?.id}`}
                     >
-                        <a>
-                            {notification.data.obj?.content_type}{' '}
-                            {notification.data.obj?.id}
-                        </a>
+                        <a>{notification.data.obj?.subject}</a>
                     </Link>
                 </span>
             )
@@ -112,14 +118,13 @@ const getTitle = (notification: Notification) => {
                 <span>
                     Added as Watcher of{' '}
                     <Link
-                        href={`/projects/${1}/tasks/${
-                            notification.data.obj?.id
-                        }`}
+                        href={`/projects/${notification.data.project.id}/${
+                            notification.data.obj?.content_type === 'task'
+                                ? 'tasks'
+                                : 'userstories'
+                        }/${notification.data.obj?.id}`}
                     >
-                        <a>
-                            {notification.data.obj?.content_type}{' '}
-                            {notification.data.obj?.id}
-                        </a>
+                        <a>{notification.data.obj?.subject}</a>
                     </Link>
                 </span>
             )
@@ -160,8 +165,15 @@ const getTitle = (notification: Notification) => {
 const getDescription = (notification: Notification) => {
     return (
         <div>
-            {notification.data.project.name} <Divider type="vertical" />
-            {notification.data.user.name}
+            In:{' '}
+            <Link passHref href={`/projects/${notification.data.project.id}`}>
+                <StyledAnchor>{notification.data.project.name}</StyledAnchor>
+            </Link>{' '}
+            <Divider type="vertical" />
+            By:{' '}
+            <Link passHref href={`/users/${notification.data.user.id}`}>
+                <StyledAnchor>{notification.data.user.name}</StyledAnchor>
+            </Link>{' '}
         </div>
     )
 }
