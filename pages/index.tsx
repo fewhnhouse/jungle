@@ -123,7 +123,7 @@ export default function Home({
                 </HomeContainer>
             </PageHeader>
             <PageBody>
-                <Container wrap>
+                <Container>
                     <Projects publicProjects={publicProjects} />
                     <InnerContainer>
                         <LimitedActivity
