@@ -56,7 +56,12 @@ const EditSprint = ({ open, sprint, onClose }: Props) => {
     }
 
     return (
-        <Modal visible={open} onOk={handleFormSubmit} onCancel={onClose}>
+        <Modal
+            title="Edit Sprint"
+            visible={open}
+            onOk={handleFormSubmit}
+            onCancel={onClose}
+        >
             <Form
                 layout="vertical"
                 form={form}
