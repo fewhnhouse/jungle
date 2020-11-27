@@ -34,7 +34,7 @@ const StyledInput = styled(Input)`
 `
 
 const StyledFormItem = styled(Form.Item)`
-    width: 100%;
+    flex: 1 !important;
     margin-right: 10px;
     margin-bottom: 0px;
 `
