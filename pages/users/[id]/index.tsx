@@ -21,6 +21,7 @@ import { getPublicProjects } from '../../../taiga-api/projects'
 import { useRouter } from 'next/router'
 import RecentTasks from '../../../components/your-work/LimitedYourWork'
 import { recentTaskFilter } from '../../../util/recentTaskFilter'
+import Head from 'next/head'
 
 const Container = styled.div`
     padding: ${({ theme }) => `${theme.spacing.huge} ${theme.spacing.crazy}`};
@@ -112,6 +113,13 @@ export default function Home({
 
     return (
         <>
+            <Head>
+                <title>{user?.username}</title>
+                <meta
+                    name="viewport"
+                    content="initial-scale=1.0, width=device-width"
+                />
+            </Head>
             <PageHeader>
                 <HomeContainer>
                     <HeaderContainer>
@@ -155,7 +163,11 @@ export default function Home({
                             isLoading={isLoading}
                             href={`/activity`}
                         />
-                        <RecentTasks limit={5} title="Your work" timeline={recentTasks} />
+                        <RecentTasks
+                            limit={5}
+                            title="Your work"
+                            timeline={recentTasks}
+                        />
                     </InnerContainer>
                 </Container>
             </PageBody>

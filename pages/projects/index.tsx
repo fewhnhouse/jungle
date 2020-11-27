@@ -7,6 +7,7 @@ import Flex from '../../components/Flex'
 import { Button, Skeleton } from 'antd'
 import ProjectCreationModal from '../../components/home/ProjectCreationModal'
 import { useState } from 'react'
+import Head from 'next/head'
 
 const Projects = () => {
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -20,6 +21,13 @@ const Projects = () => {
     const toggleModal = () => setIsModalOpen((open) => !open)
     return (
         <>
+            <Head>
+                <title>Projects</title>
+                <meta
+                    name="viewport"
+                    content="initial-scale=1.0, width=device-width"
+                />
+            </Head>
             <PageHeader>
                 <PageTitle
                     title="Projects"

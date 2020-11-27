@@ -14,6 +14,7 @@ import FilterBoard, { GroupBy } from '../../../../components/board/FilterBoard'
 import Link from 'next/link'
 import useQueryState from '../../../../util/useQueryState'
 import { ScrollSync } from 'react-scroll-sync'
+import Head from 'next/head'
 
 export default function BoardContainer() {
     const router = useRouter()
@@ -127,6 +128,13 @@ export default function BoardContainer() {
     return (
         <ScrollSync>
             <>
+                <Head>
+                    <title>Board: {project?.name}</title>
+                    <meta
+                        name="viewport"
+                        content="initial-scale=1.0, width=device-width"
+                    />
+                </Head>
                 <PageHeader>
                     <PageTitle
                         breadcrumbs={[

@@ -5,6 +5,7 @@ import {
     UserOutlined,
 } from '@ant-design/icons'
 import { Button, Dropdown, Menu, Modal, Skeleton } from 'antd'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import ReactMarkdown from 'react-markdown'
 import { queryCache, useQuery } from 'react-query'
@@ -148,6 +149,13 @@ const TaskPage = () => {
 
     return (
         <div>
+            <Head>
+                <title>{data?.subject}</title>
+                <meta
+                    name="viewport"
+                    content="initial-scale=1.0, width=device-width"
+                />
+            </Head>
             <PageHeader>
                 <PageTitle
                     breadcrumbs={[

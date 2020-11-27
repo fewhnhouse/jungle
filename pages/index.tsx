@@ -16,6 +16,7 @@ import { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { getPublicProjects } from '../taiga-api/projects'
 import { recentTaskFilter } from '../util/recentTaskFilter'
 import LimitedYourWork from '../components/your-work/LimitedYourWork'
+import Head from 'next/head'
 
 const Container = styled.div`
     padding: ${({ theme }) => `${theme.spacing.huge} ${theme.spacing.crazy}`};
@@ -89,6 +90,13 @@ export default function Home({
 
     return (
         <>
+            <Head>
+                <title>Home</title>
+                <meta
+                    name="viewport"
+                    content="initial-scale=1.0, width=device-width"
+                />
+            </Head>
             <PageHeader>
                 <HomeContainer>
                     <HeaderContainer>

@@ -19,6 +19,7 @@ import { getTasks, Task, updateTask } from '../../../../taiga-api/tasks'
 import { Empty, Skeleton } from 'antd'
 import { getProject } from '../../../../taiga-api/projects'
 import { Fragment } from 'react'
+import Head from 'next/head'
 
 const IssueContainer = styled.div`
     display: flex;
@@ -227,6 +228,13 @@ export default function Backlog() {
 
     return (
         <div>
+            <Head>
+                <title>Backlog: {project?.name}</title>
+                <meta
+                    name="viewport"
+                    content="initial-scale=1.0, width=device-width"
+                />
+            </Head>
             <PageHeader>
                 <PageTitle
                     breadcrumbs={[

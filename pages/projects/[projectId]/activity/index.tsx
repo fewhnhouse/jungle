@@ -1,3 +1,4 @@
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
 import Activity from '../../../../components/activity/Activity'
@@ -19,12 +20,21 @@ export default function ProejctActivity() {
     )
 
     return (
-        <Activity
-            activity={data ?? []}
-            isLoading={isLoading}
-            title="Project Activity"
-            description={`All activity from ${project?.name}`}
-            avatarUrl={project?.logo_big_url}
-        />
+        <>
+            <Head>
+                <title>Activity: {project?.name}</title>
+                <meta
+                    name="viewport"
+                    content="initial-scale=1.0, width=device-width"
+                />
+            </Head>
+            <Activity
+                activity={data ?? []}
+                isLoading={isLoading}
+                title="Project Activity"
+                description={`All activity from ${project?.name}`}
+                avatarUrl={project?.logo_big_url}
+            />
+        </>
     )
 }

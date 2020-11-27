@@ -1,3 +1,4 @@
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
 import YourWork from '../../../../components/your-work/YourWork'
@@ -22,12 +23,22 @@ export default function ProjectWork() {
     const recentTasks: Timeline[] = recentTaskFilter(timeline)
 
     return (
-        <YourWork
-            timeline={recentTasks ?? []}
-            isLoading={isLoading}
-            title="Project Work Items"
-            description={`All recent work items from ${project?.name}`}
-            avatarUrl={project?.logo_big_url}
-        />
+        <>
+            <Head>
+                <title>{project?.name} Work Items</title>
+                <meta
+                    name="viewport"
+                    content="initial-scale=1.0, width=device-width"
+                />
+            </Head>
+
+            <YourWork
+                timeline={recentTasks ?? []}
+                isLoading={isLoading}
+                title="Project Work Items"
+                description={`All recent work items from ${project?.name}`}
+                avatarUrl={project?.logo_big_url}
+            />
+        </>
     )
 }

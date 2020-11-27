@@ -15,6 +15,7 @@ import LimitedActivity from '../../../components/activity/LimitedActivity'
 import useMedia from 'use-media'
 import { recentTaskFilter } from '../../../util/recentTaskFilter'
 import LimitedYourWork from '../../../components/your-work/LimitedYourWork'
+import Head from 'next/head'
 
 const StyledFlex = styled(Flex)`
     margin-top: 20px;
@@ -79,6 +80,14 @@ const Project = () => {
 
     return (
         <div>
+            <Head>
+                <title>{data?.name}</title>
+                <meta
+                    name="viewport"
+                    content="initial-scale=1.0, width=device-width"
+                />
+            </Head>
+
             <PageHeader>
                 <div>
                     <Flex direction="column" align="flex-start">

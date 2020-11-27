@@ -7,6 +7,7 @@ import ProjectDetails from '../../..../../../components/project-settings/Project
 import Settings from '../../../components/Settings'
 import { getProject } from '../../../taiga-api/projects'
 import styled from 'styled-components'
+import Head from 'next/head'
 
 const HeaderContainer = styled.div`
     margin: auto;
@@ -36,6 +37,14 @@ export default function ProjectSettings() {
     ]
     return (
         <div>
+            <Head>
+                <title>Settings: {project?.name}</title>
+                <meta
+                    name="viewport"
+                    content="initial-scale=1.0, width=device-width"
+                />
+            </Head>
+
             <PageHeader>
                 <HeaderContainer>
                     <PageTitle
