@@ -1,17 +1,8 @@
-import { Skeleton } from 'antd'
-import styled from 'styled-components'
+import { List, Skeleton } from 'antd'
 import { Timeline } from '../../taiga-api/timelines'
 import ActivityListItem from './ActivityListItem'
 import { PageBody, PageHeader } from '../Layout'
 import PageTitle from '../PageTitle'
-
-const List = styled.ul`
-    list-style: none;
-    padding: 0;
-    @media screen and (max-width: 400px) {
-        width: 350px;
-    }
-`
 
 interface Props {
     title?: string
@@ -46,7 +37,7 @@ export default function Activity({
                                     key={activityItem.id}
                                     activityItem={activityItem}
                                 ></ActivityListItem>
-                            ))}
+                            )) ?? null}
                     </List>
                 </Skeleton>
             </PageBody>

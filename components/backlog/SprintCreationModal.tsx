@@ -127,7 +127,6 @@ const SprintCreation = () => {
                                                 )
                                             )
                                         })
-                                    console.log(isConflictingDate)
                                     if (isConflictingDate) {
                                         return Promise.reject(
                                             `The selected Date Range is colliding with another Sprint!`

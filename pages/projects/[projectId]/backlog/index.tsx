@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import Sprint from '../../../../components/backlog/Sprint'
 import { useQuery, queryCache } from 'react-query'
 import SprintCreation from '../../../../components/backlog/SprintCreationModal'
-import UserstoryCreation from '../../../../components/backlog/UserstoryCreation'
+import IssueCreationModal from '../../../../components/backlog/IssueCreationModal'
 import {
     UserStory,
     getUserstories,
@@ -75,10 +75,12 @@ export default function Backlog() {
                 projectId,
             })
             return [
-                ...userstories,
+                ...userstories.filter((story) => !story.is_closed),
                 ...tasks.filter(
                     (task) =>
-                        task.user_story === null && task.milestone === null
+                        task.user_story === null &&
+                        task.milestone === null &&
+                        !task.is_closed
                 ),
             ]
         }
@@ -134,7 +136,6 @@ export default function Backlog() {
             ? currentSprint.user_stories
             : tasks
         ).find((issue) => issue.id.toString() === actualDraggableId)
-        console.log(currentIssue)
         queryCache.setQueryData(
             ['backlog', { projectId }],
             (prevData: (UserStory | Task)[]) => {
@@ -213,7 +214,6 @@ export default function Backlog() {
         if (isStory) {
             queryCache.invalidateQueries(['milestones', { projectId }])
         } else {
-            console.log(milestone, source.droppableId)
             queryCache.invalidateQueries(['tasks', { projectId, milestone }])
             queryCache.invalidateQueries([
                 'tasks',
@@ -256,31 +256,31 @@ export default function Backlog() {
                                 <SprintCreation />
                             </TitleContainer>
                             <ListContainer>
-                                {sprintsData?.length ? (
-                                    sprintsData
-                                        .filter((sprint) => !sprint.closed)
-                                        .map((sprint) => (
-                                            <Fragment key={sprint.id}>
-                                                <Sprint
-                                                    key={sprint.id}
-                                                    sprint={sprint}
-                                                />
-                                                <IssueCreation
-                                                    milestone={sprint.id}
-                                                />
-                                            </Fragment>
-                                        ))
-                                ) : isSprintsLoading ? (
-                                    <Skeleton active />
-                                ) : (
-                                    <Empty description="No Sprints exist for this Project. Create one to get started!" />
-                                )}
+                                <Skeleton active loading={isSprintsLoading}>
+                                    {sprintsData?.length &&
+                                        sprintsData
+                                            .filter((sprint) => !sprint.closed)
+                                            .map((sprint) => (
+                                                <Fragment key={sprint.id}>
+                                                    <Sprint
+                                                        key={sprint.id}
+                                                        sprint={sprint}
+                                                    />
+                                                    <IssueCreation
+                                                        milestone={sprint.id}
+                                                    />
+                                                </Fragment>
+                                            ))}
+                                    {sprintsData?.length === 0 && (
+                                        <Empty description="No Sprints exist for this Project. Create one to get started!" />
+                                    )}
+                                </Skeleton>
                             </ListContainer>
                         </Container>
                         <Container>
                             <TitleContainer>
                                 <Title>Backlog</Title>
-                                <UserstoryCreation />
+                                <IssueCreationModal />
                             </TitleContainer>
                             <ListContainer>
                                 {isBacklogLoading ? (

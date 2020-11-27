@@ -155,10 +155,9 @@ export default function ProjectListItem({
         ['actualMembers', { members }],
         (key, { members }) =>
             Promise.all(
-                members?.map((userId) => {
-                    console.log(members)
-                    return getUser(userId.toString())
-                })
+                members?.map(
+                    async (userId: number) => await getUser(userId.toString())
+                )
             )
     )
 
@@ -170,7 +169,7 @@ export default function ProjectListItem({
                 </Link>
                 <ItemContainer>
                     <InfoContainer>
-                        <StyledImage src={avatar ?? 'bmo.png'} />
+                        <StyledImage src={avatar ?? '/placeholder.png'} />
                         <TextContainer>
                             <Flex align="center">
                                 <Link href={`/projects/${id}`} passHref>

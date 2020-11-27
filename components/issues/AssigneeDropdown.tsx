@@ -1,13 +1,13 @@
 import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
-import { getProject } from '../taiga-api/projects'
+import { getProject } from '../../taiga-api/projects'
 import { Avatar, Select } from 'antd'
 import styled from 'styled-components'
 
 const { Option } = Select
 
 const StyledSelect = styled(Select)<{ fluid?: boolean }>`
-    width: ${({ fluid }) => (fluid ? '100%' : '')};
+    width: 100%;
 `
 
 interface Props {
@@ -34,7 +34,6 @@ const AssigneeDropdown = ({ onChange, value, fluid }: Props) => {
             placeholder="Assignee..."
             fluid={fluid}
             showSearch
-            style={{ width: 160 }}
             filterOption={(input, option) =>
                 option.title.toLowerCase().indexOf(input.toLowerCase()) >= 0
             }

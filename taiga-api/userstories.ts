@@ -1,5 +1,5 @@
 import { authInstance } from '../util/axiosInstance'
-import { Task } from './tasks'
+import { Attachment, Task } from './tasks'
 import { User } from './users'
 
 export interface StoryStatus {
@@ -197,25 +197,25 @@ export const getUserstoryAttachments = ({
     projectId && params.append('project', projectId.toString())
     userstoryId && params.append('object_id', userstoryId.toString())
 
-    return authInstance.get(`/userstories/attachments`, { params }).then(res => res.data)
+    return authInstance.get<Attachment[]>(`/userstories/attachments`, { params }).then(res => res.data)
 }
 
 export const createUserstoryAttachment = (data: any) => {
-    return authInstance.post(`/userstories/attachments`, data).then(res => res.data)
+    return authInstance.post<Attachment>(`/userstories/attachments`, data).then(res => res.data)
 }
 
 export const getUserstoryAttachment = (attachmentId: number) => {
-    return authInstance.get(`/userstories/attachments/${attachmentId}`).then(res => res.data)
+    return authInstance.get<Attachment>(`/userstories/attachments/${attachmentId}`).then(res => res.data)
 }
 
 export const replaceUserstoryAttachment = (attachmentId: number, data: any) => {
-    return authInstance.put(`/userstories/attachments/${attachmentId}`, data).then(res => res.data)
+    return authInstance.put<Attachment>(`/userstories/attachments/${attachmentId}`, data).then(res => res.data)
 }
 
 export const updateUserstoryAttachment = (attachmentId: number, data: any) => {
-    return authInstance.patch(`/userstories/attachments/${attachmentId}`, data).then(res => res.data)
+    return authInstance.patch<Attachment>(`/userstories/attachments/${attachmentId}`, data).then(res => res.data)
 }
 
 export const deleteUserstoryAttachment = (attachmentId: number) => {
-    return authInstance.delete(`/userstories/attachments/${attachmentId}`).then(res => res.data)
+    return authInstance.delete<Attachment>(`/userstories/attachments/${attachmentId}`).then(res => res.data)
 }

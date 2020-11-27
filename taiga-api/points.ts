@@ -1,27 +1,45 @@
 import { authInstance } from '../util/axiosInstance'
 
-export const getPoints = ({ projectId }: { projectId?: string }) => {
+export interface StoryPoint {
+    id: number
+    name: string
+    order: number
+    project: number
+    value: null | number
+}
+
+export const getPoints = async (projectId: string) => {
     const params = new URLSearchParams()
     projectId && params.append('project', projectId)
-    return authInstance.get(`/points`, { params })
+    return authInstance
+        .get<StoryPoint[]>(`/points`, { params })
+        .then((res) => res.data)
 }
 
 export const createPoint = (data: any) => {
-    return authInstance.post(`/points`, data)
+    return authInstance
+        .post<StoryPoint>(`/points`, data)
+        .then((res) => res.data)
 }
 
 export const getPoint = (id: string) => {
-    return authInstance.get(`/points/${id}`)
+    return authInstance.get<StoryPoint>(`/points/${id}`).then((res) => res.data)
 }
 
 export const replacePoint = (id: string, data: any) => {
-    return authInstance.put(`/points/${id}`, data)
+    return authInstance
+        .put<StoryPoint>(`/points/${id}`, data)
+        .then((res) => res.data)
 }
 
 export const updatePoint = (id: string, data: any) => {
-    return authInstance.patch(`/points/${id}`, data)
+    return authInstance
+        .patch<StoryPoint>(`/points/${id}`, data)
+        .then((res) => res.data)
 }
 
 export const deletePoint = (id: string) => {
-    return authInstance.delete(`/points/${id}`)
+    return authInstance
+        .delete<StoryPoint>(`/points/${id}`)
+        .then((res) => res.data)
 }

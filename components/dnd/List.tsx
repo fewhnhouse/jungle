@@ -59,11 +59,10 @@ const Wrapper = styled.div<WrapperProps>`
     height: 100%;
 `
 
-const scrollContainerHeight = 150
-
 const DropZone = styled.div`
     /* stop the list collapsing when empty */
-    min-height: ${scrollContainerHeight}px;
+    min-height: 150px;
+    height: 100%;
     /*
     not relying on the items for a margin-bottom
     as it will collapse when the list is empty
@@ -162,13 +161,11 @@ export default function IssueList({
                     isDraggingFrom={!!dropSnapshot.draggingFromThisWith}
                     {...dropProvided.droppableProps}
                 >
-                    <div>
-                        {title ? <Title>{title}</Title> : null}
-                        <DropZone ref={dropProvided.innerRef}>
-                            <InnerIssueList issues={issues} />
-                            {dropProvided.placeholder}
-                        </DropZone>
-                    </div>
+                    {title ? <Title>{title}</Title> : null}
+                    <DropZone ref={dropProvided.innerRef}>
+                        <InnerIssueList issues={issues} />
+                        {dropProvided.placeholder}
+                    </DropZone>
                 </Wrapper>
             )}
         </Droppable>

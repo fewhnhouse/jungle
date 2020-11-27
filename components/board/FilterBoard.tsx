@@ -2,7 +2,7 @@ import { Form, Select, Tag } from 'antd'
 import { Dispatch, memo, SetStateAction, useEffect } from 'react'
 import styled from 'styled-components'
 import { Milestone } from '../../taiga-api/milestones'
-import AssigneeDropdown from '../AssigneeDropdown'
+import AssigneeDropdown from '../issues/AssigneeDropdown'
 
 const { Option } = Select
 const { Item } = Form

@@ -56,13 +56,13 @@ const IssueCreation = ({ milestone }: { milestone: number | null }) => {
             <Select
                 value={issueType}
                 onChange={(val) => setIssueType(val)}
-                style={{ width: 60 }}
+                style={{ width: 100 }}
             >
                 <Select.Option value="task">
-                    <StyledTaskIcon />
+                    <StyledTaskIcon /> Task
                 </Select.Option>
                 <Select.Option value="story">
-                    <StyledUserStoryIcon />
+                    <StyledUserStoryIcon /> Story
                 </Select.Option>
             </Select>
 

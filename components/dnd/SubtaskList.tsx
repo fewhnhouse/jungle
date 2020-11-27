@@ -1,70 +1,65 @@
 import React from 'react'
 import styled from 'styled-components'
 import { queryCache, useQuery } from 'react-query'
-import { getTasks, createTask, Task } from '../../taiga-api/tasks'
+import { getTasks, createTask, Task, deleteTask } from '../../taiga-api/tasks'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { Button, Form, Input, Skeleton, Tag } from 'antd'
-import { PicLeftOutlined, PlusOutlined } from '@ant-design/icons'
+import {
+    Avatar,
+    Button,
+    Form,
+    Input,
+    List,
+    Popconfirm,
+    Skeleton,
+    Tag,
+} from 'antd'
+import {
+    DeleteOutlined,
+    LinkOutlined,
+    PlusOutlined,
+    ProfileOutlined,
+} from '@ant-design/icons'
+import { Store } from 'antd/lib/form/interface'
 
 const TaskList = styled.ul`
     list-style: none;
     width: 100%;
     padding: 0;
+    margin: 0;
 `
 
 const StyledInput = styled(Input)`
     flex: 1;
 `
 
+const StyledFormItem = styled(Form.Item)`
+    flex: 1 !important;
+    margin-right: 10px;
+    margin-bottom: 0px;
+`
+
 const StyledForm = styled(Form)`
     width: 100%;
     display: flex;
     justify-content: space-between;
+    margin-top: 10px;
 `
 
-const TaskItem = styled.li`
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
+const Meta = styled(List.Item.Meta)`
     align-items: center;
-    border: 2px solid transparent;
-    background-color: #ecf0f1;
-    box-sizing: border-box;
-    padding: ${({ theme }) => `${theme.spacing.mini}`};
-    margin-bottom: ${({ theme }) => `${theme.spacing.mini}`};
-    &:hover,
-    &:active {
-        color: #7f8c8d;
-    }
-    display: flex;
 `
 
-const Flex = styled.div`
-    display: flex;
-    align-items: center;
-    width: 100%;
+const Item = styled(List.Item)`
+    padding: 8px 0px !important;
 `
 
-const TaskContent = styled.div`
-    /* flex child */
-    flex-grow: 1;
-    flex-basis: 100%;
-    align-items: center;
-    justify-content: space-between;
-    /* flex parent */
-    display: flex;
-    flex-direction: row;
-`
-
-const TaskSubject = styled.p`
-    margin: 0px 10px;
-`
-
-const TagContainer = styled.div`
-    display: flex;
-    margin-top: ${({ theme }) => `${theme.spacing.mini}`};
-    align-items: center;
+const TitleBlock = styled.span`
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+    display: block;
 `
 
 interface Props {
@@ -86,20 +81,28 @@ const SubtaskList = ({ id }: Props) => {
         { enabled: id && projectId }
     )
 
-    const handleAddSubtask = (values: { name: string }) => {
-        createTask({
-            assigned_to: null,
-            project: projectId,
-            // TODO status: 16,
-            subject: values.name,
-            user_story: id,
-        }).then((newTask) => {
+    const handleFinish = (values: Store) => {
+        form.validateFields().then(() => {
+            console.log(values)
             form.resetFields()
-            queryCache.setQueryData(
-                ['subtasks', { id }],
-                (prevData: Task[]) => [...prevData, newTask]
-            )
+            createTask({
+                assigned_to: null,
+                project: projectId,
+                // TODO status: 16,
+                subject: values.name,
+                user_story: id,
+            }).then((newTask) => {
+                queryCache.setQueryData(
+                    ['subtasks', { id }],
+                    (prevData: Task[]) => [...prevData, newTask]
+                )
+            })
         })
+    }
+
+    const handleDelete = (id: number) => async () => {
+        await deleteTask(id)
+        queryCache.invalidateQueries(['subtasks', { id }])
     }
 
     return (
@@ -108,19 +111,49 @@ const SubtaskList = ({ id }: Props) => {
                 <Skeleton active paragraph={{ rows: 2 }} />
             ) : (
                 <>
-                    {subtasks?.map((task) => (
-                        <TaskItem key={task.id}>
-                            <Link
+                    <List style={{ width: '100%' }} size="small">
+                        {subtasks?.map((task) => (
+                            <Item
                                 key={task.id}
-                                href={`/projects/${projectId}/tasks/${id}`}
+                                actions={[
+                                    <Link
+                                        key="link"
+                                        href={`/projects/${projectId}/tasks/${task.id}`}
+                                        passHref
+                                    >
+                                        <Button
+                                            size="small"
+                                            icon={<LinkOutlined />}
+                                        />
+                                    </Link>,
+                                    <Popconfirm
+                                        key="delete"
+                                        title="Are you sure you want to delete this subtask?"
+                                        onConfirm={handleDelete(task.id)}
+                                    >
+                                        <Button
+                                            size="small"
+                                            danger
+                                            icon={<DeleteOutlined />}
+                                        />
+                                    </Popconfirm>,
+                                ]}
                             >
-                                <Flex>
-                                    <PicLeftOutlined />
-                                    <TaskContent>
-                                        <TaskSubject>
-                                            {task.subject}
-                                        </TaskSubject>
-                                        <TagContainer>
+                                <Meta
+                                    avatar={
+                                        <Avatar
+                                            style={{
+                                                backgroundColor: '#45aaff',
+                                            }}
+                                            shape="square"
+                                            icon={<ProfileOutlined />}
+                                        />
+                                    }
+                                    title={
+                                        <TitleBlock>{task.subject}</TitleBlock>
+                                    }
+                                    description={
+                                        <>
                                             {task.assigned_to_extra_info && (
                                                 <Tag>
                                                     {
@@ -137,14 +170,19 @@ const SubtaskList = ({ id }: Props) => {
                                                 ID-
                                                 {task.id}
                                             </Tag>
-                                        </TagContainer>
-                                    </TaskContent>
-                                </Flex>
-                            </Link>
-                        </TaskItem>
-                    ))}
-                    <StyledForm layout="inline" onFinish={handleAddSubtask}>
-                        <Form.Item
+                                        </>
+                                    }
+                                />
+                            </Item>
+                        ))}
+                    </List>
+                    <StyledForm
+                        form={form}
+                        initialValues={{ name: '' }}
+                        layout="inline"
+                        onFinish={handleFinish}
+                    >
+                        <StyledFormItem
                             name="name"
                             rules={[
                                 {
@@ -153,7 +191,7 @@ const SubtaskList = ({ id }: Props) => {
                             ]}
                         >
                             <StyledInput placeholder="Add Subtask..." />
-                        </Form.Item>
+                        </StyledFormItem>
                         <Button
                             htmlType="submit"
                             type="primary"

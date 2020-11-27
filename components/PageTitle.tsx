@@ -15,6 +15,13 @@ const Avatar = styled.img`
     min-height: 100px;
     border-radius: 50%;
     margin-right: 30px;
+    @media (max-width: 480px) {
+        width: 50px;
+        min-width: 50px;
+        height: 50px;
+        min-height: 50px;
+        margin-right: 20px;
+    }
 `
 
 const TitleContainer = styled(Flex)`
@@ -23,8 +30,8 @@ const TitleContainer = styled(Flex)`
 `
 
 interface Props {
-    title: string
-    description?: string
+    title: React.ReactNode
+    description?: React.ReactNode
     avatarUrl?: string
     actions?: React.ReactNode
     breadcrumbs?: { label: string; href: string }[]
@@ -45,7 +52,7 @@ const PageTitle = ({
             align="center"
             justify="space-between"
         >
-            <TitleContainer style={{ width: '100%' }}>
+            <TitleContainer>
                 {avatarUrl && <Avatar src={avatarUrl} />}
                 <Flex direction="column">
                     <Breadcrumb>

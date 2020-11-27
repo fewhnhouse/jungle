@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 import Projects from '../components/home/Projects'
 import { useState } from 'react'
-import YourWork from '../components/home/YourWork'
 import ProjectCreationModal from '../components/home/ProjectCreationModal'
 import { getMe } from '../taiga-api/users'
 import PageTitle from '../components/PageTitle'
@@ -12,22 +11,25 @@ import { SettingOutlined } from '@ant-design/icons'
 import Link from 'next/link'
 import { ActionContainer } from '../components/project/Actions'
 import LimitedActivity from '../components/activity/LimitedActivity'
-import { getUserTimeline } from '../taiga-api/timelines'
+import { getUserTimeline, Timeline } from '../taiga-api/timelines'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
-import { getProjects, getPublicProjects } from '../taiga-api/projects'
+import { getPublicProjects } from '../taiga-api/projects'
+import { recentTaskFilter } from '../util/recentTaskFilter'
+import LimitedYourWork from '../components/your-work/LimitedYourWork'
 
 const Container = styled.div`
     padding: ${({ theme }) => `${theme.spacing.huge} ${theme.spacing.crazy}`};
     margin: auto;
     max-width: 1400px;
     display: flex;
+    flex-wrap: wrap;
     height: 100%;
     align-items: flex-start;
     @media screen and (max-width: 960px) {
         flex-direction: column;
         align-items: center;
     }
-    @media screen and (max-width: 400px) {
+    @media screen and (max-width: 720px) {
         padding: ${({ theme }) =>
             `${theme.spacing.small} ${theme.spacing.medium}`};
     }
@@ -52,6 +54,7 @@ const InnerContainer = styled.div`
     display: flex;
     flex-direction: column;
     flex: 1;
+    width: 100%;
 `
 
 const TitleContainer = styled.div`
@@ -76,11 +79,14 @@ export default function Home({
 
     const { data: me } = useQuery('me', () => getMe())
 
-    const { data: activity, isLoading } = useQuery(
+    const { data: timeline, isLoading } = useQuery(
         ['timeline', { id: me?.id }],
         (key, { id }) => getUserTimeline(id),
         { enabled: !!me?.id }
     )
+
+    const recentTasks: Timeline[] = recentTaskFilter(timeline)
+
     return (
         <>
             <PageHeader>
@@ -88,7 +94,7 @@ export default function Home({
                     <HeaderContainer>
                         <TitleContainer>
                             <PageTitle
-                                avatarUrl={me?.big_photo ?? 'bmo.png'}
+                                avatarUrl={me?.big_photo ?? 'placeholder.png'}
                                 title={me?.full_name ?? ''}
                                 description={me?.email}
                                 actions={
@@ -118,15 +124,22 @@ export default function Home({
             </PageHeader>
             <PageBody>
                 <Container>
-                    <Projects publicProjects={publicProjects}/>
+                    <Projects publicProjects={publicProjects} />
                     <InnerContainer>
                         <LimitedActivity
-                            title="Your activity"
-                            activity={activity ?? []}
+                            limit={5}
+                            title="Your recent activity"
+                            activity={timeline ?? []}
                             isLoading={isLoading}
-                            href={`/activity`}
+                            href="/activity"
                         />
-                        <YourWork />
+                        <LimitedYourWork
+                            limit={5}
+                            title="Your recent work"
+                            timeline={recentTasks}
+                            isLoading={isLoading}
+                            href="/your-work"
+                        />
                     </InnerContainer>
                 </Container>
             </PageBody>

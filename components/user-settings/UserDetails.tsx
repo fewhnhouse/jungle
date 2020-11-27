@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { queryCache, useQuery } from 'react-query'
 import { Button, Card, Checkbox, Form, Input, message, Skeleton } from 'antd'
 import styled from 'styled-components'
@@ -48,6 +48,7 @@ const AvatarWrapper = styled.div`
 const FileInput = styled.input`
     width: 0;
     height: 0;
+    display: none;
 `
 
 const Description = styled.p`
@@ -83,11 +84,13 @@ const StyledFormItem = styled(Form.Item)`
 const UserDetails = () => {
     const { data } = useQuery('me', () => getMe())
 
+    useEffect(() => {
+        if (data?.photo) {
+            setLogo(data.photo)
+        }
+    }, [data])
     const [confirmDeletion, setConfirmDeletion] = useState(false)
-    const [logo, setLogo] = useState(
-        data?.photo ??
-            'https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png'
-    )
+    const [logo, setLogo] = useState('/placeholder.png')
 
     if (!data) {
         return <Skeleton paragraph={{ rows: 5 }} active />

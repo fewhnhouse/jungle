@@ -1,15 +1,16 @@
 import styled from 'styled-components'
-import ListItem from '../ListItem'
 import { Timeline, TimelineType } from '../../taiga-api/timelines'
 import Link from 'next/link'
-import { Tag } from 'antd'
+import { List, Tag } from 'antd'
 import { getActivityDate } from '../../util/getActivityDate'
 
 const Description = styled.p`
     margin: 0px ${({ theme }) => `${theme.spacing.small}`};
-    overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 `
 
 const DateSpan = styled.div`
@@ -18,6 +19,7 @@ const DateSpan = styled.div`
 `
 
 const ItemContainer = styled.div`
+    width: 100%;
     display: flex;
     padding: ${({ theme }) => `${theme.spacing.small}`};
     justify-content: space-between;
@@ -31,7 +33,7 @@ const Content = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    width: calc(100% - 60px);
+    width: calc(100% - 80px);
 `
 
 interface Props {
@@ -43,15 +45,15 @@ export default function ActivityListItem({ activityItem }: Props) {
     const affectedItem = activityItem.data[item] ?? user
     const getItemName = () => {
         if (item === 'userstory' || item === 'epic' || item === 'task') {
-            return affectedItem.subject
+            return affectedItem.subject ?? ''
         } else {
-            return affectedItem.name
+            return affectedItem.name ?? ''
         }
     }
 
     const date = new Date(activityItem.created)
     return (
-        <ListItem>
+        <List.Item>
             <ItemContainer>
                 <Content>
                     <Tag id="issues-todo">{type}</Tag>
@@ -66,6 +68,6 @@ export default function ActivityListItem({ activityItem }: Props) {
                 </Content>
                 <DateSpan>{getActivityDate(date)}</DateSpan>
             </ItemContainer>
-        </ListItem>
+        </List.Item>
     )
 }

@@ -1,14 +1,8 @@
 import styled from 'styled-components'
 import Projects from '../../../components/home/Projects'
 import { useState } from 'react'
-import YourWork from '../../../components/home/YourWork'
 import ProjectCreationModal from '../../../components/home/ProjectCreationModal'
-import {
-    getMe,
-    getPublicUser,
-    getUser,
-    getUsers,
-} from '../../../taiga-api/users'
+import { getPublicUser, getUser, getUsers } from '../../../taiga-api/users'
 import PageTitle from '../../../components/PageTitle'
 import { PageBody, PageHeader } from '../../../components/Layout'
 import { useQuery } from 'react-query'
@@ -20,10 +14,13 @@ import LimitedActivity from '../../../components/activity/LimitedActivity'
 import {
     getPublicUserTimeline,
     getUserTimeline,
+    Timeline,
 } from '../../../taiga-api/timelines'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { getPublicProjects } from '../../../taiga-api/projects'
 import { useRouter } from 'next/router'
+import RecentTasks from '../../../components/your-work/LimitedYourWork'
+import { recentTaskFilter } from '../../../util/recentTaskFilter'
 
 const Container = styled.div`
     padding: ${({ theme }) => `${theme.spacing.huge} ${theme.spacing.crazy}`};
@@ -94,7 +91,6 @@ export default function Home({
     publicUserTimeline,
     publicUser,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-    console.log(publicUserTimeline)
     const [isModalOpen, setIsModalOpen] = useState(false)
     const toggleModal = () => {
         setIsModalOpen((open) => !open)
@@ -106,11 +102,14 @@ export default function Home({
         getUser(id.toString())
     )
 
-    const { data: activity = publicUserTimeline, isLoading } = useQuery(
+    const { data: timeline = publicUserTimeline, isLoading } = useQuery(
         ['timeline', { id }],
         (key, { id }) => getUserTimeline(id),
         { enabled: !!id }
     )
+
+    const recentTasks: Timeline[] = recentTaskFilter(timeline)
+
     return (
         <>
             <PageHeader>
@@ -118,7 +117,7 @@ export default function Home({
                     <HeaderContainer>
                         <TitleContainer>
                             <PageTitle
-                                avatarUrl={user?.big_photo ?? 'bmo.png'}
+                                avatarUrl={user?.big_photo ?? 'placeholder.png'}
                                 title={user?.full_name ?? ''}
                                 description={user?.email}
                                 actions={
@@ -152,11 +151,11 @@ export default function Home({
                     <InnerContainer>
                         <LimitedActivity
                             title="Your activity"
-                            activity={activity ?? []}
+                            activity={timeline ?? []}
                             isLoading={isLoading}
                             href={`/activity`}
                         />
-                        <YourWork />
+                        <RecentTasks limit={5} title="Your work" timeline={recentTasks} />
                     </InnerContainer>
                 </Container>
             </PageBody>

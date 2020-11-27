@@ -1,65 +1,31 @@
 import React from 'react'
 import styled from 'styled-components'
-import EditableTitle from '../EditableTitle'
-import EditableDescription from '../EditableDescription'
-import EditableNumber from '../EditableNumber'
 import { queryCache, useQuery } from 'react-query'
-import { getFiltersData, getTask, updateTask } from '../../taiga-api/tasks'
-import AssigneeDropdown from '../AssigneeDropdown'
-import StatusDropdown from '../StatusDropdown'
-import Breadcrumbs from '../TaskBreadcrumbs'
+import {
+    deleteTask,
+    getFiltersData,
+    getTask,
+    promoteToUserstory,
+    Task,
+    updateTask,
+} from '../../taiga-api/tasks'
+import AssigneeDropdown from '../issues/AssigneeDropdown'
+import StatusDropdown from '../issues/StatusDropdown'
 import { useRouter } from 'next/router'
-import { Modal, Select, Skeleton, Upload } from 'antd'
-import Flex from '../Flex'
-import { ProfileOutlined, UploadOutlined } from '@ant-design/icons'
-import Comments from './comments/Comments'
+import { Menu, Modal, Skeleton } from 'antd'
+import {
+    BookOutlined,
+    DeleteOutlined,
+    ExclamationCircleOutlined,
+    UserOutlined,
+} from '@ant-design/icons'
+import Uploader from '../issues/Uploader'
+import IssueModal from './IssueModal'
+import CustomTagPicker from '../issues/TagPicker'
+import { updateTaskCache } from '../../updateCache'
 
 const Label = styled.span`
     margin-top: ${({ theme }) => theme.spacing.mini};
-`
-
-const StyledFlex = styled(Flex)`
-    margin: 0px 10px;
-    span {
-        &:first-child {
-            margin-right: 5px;
-        }
-    }
-`
-
-const StyledTaskIcon = styled(ProfileOutlined)`
-    background: #45aaff;
-    border-radius: 3px;
-    font-size: 20px;
-    padding: 5px;
-    color: #2c3e50;
-`
-
-const Main = styled.div`
-    display: flex;
-    width: 100%;
-    flex-direction: row;
-    @media only screen and (max-width: 600px) {
-        flex-direction: column;
-    }
-    overflow: auto;
-    height: 100%;
-`
-
-const Content = styled.div`
-    flex: 3;
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-`
-
-const Sidebar = styled.aside`
-    flex: 1;
-    padding: ${({ theme }) => theme.spacing.small};
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    min-width: 180px;
 `
 
 interface Props {
@@ -68,7 +34,9 @@ interface Props {
     id: number
 }
 
-export default function IssueModal({ id, open, onClose }: Props) {
+const { confirm } = Modal
+
+export default function TaskModal({ id, open, onClose }: Props) {
     const { projectId } = useRouter().query
 
     const { isLoading, data, isError } = useQuery(
@@ -82,19 +50,66 @@ export default function IssueModal({ id, open, onClose }: Props) {
         (key, { projectId }) => getFiltersData(projectId as string),
         { enabled: projectId }
     )
+
+    const handleDelete = () => {
+        confirm({
+            title: 'Are you sure you want to delete this task?',
+            icon: <ExclamationCircleOutlined />,
+            centered: true,
+            content: 'Deleting a task is irreversible.',
+            onOk: async () => {
+                await deleteTask(id)
+                queryCache.invalidateQueries([
+                    'tasks',
+                    { projectId, milestone: data?.id },
+                ])
+                queryCache.setQueryData(
+                    ['tasks', { projectId }],
+                    (prevData: Task[]) =>
+                        prevData?.filter((task) => task.id !== id)
+                )
+                onClose()
+            },
+            onCancel() {
+                console.log('Cancel')
+            },
+        })
+    }
+
+    const handleConvert = async () => {
+        await promoteToUserstory(id, projectId as string)
+        queryCache.invalidateQueries(['tasks', { projectId }])
+        queryCache.invalidateQueries(['backlog', { projectId }])
+        queryCache.invalidateQueries(['milestones', { projectId }])
+        onClose()
+    }
+    const menu = (
+        <Menu>
+            <Menu.Item onClick={handleConvert} key="1" icon={<BookOutlined />}>
+                Convert to Userstory
+            </Menu.Item>
+            <Menu.Item key="2" icon={<UserOutlined />}>
+                Change Parent
+            </Menu.Item>
+            <Menu.Item onClick={handleDelete} key="3" icon={<DeleteOutlined />}>
+                Delete Task
+            </Menu.Item>
+        </Menu>
+    )
+
     const statusData =
         taskFilters?.statuses.map((status) => ({
             value: status.id,
             label: status.name,
         })) ?? []
 
-    const updateAssignee = async (assigneeId: number) => {
+    const updateAssignee = async (assigneeId?: number) => {
         const updatedTask = await updateTask(id, {
-            assigned_to: assigneeId,
-            assigned_users: [assigneeId],
+            assigned_to: assigneeId ?? null,
+            assigned_users: assigneeId ? [assigneeId] : null,
             version: data.version,
         })
-        queryCache.setQueryData(['task', { id }], () => updatedTask)
+        updateTaskCache(updatedTask, id, projectId as string)
     }
 
     const updateStatus = async (status: number) => {
@@ -102,70 +117,47 @@ export default function IssueModal({ id, open, onClose }: Props) {
             status,
             version: data.version,
         })
-        queryCache.setQueryData(['task', { id }], () => updatedTask)
+        updateTaskCache(updatedTask, id, projectId as string)
     }
 
     if (isError) return <div>Error</div>
 
-    const token = localStorage.getItem('auth-token')
-
     return (
-        <Modal footer={null} visible={open} onCancel={onClose} onOk={onClose}>
-            {isLoading ? (
-                <Skeleton active paragraph={{ rows: 5 }} />
-            ) : (
-                <Flex direction="column">
-                    <Breadcrumbs data={data} />
-                    <Main>
-                        <Content>
-                            <Flex align="center">
-                                <StyledTaskIcon />
-                                <EditableTitle
-                                    onSubmit={() => console.log('submit')}
-                                    initialValue={data?.subject}
-                                />
-                            </Flex>
-                            <EditableDescription
-                                initialValue={data?.description}
-                            />
-                            <Upload.Dragger
-                                data={{
-                                    object_id: data?.id,
-                                    project: data?.project,
-                                }}
-                                name="attached_file"
-                                headers={{
-                                    Authorization: token && `Bearer ${token}`,
-                                }}
-                                action={`${process.env.NEXT_PUBLIC_TAIGA_API_URL}/tasks/attachments`}
-                            >
-                                <StyledFlex align="center">
-                                    <UploadOutlined size={32} />
-                                    <p>Click or Drag files to upload</p>
-                                </StyledFlex>
-                            </Upload.Dragger>
-                        </Content>
-                        <Sidebar>
-                            <Label>Status</Label>
-                            <StatusDropdown
-                                data={statusData}
-                                value={data?.status}
-                                onChange={updateStatus}
-                            />
-                            <Label>Assignee</Label>
-                            <AssigneeDropdown
-                                value={data?.assigned_to}
-                                onChange={updateAssignee}
-                            />
-                            <Label>Priority</Label>
-                            <Select style={{ width: '100%' }} />
-                            <Label>Story Points</Label>
-                            <EditableNumber initialValue={1} />
-                        </Sidebar>
-                    </Main>
-                    <Comments type="task" id={id} version={data?.version} />
-                </Flex>
-            )}
-        </Modal>
+        <IssueModal
+            id={id}
+            open={open}
+            onClose={onClose}
+            type="task"
+            sidebar={
+                <Skeleton loading={isLoading} active>
+                    <Label>Status</Label>
+                    <StatusDropdown
+                        data={statusData}
+                        value={data?.status}
+                        onChange={updateStatus}
+                    />
+                    <Label>Assignee</Label>
+                    <AssigneeDropdown
+                        value={data?.assigned_to}
+                        onChange={updateAssignee}
+                    />
+                    <Label>Tags</Label>
+                    <CustomTagPicker type="task" id={id} />
+                </Skeleton>
+            }
+            outerContent={
+                <Skeleton loading={isLoading} active>
+                    <Uploader
+                        type="task"
+                        action={`${process.env.NEXT_PUBLIC_TAIGA_API_URL}/tasks/attachments`}
+                        data={{
+                            object_id: data?.id,
+                            project: data?.project,
+                        }}
+                    />
+                </Skeleton>
+            }
+            actions={menu}
+        />
     )
 }

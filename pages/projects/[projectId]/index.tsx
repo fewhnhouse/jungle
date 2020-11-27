@@ -13,20 +13,21 @@ import Actions from '../../../components/project/Actions'
 import Achievements from '../../../components/achievements/Achievements'
 import LimitedActivity from '../../../components/activity/LimitedActivity'
 import useMedia from 'use-media'
-import moment from 'moment'
-import RecentTask from '../../../components/recentTasks/RecentTask'
+import { recentTaskFilter } from '../../../util/recentTaskFilter'
+import LimitedYourWork from '../../../components/your-work/LimitedYourWork'
 
 const StyledFlex = styled(Flex)`
     margin-top: 20px;
 `
 
-const Container = styled.div`
-    flex: 1;
+const TimelineContainer = styled.div`
+    width: 100%;
+    margin: 0px 20px;
     &:first-child {
-        margin-right: 10px;
+        margin-right: 20px;
     }
     &:last-child {
-        margin-left: 10px;
+        margin-left: 20px;
     }
 `
 
@@ -73,43 +74,8 @@ const Project = () => {
             enabled: !!projectId,
         }
     )
-    const today = moment()
     // Get all tasks which are less than 24h old, related to tasks / userstories, unique and max of 10
-    const recentTasks: Timeline[] =
-        timeline
-            ?.filter((t) => {
-                return today.diff(moment(t.created), 'days') < 1
-            })
-            ?.filter(
-                (t) =>
-                    t.event_type.includes('task') ||
-                    t.event_type.includes('userstory')
-            )
-            ?.reduce((prev, curr) => {
-                if (curr.event_type.includes('task')) {
-                    if (
-                        prev.find(
-                            (el) => el.data.task?.id === curr.data.task.id
-                        )
-                    ) {
-                        return prev
-                    } else {
-                        return [...prev, curr]
-                    }
-                } else if (curr.event_type.includes('userstory')) {
-                    if (
-                        prev.find(
-                            (el) =>
-                                el.data.userstory?.id === curr.data.userstory.id
-                        )
-                    ) {
-                        return prev
-                    } else {
-                        return [...prev, curr]
-                    }
-                }
-            }, [])
-            ?.filter((_, index) => index < 10) ?? []
+    const recentTasks: Timeline[] = recentTaskFilter(timeline)
 
     return (
         <div>
@@ -124,32 +90,37 @@ const Project = () => {
                                     label: data?.name,
                                 },
                             ]}
-                            avatarUrl={data?.logo_big_url ?? '/bmo.png'}
+                            avatarUrl={data?.logo_big_url ?? '/placeholder.png'}
                             title={data?.name}
-                            description={data?.description}
+                            description={
+                                <Flex direction="column">
+                                    <p>{data?.description}</p>
+                                    <Flex>
+                                        {data?.members.map((member) => (
+                                            <StyledAvatar
+                                                size="large"
+                                                key={member.id}
+                                                src={member.photo}
+                                            >
+                                                {member.full_name
+                                                    .split(' ')
+                                                    .reduce(
+                                                        (prev, curr) =>
+                                                            prev +
+                                                            curr.charAt(0),
+                                                        ''
+                                                    )}
+                                            </StyledAvatar>
+                                        ))}
+                                    </Flex>
+                                </Flex>
+                            }
                             actions={data && <Actions project={data} />}
                         />
                         <LevelDisplay />
                     </Flex>
                     <Achievements />
-                    <StyledFlex justify="space-between">
-                        <Flex>
-                            {data?.members.map((member) => (
-                                <StyledAvatar
-                                    size="large"
-                                    key={member.id}
-                                    src={member.photo}
-                                >
-                                    {member.full_name
-                                        .split(' ')
-                                        .reduce(
-                                            (prev, curr) =>
-                                                prev + curr.charAt(0),
-                                            ''
-                                        )}
-                                </StyledAvatar>
-                            ))}
-                        </Flex>
+                    <StyledFlex justify="flex-end">
                         <Flex>
                             <Link href={`/projects/${projectId}/board`}>
                                 <StyledButton size="large">
@@ -167,41 +138,26 @@ const Project = () => {
             </PageHeader>
             <PageBody>
                 <Flex
-                    align="center"
+                    align={isMobile ? 'center' : 'flex-start'}
                     justify="space-between"
                     direction={isMobile ? 'column' : 'row'}
                 >
-                    <Container>
+                    <TimelineContainer>
                         <LimitedActivity
                             title="Project Activity"
+                            limit={5}
                             activity={timeline}
                             href={`/projects/${projectId}/activity`}
                         />
-                    </Container>
-                    <Container>
-                        <h2>Recent Tasks</h2>
-                        {recentTasks.map((item) =>
-                            item.event_type.includes('task') ? (
-                                <RecentTask
-                                    key={item.id}
-                                    type="task"
-                                    title={item.data.task.subject}
-                                    id={item.data.task.id}
-                                    description={'Bla'}
-                                ></RecentTask>
-                            ) : (
-                                <RecentTask
-                                    key={item.id}
-                                    type="userstory"
-                                    title={item.data.userstory.subject}
-                                    id={item.data.userstory.id}
-                                    description={`Last edited: ${new Date(
-                                        item.created
-                                    ).toDateString()}`}
-                                ></RecentTask>
-                            )
-                        )}
-                    </Container>
+                    </TimelineContainer>
+                    <TimelineContainer>
+                        <LimitedYourWork
+                            limit={5}
+                            title="Recent Tasks"
+                            timeline={recentTasks}
+                            href={`/projects/${projectId}/your-work`}
+                        />
+                    </TimelineContainer>
                 </Flex>
             </PageBody>
         </div>

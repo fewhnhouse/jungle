@@ -6,12 +6,9 @@ import Profile from './Profile'
 import { useRouter } from 'next/router'
 import { useState, useRef } from 'react'
 import useMedia from 'use-media'
-import WorkOutlineIcon from '@material-ui/icons/WorkOutline'
-import AppsIcon from '@material-ui/icons/Apps'
-import HomeIcon from '@material-ui/icons/Home'
-import SyncIcon from '@material-ui/icons/Sync'
 import Tab from './Tab'
 import { Button, Input } from 'antd'
+import { AppstoreOutlined, BlockOutlined, HistoryOutlined, HomeOutlined } from '@ant-design/icons'
 
 interface HeaderProps {
     landing: boolean
@@ -112,27 +109,27 @@ const Header = () => {
                 <h3></h3>
             ) : pathname.includes('/') ? (
                 <Links>
-                    <Tab href="/" icon={<HomeIcon />} label="Home" />
+                    <Tab href="/" icon={<HomeOutlined />} label="Home" />
                     <Tab
                         href="/projects"
-                        icon={<AppsIcon />}
+                        icon={<AppstoreOutlined />}
                         label="Projects"
                     />
                     <Tab
                         href="/activity"
-                        icon={<SyncIcon />}
+                        icon={<HistoryOutlined />}
                         label="Activity"
                     />
                     <Tab
                         href="/your-work"
-                        icon={<WorkOutlineIcon />}
+                        icon={<BlockOutlined />}
                         label="Your Work"
                     />
                 </Links>
             ) : null}
 
             <Options>
-                {!isTablet && (
+                {false && (
                     <InputContainer
                         headerWidth={
                             // eslint-disable-next-line @typescript-eslint/ban-ts-comment

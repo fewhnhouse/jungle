@@ -13,6 +13,8 @@ import { getProject } from '../../../../taiga-api/projects'
 import FilterBoard, { GroupBy } from '../../../../components/board/FilterBoard'
 import Link from 'next/link'
 import useQueryState from '../../../../util/useQueryState'
+import { ScrollSync } from 'react-scroll-sync'
+import Updater from '../../../../components/Updater'
 
 export default function BoardContainer() {
     const router = useRouter()
@@ -33,7 +35,7 @@ export default function BoardContainer() {
     const { data: milestones, isLoading: isMilestonesLoading } = useQuery(
         ['milestones', { projectId }],
         () => getMilestones({ projectId: projectId as string, closed: false }),
-        { enabled: projectId }
+        { enabled: projectId, refetchInterval: 5000 }
     )
 
     const { data: taskFiltersData } = useQuery(
@@ -44,12 +46,20 @@ export default function BoardContainer() {
         { enabled: projectId }
     )
 
+    const sortedTaskStatuses = taskFiltersData?.statuses?.sort(
+        (a, b) => a.order - b.order
+    )
+
     const { data: storyFiltersData } = useQuery(
         ['storyFilters', { projectId }],
         async (key, { projectId }) => {
             return getStoryFiltersData(projectId as string)
         },
         { enabled: projectId }
+    )
+
+    const sortedStoryStatuses = storyFiltersData?.statuses?.sort(
+        (a, b) => a.order - b.order
     )
 
     const milestoneIds =
@@ -60,34 +70,24 @@ export default function BoardContainer() {
             'tasks',
             {
                 projectId,
-                milestoneIds,
             },
         ],
-        (
-            key,
-            {
+        (key, { projectId }: { projectId: string; milestoneIds: number[] }) =>
+            getTasks({
                 projectId,
-                milestoneIds,
-            }: { projectId: string; milestoneIds: number[] }
-        ) =>
-            Promise.all(
-                milestoneIds.map(
-                    async (milestone) =>
-                        await getTasks({
-                            projectId,
-                            milestone: milestone.toString(),
-                        })
-                )
-            ).then((res) => res.flat()),
-        { enabled: !!milestones && groupBy === 'subtask' }
+            }),
+        { enabled: groupBy === 'subtask', refetchInterval: 5000 }
     )
+
+    const filteredTasks =
+        tasks?.filter((task) => milestoneIds.includes(task.milestone)) ?? []
 
     const orderedTasks: {
         storySubject: string
         tasks: Task[]
         storyId: number
     }[] =
-        tasks?.reduce(
+        filteredTasks?.reduce(
             (prev, curr) => {
                 if (!curr.user_story) {
                     return prev.map((p) =>
@@ -114,149 +114,162 @@ export default function BoardContainer() {
             [{ storyId: null, storySubject: 'Tasks without Story', tasks: [] }]
         ) ?? []
 
+    const openMilestones = milestones?.filter((ms) => !ms.closed)
     const sprint =
         selectedSprint !== -1
-            ? milestones?.find((ms) => ms.id === selectedSprint)
+            ? openMilestones?.find((ms) => ms.id === selectedSprint)
             : {
                   name: 'All',
                   user_stories:
-                      milestones?.flatMap((ms) => ms.user_stories) ?? [],
+                      openMilestones?.flatMap((ms) => ms.user_stories) ?? [],
                   id: -1,
               }
 
     return (
-        <>
-            <PageHeader>
-                <PageTitle
-                    breadcrumbs={[
-                        { href: `/projects`, label: 'Projects' },
-                        { href: `/projects/${projectId}`, label: project?.name },
-                        {
-                            href: `/projects/${projectId}/board`,
-                            label: 'Board',
-                        },
-                    ]}
-                    title="Board"
-                />
-                <Flex>
-                    {!!milestones?.length && (
-                        <FilterBoard
-                            groupBy={groupBy}
-                            setGroupBy={setGroupBy}
-                            assignee={assignee}
-                            setAssignee={setAssignee}
-                            sprint={selectedSprint}
-                            setSprint={setSelectedSprint}
-                            milestones={milestones}
-                        />
-                    )}
-                </Flex>
-            </PageHeader>
-            <PageBody>
-                {milestones?.length ? (
-                    <div>
-                        {groupBy === 'subtask' &&
-                            orderedTasks?.map((orderedTask, index) => {
-                                return (
-                                    <TaskBoard
-                                        hasHeader={index === 0}
-                                        milestoneIds={milestoneIds}
-                                        title={orderedTask.storySubject}
-                                        key={orderedTask.storyId}
-                                        tasks={orderedTask.tasks.filter(
-                                            (t) =>
-                                                !assignee ||
-                                                t.assigned_to === assignee
-                                        )}
-                                        columns={taskFiltersData?.statuses}
-                                    />
-                                )
-                            })}
-                        {groupBy === 'subtask' && (
-                            <StoryBoard
-                                title="Issues without Subtask"
-                                stories={
-                                    sprint?.user_stories.filter(
-                                        (story) => story.tasks?.length === 0
-                                    ) ?? []
-                                }
-                                columns={storyFiltersData?.statuses ?? []}
+        <ScrollSync>
+            <>
+                <PageHeader>
+                    <PageTitle
+                        breadcrumbs={[
+                            { href: `/projects`, label: 'Projects' },
+                            {
+                                href: `/projects/${projectId}`,
+                                label: project?.name,
+                            },
+                            {
+                                href: `/projects/${projectId}/board`,
+                                label: 'Board',
+                            },
+                        ]}
+                        title="Board"
+                    />
+                    <Flex>
+                        {!!openMilestones?.length && (
+                            <FilterBoard
+                                groupBy={groupBy}
+                                setGroupBy={setGroupBy}
+                                assignee={assignee}
+                                setAssignee={setAssignee}
+                                sprint={selectedSprint}
+                                setSprint={setSelectedSprint}
+                                milestones={openMilestones.filter(
+                                    (ms) => !ms.closed
+                                )}
                             />
                         )}
-                        {groupBy === 'sprint' &&
-                            milestones.map((ms, index) => (
+                    </Flex>
+                </PageHeader>
+                <PageBody>
+                    {openMilestones?.length ? (
+                        <div>
+                            {groupBy === 'subtask' &&
+                                orderedTasks?.map((orderedTask, index) => {
+                                    return (
+                                        <TaskBoard
+                                            hasHeader={index === 0}
+                                            milestoneIds={milestoneIds}
+                                            title={orderedTask.storySubject}
+                                            key={orderedTask.storyId}
+                                            tasks={orderedTask.tasks.filter(
+                                                (t) =>
+                                                    !assignee ||
+                                                    t.assigned_to === assignee
+                                            )}
+                                            columns={sortedTaskStatuses}
+                                        />
+                                    )
+                                })}
+                            {groupBy === 'subtask' && (
                                 <StoryBoard
-                                    key={ms.id}
-                                    hasHeader={index === 0}
-                                    title={`${ms?.name}`}
+                                    title="Issues without Subtask"
                                     stories={
-                                        ms?.user_stories.filter(
+                                        sprint?.user_stories.filter(
+                                            (story) => story.tasks?.length === 0
+                                        ) ?? []
+                                    }
+                                    columns={sortedStoryStatuses ?? []}
+                                />
+                            )}
+                            {groupBy === 'sprint' &&
+                                openMilestones.map((ms, index) => (
+                                    <StoryBoard
+                                        key={ms.id}
+                                        hasHeader={index === 0}
+                                        title={`${ms?.name}`}
+                                        stories={
+                                            ms?.user_stories.filter(
+                                                (story) =>
+                                                    !assignee ||
+                                                    story.assigned_to ===
+                                                        assignee
+                                            ) ?? []
+                                        }
+                                        columns={sortedStoryStatuses ?? []}
+                                    />
+                                ))}
+                            {groupBy === 'none' && (
+                                <StoryBoard
+                                    hasHeader
+                                    title={`${sprint?.name}`}
+                                    stories={
+                                        sprint?.user_stories.filter(
                                             (story) =>
                                                 !assignee ||
                                                 story.assigned_to === assignee
                                         ) ?? []
                                     }
-                                    columns={storyFiltersData?.statuses ?? []}
+                                    columns={sortedStoryStatuses ?? []}
                                 />
-                            ))}
-                        {groupBy === 'none' && (
-                            <StoryBoard
-                                hasHeader
-                                title={`${sprint?.name}`}
-                                stories={
-                                    sprint?.user_stories.filter(
-                                        (story) =>
-                                            !assignee ||
-                                            story.assigned_to === assignee
-                                    ) ?? []
-                                }
-                                columns={storyFiltersData?.statuses ?? []}
-                            />
-                        )}
+                            )}
 
-                        {groupBy === 'assignee' &&
-                            project?.members.map((member, index) => (
+                            {groupBy === 'assignee' &&
+                                project?.members.map((member, index) => (
+                                    <StoryBoard
+                                        hasHeader={index === 0}
+                                        key={member.id}
+                                        title={`${member?.full_name}`}
+                                        stories={
+                                            sprint?.user_stories.filter(
+                                                (story) =>
+                                                    story.assigned_to ===
+                                                    member.id
+                                            ) ?? []
+                                        }
+                                        columns={sortedStoryStatuses ?? []}
+                                    />
+                                ))}
+                            {groupBy === 'assignee' && (
                                 <StoryBoard
-                                    hasHeader={index === 0}
-                                    key={member.id}
-                                    title={`${member?.full_name}`}
+                                    title="Unassigned"
                                     stories={
                                         sprint?.user_stories.filter(
                                             (story) =>
-                                                story.assigned_to === member.id
+                                                story.assigned_to === null
                                         ) ?? []
                                     }
-                                    columns={storyFiltersData?.statuses ?? []}
+                                    columns={sortedStoryStatuses ?? []}
                                 />
-                            ))}
-                        {groupBy === 'assignee' && (
-                            <StoryBoard
-                                title="Unassigned"
-                                stories={
-                                    sprint?.user_stories.filter(
-                                        (story) => story.assigned_to === null
-                                    ) ?? []
-                                }
-                                columns={storyFiltersData?.statuses ?? []}
-                            />
-                        )}
-                    </div>
-                ) : isMilestonesLoading || !projectId ? (
-                    <Skeleton active />
-                ) : (
-                    <Empty
-                        description={
-                            <>
-                                No Sprint active. Go to the{' '}
-                                <Link href={`/projects/${projectId}/backlog`}>
-                                    Backlog
-                                </Link>{' '}
-                                to create one.
-                            </>
-                        }
-                    />
-                )}
-            </PageBody>
-        </>
+                            )}
+                        </div>
+                    ) : isMilestonesLoading || !projectId ? (
+                        <Skeleton active />
+                    ) : (
+                        <Empty
+                            description={
+                                <>
+                                    No Sprint active. Go to the{' '}
+                                    <Link
+                                        href={`/projects/${projectId}/backlog`}
+                                    >
+                                        Backlog
+                                    </Link>{' '}
+                                    to create one.
+                                </>
+                            }
+                        />
+                    )}
+                </PageBody>
+            </>
+        </ScrollSync>
     )
 }
