@@ -6,6 +6,7 @@ import { Task } from '../../taiga-api/tasks'
 import { Avatar, Tag, Tooltip } from 'antd'
 import { ProfileOutlined } from '@ant-design/icons'
 import { getNameInitials } from '../../util/getNameInitials'
+import useQueryState from '../../util/useQueryState'
 
 const getBackgroundColor = (isDragging: boolean, isGroupedOver: boolean) => {
     if (isDragging) {
@@ -138,10 +139,12 @@ function IssueItem({
     index,
     showStatus,
 }: IssueItemProps) {
-    const [expanded, setExpanded] = useState(false)
-
-    const handleClick = () => setExpanded(true)
-    const handleClose = () => setExpanded(false)
+    const [expanded, setExpanded] = useQueryState<string | undefined>(
+        'openModal',
+        undefined
+    )
+    const handleClick = () => setExpanded(`task-${issue.id}`)
+    const handleClose = () => setExpanded(undefined)
 
     return (
         <>
@@ -187,7 +190,11 @@ function IssueItem({
                     </TagContainer>
                 </Content>
             </Container>
-            <IssueModal id={issue.id} open={expanded} onClose={handleClose} />
+            <IssueModal
+                id={issue.id}
+                open={expanded === `task-${issue.id}`}
+                onClose={handleClose}
+            />
         </>
     )
 }

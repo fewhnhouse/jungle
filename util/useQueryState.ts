@@ -14,6 +14,7 @@ function useQueryState<T>(key: string, initialValue?: T) {
             const valueToStore =
                 value instanceof Function ? value(storedValue) : value
             const stringValue = JSON.stringify(valueToStore)
+
             replace({
                 pathname,
                 query: { ...query, [key]: stringValue },

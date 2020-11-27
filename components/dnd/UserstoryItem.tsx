@@ -9,6 +9,7 @@ import { getNameInitials } from '../../util/getNameInitials'
 import { useQuery } from 'react-query'
 import { getPoints } from '../../taiga-api/points'
 import { useRouter } from 'next/router'
+import useQueryState from '../../util/useQueryState'
 
 const getBackgroundColor = (isDragging: boolean, isGroupedOver: boolean) => {
     if (isDragging) {
@@ -143,10 +144,9 @@ function IssueItem({
     index,
 }: IssueItemProps) {
     const { projectId } = useRouter().query
-    const [expanded, setExpanded] = useState(false)
-
-    const handleClick = () => setExpanded(true)
-    const handleClose = () => setExpanded(false)
+    const [expanded, setExpanded] = useQueryState<string|undefined>('openModal', undefined)
+    const handleClick = () => setExpanded(`story-${issue.id}`)
+    const handleClose = () => setExpanded(undefined)
     const { data: pointsData } = useQuery(
         'storypoints',
         async () => await getPoints(projectId as string)
@@ -208,7 +208,11 @@ function IssueItem({
                     </Footer>
                 </Content>
             </Container>
-            <IssueModal id={issue.id} open={expanded} onClose={handleClose} />
+            <IssueModal
+                id={issue.id}
+                open={expanded === `story-${issue.id}`}
+                onClose={handleClose}
+            />
         </>
     )
 }
