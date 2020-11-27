@@ -46,12 +46,20 @@ export default function BoardContainer() {
         { enabled: projectId }
     )
 
+    const sortedTaskStatuses = taskFiltersData?.statuses?.sort(
+        (a, b) => a.order - b.order
+    )
+
     const { data: storyFiltersData } = useQuery(
         ['storyFilters', { projectId }],
         async (key, { projectId }) => {
             return getStoryFiltersData(projectId as string)
         },
         { enabled: projectId }
+    )
+
+    const sortedStoryStatuses = storyFiltersData?.statuses?.sort(
+        (a, b) => a.order - b.order
     )
 
     const milestoneIds =
@@ -167,7 +175,7 @@ export default function BoardContainer() {
                                                     !assignee ||
                                                     t.assigned_to === assignee
                                             )}
-                                            columns={taskFiltersData?.statuses}
+                                            columns={sortedTaskStatuses}
                                         />
                                     )
                                 })}
@@ -179,7 +187,7 @@ export default function BoardContainer() {
                                             (story) => story.tasks?.length === 0
                                         ) ?? []
                                     }
-                                    columns={storyFiltersData?.statuses ?? []}
+                                    columns={sortedStoryStatuses ?? []}
                                 />
                             )}
                             {groupBy === 'sprint' &&
@@ -196,9 +204,7 @@ export default function BoardContainer() {
                                                         assignee
                                             ) ?? []
                                         }
-                                        columns={
-                                            storyFiltersData?.statuses ?? []
-                                        }
+                                        columns={sortedStoryStatuses ?? []}
                                     />
                                 ))}
                             {groupBy === 'none' && (
@@ -212,7 +218,7 @@ export default function BoardContainer() {
                                                 story.assigned_to === assignee
                                         ) ?? []
                                     }
-                                    columns={storyFiltersData?.statuses ?? []}
+                                    columns={sortedStoryStatuses ?? []}
                                 />
                             )}
 
@@ -229,9 +235,7 @@ export default function BoardContainer() {
                                                     member.id
                                             ) ?? []
                                         }
-                                        columns={
-                                            storyFiltersData?.statuses ?? []
-                                        }
+                                        columns={sortedStoryStatuses ?? []}
                                     />
                                 ))}
                             {groupBy === 'assignee' && (
@@ -243,7 +247,7 @@ export default function BoardContainer() {
                                                 story.assigned_to === null
                                         ) ?? []
                                     }
-                                    columns={storyFiltersData?.statuses ?? []}
+                                    columns={sortedStoryStatuses ?? []}
                                 />
                             )}
                         </div>
