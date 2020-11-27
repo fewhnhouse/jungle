@@ -1,10 +1,5 @@
-import {
-    BookOutlined,
-    DeleteOutlined,
-    ExclamationCircleOutlined,
-    UserOutlined,
-} from '@ant-design/icons'
-import { Button, Dropdown, Menu, Modal, Skeleton } from 'antd'
+import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
+import { Button, Menu, Modal, Skeleton } from 'antd'
 import { useRouter } from 'next/router'
 import ReactMarkdown from 'react-markdown'
 import { queryCache, useQuery } from 'react-query'
@@ -21,14 +16,7 @@ import Uploader from '../../../../components/issues/Uploader'
 import { PageBody, PageHeader } from '../../../../components/Layout'
 import PageTitle from '../../../../components/PageTitle'
 import { getProject } from '../../../../taiga-api/projects'
-import {
-    deleteTask,
-    getFiltersData,
-    getTask,
-    promoteToUserstory,
-    Task,
-    updateTask,
-} from '../../../../taiga-api/tasks'
+import { getFiltersData } from '../../../../taiga-api/tasks'
 import {
     deleteUserstory,
     getUserstory,

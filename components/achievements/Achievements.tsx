@@ -1,17 +1,16 @@
 import AchievementBadge from '../Badge/Achievement'
 import styled from 'styled-components'
 import Flex from '../Flex'
-import { useRouter } from 'next/router'
 import useMedia from 'use-media'
 import { Skeleton } from 'antd'
-import useAchievements from '../../util/useAchievements'
+import { AchievementContext } from '../../util/AchievementWrapper'
+import { useContext } from 'react'
 
 const AchievementContainer = styled(Flex)``
 
 const Achievements = () => {
-    const { projectId } = useRouter().query
     const isMobile = useMedia('(max-width: 700px)')
-    const { achievements, isLoading } = useAchievements(projectId as string)
+    const { achievements, isLoading } = useContext(AchievementContext)
 
     return (
         <AchievementContainer
