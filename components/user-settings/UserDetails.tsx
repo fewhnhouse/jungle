@@ -83,11 +83,13 @@ const StyledFormItem = styled(Form.Item)`
 const UserDetails = () => {
     const { data } = useQuery('me', () => getMe())
 
+    useEffect(() => {
+        if (data?.photo) {
+            setLogo(data.photo)
+        }
+    }, [data])
     const [confirmDeletion, setConfirmDeletion] = useState(false)
-    const [logo, setLogo] = useState(
-        data?.photo ??
-            'https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png'
-    )
+    const [logo, setLogo] = useState('/placeholder.png')
 
     if (!data) {
         return <Skeleton paragraph={{ rows: 5 }} active />

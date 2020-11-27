@@ -1,6 +1,6 @@
 import { Button, Card, Checkbox, Form, Input, message, Skeleton } from 'antd'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { queryCache, useQuery } from 'react-query'
 
 import styled from 'styled-components'
@@ -83,18 +83,23 @@ const ProjectDetails = () => {
     const { query, replace } = useRouter()
     const { projectId } = query
 
-    const { data } = useQuery(
+    const { data, isLoading } = useQuery(
         ['project', { projectId }],
         async (key, { projectId }) => {
             return getProject(projectId as string)
-        }
+        },
+        { enabled: projectId }
     )
+
+    useEffect(() => {
+        if (data?.logo_small_url) {
+            setLogo(data.logo_small_url)
+        }
+    }, [data])
+
     const [isPrivate, setIsPrivate] = useState(data?.is_private ?? false)
     const [confirmDeletion, setConfirmDeletion] = useState(false)
-    const [logo, setLogo] = useState(
-        data?.logo_small_url ??
-            'https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png'
-    )
+    const [logo, setLogo] = useState('/placeholder.png')
 
     if (!data) {
         return <Skeleton paragraph={{ rows: 5 }} active />
@@ -158,12 +163,11 @@ const ProjectDetails = () => {
     }
 
     return (
-        <div>
+        <Skeleton loading={isLoading} active>
             <StyledCard bodyStyle={{ padding: 0 }} title="Project Name">
                 <Form
                     initialValues={{
                         name: data?.name,
-                        description: data?.description,
                     }}
                     layout="vertical"
                     onFinish={handleNameSubmit}
@@ -178,7 +182,13 @@ const ProjectDetails = () => {
                 </Form>
             </StyledCard>
             <StyledCard bodyStyle={{ padding: 0 }} title="Project Description">
-                <Form layout="vertical" onFinish={handleDescriptionSubmit}>
+                <Form
+                    initialValues={{
+                        description: data?.description,
+                    }}
+                    layout="vertical"
+                    onFinish={handleDescriptionSubmit}
+                >
                     <StyledFormItem name="description">
                         <Input.TextArea rows={5} />
                     </StyledFormItem>
@@ -269,7 +279,7 @@ const ProjectDetails = () => {
                     </Footer>
                 </Form>
             </StyledCard>
-        </div>
+        </Skeleton>
     )
 }
 
