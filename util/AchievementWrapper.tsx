@@ -71,7 +71,7 @@ const AchievementWrapper = ({ children }: Props) => {
     )
 
     const closedSprints =
-        sprints?.filter((sprint) => sprint.closed)?.length ?? 0
+        sprints?.filter((sprint) => sprint.closed)?.length ?? -1
     const closedBugs =
         stories && tasks
             ? [...stories, ...tasks].filter(
@@ -81,12 +81,12 @@ const AchievementWrapper = ({ children }: Props) => {
                           (tag) => tag.length && tag[0].includes('bug')
                       )
               ).length
-            : 0
+            : -1
 
     const closedIssues =
         stories && tasks
             ? [...stories, ...tasks].filter((issue) => issue.is_closed).length
-            : 0
+            : -1
 
     const storyPoints = stories
         ? [...stories]
@@ -100,10 +100,10 @@ const AchievementWrapper = ({ children }: Props) => {
                       ),
                   0
               )
-        : 0
+        : -1
 
     const comments =
-        stories?.reduce((prev, curr) => prev + curr.total_comments, 0) ?? 0
+        stories?.reduce((prev, curr) => prev + curr.total_comments, 0) ?? -1
 
     const tags =
         stories && tasks
@@ -111,7 +111,7 @@ const AchievementWrapper = ({ children }: Props) => {
                   (prev, curr) => prev + curr.tags.length,
                   0
               )
-            : 0
+            : -1
     const achievements = [
         {
             score: comments,
@@ -211,24 +211,28 @@ const AchievementWrapper = ({ children }: Props) => {
     const prevAchievements = usePrev(achievements)
 
     useEffect(() => {
-        if (projectId && sprints && tasks && stories) {
-            console.log(prevAchievements)
+        if (projectId) {
             achievements.forEach((achievement, index) => {
                 const prevAchievement = prevAchievements[index]
-                const oldLevel = getLevel(
-                    prevAchievement.levelRange,
-                    prevAchievement.score
-                )
-                const newLevel = getLevel(
-                    achievement.levelRange,
-                    achievement.score
-                )
-                if (newLevel > oldLevel) {
-                    notification.open({
-                        message: `${achievement.title} Level ${newLevel}`,
-                        description: `You leveled up your ${achievement.label} Achievement!`,
-                        icon: achievement.icon,
-                    })
+                if (prevAchievement.score >= 0) {
+                    if (achievement.score > prevAchievement.score) {
+                        console.log(achievement.title, achievement.score)
+                    }
+                    const oldLevel = getLevel(
+                        prevAchievement.levelRange,
+                        prevAchievement.score
+                    )
+                    const newLevel = getLevel(
+                        achievement.levelRange,
+                        achievement.score
+                    )
+                    if (newLevel > oldLevel) {
+                        notification.open({
+                            message: `${achievement.title} Level ${newLevel}`,
+                            description: `You leveled up your ${achievement.label} Achievement!`,
+                            icon: achievement.icon,
+                        })
+                    }
                 }
             })
         }
