@@ -123,7 +123,7 @@ const Comments = ({
                         placeholder="Type a comment..."
                         style={{ flex: 1, marginRight: 10 }}
                     >
-                        {project.members.map((member) => (
+                        {project?.members?.map((member) => (
                             <Mentions.Option
                                 key={member.id.toString()}
                                 value={member.username}

@@ -6,6 +6,7 @@ import {
 } from '@ant-design/icons'
 import { Button, Dropdown, Menu, Modal, Skeleton } from 'antd'
 import { useRouter } from 'next/router'
+import ReactMarkdown from 'react-markdown'
 import { queryCache, useQuery } from 'react-query'
 import styled from 'styled-components'
 import useMedia from 'use-media'
@@ -139,7 +140,9 @@ const UserstoryPage = () => {
                         },
                     ]}
                     title={data?.subject}
-                    description={data?.description}
+                    description={
+                        <ReactMarkdown>{data?.description}</ReactMarkdown>
+                    }
                 />
             </PageHeader>
             <PageBody>

@@ -1,54 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useQuery } from 'react-query'
-import { Button, Divider, Dropdown, Modal, Skeleton } from 'antd'
+import { Divider } from 'antd'
 import Flex from '../Flex'
-import {
-    BookOutlined,
-    CloseOutlined,
-    EllipsisOutlined,
-    ProfileOutlined,
-} from '@ant-design/icons'
 import { ModalProps } from 'antd/lib/modal'
 import { useRouter } from 'next/router'
-import { getTask, Task } from '../../taiga-api/tasks'
-import { getUserstory, UserStory } from '../../taiga-api/userstories'
-import TaskBreadcrumbs from './TaskBreadcrumbs'
-import UserStoryBreadcrumbs from './UserStoryBreadcrumbs'
+import { Task } from '../../taiga-api/tasks'
+import { UserStory } from '../../taiga-api/userstories'
 import EditableDescription from './EditableDescription'
 import EditableTitle from './EditableTitle'
 import Comments from '../dnd/comments/Comments'
-
-const StyledTaskIcon = styled(ProfileOutlined)`
-    display: block;
-    background: #45aaff;
-    border-radius: 3px;
-    font-size: 20px;
-    padding: 5px;
-    color: #2c3e50;
-    margin-right: 5px;
-`
-
-const StyledUserStoryIcon = styled(BookOutlined)`
-    background: #2ecc71;
-    font-size: 20px;
-    border-radius: 3px;
-    padding: 5px;
-    margin-right: 5px;
-    color: #2c3e50;
-`
-
-const StyledModal = styled(Modal)`
-    .ant-modal-close {
-        visibility: hidden;
-    }
-`
-
-const HeaderActionContainer = styled(Flex)`
-    & > :first-child {
-        margin-right: 5px;
-    }
-`
 
 const Main = styled.div`
     display: flex;
@@ -96,13 +56,6 @@ export default function IssuePage({
             <Main>
                 <Content direction="column" justify="space-between">
                     <Flex style={{ width: '100%' }} align="center">
-                        <div>
-                            {type === 'task' ? (
-                                <StyledTaskIcon />
-                            ) : (
-                                <StyledUserStoryIcon />
-                            )}
-                        </div>
                         <EditableTitle
                             id={data?.id}
                             version={data?.version}

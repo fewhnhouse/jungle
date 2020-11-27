@@ -1,41 +1,19 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import MarkdownIt from 'markdown-it'
 import dynamic from 'next/dynamic'
-import ReactMarkdown from 'react-markdown'
 import Flex from '../Flex'
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
-import { Button } from 'antd'
 import { Task, updateTask } from '../../taiga-api/tasks'
 import { updateUserstory, UserStory } from '../../taiga-api/userstories'
 import { queryCache } from 'react-query'
 import { useRouter } from 'next/router'
 import { updateTaskCache, updateUserstoryCache } from '../../updateCache'
+import useDebounce from '../../util/useDebounce'
 
 const mdParser = new MarkdownIt(/* Markdown-it options */)
 const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
     ssr: false,
 })
-
-const DisplayContainer = styled.div`
-    height: 200px;
-    width: 100%;
-    padding: 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    &:hover {
-        background: #eee;
-    }
-`
-
-const StyledButton = styled(Button)`
-    margin-left: 5px;
-    width: 40px;
-    padding: 0px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-`
 
 const InputContainer = styled.div`
     display: flex;
@@ -60,35 +38,39 @@ export default function EditableDescription({
     version,
 }: Props) {
     const { projectId } = useRouter().query
-    const [editable, setEditable] = useState(false)
     const [description, setDescription] = useState(initialValue)
 
+    const debouncedDescription = useDebounce(description, 500)
+
+    useEffect(() => {
+        if (debouncedDescription) {
+            queryCache.setQueryData(
+                [type, { id }],
+                (prevData: UserStory | Task) => ({
+                    ...prevData,
+                    description,
+                })
+            )
+            if (type === 'task') {
+                updateTask(id, {
+                    version,
+                    description,
+                }).then((updatedTask) => {
+                    updateTaskCache(updatedTask, id, projectId as string)
+                })
+            } else {
+                updateUserstory(id, {
+                    version,
+                    description,
+                }).then((updatedStory) => {
+                    updateUserstoryCache(updatedStory, id, projectId as string)
+                })
+            }
+        }
+    }, [debouncedDescription, type])
     function handleEditorChange({ text }) {
         setDescription(text)
     }
-
-    const onSubmit = async () => {
-        queryCache.setQueryData(
-            [type, { id }],
-            (prevData: UserStory | Task) => ({
-                ...prevData,
-                description,
-            })
-        )
-        if (type === 'task') {
-            const updatedTask = await updateTask(id, { version, description })
-            updateTaskCache(updatedTask, id, projectId as string)
-        } else {
-            const updatedStory = await updateUserstory(id, {
-                version,
-                description,
-            })
-            updateUserstoryCache(updatedStory, id, projectId as string)
-        }
-        toggleEditable()
-    }
-
-    const toggleEditable = () => setEditable((editable) => !editable)
     return (
         <InputContainer>
             <MdEditor
@@ -110,12 +92,7 @@ export default function EditableDescription({
                 renderHTML={(text) => mdParser.render(text)}
             />
             <Flex style={{ marginTop: 5 }}>
-                <StyledButton size="large" onClick={toggleEditable}>
-                    <CloseOutlined />
-                </StyledButton>
-                <StyledButton size="large" onClick={onSubmit}>
-                    <CheckOutlined />
-                </StyledButton>
+                <span>Your changes will automatically be saved.</span>
             </Flex>
         </InputContainer>
     )
