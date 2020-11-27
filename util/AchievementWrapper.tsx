@@ -46,7 +46,7 @@ interface Props {
 
 const AchievementWrapper = ({ children }: Props) => {
     const { projectId } = useRouter().query
-    const { data: sprints = [], isLoading: milestonesLoading } = useQuery(
+    const { data: sprints, isLoading: milestonesLoading } = useQuery(
         ['milestones', { projectId }],
         async (key, { projectId }) => {
             return getMilestones({
@@ -218,7 +218,7 @@ const AchievementWrapper = ({ children }: Props) => {
                 const prevAchievement = prevAchievements[index]
                 if (prevAchievement.score >= 0) {
                     if (achievement.score > prevAchievement.score) {
-                        console.log(achievement.title, achievement.score)
+                        console.log(achievement.title, achievement.score, prevAchievement.score)
                     }
                     const oldLevel = getLevel(
                         prevAchievement.levelRange,

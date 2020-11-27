@@ -78,7 +78,6 @@ const Board = ({
                 'tasks',
                 {
                     projectId,
-                    milestoneIds,
                 },
             ],
             (prevData: Task[]) =>
@@ -99,7 +98,6 @@ const Board = ({
                 'tasks',
                 {
                     projectId,
-                    milestoneIds,
                 },
             ])
         })
