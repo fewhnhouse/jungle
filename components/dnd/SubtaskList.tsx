@@ -179,7 +179,7 @@ const SubtaskList = ({ id }: Props) => {
                     <StyledForm
                         form={form}
                         initialValues={{ name: '' }}
-                        layout="vertical"
+                        layout="inline"
                         onFinish={handleFinish}
                     >
                         <StyledFormItem

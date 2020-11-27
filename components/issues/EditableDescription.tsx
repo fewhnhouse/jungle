@@ -39,6 +39,7 @@ const StyledButton = styled(Button)`
 
 const InputContainer = styled.div`
     display: flex;
+    margin-top: ${({ theme }) => theme.spacing.small};
     flex-direction: column;
     align-items: flex-end;
     margin-bottom: ${({ theme }) => theme.spacing.small};
@@ -88,7 +89,7 @@ export default function EditableDescription({
     }
 
     const toggleEditable = () => setEditable((editable) => !editable)
-    return editable ? (
+    return (
         <InputContainer>
             <MdEditor
                 shortcuts
@@ -108,7 +109,7 @@ export default function EditableDescription({
                 onChange={handleEditorChange}
                 renderHTML={(text) => mdParser.render(text)}
             />
-            <Flex>
+            <Flex style={{ marginTop: 5 }}>
                 <StyledButton size="large" onClick={toggleEditable}>
                     <CloseOutlined />
                 </StyledButton>
@@ -117,9 +118,5 @@ export default function EditableDescription({
                 </StyledButton>
             </Flex>
         </InputContainer>
-    ) : (
-        <DisplayContainer onClick={toggleEditable}>
-            <ReactMarkdown source={description}></ReactMarkdown>
-        </DisplayContainer>
     )
 }

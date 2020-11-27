@@ -95,7 +95,7 @@ export default function IssuePage({
         <Flex direction="column">
             <Main>
                 <Content direction="column" justify="space-between">
-                    <Flex align="center">
+                    <Flex style={{ width: '100%' }} align="center">
                         <div>
                             {type === 'task' ? (
                                 <StyledTaskIcon />

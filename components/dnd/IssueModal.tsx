@@ -6,7 +6,7 @@ import { useQuery } from 'react-query'
 import { getTask, Task } from '../../taiga-api/tasks'
 import TaskBreadcrumbs from '../issues/TaskBreadcrumbs'
 import StoryBreadcrumbs from '../issues/UserStoryBreadcrumbs'
-import { Button, Divider, Dropdown, Modal, Skeleton } from 'antd'
+import { Avatar, Button, Divider, Dropdown, Modal, Skeleton } from 'antd'
 import Flex from '../Flex'
 import {
     BookOutlined,
@@ -17,25 +17,6 @@ import {
 import Comments from './comments/Comments'
 import { getUserstory, UserStory } from '../../taiga-api/userstories'
 import { ModalProps } from 'antd/lib/modal'
-
-const StyledTaskIcon = styled(ProfileOutlined)`
-    display: block;
-    background: #45aaff;
-    border-radius: 3px;
-    font-size: 20px;
-    padding: 5px;
-    color: #2c3e50;
-    margin-right: 5px;
-`
-
-const StyledUserStoryIcon = styled(BookOutlined)`
-    background: #2ecc71;
-    font-size: 20px;
-    border-radius: 3px;
-    padding: 5px;
-    margin-right: 5px;
-    color: #2c3e50;
-`
 
 const StyledModal = styled(Modal)`
     .ant-modal-close {
@@ -62,7 +43,7 @@ const Main = styled.div`
 
 const Content = styled(Flex)`
     flex: 3;
-    margin-right: 10px;
+    margin-right: 40px;
 `
 
 const Sidebar = styled.aside`
@@ -143,13 +124,6 @@ export default function IssueModal({
                     <Main>
                         <Content direction="column" justify="flex-start">
                             <Flex align="center" style={{ width: '100%' }}>
-                                <div>
-                                    {type === 'task' ? (
-                                        <StyledTaskIcon />
-                                    ) : (
-                                        <StyledUserStoryIcon />
-                                    )}
-                                </div>
                                 <EditableTitle
                                     id={data?.id}
                                     version={data?.version}

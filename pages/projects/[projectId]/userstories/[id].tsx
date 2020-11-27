@@ -178,7 +178,7 @@ const UserstoryPage = () => {
                                                 danger
                                                 icon={<DeleteOutlined />}
                                             >
-                                                Delete Task
+                                                Delete Userstory
                                             </StyledBtn>
                                         </BtnContainer>
                                     </>

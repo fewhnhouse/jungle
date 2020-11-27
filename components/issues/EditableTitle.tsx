@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import styled from 'styled-components'
 import Flex from '../Flex'
-import { Button, Input } from 'antd'
+import { Avatar, Button, Input } from 'antd'
 import { Task, updateTask } from '../../taiga-api/tasks'
 import { updateUserstory, UserStory } from '../../taiga-api/userstories'
 import { useRouter } from 'next/router'
 import { queryCache } from 'react-query'
 import { updateTaskCache, updateUserstoryCache } from '../../updateCache'
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
+import { BookOutlined, ProfileOutlined, SaveOutlined } from '@ant-design/icons'
 
 const Title = styled.h2`
     border-radius: 2px;
@@ -25,6 +25,11 @@ const Title = styled.h2`
     }
 `
 
+const StyledAvatar = styled(Avatar)<{ type: 'task' | 'userstory' }>`
+    background-color: ${({ type }) =>
+        type === 'task' ? '#45aaff' : '#2ecc71'};
+`
+
 const StyledButton = styled(Button)`
     margin-left: 5px;
     width: 40px;
@@ -36,6 +41,7 @@ const StyledButton = styled(Button)`
 
 const TitleContainer = styled.div`
     width: 100%;
+    max-width: 510px;
 `
 
 const InputContainer = styled.form`
@@ -60,10 +66,7 @@ export default function EditableTitle({
 }: Props) {
     const { projectId } = useRouter().query
 
-    const [editable, setEditable] = useState(false)
     const [subject, setSubject] = useState(initialValue)
-
-    const toggleEditable = () => setEditable((editable) => !editable)
 
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -81,32 +84,39 @@ export default function EditableTitle({
             const updatedStory = await updateUserstory(id, { version, subject })
             updateUserstoryCache(updatedStory, id, projectId as string)
         }
-        toggleEditable()
     }
 
     return (
         <TitleContainer>
-            {editable ? (
-                <InputContainer onSubmit={onSubmit}>
-                    <Flex style={{ width: '100%' }}>
-                        <Input
-                            size="large"
-                            value={subject}
-                            onChange={(e) => setSubject(e.target.value)}
-                        />
-                        <Flex>
-                            <StyledButton size="large" onClick={toggleEditable}>
-                                <CloseOutlined />
-                            </StyledButton>
-                            <StyledButton size="large" onClick={toggleEditable}>
-                                <CheckOutlined />
-                            </StyledButton>
-                        </Flex>
-                    </Flex>
-                </InputContainer>
-            ) : (
-                <Title onClick={toggleEditable}>{subject}</Title>
-            )}
+            <InputContainer onSubmit={onSubmit}>
+                <Flex style={{ width: '100%' }}>
+                    <Input
+                        addonBefore={
+                            <StyledAvatar
+                                type={type}
+                                shape="square"
+                                icon={
+                                    type === 'task' ? (
+                                        <ProfileOutlined />
+                                    ) : (
+                                        <BookOutlined />
+                                    )
+                                }
+                            />
+                        }
+                        addonAfter={
+                            <Flex>
+                                <StyledButton htmlType="submit">
+                                    <SaveOutlined />
+                                </StyledButton>
+                            </Flex>
+                        }
+                        size="large"
+                        value={subject}
+                        onChange={(e) => setSubject(e.target.value)}
+                    />
+                </Flex>
+            </InputContainer>
         </TitleContainer>
     )
 }
