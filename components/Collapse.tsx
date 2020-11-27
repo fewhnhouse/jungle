@@ -50,6 +50,7 @@ const StoryTitle = styled.h3`
 
 const StyledTag = styled(Tag)`
     margin: 0;
+    margin-right: 5px;
 `
 
 interface CollapseProps {
@@ -88,15 +89,18 @@ export default function CustomCollapse({
                         style={{ marginRight: 5 }}
                         icon={expanded ? <UpOutlined /> : <DownOutlined />}
                     />
-                    {status === 'active' && (
-                        <StyledTag color="blue">Active</StyledTag>
-                    )}
-                    {status === 'closed' && (
-                        <StyledTag color="grey">Closed</StyledTag>
-                    )}
+
                     <HeaderContainer>
                         <StoryTitle>{title}</StoryTitle>
-                        <Description>{description}</Description>
+                        <Description>
+                            {status === 'active' && (
+                                <StyledTag color="blue">Active</StyledTag>
+                            )}
+                            {status === 'closed' && (
+                                <StyledTag color="grey">Closed</StyledTag>
+                            )}
+                            {description}
+                        </Description>
                     </HeaderContainer>
                 </InnerContainer>
                 {primaryAction}
