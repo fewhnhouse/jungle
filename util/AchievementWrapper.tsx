@@ -19,6 +19,8 @@ import usePrev from './usePrev'
 export const AchievementContext = createContext({
     achievements: [],
     isLoading: false,
+    totalLevelRange: [],
+    totalScore: 0,
 })
 
 export interface Achievement {
@@ -30,7 +32,7 @@ export interface Achievement {
     label: string
 }
 
-const getLevel = (levelRange: [number, number][], score: number) => {
+export const getLevel = (levelRange: [number, number][], score: number) => {
     return levelRange.findIndex((range, index) =>
         index === levelRange.length - 1
             ? true
@@ -237,11 +239,27 @@ const AchievementWrapper = ({ children }: Props) => {
             })
         }
     }, [achievements, prevAchievements])
+
+    const totalScore = achievements.reduce(
+        (prev, curr) => prev + getLevel(curr.levelRange, curr.score) * 10,
+        0
+    )
     return (
         <AchievementContext.Provider
             value={{
                 achievements,
                 isLoading: milestonesLoading && tasksLoading && storiesLoading,
+                totalLevelRange: [
+                    [0, 50],
+                    [50, 200],
+                    [200, 500],
+                    [500, 1000],
+                    [1000, 2000],
+                    [2000, 5000],
+                    [5000, 10000],
+                    [10000, 200000],
+                ],
+                totalScore,
             }}
         >
             {children}

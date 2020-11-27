@@ -1,6 +1,9 @@
 import { InfoCircleOutlined } from '@ant-design/icons'
 import { Progress, Tooltip } from 'antd'
+import { useContext } from 'react'
 import styled from 'styled-components'
+import { AchievementContext } from '../../util/AchievementWrapper'
+import { getLevel } from '../Badge/Achievement'
 import Flex from '../Flex'
 
 const LevelContainer = styled.div`
@@ -39,20 +42,26 @@ const Container = styled(Flex)`
 `
 
 const LevelDisplay = () => {
+    const { totalLevelRange, totalScore } = useContext(AchievementContext)
+    const currentLevel = getLevel(totalLevelRange, totalScore)
+    const percent =
+        ((totalScore - totalLevelRange[currentLevel][0]) /
+            totalLevelRange[currentLevel][1]) *
+        100
     return (
         <Container fluid direction="column" align="center">
             <LevelContainer>
-                <LevelIcon>5</LevelIcon>
+                <LevelIcon>{currentLevel}</LevelIcon>
                 <Progress
                     strokeColor="#2ecc71"
                     showInfo={false}
-                    percent={30}
+                    percent={percent}
                     status="active"
                 />
-                <LevelIcon>6</LevelIcon>
+                <LevelIcon>{currentLevel + 1}</LevelIcon>
             </LevelContainer>
             <Score>
-                300 / 900 Points{' '}
+                {totalScore} / {totalLevelRange[currentLevel][1]} Points{' '}
                 <Tooltip
                     title="Your Team Level is currently 5. Complete tasks, finish Sprints
                 and collaborate as a Team to gain experience towards the next
