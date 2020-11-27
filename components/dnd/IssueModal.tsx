@@ -103,6 +103,7 @@ export default function IssueModal({
 
     return (
         <StyledModal
+            width={1000}
             title={
                 <Flex
                     justify="space-between"
@@ -140,8 +141,8 @@ export default function IssueModal({
             <Skeleton active paragraph={{ rows: 5 }} loading={isLoading}>
                 <Flex direction="column">
                     <Main>
-                        <Content direction="column" justify="space-between">
-                            <Flex align="center">
+                        <Content direction="column" justify="flex-start">
+                            <Flex align="center" style={{ width: '100%' }}>
                                 <div>
                                     {type === 'task' ? (
                                         <StyledTaskIcon />

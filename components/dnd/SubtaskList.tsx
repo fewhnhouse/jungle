@@ -43,6 +43,7 @@ const StyledForm = styled(Form)`
     width: 100%;
     display: flex;
     justify-content: space-between;
+    margin-top: 10px;
 `
 
 const Meta = styled(List.Item.Meta)`

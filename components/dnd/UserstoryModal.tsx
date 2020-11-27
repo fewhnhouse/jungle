@@ -20,6 +20,7 @@ import MultiStorypointSelect from './MultiStorypointSelect'
 import IssueModal from './IssueModal'
 import { Milestone } from '../../taiga-api/milestones'
 import { updateUserstoryCache } from '../../updateCache'
+import Flex from '../Flex'
 
 const { confirm } = Modal
 

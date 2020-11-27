@@ -34,6 +34,10 @@ const StyledButton = styled(Button)`
     justify-content: center;
 `
 
+const TitleContainer = styled.div`
+    width: 100%;
+`
+
 const InputContainer = styled.form`
     display: flex;
     margin: ${({ theme }) => theme.spacing.mini} 0px;
@@ -81,10 +85,10 @@ export default function EditableTitle({
     }
 
     return (
-        <div>
+        <TitleContainer>
             {editable ? (
                 <InputContainer onSubmit={onSubmit}>
-                    <Flex>
+                    <Flex style={{ width: '100%' }}>
                         <Input
                             size="large"
                             value={subject}
@@ -103,6 +107,6 @@ export default function EditableTitle({
             ) : (
                 <Title onClick={toggleEditable}>{subject}</Title>
             )}
-        </div>
+        </TitleContainer>
     )
 }
