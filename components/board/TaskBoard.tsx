@@ -82,7 +82,7 @@ const Board = ({
                 },
             ],
             (prevData: Task[]) =>
-                prevData.map((t) =>
+                prevData?.map((t) =>
                     t.id === task.id
                         ? {
                               ...task,
