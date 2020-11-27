@@ -1,53 +1,32 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Flex from '../Flex'
-import { Avatar, Button, Input } from 'antd'
+import { Input } from 'antd'
 import { Task, updateTask } from '../../taiga-api/tasks'
 import { updateUserstory, UserStory } from '../../taiga-api/userstories'
 import { useRouter } from 'next/router'
 import { queryCache } from 'react-query'
 import { updateTaskCache, updateUserstoryCache } from '../../updateCache'
-import { BookOutlined, ProfileOutlined, SaveOutlined } from '@ant-design/icons'
-
-const Title = styled.h2`
-    border-radius: 2px;
-    width: 100%;
-    padding: ${({ theme }) => `${theme.spacing.mini} ${theme.spacing.small}`};
-    &:hover {
-        background: #e9ecef;
-    }
-    font-size: 1.2rem;
-    color: #495057;
-    cursor: pointer;
-    margin: ${({ theme }) => theme.spacing.mini} 0px;
-    span {
-        margin-right: 5px;
-    }
-`
-
-const StyledAvatar = styled(Avatar)<{ type: 'task' | 'userstory' }>`
-    background-color: ${({ type }) =>
-        type === 'task' ? '#45aaff' : '#2ecc71'};
-`
-
-const StyledButton = styled(Button)`
-    margin-left: 5px;
-    width: 40px;
-    padding: 0px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-`
+import useDebounce from '../../util/useDebounce'
 
 const TitleContainer = styled.div`
     width: 100%;
-    max-width: 510px;
 `
 
 const InputContainer = styled.form`
     display: flex;
     margin: ${({ theme }) => theme.spacing.mini} 0px;
     align-items: center;
+`
+
+const StyledInput = styled(Input)<{ $focus }>`
+    font-size: 20px !important;
+    input {
+        font-size: 20px !important;
+    }
+    &:hover {
+        background: ${({ $focus }) => ($focus ? '' : '#e9ecef')};
+    }
 `
 interface Props {
     initialValue: string
@@ -60,16 +39,16 @@ interface Props {
 export default function EditableTitle({
     initialValue,
     id,
-    milestone,
     type,
     version,
 }: Props) {
     const { projectId } = useRouter().query
 
     const [subject, setSubject] = useState(initialValue)
+    const [focus, setFocus] = useState(false)
+    const debouncedSubject = useDebounce(subject, 500)
 
-    const onSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
+    useEffect(() => {
         queryCache.setQueryData(
             [type, { id }],
             (prevData: UserStory | Task) => ({
@@ -78,42 +57,33 @@ export default function EditableTitle({
             })
         )
         if (type === 'task') {
-            const updatedTask = await updateTask(id, { version, subject })
-            updateTaskCache(updatedTask, id, projectId as string)
+            updateTask(id, { version, subject }).then((updatedTask) => {
+                updateTaskCache(updatedTask, id, projectId as string)
+            })
         } else {
-            const updatedStory = await updateUserstory(id, { version, subject })
-            updateUserstoryCache(updatedStory, id, projectId as string)
+            updateUserstory(id, { version, subject }).then((updatedStory) => {
+                updateUserstoryCache(updatedStory, id, projectId as string)
+            })
         }
+    }, [debouncedSubject])
+
+    const onSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
     }
 
     return (
         <TitleContainer>
             <InputContainer onSubmit={onSubmit}>
-                <Flex style={{ width: '100%' }}>
-                    <Input
-                        addonBefore={
-                            <StyledAvatar
-                                type={type}
-                                shape="square"
-                                icon={
-                                    type === 'task' ? (
-                                        <ProfileOutlined />
-                                    ) : (
-                                        <BookOutlined />
-                                    )
-                                }
-                            />
-                        }
-                        addonAfter={
-                            <Flex>
-                                <StyledButton htmlType="submit">
-                                    <SaveOutlined />
-                                </StyledButton>
-                            </Flex>
-                        }
+                <Flex style={{ width: '100%' }} align="center">
+                    <StyledInput
+                        $focus={focus}
                         size="large"
+                        onFocus={() => setFocus(true)}
+                        onBlur={() => setFocus(false)}
+                        placeholder="Subject..."
                         value={subject}
                         onChange={(e) => setSubject(e.target.value)}
+                        bordered={focus}
                     />
                 </Flex>
             </InputContainer>

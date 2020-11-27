@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import MarkdownIt from 'markdown-it'
-import dynamic from 'next/dynamic'
 import Flex from '../Flex'
 import { Task, updateTask } from '../../taiga-api/tasks'
 import { updateUserstory, UserStory } from '../../taiga-api/userstories'
@@ -9,18 +7,23 @@ import { queryCache } from 'react-query'
 import { useRouter } from 'next/router'
 import { updateTaskCache, updateUserstoryCache } from '../../updateCache'
 import useDebounce from '../../util/useDebounce'
-
-const mdParser = new MarkdownIt(/* Markdown-it options */)
-const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
-    ssr: false,
-})
+import { Input } from 'antd'
 
 const InputContainer = styled.div`
     display: flex;
+    width: 100%;
     margin-top: ${({ theme }) => theme.spacing.small};
     flex-direction: column;
     align-items: flex-end;
     margin-bottom: ${({ theme }) => theme.spacing.small};
+`
+
+const StyledTextArea = styled(Input.TextArea)<{ $focus }>`
+    font-size: 16px;
+    margin-left: 5px;
+    &:hover {
+        background: ${({ $focus }) => ($focus ? '' : '#e9ecef')};
+    }
 `
 
 interface Props {
@@ -34,12 +37,11 @@ export default function EditableDescription({
     initialValue,
     type,
     id,
-    milestone,
     version,
 }: Props) {
     const { projectId } = useRouter().query
     const [description, setDescription] = useState(initialValue)
-
+    const [focus, setFocus] = useState(false)
     const debouncedDescription = useDebounce(description, 500)
 
     useEffect(() => {
@@ -68,29 +70,20 @@ export default function EditableDescription({
             }
         }
     }, [debouncedDescription, type])
-    function handleEditorChange({ text }) {
-        setDescription(text)
-    }
+
     return (
         <InputContainer>
-            <MdEditor
-                shortcuts
-                config={{
-                    shortcuts: true,
-                    view: { menu: true, md: true, html: false },
-                    canView: {
-                        menu: true,
-                        md: true,
-                        html: false,
-                        fullScreen: false,
-                        hideMenu: false,
-                    },
-                }}
-                style={{ height: 200 }}
-                value={description}
-                onChange={handleEditorChange}
-                renderHTML={(text) => mdParser.render(text)}
-            />
+            <StyledTextArea
+                placeholder="Description..."
+                $focus={focus}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                    setDescription(e.target.value)
+                }
+                onFocus={() => setFocus(true)}
+                onBlur={() => setFocus(false)}
+                bordered={focus}
+                autoSize={{ minRows: 4, maxRows: 8 }}
+            ></StyledTextArea>
             <Flex style={{ marginTop: 5 }}>
                 <span>Your changes will automatically be saved.</span>
             </Flex>
