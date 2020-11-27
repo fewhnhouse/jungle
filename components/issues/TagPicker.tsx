@@ -31,7 +31,8 @@ const CustomTagPicker = ({ id, type }: Props) => {
     const { projectId } = useRouter().query
     const { data: tags } = useQuery(
         ['tags', { projectId }],
-        (key, { projectId }) => getTagColors(projectId as string)
+        (key, { projectId }) => getTagColors(projectId as string),
+        { enabled: projectId }
     )
     const tagsArray = tags
         ? Object.keys(tags).map((key) => ({
