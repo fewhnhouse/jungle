@@ -94,7 +94,7 @@ export default function Home({
                     <HeaderContainer>
                         <TitleContainer>
                             <PageTitle
-                                avatarUrl={me?.big_photo ?? 'bmo.png'}
+                                avatarUrl={me?.big_photo ?? 'placeholder.png'}
                                 title={me?.full_name ?? ''}
                                 description={me?.email}
                                 actions={

@@ -90,7 +90,7 @@ const Project = () => {
                                     label: data?.name,
                                 },
                             ]}
-                            avatarUrl={data?.logo_big_url ?? '/bmo.png'}
+                            avatarUrl={data?.logo_big_url ?? '/placeholder.png'}
                             title={data?.name}
                             description={
                                 <Flex direction="column">

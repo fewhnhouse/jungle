@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { queryCache, useQuery } from 'react-query'
 import { Button, Card, Checkbox, Form, Input, message, Skeleton } from 'antd'
 import styled from 'styled-components'
@@ -48,6 +48,7 @@ const AvatarWrapper = styled.div`
 const FileInput = styled.input`
     width: 0;
     height: 0;
+    display: none;
 `
 
 const Description = styled.p`

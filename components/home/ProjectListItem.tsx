@@ -169,7 +169,7 @@ export default function ProjectListItem({
                 </Link>
                 <ItemContainer>
                     <InfoContainer>
-                        <StyledImage src={avatar ?? 'bmo.png'} />
+                        <StyledImage src={avatar ?? '/placeholder.png'} />
                         <TextContainer>
                             <Flex align="center">
                                 <Link href={`/projects/${id}`} passHref>
