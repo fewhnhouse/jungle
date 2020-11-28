@@ -116,6 +116,7 @@ export default function App({ Component, pageProps }: AppProps) {
                     </AppContainer>
                 </ThemeProvider>
             </Hydrate>
+            <ReactQueryDevtools  />
         </ReactQueryCacheProvider>
     )
 }

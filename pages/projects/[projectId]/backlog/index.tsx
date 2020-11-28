@@ -18,7 +18,7 @@ import IssueCreation from '../../../../components/backlog/IssueCreation'
 import { getTasks, Task, updateTask } from '../../../../taiga-api/tasks'
 import { Empty, Skeleton } from 'antd'
 import { getProject, getProjects } from '../../../../taiga-api/projects'
-import { Fragment } from 'react'
+import { Fragment, useCallback, useMemo } from 'react'
 import Head from 'next/head'
 import { dehydrate } from 'react-query/hydration'
 import { GetStaticProps } from 'next'
@@ -128,7 +128,7 @@ export default function Backlog() {
         { enabled: projectId }
     )
 
-    console.log(tasks, userstories)
+    // console.log(tasks, userstories)
 
     const isBacklogLoading = isTasksLoading && isStoriesLoading
 
@@ -139,13 +139,17 @@ export default function Backlog() {
                 closed: false,
                 projectId: projectId as string,
             })
-        }
+        },
+        { enabled: projectId }
     )
 
-    const backlogData = [
-        ...userstories?.filter((story) => story.milestone === null),
-        ...tasks?.filter((task) => task.milestone === null),
-    ]
+    const backlogData = useMemo(
+        () => [
+            ...userstories?.filter((story) => story.milestone === null),
+            ...tasks?.filter((task) => task.milestone === null),
+        ],
+        [userstories, tasks]
+    )
 
     function onDragStart() {
         // Add a little vibration if the browser supports it.
@@ -181,13 +185,13 @@ export default function Backlog() {
         const destinationId =
             destination.droppableId === 'backlog'
                 ? null
-                : destination.droppableId
+                : parseInt(destination.droppableId, 10)
 
         if (isStory) {
             queryCache.setQueryData(
                 ['userstories', { projectId }],
                 (prevData: UserStory[]) =>
-                    prevData.map((userstory) =>
+                    prevData?.map((userstory) =>
                         userstory.id.toString() === actualDraggableId
                             ? { ...userstory, milestone: destinationId }
                             : userstory
@@ -197,33 +201,45 @@ export default function Backlog() {
             queryCache.setQueryData(
                 ['tasks', { projectId }],
                 (prevData: Task[]) =>
-                    prevData.map((userstory) =>
-                        userstory.id.toString() === actualDraggableId
-                            ? { ...userstory, milestone: destinationId }
-                            : userstory
+                    prevData?.map((task) =>
+                        task.id.toString() === actualDraggableId
+                            ? { ...task, milestone: destinationId }
+                            : task
                     )
             )
         }
 
-        const milestone =
-            destination.droppableId === 'backlog'
-                ? null
-                : parseInt(destination.droppableId, 10)
         const order = destination.index
         const { id: issueId, version } = currentIssue
+
         if (isStory) {
-            await updateUserstory(issueId, {
-                milestone,
+            const updatedStory = await updateUserstory(issueId, {
+                milestone: destinationId,
                 sprint_order: order,
                 version,
             })
+            queryCache.setQueryData(
+                ['userstories', { projectId }],
+                (prevData: UserStory[]) =>
+                    prevData?.map((userstory) =>
+                        userstory.id === updatedStory.id
+                            ? updatedStory
+                            : userstory
+                    )
+            )
         } else {
-            await updateTask(issueId, { milestone, version })
-        }
-        if (isStory) {
-            queryCache.invalidateQueries(['userstories', { projectId }])
-        } else {
-            queryCache.invalidateQueries(['tasks', { projectId }])
+            const updatedTask = await updateTask(issueId, {
+                milestone: destinationId,
+                task_order: order,
+                version,
+            })
+            queryCache.setQueryData(
+                ['tasks', { projectId }],
+                (prevData: Task[]) =>
+                    prevData?.map((task) =>
+                        task.id === updatedTask.id ? updatedTask : task
+                    )
+            )
         }
     }
 
