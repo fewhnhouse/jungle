@@ -21,21 +21,17 @@ const Container = styled(Flex)`
     }
 `
 
-export default function Projects({ userId }: { userId?: string }) {
-    const { data, error } = useQuery('projects', async () => {
-        return getProjects({ member: userId })
-    })
-
-    const isMax = data?.length >= 6
-
-    if (error) {
-        localStorage.removeItem('user')
-    }
+export default function Projects({
+    projects = [],
+}: {
+    projects?: MultiProjectInterface[]
+}) {
+    const isMax = projects?.length >= 6
 
     return (
         <>
             <Container direction="column" align="center">
-                {data
+                {projects
                     ?.sort(
                         (a, b) =>
                             new Date(b.modified_date).getTime() -

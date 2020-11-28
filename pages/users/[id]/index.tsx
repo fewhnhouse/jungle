@@ -18,6 +18,7 @@ import RecentTasks from '../../../components/your-work/LimitedYourWork'
 import { recentTaskFilter } from '../../../util/recentTaskFilter'
 import Head from 'next/head'
 import { dehydrate } from 'react-query/hydration'
+import { getProjects } from '../../../taiga-api/projects'
 
 const Container = styled.div`
     padding: ${({ theme }) => `${theme.spacing.huge} ${theme.spacing.crazy}`};
@@ -73,8 +74,9 @@ export const getStaticProps: GetStaticProps = async (context) => {
         await queryCache.prefetchQuery('user', () =>
             getUser(context.params.id as string)
         )
-        await queryCache.prefetchQuery('projects', () =>
-            getProjects({ member: context.params.id as string })
+        await queryCache.prefetchQuery(
+            ['projects', { userId: context.params.id }],
+            () => getProjects({ member: context.params.id as string })
         )
     } catch (e) {
         console.error(e)
@@ -97,12 +99,18 @@ export async function getStaticPaths() {
 }
 
 export default function Home() {
+    const { id } = useRouter().query
     const [isModalOpen, setIsModalOpen] = useState(false)
     const toggleModal = () => {
         setIsModalOpen((open) => !open)
     }
 
-    const { id } = useRouter().query
+    const { data: projects } = useQuery(
+        ['projects', { userId: id }],
+        async (key, { userId }) => {
+            return getProjects({ member: userId })
+        }
+    )
 
     const { data: user } = useQuery('user', () => getUser(id.toString()))
 
@@ -158,7 +166,7 @@ export default function Home() {
             </PageHeader>
             <PageBody>
                 <Container>
-                    <Projects userId={user?.id} />
+                    <Projects projects={projects} />
                     <InnerContainer>
                         <LimitedActivity
                             title="Your activity"

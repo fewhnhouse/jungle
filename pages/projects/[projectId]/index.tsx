@@ -136,20 +136,26 @@ const Project = () => {
                                     <p>{data?.description}</p>
                                     <Flex>
                                         {data?.members.map((member) => (
-                                            <StyledAvatar
-                                                size="large"
+                                            <Link
                                                 key={member.id}
-                                                src={member.photo}
+                                                href={`/users/${member.id}`}
+                                                passHref
                                             >
-                                                {member.full_name
-                                                    .split(' ')
-                                                    .reduce(
-                                                        (prev, curr) =>
-                                                            prev +
-                                                            curr.charAt(0),
-                                                        ''
-                                                    )}
-                                            </StyledAvatar>
+                                                <StyledAvatar
+                                                    size="large"
+                                                    key={member.id}
+                                                    src={member.photo}
+                                                >
+                                                    {member.full_name
+                                                        .split(' ')
+                                                        .reduce(
+                                                            (prev, curr) =>
+                                                                prev +
+                                                                curr.charAt(0),
+                                                            ''
+                                                        )}
+                                                </StyledAvatar>
+                                            </Link>
                                         ))}
                                     </Flex>
                                 </Flex>

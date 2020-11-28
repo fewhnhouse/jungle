@@ -80,13 +80,15 @@ export const getStaticProps: GetStaticProps = async (context) => {
     }
 }
 
-export default function Home({
-    publicProjects,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function Home() {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const toggleModal = () => {
         setIsModalOpen((open) => !open)
     }
+
+    const { data: projects, error } = useQuery('projects', async () => {
+        return getProjects()
+    })
 
     const { data: me } = useQuery('me', () => getMe())
 
@@ -142,7 +144,7 @@ export default function Home({
             </PageHeader>
             <PageBody>
                 <Container>
-                    <Projects publicProjects={publicProjects} />
+                    <Projects projects={projects} />
                     <InnerContainer>
                         <LimitedActivity
                             limit={5}
