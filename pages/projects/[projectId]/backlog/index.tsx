@@ -145,8 +145,10 @@ export default function Backlog() {
 
     const backlogData = useMemo(
         () => [
-            ...userstories?.filter((story) => story.milestone === null),
-            ...tasks?.filter((task) => task.milestone === null),
+            ...(userstories
+                ? userstories?.filter((story) => story.milestone === null)
+                : []),
+            ...(tasks ? tasks?.filter((task) => task.milestone === null) : []),
         ],
         [userstories, tasks]
     )
