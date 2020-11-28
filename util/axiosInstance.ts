@@ -10,10 +10,14 @@ const publicInstance = axios.create({
 
 authInstance.interceptors.request.use(
     function (config) {
-        const token = localStorage.getItem('auth-token')
-        config.headers.Authorization = token && `Bearer ${token}`
-        // Do something before request is sent
-        return { ...config }
+        if (typeof window !== 'undefined') {
+            const token = localStorage.getItem('auth-token')
+            config.headers.Authorization = token && `Bearer ${token}`
+            // Do something before request is sent
+            return { ...config }
+        } else {
+            return config
+        }
     },
     function (error) {
         // Do something with request error
@@ -29,9 +33,10 @@ authInstance.interceptors.response.use(
         return response
     },
     function (error) {
-        if (error.response.status === 401) {
+        if (error?.response?.status === 401) {
             localStorage.clear()
         }
+        console.error(error)
         // Any status codes that falls outside the range of 2xx cause this function to trigger
         // Do something with response error
         return Promise.reject(error)

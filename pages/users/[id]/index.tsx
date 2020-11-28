@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import Projects from '../../../components/home/Projects'
 import { useState } from 'react'
 import ProjectCreationModal from '../../../components/home/ProjectCreationModal'
-import { getPublicUser, getUser, getUsers } from '../../../taiga-api/users'
+import { getUser, getUsers } from '../../../taiga-api/users'
 import PageTitle from '../../../components/PageTitle'
 import { PageBody, PageHeader } from '../../../components/Layout'
 import { QueryCache, useQuery } from 'react-query'
@@ -11,11 +11,7 @@ import { SettingOutlined } from '@ant-design/icons'
 import Link from 'next/link'
 import { ActionContainer } from '../../../components/project/Actions'
 import LimitedActivity from '../../../components/activity/LimitedActivity'
-import {
-    getPublicUserTimeline,
-    getUserTimeline,
-    Timeline,
-} from '../../../taiga-api/timelines'
+import { getUserTimeline, Timeline } from '../../../taiga-api/timelines'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { useRouter } from 'next/router'
 import RecentTasks from '../../../components/your-work/LimitedYourWork'
@@ -70,13 +66,16 @@ const TitleContainer = styled.div`
 
 export const getStaticProps: GetStaticProps = async (context) => {
     const queryCache = new QueryCache()
-
-    await queryCache.prefetchQuery('timeline', () =>
-        getPublicUserTimeline(context.params.id as string)
-    )
-    await queryCache.prefetchQuery('user', () =>
-        getPublicUser(context.params.id as string)
-    )
+    try {
+        await queryCache.prefetchQuery('timeline', () =>
+            getUserTimeline(parseInt(context.params.id as string, 10))
+        )
+        await queryCache.prefetchQuery('user', () =>
+            getUser(context.params.id as string)
+        )
+    } catch (e) {
+        console.error(e)
+    }
 
     return {
         props: {
@@ -93,6 +92,7 @@ export async function getStaticPaths() {
         fallback: true, // See the "fallback" section below
     }
 }
+
 export default function Home({
     publicProjects,
     publicUserTimeline,

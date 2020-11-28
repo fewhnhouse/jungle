@@ -113,12 +113,6 @@ export const getProjects = () => {
         .then((res) => res.data)
 }
 
-export const getPublicProjects = () => {
-    return publicInstance
-        .get<MultiProjectInterface[]>(`/projects`)
-        .then((res) => res.data)
-}
-
 export const getProject = (id: string) => {
     return authInstance
         .get<SingleProjectInterface>(`/projects/${id}`)

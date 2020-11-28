@@ -108,19 +108,6 @@ const TaskPage = () => {
         queryCache.invalidateQueries(['backlog', { projectId }])
         queryCache.invalidateQueries(['milestones', { projectId }])
     }
-    const menu = (
-        <Menu>
-            <Menu.Item onClick={handleConvert} key="1" icon={<BookOutlined />}>
-                Convert to Userstory
-            </Menu.Item>
-            <Menu.Item key="2" icon={<UserOutlined />}>
-                Change Parent
-            </Menu.Item>
-            <Menu.Item onClick={handleDelete} key="3" icon={<DeleteOutlined />}>
-                Delete Task
-            </Menu.Item>
-        </Menu>
-    )
 
     const statusData =
         taskFilters?.statuses.map((status) => ({
@@ -202,13 +189,20 @@ const TaskPage = () => {
                                 <BtnContainer
                                     direction={isMobile ? 'column' : 'row'}
                                 >
-                                    <StyledBtn icon={<BookOutlined />}>
+                                    <StyledBtn
+                                        onClick={handleConvert}
+                                        icon={<BookOutlined />}
+                                    >
                                         Convert to Userstory
                                     </StyledBtn>
                                     <StyledBtn icon={<UserOutlined />}>
                                         Change Parent
                                     </StyledBtn>
-                                    <StyledBtn danger icon={<DeleteOutlined />}>
+                                    <StyledBtn
+                                        onClick={handleDelete}
+                                        danger
+                                        icon={<DeleteOutlined />}
+                                    >
                                         Delete Task
                                     </StyledBtn>
                                 </BtnContainer>

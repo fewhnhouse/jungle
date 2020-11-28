@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { PageBody, PageHeader } from '../../../components/Layout'
 import PageTitle from '../../../components/PageTitle'
-import { useQuery } from 'react-query'
-import { getProject } from '../../../taiga-api/projects'
+import { QueryCache, useQuery } from 'react-query'
+import { getProject, getProjects } from '../../../taiga-api/projects'
 import { getProjectTimeline, Timeline } from '../../../taiga-api/timelines'
 import Flex from '../../../components/Flex'
 import { Avatar, Button } from 'antd'
@@ -16,6 +16,8 @@ import useMedia from 'use-media'
 import { recentTaskFilter } from '../../../util/recentTaskFilter'
 import LimitedYourWork from '../../../components/your-work/LimitedYourWork'
 import Head from 'next/head'
+import { GetStaticProps } from 'next'
+import { dehydrate } from 'react-query/hydration'
 
 const StyledFlex = styled(Flex)`
     margin-top: 20px;
@@ -55,6 +57,34 @@ const StyledAvatar = styled(Avatar)`
         box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.3);
     }
 `
+
+export async function getStaticPaths() {
+    const projects = await getProjects()
+    return {
+        paths: projects
+            .filter((project) => !project.is_private)
+            .map((project) => ({
+                params: { projectId: project.id.toString() },
+            })),
+        fallback: true,
+    }
+}
+
+export const getStaticProps: GetStaticProps = async (context) => {
+    const queryCache = new QueryCache()
+
+    await queryCache.prefetchQuery(
+        ['project', { projectId: context.params.projectId as string }],
+        (key, { projectId }) => getProject(projectId as string)
+    )
+
+    return {
+        props: {
+            dehydratedState: dehydrate(queryCache),
+        },
+        revalidate: 10,
+    }
+}
 
 const Project = () => {
     const router = useRouter()

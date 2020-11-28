@@ -176,6 +176,7 @@ const UserstoryPage = () => {
                                         >
                                             <StyledBtn
                                                 danger
+                                                onClick={handleDelete}
                                                 icon={<DeleteOutlined />}
                                             >
                                                 Delete Userstory

@@ -10,7 +10,7 @@ import 'react-markdown-editor-lite/lib/index.css'
 import { ReactQueryDevtools } from 'react-query-devtools'
 import AchievementWrapper from '../util/AchievementWrapper'
 import { Hydrate } from 'react-query/hydration'
-import { ReactQueryCacheProvider } from 'react-query'
+import { QueryCache, ReactQueryCacheProvider } from 'react-query'
 
 export interface Theme {
     colors: {

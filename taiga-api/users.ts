@@ -33,10 +33,6 @@ export const getUsers = () => {
     return publicInstance.get<User[]>(`/users`).then((res) => res.data)
 }
 
-export const getPublicUser = (id: string) => {
-    return publicInstance.get<User>(`/users/${id}`).then((res) => res.data)
-}
-
 export const getUser = (id: string) => {
     return authInstance.get<User>(`/users/${id}`).then((res) => res.data)
 }

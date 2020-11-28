@@ -81,12 +81,6 @@ export const getUserTimeline = (userId: number) => {
         .then((res) => res.data)
 }
 
-export const getPublicUserTimeline = (userId: string) => {
-    return publicInstance
-        .get<Timeline[]>(`timeline/user/${userId}`)
-        .then((res) => res.data)
-}
-
 export const getProfileTimeline = (userId: number) => {
     return authInstance
         .get<Timeline[]>(`/timeline/profile/${userId}`)
@@ -98,8 +92,3 @@ export const getProjectTimeline = (projectId: string) => {
         .then((res) => res.data)
 }
 
-export const getPublicProjectTimeline = (projectId: string) => {
-    return publicInstance
-        .get<Timeline[]>(`timeline/project/${projectId}`)
-        .then((res) => res.data)
-}

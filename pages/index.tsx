@@ -13,7 +13,7 @@ import { ActionContainer } from '../components/project/Actions'
 import LimitedActivity from '../components/activity/LimitedActivity'
 import { getUserTimeline, Timeline } from '../taiga-api/timelines'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
-import { getPublicProjects } from '../taiga-api/projects'
+import { getProjects } from '../taiga-api/projects'
 import { recentTaskFilter } from '../util/recentTaskFilter'
 import LimitedYourWork from '../components/your-work/LimitedYourWork'
 import Head from 'next/head'
@@ -70,7 +70,7 @@ const TitleContainer = styled.div`
 export const getStaticProps: GetStaticProps = async (context) => {
     const queryCache = new QueryCache()
 
-    await queryCache.prefetchQuery('projects', () => getPublicProjects())
+    await queryCache.prefetchQuery('projects', () => getProjects())
 
     return {
         props: {
