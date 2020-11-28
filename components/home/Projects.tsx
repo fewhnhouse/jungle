@@ -1,7 +1,11 @@
 import ProjectListItem from './ProjectListItem'
 import styled from 'styled-components'
 import { useQuery } from 'react-query'
-import { getProjects, MultiProjectInterface, Project } from '../../taiga-api/projects'
+import {
+    getProjects,
+    MultiProjectInterface,
+    Project,
+} from '../../taiga-api/projects'
 import Link from 'next/link'
 import Flex from '../Flex'
 
@@ -16,12 +20,10 @@ const Container = styled(Flex)`
         position: inherit;
     }
 `
-interface Props {
-    publicProjects: MultiProjectInterface[]
-}
-export default function Projects({ publicProjects }: Props) {
-    const { data = publicProjects, error } = useQuery('projects', async () => {
-        return getProjects()
+
+export default function Projects({ userId }: { userId?: string }) {
+    const { data, error } = useQuery('projects', async () => {
+        return getProjects({ member: userId })
     })
 
     const isMax = data?.length >= 6

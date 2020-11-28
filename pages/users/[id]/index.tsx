@@ -73,6 +73,9 @@ export const getStaticProps: GetStaticProps = async (context) => {
         await queryCache.prefetchQuery('user', () =>
             getUser(context.params.id as string)
         )
+        await queryCache.prefetchQuery('projects', () =>
+            getProjects({ member: context.params.id as string })
+        )
     } catch (e) {
         console.error(e)
     }
@@ -93,11 +96,7 @@ export async function getStaticPaths() {
     }
 }
 
-export default function Home({
-    publicProjects,
-    publicUserTimeline,
-    publicUser,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function Home() {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const toggleModal = () => {
         setIsModalOpen((open) => !open)
@@ -105,11 +104,9 @@ export default function Home({
 
     const { id } = useRouter().query
 
-    const { data: user = publicUser } = useQuery('user', () =>
-        getUser(id.toString())
-    )
+    const { data: user } = useQuery('user', () => getUser(id.toString()))
 
-    const { data: timeline = publicUserTimeline, isLoading } = useQuery(
+    const { data: timeline, isLoading } = useQuery(
         ['timeline', { id }],
         (key, { id }) => getUserTimeline(id),
         { enabled: !!id }
@@ -161,7 +158,7 @@ export default function Home({
             </PageHeader>
             <PageBody>
                 <Container>
-                    <Projects publicProjects={publicProjects} />
+                    <Projects userId={user?.id} />
                     <InnerContainer>
                         <LimitedActivity
                             title="Your activity"
