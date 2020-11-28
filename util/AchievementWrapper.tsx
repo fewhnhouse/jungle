@@ -217,9 +217,6 @@ const AchievementWrapper = ({ children }: Props) => {
             achievements.forEach((achievement, index) => {
                 const prevAchievement = prevAchievements[index]
                 if (prevAchievement.score >= 0) {
-                    if (achievement.score > prevAchievement.score) {
-                        console.log(achievement.title, achievement.score, prevAchievement.score)
-                    }
                     const oldLevel = getLevel(
                         prevAchievement.levelRange,
                         prevAchievement.score

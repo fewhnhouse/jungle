@@ -158,7 +158,6 @@ const IssueCreationModal = () => {
                                 })
                             }}
                             beforeUpload={(file) => {
-                                console.log(file)
                                 setFileList((fileList) => [...fileList, file])
                                 return false
                             }}

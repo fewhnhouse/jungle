@@ -83,7 +83,6 @@ const SubtaskList = ({ id }: Props) => {
 
     const handleFinish = (values: Store) => {
         form.validateFields().then(() => {
-            console.log(values)
             form.resetFields()
             createTask({
                 assigned_to: null,

@@ -128,6 +128,8 @@ export default function Backlog() {
         { enabled: projectId }
     )
 
+    console.log(tasks, userstories)
+
     const isBacklogLoading = isTasksLoading && isStoriesLoading
 
     const { data: milestones = [], isLoading: isMilestonesLoading } = useQuery(

@@ -12,7 +12,6 @@ import { useRouter } from 'next/router'
 import { memo } from 'react'
 import { updateUserstory, UserStory } from '../../taiga-api/userstories'
 import { queryCache } from 'react-query'
-import { Milestone } from '../../taiga-api/milestones'
 import { ScrollSyncPane } from 'react-scroll-sync'
 
 const Container = styled.div`
@@ -73,31 +72,28 @@ const Board = ({
             (story) => story.id.toString() === actualDraggableId
         )
         queryCache.setQueryData(
-            ['milestones', { projectId }],
-            (prevData: Milestone[]) =>
-                prevData?.map((m) =>
-                    m.id === story.milestone
+            ['userstories', { projectId }],
+            (prevData: UserStory[]) =>
+                prevData?.map((us) =>
+                    us.id === story.id
                         ? {
-                              ...m,
-                              user_stories: m.user_stories.map((s) =>
-                                  s.id === story.id
-                                      ? {
-                                            ...story,
-                                            status: parseInt(
-                                                destination.droppableId,
-                                                10
-                                            ),
-                                        }
-                                      : s
-                              ),
+                              ...story,
+                              status: parseInt(destination.droppableId, 10),
                           }
-                        : m
-                ) ?? []
+                        : us
+                )
         )
         updateUserstory(story.id, {
             status: destination.droppableId,
             version: story.version,
-        }).then(() => {
+        }).then((updatedStory) => {
+            queryCache.setQueryData(
+                ['userstories', { projectId }],
+                (prevData: UserStory[]) =>
+                    prevData?.map((story) =>
+                        story.id === updatedStory.id ? updatedStory : story
+                    )
+            )
             queryCache.invalidateQueries(['milestones', { projectId }])
         })
     }
