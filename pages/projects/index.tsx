@@ -1,6 +1,6 @@
 import { PageBody, PageHeader } from '../../components/Layout'
 import PageTitle from '../../components/PageTitle'
-import { useQuery } from 'react-query'
+import { QueryCache, useQuery } from 'react-query'
 import { getProjects } from '../../taiga-api/projects'
 import ProjectListItem from '../../components/home/ProjectListItem'
 import Flex from '../../components/Flex'
@@ -8,15 +8,27 @@ import { Button, Skeleton } from 'antd'
 import ProjectCreationModal from '../../components/home/ProjectCreationModal'
 import { useState } from 'react'
 import Head from 'next/head'
+import { GetStaticProps } from 'next'
+import { dehydrate } from 'react-query/hydration'
+
+export const getStaticProps: GetStaticProps = async (context) => {
+    const queryCache = new QueryCache()
+
+    await queryCache.prefetchQuery(['projects'], () => getProjects())
+
+    return {
+        props: {
+            dehydratedState: dehydrate(queryCache),
+        },
+        revalidate: 10,
+    }
+}
 
 const Projects = () => {
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const { data, isLoading, error } = useQuery('projects', () => {
+    const { data, isLoading } = useQuery('projects', () => {
         return getProjects()
     })
-    if (error) {
-        localStorage.removeItem('user')
-    }
 
     const toggleModal = () => setIsModalOpen((open) => !open)
     return (
