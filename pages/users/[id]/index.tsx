@@ -11,11 +11,9 @@ import { SettingOutlined } from '@ant-design/icons'
 import Link from 'next/link'
 import { ActionContainer } from '../../../components/project/Actions'
 import LimitedActivity from '../../../components/activity/LimitedActivity'
-import { getUserTimeline, Timeline } from '../../../taiga-api/timelines'
-import { GetStaticProps, InferGetStaticPropsType } from 'next'
+import { getUserTimeline } from '../../../taiga-api/timelines'
+import { GetStaticProps } from 'next'
 import { useRouter } from 'next/router'
-import RecentTasks from '../../../components/your-work/LimitedYourWork'
-import { recentTaskFilter } from '../../../util/recentTaskFilter'
 import Head from 'next/head'
 import { dehydrate } from 'react-query/hydration'
 import { getProjects } from '../../../taiga-api/projects'
@@ -71,8 +69,9 @@ export const getStaticProps: GetStaticProps = async (context) => {
         await queryCache.prefetchQuery('timeline', () =>
             getUserTimeline(parseInt(context.params.id as string, 10))
         )
-        await queryCache.prefetchQuery('user', () =>
-            getUser(context.params.id as string)
+        await queryCache.prefetchQuery(
+            ['user', { userId: context.params.id }],
+            (_, { userId }) => getUser(userId as string)
         )
         await queryCache.prefetchQuery(
             ['projects', { userId: context.params.id }],
@@ -112,15 +111,15 @@ export default function Home() {
         }
     )
 
-    const { data: user } = useQuery('user', () => getUser(id.toString()))
+    const { data: user } = useQuery(['user', { userId: id }], (_, { userId }) =>
+        getUser(userId as string)
+    )
 
     const { data: timeline, isLoading } = useQuery(
         ['timeline', { id }],
         (key, { id }) => getUserTimeline(id),
         { enabled: !!id }
     )
-
-    const recentTasks: Timeline[] = recentTaskFilter(timeline)
 
     return (
         <>
@@ -169,15 +168,10 @@ export default function Home() {
                     <Projects projects={projects} />
                     <InnerContainer>
                         <LimitedActivity
-                            title="Your activity"
+                            title="Activity"
                             activity={timeline ?? []}
                             isLoading={isLoading}
-                            href={`/activity`}
-                        />
-                        <RecentTasks
-                            limit={5}
-                            title="Your work"
-                            timeline={recentTasks}
+                            href={`/users/${id}/activity`}
                         />
                     </InnerContainer>
                 </Container>

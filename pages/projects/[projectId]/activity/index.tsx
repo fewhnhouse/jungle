@@ -40,7 +40,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     }
 }
 
-export default function ProejctActivity() {
+export default function ProjectActivity() {
     const { projectId } = useRouter().query
     const { data: project } = useQuery(
         ['project', { projectId }],

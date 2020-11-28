@@ -107,7 +107,7 @@ export interface Project {
     roles: Role[]
 }
 
-export const getProjects = (props: { member?: string; order_by?: string }) => {
+export const getProjects = (props?: { member?: string; order_by?: string }) => {
     const params = new URLSearchParams()
     if (props) {
         const { member, order_by } = props
