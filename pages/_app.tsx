@@ -9,6 +9,8 @@ import 'react-markdown-editor-lite/lib/index.css'
 // import 'antd/dist/antd.css'
 import { ReactQueryDevtools } from 'react-query-devtools'
 import AchievementWrapper from '../util/AchievementWrapper'
+import { Hydrate } from 'react-query/hydration'
+import { ReactQueryCacheProvider } from 'react-query'
 
 export interface Theme {
     colors: {
@@ -92,6 +94,8 @@ const graphqlFetcher = (query) =>
         .then((json) => json.data)
 */
 
+const queryCache = new QueryCache()
+
 export default function App({ Component, pageProps }: AppProps) {
     const { push } = useRouter()
     useEffect(() => {
@@ -101,13 +105,17 @@ export default function App({ Component, pageProps }: AppProps) {
         }
     }, [])
     return (
-        <ThemeProvider theme={theme}>
-            <Header />
-            <AppContainer>
-                <AchievementWrapper>
-                    <Component {...pageProps} />
-                </AchievementWrapper>
-            </AppContainer>
-        </ThemeProvider>
+        <ReactQueryCacheProvider queryCache={queryCache}>
+            <Hydrate state={pageProps.dehydratedState}>
+                <ThemeProvider theme={theme}>
+                    <Header />
+                    <AppContainer>
+                        <AchievementWrapper>
+                            <Component {...pageProps} />
+                        </AchievementWrapper>
+                    </AppContainer>
+                </ThemeProvider>
+            </Hydrate>
+        </ReactQueryCacheProvider>
     )
 }

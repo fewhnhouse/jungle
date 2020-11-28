@@ -17,6 +17,8 @@ import { getPublicProjects } from '../taiga-api/projects'
 import { recentTaskFilter } from '../util/recentTaskFilter'
 import LimitedYourWork from '../components/your-work/LimitedYourWork'
 import Head from 'next/head'
+import { QueryCache } from 'react-query'
+import { dehydrate } from 'react-query/hydration'
 
 const Container = styled.div`
     padding: ${({ theme }) => `${theme.spacing.huge} ${theme.spacing.crazy}`};
@@ -66,8 +68,16 @@ const TitleContainer = styled.div`
 `
 
 export const getStaticProps: GetStaticProps = async (context) => {
-    const publicProjects = await getPublicProjects()
-    return { props: { publicProjects }, revalidate: 1 }
+    const queryCache = new QueryCache()
+
+    await queryCache.prefetchQuery('projects', () => getPublicProjects())
+
+    return {
+        props: {
+            dehydratedState: dehydrate(queryCache),
+        },
+        revalidate: 10,
+    }
 }
 
 export default function Home({

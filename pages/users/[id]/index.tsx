@@ -5,7 +5,7 @@ import ProjectCreationModal from '../../../components/home/ProjectCreationModal'
 import { getPublicUser, getUser, getUsers } from '../../../taiga-api/users'
 import PageTitle from '../../../components/PageTitle'
 import { PageBody, PageHeader } from '../../../components/Layout'
-import { useQuery } from 'react-query'
+import { QueryCache, useQuery } from 'react-query'
 import { Button } from 'antd'
 import { SettingOutlined } from '@ant-design/icons'
 import Link from 'next/link'
@@ -17,11 +17,11 @@ import {
     Timeline,
 } from '../../../taiga-api/timelines'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
-import { getPublicProjects } from '../../../taiga-api/projects'
 import { useRouter } from 'next/router'
 import RecentTasks from '../../../components/your-work/LimitedYourWork'
 import { recentTaskFilter } from '../../../util/recentTaskFilter'
 import Head from 'next/head'
+import { dehydrate } from 'react-query/hydration'
 
 const Container = styled.div`
     padding: ${({ theme }) => `${theme.spacing.huge} ${theme.spacing.crazy}`};
@@ -69,14 +69,20 @@ const TitleContainer = styled.div`
 `
 
 export const getStaticProps: GetStaticProps = async (context) => {
-    const publicProjects = await getPublicProjects()
-    const publicUserTimeline = await getPublicUserTimeline(
-        context.params.id as string
+    const queryCache = new QueryCache()
+
+    await queryCache.prefetchQuery('timeline', () =>
+        getPublicUserTimeline(context.params.id as string)
     )
-    const publicUser = await getPublicUser(context.params.id as string)
+    await queryCache.prefetchQuery('user', () =>
+        getPublicUser(context.params.id as string)
+    )
+
     return {
-        props: { publicProjects, publicUserTimeline, publicUser },
-        revalidate: 1,
+        props: {
+            dehydratedState: dehydrate(queryCache),
+        },
+        revalidate: 5,
     }
 }
 
@@ -99,7 +105,7 @@ export default function Home({
 
     const { id } = useRouter().query
 
-    const { data: user = publicUser } = useQuery('me', () =>
+    const { data: user = publicUser } = useQuery('user', () =>
         getUser(id.toString())
     )
 
