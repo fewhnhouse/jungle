@@ -8,7 +8,7 @@ import {
 } from '../../taiga-api/userstories'
 import { getProject, getTagColors } from '../../taiga-api/projects'
 import { Button, Form, Input, Modal, Select, Tag, Upload } from 'antd'
-import { createTask, createTaskAttachment } from '../../taiga-api/tasks'
+import { createTask, createTaskAttachment, Task } from '../../taiga-api/tasks'
 import { Store } from 'antd/lib/form/interface'
 import { RcFile } from 'antd/lib/upload'
 
@@ -69,7 +69,7 @@ const IssueCreationModal = () => {
             })
             handleUpload(type, newUserstory.id)
             queryCache.setQueryData(
-                ['backlog', { projectId }],
+                ['userstories', { projectId }],
                 (prevData?: UserStory[]) =>
                     prevData ? [...prevData, newUserstory] : [newUserstory]
             )
@@ -82,7 +82,11 @@ const IssueCreationModal = () => {
                 project: projectId,
             })
             handleUpload(type, newTask.id)
-            queryCache.invalidateQueries(['tasks', { projectId }])
+            queryCache.setQueryData(
+                ['tasks', { projectId }],
+                (prevData?: Task[]) =>
+                    prevData ? [...prevData, newTask] : [newTask]
+            )
         }
         handleClose()
     }

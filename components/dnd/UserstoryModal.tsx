@@ -56,17 +56,7 @@ export default function UserstoryModal({ id, open, onClose }: Props) {
             onOk: async () => {
                 await deleteUserstory(id)
                 queryCache.setQueryData(
-                    ['milestones', { projectId }],
-                    (prevData: Milestone[]) =>
-                        prevData?.map((ms) => ({
-                            ...ms,
-                            user_stories: ms.user_stories.filter(
-                                (story) => story.id !== id
-                            ),
-                        }))
-                )
-                queryCache.setQueryData(
-                    ['backlog', { projectId }],
+                    ['userstories', { projectId }],
                     (prevData: UserStory[]) =>
                         prevData?.filter((story) => story.id !== id)
                 )

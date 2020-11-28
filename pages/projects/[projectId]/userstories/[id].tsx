@@ -22,6 +22,7 @@ import {
     deleteUserstory,
     getUserstory,
     updateUserstory,
+    UserStory,
 } from '../../../../taiga-api/userstories'
 
 const { confirm } = Modal
@@ -79,8 +80,11 @@ const UserstoryPage = () => {
             content: 'Some descriptions',
             onOk: async () => {
                 await deleteUserstory(parseInt(id as string, 10))
-                queryCache.invalidateQueries(['milestones', { projectId }])
-                queryCache.invalidateQueries(['backlog', { projectId }])
+                queryCache.setQueryData(
+                    ['userstories', { projectId }],
+                    (prevData: UserStory[]) =>
+                        prevData?.filter((story) => story.id.toString() !== id)
+                )
             },
             onCancel() {
                 console.log('Cancel')
