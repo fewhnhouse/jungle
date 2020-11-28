@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { useQuery } from 'react-query'
+import { QueryCache, useQuery } from 'react-query'
 import { getMilestones } from '../../../../taiga-api/milestones'
 import { getFiltersData, getTasks, Task } from '../../../../taiga-api/tasks'
 import {
@@ -12,12 +12,63 @@ import TaskBoard from '../../../../components/board/TaskBoard'
 import StoryBoard from '../../../../components/board/StoryBoard'
 import { Empty, Skeleton } from 'antd'
 import Flex from '../../../../components/Flex'
-import { getProject } from '../../../../taiga-api/projects'
+import { getProject, getProjects } from '../../../../taiga-api/projects'
 import FilterBoard, { GroupBy } from '../../../../components/board/FilterBoard'
 import Link from 'next/link'
 import useQueryState from '../../../../util/useQueryState'
 import { ScrollSync } from 'react-scroll-sync'
 import Head from 'next/head'
+import { GetStaticProps } from 'next'
+import { dehydrate } from 'react-query/hydration'
+
+export async function getStaticPaths() {
+    const projects = await getProjects()
+    return {
+        paths: projects
+            .filter((project) => !project.is_private)
+            .map((project) => ({
+                params: { projectId: project.id.toString() },
+            })),
+        fallback: true,
+    }
+}
+
+export const getStaticProps: GetStaticProps = async (context) => {
+    const queryCache = new QueryCache()
+
+    const projectId = context.params.projectId as string
+
+    await queryCache.prefetchQuery(
+        ['project', { projectId }],
+        (key, { projectId }) => getProject(projectId)
+    )
+
+    await queryCache.prefetchQuery(
+        ['milestones', { projectId }],
+        (key, { projectId }) =>
+            getMilestones({
+                closed: false,
+                projectId: projectId,
+            })
+    )
+
+    await queryCache.prefetchQuery(
+        ['tasks', { projectId }],
+        (key, { projectId }) => getTasks({ projectId })
+    )
+
+    await queryCache.prefetchQuery(
+        ['userstories', { projectId }],
+        (key, { projectId }) => getUserstories({ projectId })
+    )
+
+    return {
+        props: {
+            dehydratedState: dehydrate(queryCache),
+        },
+        revalidate: 10,
+    }
+}
 
 export default function BoardContainer() {
     const router = useRouter()
