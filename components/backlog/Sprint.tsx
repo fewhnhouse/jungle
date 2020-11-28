@@ -1,13 +1,13 @@
 import CustomCollapse from '../Collapse'
-import { queryCache, useQuery } from 'react-query'
+import { queryCache } from 'react-query'
 import { deleteMilestone, Milestone } from '../../taiga-api/milestones'
 import IssueList from '../dnd/List'
-import { getTasks, Task } from '../../taiga-api/tasks'
+import { Task } from '../../taiga-api/tasks'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import styled from 'styled-components'
 import SprintCompletionModal from './SprintCompletionModal'
-import { Modal, Skeleton } from 'antd'
+import { Skeleton } from 'antd'
 import { useState } from 'react'
 import EditSprint from './EditSprint'
 import { UserStory } from '../../taiga-api/userstories'
@@ -44,11 +44,6 @@ const Sprint = ({
 
     const handleNavigation = () =>
         push(`/projects/${projectId}/board?sprint=${sprint.id}`)
-
-    const sprintTasks = tasks.filter((task) => task.milestone === sprint.id)
-    const sprintStories = userstories.filter(
-        (story) => story.milestone === sprint.id
-    )
 
     const handleEdit = () => setEditOpen(true)
     const handleEditClose = () => setEditOpen(false)
@@ -92,8 +87,9 @@ const Sprint = ({
                     style={{ minHeight: 100 }}
                     listId={sprint.id.toString()}
                     issues={[
-                        ...sprintStories.filter((story) => !story.is_closed),
-                        ...sprintTasks.filter((task) => !task.is_closed),
+                        ...(userstories?.filter((story) => !story.is_closed) ??
+                            []),
+                        ...(tasks?.filter((task) => !task.is_closed) ?? []),
                     ]}
                 />
             </CustomCollapse>

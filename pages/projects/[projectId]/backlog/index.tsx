@@ -10,7 +10,7 @@ import {
     getUserstories,
     updateUserstory,
 } from '../../../../taiga-api/userstories'
-import { getMilestones, Milestone } from '../../../../taiga-api/milestones'
+import { getMilestones } from '../../../../taiga-api/milestones'
 import { PageBody, PageHeader } from '../../../../components/Layout'
 import PageTitle from '../../../../components/PageTitle'
 import IssueList from '../../../../components/dnd/List'
@@ -18,7 +18,7 @@ import IssueCreation from '../../../../components/backlog/IssueCreation'
 import { getTasks, Task, updateTask } from '../../../../taiga-api/tasks'
 import { Empty, Skeleton } from 'antd'
 import { getProject, getProjects } from '../../../../taiga-api/projects'
-import { Fragment, useCallback, useMemo } from 'react'
+import { Fragment, useMemo } from 'react'
 import Head from 'next/head'
 import { dehydrate } from 'react-query/hydration'
 import { GetStaticProps } from 'next'
@@ -182,6 +182,8 @@ export default function Backlog() {
                 issue.id.toString() === actualDraggableId
         )
 
+        console.log(currentIssue, isStory)
+
         const destinationId =
             destination.droppableId === 'backlog'
                 ? null
@@ -190,12 +192,14 @@ export default function Backlog() {
         if (isStory) {
             queryCache.setQueryData(
                 ['userstories', { projectId }],
-                (prevData: UserStory[]) =>
-                    prevData?.map((userstory) =>
+                (prevData: UserStory[]) => {
+                    console.log(prevData)
+                    return prevData?.map((userstory) =>
                         userstory.id.toString() === actualDraggableId
                             ? { ...userstory, milestone: destinationId }
                             : userstory
                     )
+                }
             )
         } else {
             queryCache.setQueryData(
@@ -288,10 +292,16 @@ export default function Backlog() {
                                             .map((sprint) => (
                                                 <Fragment key={sprint.id}>
                                                     <Sprint
-                                                        userstories={
-                                                            userstories
-                                                        }
-                                                        tasks={tasks}
+                                                        userstories={userstories?.filter(
+                                                            (story) =>
+                                                                story.milestone ===
+                                                                sprint.id
+                                                        )}
+                                                        tasks={tasks.filter(
+                                                            (task) =>
+                                                                task.milestone ===
+                                                                sprint.id
+                                                        )}
                                                         isLoading={
                                                             isMilestonesLoading &&
                                                             isStoriesLoading &&
