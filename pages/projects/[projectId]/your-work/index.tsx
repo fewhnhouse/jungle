@@ -1,10 +1,45 @@
+import { GetStaticProps } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { useQuery } from 'react-query'
+import { QueryCache, useQuery } from 'react-query'
+import { dehydrate } from 'react-query/hydration'
 import YourWork from '../../../../components/your-work/YourWork'
-import { getProject } from '../../../../taiga-api/projects'
+import { getProject, getProjects } from '../../../../taiga-api/projects'
 import { getProjectTimeline, Timeline } from '../../../../taiga-api/timelines'
 import { recentTaskFilter } from '../../../../util/recentTaskFilter'
+
+export async function getStaticPaths() {
+    const projects = await getProjects()
+    return {
+        paths: projects
+            .filter((project) => !project.is_private)
+            .map((project) => ({
+                params: { projectId: project.id.toString() },
+            })),
+        fallback: true,
+    }
+}
+
+export const getStaticProps: GetStaticProps = async (context) => {
+    const queryCache = new QueryCache()
+
+    await queryCache.prefetchQuery(
+        ['project', { projectId: context.params.projectId as string }],
+        (key, { projectId }) => getProject(projectId as string)
+    )
+
+    await queryCache.prefetchQuery(
+        ['timeline', { projectId: context.params.projectId as string }],
+        (key, { projectId }) => getProjectTimeline(projectId as string)
+    )
+
+    return {
+        props: {
+            dehydratedState: dehydrate(queryCache),
+        },
+        revalidate: 10,
+    }
+}
 
 export default function ProjectWork() {
     const { projectId } = useRouter().query
