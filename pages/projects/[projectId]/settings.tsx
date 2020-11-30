@@ -8,6 +8,7 @@ import Settings from '../../../components/Settings'
 import { getProject } from '../../../taiga-api/projects'
 import styled from 'styled-components'
 import Head from 'next/head'
+import Statuses from '../../../components/project-settings/Statuses'
 
 const HeaderContainer = styled.div`
     margin: auto;
@@ -28,7 +29,7 @@ export default function ProjectSettings() {
 
     const menuItems = [
         'Project Details',
-        'Modules',
+        'Statuses',
         'Default Values',
         'Attributes',
         'Members',
@@ -60,6 +61,7 @@ export default function ProjectSettings() {
                     menuIndex={menuItemIndex}
                 >
                     {menuItemIndex === 0 && <ProjectDetails />}
+                    {menuItemIndex === 1 && <Statuses />}
                 </Settings>
             </PageBody>
         </div>

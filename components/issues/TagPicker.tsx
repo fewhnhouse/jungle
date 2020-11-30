@@ -22,7 +22,7 @@ interface Props {
 const CustomTagPicker = ({ id, type }: Props) => {
     const { isLoading, data, isError } = useQuery<Task | UserStory>(
         [type, { id }],
-        (key, { id }) => (type === 'task' ? getTask(id) : getUserstory(id))
+        (key, { id }) => (type === 'task' ? getTask(id) : getUserstory(id)),
     )
 
     const mappedSelectedTags = data?.tags?.map((tag) => tag[0]) ?? []

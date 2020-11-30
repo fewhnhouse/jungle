@@ -95,6 +95,15 @@ export interface Task {
     watchers: string[]
 }
 
+export interface TaskStatus {
+    color: string
+    id: number
+    is_closed: boolean
+    name: string
+    order: number
+    project: number
+}
+
 export const getTasks = ({
     projectId,
     status,
@@ -260,4 +269,10 @@ export const promoteToUserstory = (id: number, projectId: string) => {
     return authInstance.post(`/tasks/${id}/promote_to_user_story`, {
         project_id: projectId,
     })
+}
+
+export const getTaskStatuses = (projectId: string) => {
+    return authInstance
+        .get<TaskStatus[]>(`/task-statuses?project=${projectId}`)
+        .then((res) => res.data)
 }

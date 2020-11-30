@@ -6,7 +6,7 @@ import { getUser, getUsers } from '../../../taiga-api/users'
 import PageTitle from '../../../components/PageTitle'
 import { PageBody, PageHeader } from '../../../components/Layout'
 import { QueryCache, useQuery } from 'react-query'
-import { Button } from 'antd'
+import { Button, Divider } from 'antd'
 import { SettingOutlined } from '@ant-design/icons'
 import Link from 'next/link'
 import { ActionContainer } from '../../../components/project/Actions'
@@ -124,7 +124,7 @@ export default function Home() {
     return (
         <>
             <Head>
-                <title>{user?.username}</title>
+                <title>@{user?.username}</title>
                 <meta
                     name="viewport"
                     content="initial-scale=1.0, width=device-width"
@@ -135,9 +135,15 @@ export default function Home() {
                     <HeaderContainer>
                         <TitleContainer>
                             <PageTitle
-                                avatarUrl={user?.big_photo ?? 'placeholder.png'}
+                                avatarUrl={user?.big_photo ?? '/placeholder.png'}
                                 title={user?.full_name ?? ''}
-                                description={user?.email}
+                                description={
+                                    <>
+                                        @{user?.username}
+                                        <Divider type="vertical" />
+                                        {user?.email}
+                                    </>
+                                }
                                 actions={
                                     <>
                                         <ActionContainer>

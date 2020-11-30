@@ -79,6 +79,18 @@ export interface UserStory {
     watchers: number[]
 }
 
+export interface UserstoryStatus {
+    color: string
+    id: number
+    is_archived: boolean
+    is_closed: boolean
+    name: string
+    order: number
+    project: number
+    slug: string
+    wip_limit: null
+}
+
 export const getUserstories = ({
     projectId,
     milestone,
@@ -135,51 +147,71 @@ export const getUserstories = ({
     excludeRole && params.append('exclude_role', excludeRole)
     excludeEpic && params.append('exclude_epic', excludeEpic)
 
-    return authInstance.get<UserStory[]>('/userstories', { params }).then(res => res.data)
+    return authInstance
+        .get<UserStory[]>('/userstories', { params })
+        .then((res) => res.data)
 }
 
 export const createUserstory = (data: any) => {
-    return authInstance.post<UserStory>('/userstories', data).then(res => res.data)
+    return authInstance
+        .post<UserStory>('/userstories', data)
+        .then((res) => res.data)
 }
 
 export const getUserstory = (id: number) => {
-    return authInstance.get<UserStory>(`/userstories/${id}`).then(res => res.data)
+    return authInstance
+        .get<UserStory>(`/userstories/${id}`)
+        .then((res) => res.data)
 }
 
 export const replaceUserstory = (id: number, data: any) => {
-    return authInstance.put<UserStory>(`/userstories/${id}`, data).then(res => res.data)
+    return authInstance
+        .put<UserStory>(`/userstories/${id}`, data)
+        .then((res) => res.data)
 }
 
 export const updateUserstory = (id: number, data: any) => {
-    return authInstance.patch<UserStory>(`/userstories/${id}`, data).then(res => res.data)
+    return authInstance
+        .patch<UserStory>(`/userstories/${id}`, data)
+        .then((res) => res.data)
 }
 
 export const deleteUserstory = (id: number) => {
-    return authInstance.delete<UserStory>(`/userstories/${id}`).then(res => res.data)
+    return authInstance
+        .delete<UserStory>(`/userstories/${id}`)
+        .then((res) => res.data)
 }
 
 export const getFiltersData = (projectId: string) => {
-    return authInstance.get(`/userstories/filters_data?project=${projectId}`).then(res => res.data)
+    return authInstance
+        .get(`/userstories/filters_data?project=${projectId}`)
+        .then((res) => res.data)
 }
 
 export const upvoteUserstory = (id: number) => {
-    return authInstance.post(`/userstories/${id}/upvote`).then(res => res.data)
+    return authInstance
+        .post(`/userstories/${id}/upvote`)
+        .then((res) => res.data)
 }
 
 export const downvoteUserstory = (id: number) => {
-    return authInstance.post(`/userstories/${id}/downvote`).then(res => res.data)
+    return authInstance
+        .post(`/userstories/${id}/downvote`)
+        .then((res) => res.data)
 }
 
 export const voters = (id: number) => {
-    return authInstance.get(`/userstories/${id}/voters`).then(res => res.data)
+    return authInstance.get(`/userstories/${id}/voters`).then((res) => res.data)
 }
 
 export const watchUserstory = (id: number) => {
-    return authInstance.post(`/userstories/${id}/watch`).then(res => res.data)
+    return authInstance.post(`/userstories/${id}/watch`).then((res) => res.data)
 }
 
 export const unwatchUserstory = (id: number) => {
-    return authInstance.post(`/userstories/${id}/unwatch`).then(res => res.data)
+    return authInstance
+        .post(`/userstories/${id}/unwatch`)
+        .then((res) => res.data)
 }
 
 export const getUserstoryWatchers = (id: number) => {
@@ -197,25 +229,43 @@ export const getUserstoryAttachments = ({
     projectId && params.append('project', projectId.toString())
     userstoryId && params.append('object_id', userstoryId.toString())
 
-    return authInstance.get<Attachment[]>(`/userstories/attachments`, { params }).then(res => res.data)
+    return authInstance
+        .get<Attachment[]>(`/userstories/attachments`, { params })
+        .then((res) => res.data)
 }
 
 export const createUserstoryAttachment = (data: any) => {
-    return authInstance.post<Attachment>(`/userstories/attachments`, data).then(res => res.data)
+    return authInstance
+        .post<Attachment>(`/userstories/attachments`, data)
+        .then((res) => res.data)
 }
 
 export const getUserstoryAttachment = (attachmentId: number) => {
-    return authInstance.get<Attachment>(`/userstories/attachments/${attachmentId}`).then(res => res.data)
+    return authInstance
+        .get<Attachment>(`/userstories/attachments/${attachmentId}`)
+        .then((res) => res.data)
 }
 
 export const replaceUserstoryAttachment = (attachmentId: number, data: any) => {
-    return authInstance.put<Attachment>(`/userstories/attachments/${attachmentId}`, data).then(res => res.data)
+    return authInstance
+        .put<Attachment>(`/userstories/attachments/${attachmentId}`, data)
+        .then((res) => res.data)
 }
 
 export const updateUserstoryAttachment = (attachmentId: number, data: any) => {
-    return authInstance.patch<Attachment>(`/userstories/attachments/${attachmentId}`, data).then(res => res.data)
+    return authInstance
+        .patch<Attachment>(`/userstories/attachments/${attachmentId}`, data)
+        .then((res) => res.data)
 }
 
 export const deleteUserstoryAttachment = (attachmentId: number) => {
-    return authInstance.delete<Attachment>(`/userstories/attachments/${attachmentId}`).then(res => res.data)
+    return authInstance
+        .delete<Attachment>(`/userstories/attachments/${attachmentId}`)
+        .then((res) => res.data)
+}
+
+export const getUserstoryStatuses = (projectId: string) => {
+    return authInstance
+        .get<UserstoryStatus[]>(`/userstory-statuses?project=${projectId}`)
+        .then((res) => res.data)
 }
