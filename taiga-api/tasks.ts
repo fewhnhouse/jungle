@@ -276,3 +276,9 @@ export const getTaskStatuses = (projectId: string) => {
         .get<TaskStatus[]>(`/task-statuses?project=${projectId}`)
         .then((res) => res.data)
 }
+
+export const updateTaskStatus = (id: number, data: any) => {
+    return authInstance
+        .patch<TaskStatus>(`/task-statuses/${id}`, data)
+        .then((res) => res.data)
+}

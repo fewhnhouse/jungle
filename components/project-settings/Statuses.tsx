@@ -1,114 +1,204 @@
-import { CheckOutlined, CloseOutlined, DeleteOutlined } from '@ant-design/icons'
-import { Table, Tag, Space, Skeleton, Input, Form, Button } from 'antd'
+/* eslint-disable react/display-name */
+import {
+    ArrowDownOutlined,
+    ArrowUpOutlined,
+    CheckOutlined,
+    CloseOutlined,
+    DeleteOutlined,
+} from '@ant-design/icons'
+import {
+    Table,
+    Tag,
+    Skeleton,
+    Input,
+    Form,
+    Button,
+    Popover,
+    Switch,
+} from 'antd'
 
-const { Column, ColumnGroup } = Table
+const { Column } = Table
 
 import { useRouter } from 'next/router'
-import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { queryCache, useQuery } from 'react-query'
+import { TwitterPicker, ChromePicker } from 'react-color'
 
-import styled from 'styled-components'
-import { getProject } from '../../taiga-api/projects'
-import { getTaskStatuses } from '../../taiga-api/tasks'
+import {
+    getTaskStatuses,
+    TaskStatus,
+    updateTaskStatus,
+} from '../../taiga-api/tasks'
 import { getUserstoryStatuses } from '../../taiga-api/userstories'
-import Flex from '../Flex'
-
-const EditableContext = createContext<any>()
-
-interface Item {
-    key: string
-    name: string
-    age: string
-    address: string
-}
-
-interface EditableRowProps {
-    index: number
-}
-
-const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
-    const [form] = Form.useForm()
-    return (
-        <Form form={form} component={false}>
-            <EditableContext.Provider value={form}>
-                <tr {...props} />
-            </EditableContext.Provider>
-        </Form>
-    )
-}
 
 interface EditableCellProps {
     title: React.ReactNode
-    editable: boolean
-    children: React.ReactNode
     dataIndex: string
-    record: Item
-    handleSave: (record: Item) => void
+    record: TaskStatus
 }
 
-const EditableCell: React.FC<EditableCellProps> = ({
-    title,
-    editable,
-    children,
+interface MoveProps {
+    dataIndex: string
+    record: TaskStatus
+    count: number
+    index: number
+}
+
+const Move: React.FC<MoveProps> = ({
     dataIndex,
     record,
-    handleSave,
+    count,
+    index,
     ...restProps
 }) => {
-    const [editing, setEditing] = useState(false)
-    const inputRef = useRef()
-    const form = useContext(EditableContext)
-
-    useEffect(() => {
-        if (editing) {
-            inputRef?.current?.focus()
-        }
-    }, [editing])
-
-    const toggleEdit = () => {
-        setEditing(!editing)
-        form.setFieldsValue({ [dataIndex]: record[dataIndex] })
-    }
-
-    const save = async (e) => {
+    const [order, setOrder] = useState(record[dataIndex])
+    const handleSave = async (order) => {
         try {
-            const values = await form.validateFields()
-
-            toggleEdit()
-            handleSave({ ...record, ...values })
+            await updateTaskStatus(record.id, {
+                [dataIndex]: order,
+            })
+            queryCache.invalidateQueries('taskStatuses')
         } catch (errInfo) {
             console.log('Save failed:', errInfo)
         }
     }
 
-    let childNode = children
+    useEffect(() => {
+        handleSave(order)
+    }, [order])
 
-    if (editable) {
-        childNode = editing ? (
-            <Form.Item
-                style={{ margin: 0 }}
-                name={dataIndex}
-                rules={[
-                    {
-                        required: true,
-                        message: `${title} is required.`,
-                    },
-                ]}
-            >
-                <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-            </Form.Item>
-        ) : (
-            <div
-                className="editable-cell-value-wrap"
-                style={{ paddingRight: 24 }}
-                onClick={toggleEdit}
-            >
-                {children}
-            </div>
-        )
+    const increment = () => setOrder((order) => order + 1)
+    const decrement = () => setOrder((order) => order - 1)
+
+    return (
+        <td {...restProps}>
+            <Button
+                disabled={index <= 0}
+                onClick={decrement}
+                icon={<ArrowUpOutlined />}
+            />
+            <Button
+                disabled={index >= count - 1}
+                onClick={increment}
+                icon={<ArrowDownOutlined />}
+            />
+        </td>
+    )
+}
+
+const EditableSwitch: React.FC<EditableCellProps> = ({
+    title,
+    dataIndex,
+    record,
+    ...restProps
+}) => {
+    const [closed, setClosed] = useState(record[dataIndex])
+    const handleSave = async () => {
+        try {
+            await updateTaskStatus(record.id, {
+                [dataIndex]: closed,
+            })
+        } catch (errInfo) {
+            console.log('Save failed:', errInfo)
+        }
     }
 
-    return <td {...restProps}>{childNode}</td>
+    useEffect(() => {
+        handleSave()
+    }, [closed])
+
+    return (
+        <td {...restProps}>
+            <Switch
+                checked={closed}
+                onChange={(checked) => setClosed(checked)}
+            />
+        </td>
+    )
+}
+
+const EditableCell: React.FC<EditableCellProps> = ({
+    title,
+    dataIndex,
+    record,
+    ...restProps
+}) => {
+    const [form] = Form.useForm()
+
+    const handleSave = async () => {
+        try {
+            const values = await form.validateFields()
+
+            await updateTaskStatus(record.id, {
+                [dataIndex]: values[dataIndex],
+            })
+        } catch (errInfo) {
+            console.log('Save failed:', errInfo)
+        }
+    }
+
+    return (
+        <td {...restProps}>
+            <Form
+                form={form}
+                onFinish={handleSave}
+                initialValues={{ [dataIndex]: record[dataIndex] }}
+            >
+                <Form.Item
+                    style={{ margin: 0 }}
+                    name={dataIndex}
+                    rules={[
+                        {
+                            required: true,
+                            message: `${title} is required.`,
+                        },
+                    ]}
+                >
+                    <Input
+                        onPressEnter={handleSave}
+                        onBlur={handleSave}
+                        bordered={false}
+                    />
+                </Form.Item>
+            </Form>
+        </td>
+    )
+}
+
+const EditableTag: React.FC<EditableCellProps> = ({
+    dataIndex,
+    record,
+    ...restProps
+}) => {
+    const [form] = Form.useForm()
+    const [color, setColor] = useState(record[dataIndex])
+    const handleSave = async (color: string) => {
+        try {
+            await updateTaskStatus(record.id, { color })
+        } catch (errInfo) {
+            console.log('Save failed:', errInfo)
+        }
+    }
+
+    return (
+        <td {...restProps}>
+            <Popover
+                trigger="click"
+                overlayStyle={{ padding: 0 }}
+                overlayInnerStyle={{ padding: 0 }}
+                content={
+                    <ChromePicker
+                        color={color}
+                        onChangeComplete={(color) => handleSave(color.hex)}
+                        onChange={(color) => setColor(color.hex)}
+                        style={{ boxShadow: 'none' }}
+                    />
+                }
+            >
+                <Tag color={color}>{color}</Tag>
+            </Popover>
+        </td>
+    )
 }
 
 const Statuses = () => {
@@ -133,78 +223,63 @@ const Statuses = () => {
         { enabled: projectId }
     )
 
-    const components = {
-        body: {
-            row: EditableRow,
-            cell: EditableCell,
-        },
-    }
-
-    const columns = [
-        {
-            title: 'Color',
-            dataIndex: 'color',
-            // eslint-disable-next-line react/display-name
-            render: (color: string) => (
-                <Tag color={color} key={color}>
-                    {color}
-                </Tag>
-            ),
-            editable: true,
-        },
-        {
-            title: 'Name',
-            dataIndex: 'name',
-            editable: true,
-        },
-        {
-            title: 'Closed',
-            dataIndex: 'is_closed',
-            // eslint-disable-next-line react/display-name
-            render: (closed: boolean) =>
-                closed ? <CheckOutlined /> : <CloseOutlined />,
-        },
-        {
-            title: 'Action',
-            render: (_, record) => (
-                <Button icon={<DeleteOutlined />} link danger></Button>
-            ),
-        },
-    ]
-
-    const handleSave = () => {
-        console.log('save')
-    }
-
-    const editableColumns = columns.map((col) => {
-        if (!col.editable) {
-            return col
-        }
-        return {
-            ...col,
-            onCell: (record) => ({
-                record,
-                editable: col.editable,
-                dataIndex: col.dataIndex,
-                title: col.title,
-                handleSave,
-            }),
-        }
-    })
-
     return (
         <Skeleton
             loading={taskStatusesIsLoading || userstoryStatusesIsLoading}
             active
         >
             <Table
-                components={components}
-                rowClassName={() => 'editable-row'}
                 bordered
                 dataSource={taskStatuses}
-                columns={editableColumns}
                 pagination={false}
-            />
+                sorter={(a, b) => a.order - b.order}
+            >
+                <Column
+                    title="Color"
+                    dataIndex="color"
+                    render={(color: string, record: any) => (
+                        <EditableTag
+                            dataIndex="color"
+                            title="Color"
+                            record={record}
+                        />
+                    )}
+                />
+                <Column
+                    title="Name"
+                    dataIndex="name"
+                    render={(name: string, record: any) => (
+                        <EditableCell
+                            dataIndex="name"
+                            title="Name"
+                            record={record}
+                        />
+                    )}
+                />
+                <Column
+                    title="Closed"
+                    dataIndex="closed"
+                    render={(closed: boolean, record: any) => (
+                        <EditableSwitch
+                            dataIndex="closed"
+                            title="Closed"
+                            record={record}
+                        />
+                    )}
+                />
+                <Column
+                    title="Move"
+                    dataIndex="order"
+                    render={(order: number, record: any, index) => (
+                        <Move
+                            index={index}
+                            count={taskStatuses?.length}
+                            dataIndex="order"
+                            record={record}
+                        />
+                    )}
+                />
+            </Table>
         </Skeleton>
     )
 }
