@@ -54,10 +54,6 @@ const TaskStatuses = () => {
         }
     }
 
-    useEffect(() => {
-        console.log(taskStatuses)
-    }, [taskStatuses])
-
     return (
         <Skeleton loading={taskStatusesIsLoading} active>
             <h2>Task Statuses</h2>

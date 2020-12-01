@@ -118,8 +118,9 @@ const Board = ({
                                         ref={provided.innerRef}
                                         {...provided.droppableProps}
                                     >
-                                        {columns.map(
-                                            (status, index: number) => (
+                                        {columns
+                                            .sort((a, b) => a.order - b.order)
+                                            .map((status, index: number) => (
                                                 <Column
                                                     hasHeader={hasHeader}
                                                     id={status.id}
@@ -135,8 +136,7 @@ const Board = ({
                                                         withScrollableColumns
                                                     }
                                                 />
-                                            )
-                                        )}
+                                            ))}
                                         {provided.placeholder}
                                     </Container>
                                 )}

@@ -57,10 +57,6 @@ const StoryStatuses = () => {
         }
     }
 
-    useEffect(() => {
-        console.log(userstoryStatuses)
-    }, [userstoryStatuses])
-
     return (
         <Skeleton loading={userstoryStatusesIsLoading} active>
             <h2>Userstory Statuses</h2>
