@@ -1,8 +1,8 @@
 import { Skeleton } from 'antd'
 import { useRouter } from 'next/router'
-import { useQuery } from 'react-query'
+import { queryCache, useQuery } from 'react-query'
 import { getPoints } from '../../../taiga-api/points'
-import { getProject } from '../../../taiga-api/projects'
+import { getProject, updateProject } from '../../../taiga-api/projects'
 import { getTaskStatuses } from '../../../taiga-api/tasks'
 import { getUserstoryStatuses } from '../../../taiga-api/userstories'
 import DefaultValueCard from './DefaultValueCard'
@@ -42,6 +42,17 @@ const DefaultValues = () => {
         { enabled: projectId }
     )
 
+    const handleSubmit = (key: string, dataIndex: string) => (
+        values: unknown
+    ) => {
+        const id = values[dataIndex]
+        const updatedProject = updateProject(projectId as string, { [key]: id })
+        queryCache.setQueryData(
+            ['project', { projectId }],
+            () => updatedProject
+        )
+    }
+
     return (
         <Skeleton
             loading={
@@ -55,10 +66,10 @@ const DefaultValues = () => {
             <DefaultValueCard
                 title="Default Userstory Status"
                 description=""
-                name="name"
+                name="usStatus"
                 submitText="Save"
-                handleSubmit={() => console.log('submit')}
-                initialValues={{ name: '' }}
+                handleSubmit={handleSubmit('default_us_status', 'usStatus')}
+                initialValues={{ usStatus: project.default_us_status }}
                 options={taskStatuses?.map((status) => ({
                     value: status.id,
                     label: status.name,
@@ -67,10 +78,10 @@ const DefaultValues = () => {
             <DefaultValueCard
                 title="Default Task Status"
                 description=""
-                name="name"
+                name="taskStatus"
                 submitText="Save"
-                handleSubmit={() => console.log('submit')}
-                initialValues={{ name: '' }}
+                handleSubmit={handleSubmit('default_task_status', 'taskStatus')}
+                initialValues={{ taskStatus: project.default_task_status }}
                 options={userstoryStatuses?.map((status) => ({
                     value: status.id,
                     label: status.name,
@@ -79,10 +90,10 @@ const DefaultValues = () => {
             <DefaultValueCard
                 title="Default Story Point"
                 description=""
-                name="name"
+                name="points"
                 submitText="Save"
-                handleSubmit={() => console.log('submit')}
-                initialValues={{ name: '' }}
+                handleSubmit={handleSubmit('default_points', 'points')}
+                initialValues={{ points: project.default_points }}
                 options={storyPoints?.map((point) => ({
                     value: point.id,
                     label: point.name,
