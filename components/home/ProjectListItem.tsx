@@ -62,6 +62,8 @@ const ProjectName = styled.a`
 
 const ProjectDescription = styled.span`
     color: #777;
+    min-height: 50px;
+    display: block;
 `
 
 const TextContainer = styled.div`

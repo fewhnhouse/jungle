@@ -30,12 +30,15 @@ export default function ProjectSettings() {
 
     const menuItems = [
         'Project Details',
-        'Statuses',
         'Default Values',
+        'Statuses',
+        'Points',
+        'Custom Fields',
+        'Tags',
         'Attributes',
         'Members',
-        'Permissions',
-        'Integrations',
+        // 'Permissions',
+        // 'Integrations',
     ]
     return (
         <div>
@@ -62,8 +65,8 @@ export default function ProjectSettings() {
                     menuIndex={menuItemIndex}
                 >
                     {menuItemIndex === 0 && <ProjectDetails />}
-                    {menuItemIndex === 1 && <Statuses />}
-                    {menuItemIndex === 2 && <DefaultValues />}
+                    {menuItemIndex === 1 && <DefaultValues />}
+                    {menuItemIndex === 2 && <Statuses />}
                 </Settings>
             </PageBody>
         </div>
