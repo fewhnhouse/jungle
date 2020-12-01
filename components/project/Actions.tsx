@@ -70,9 +70,10 @@ const Actions = ({ project }: { project: Project }) => {
         queryCache.setQueryData(
             ['watchers', { projectId }],
             (prevData: Watcher[]) => {
+                console.log(prevData, isWatcher)
                 if (isWatcher) {
                     return (
-                        prevData?.filter((watcher) => watcher.id === me?.id) ??
+                        prevData?.filter((watcher) => watcher.id !== me?.id) ??
                         []
                     )
                 } else {
@@ -103,7 +104,7 @@ const Actions = ({ project }: { project: Project }) => {
             ['fans', { projectId }],
             (prevData: Watcher[]) => {
                 if (isFan) {
-                    return prevData?.filter((fan) => fan.id === me?.id) ?? []
+                    return prevData?.filter((fan) => fan.id !== me?.id) ?? []
                 } else {
                     const newFan = {
                         id: me?.id,
