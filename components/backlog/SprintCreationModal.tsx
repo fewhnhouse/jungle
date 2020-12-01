@@ -40,10 +40,11 @@ const SprintCreation = () => {
     const handleSubmit = async (values: Store) => {
         const startDate = values.date[0]
         const endDate = values.date[1]
+        console.log(startDate, endDate)
         const newMilestone = await createMilestone({
             name: values.name,
-            estimated_start: startDate._d.toISOString().split('T')[0],
-            estimated_finish: endDate._d.toISOString().split('T')[0],
+            estimated_start: startDate.toISOString().split('T')[0],
+            estimated_finish: endDate.toISOString().split('T')[0],
             project: projectId,
         })
         queryCache.setQueryData(

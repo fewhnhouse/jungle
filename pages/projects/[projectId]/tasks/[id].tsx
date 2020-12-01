@@ -91,8 +91,6 @@ const TaskPage = () => {
                     { projectId, milestone: data?.id },
                 ])
                 queryCache.invalidateQueries(['tasks', { projectId }])
-                queryCache.invalidateQueries(['backlog', { projectId }])
-                queryCache.invalidateQueries(['milestones', { projectId }])
             },
             onCancel() {
                 console.log('Cancel')
@@ -105,9 +103,8 @@ const TaskPage = () => {
             parseInt(id as string, 10),
             projectId as string
         )
+        queryCache.invalidateQueries(['userstories', { projectId }])
         queryCache.invalidateQueries(['tasks', { projectId }])
-        queryCache.invalidateQueries(['backlog', { projectId }])
-        queryCache.invalidateQueries(['milestones', { projectId }])
     }
 
     const statusData =

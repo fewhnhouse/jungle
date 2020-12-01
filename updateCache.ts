@@ -12,19 +12,9 @@ export const updateUserstoryCache = (
 ) => {
     queryCache.setQueryData(['userstory', { id }], () => updatedStory)
     queryCache.setQueryData(
-        ['backlog', { projectId }],
+        ['userstories', { projectId }],
         (prevData: UserStory[]) =>
             prevData?.map((story) => (story.id === id ? updatedStory : story))
-    )
-    queryCache.setQueryData(
-        ['milestones', { projectId }],
-        (prevData: Milestone[]) =>
-            prevData?.map((ms) => ({
-                ...ms,
-                user_stories: ms.user_stories.map((story) =>
-                    story.id === id ? updatedStory : story
-                ),
-            }))
     )
 }
 

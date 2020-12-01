@@ -57,17 +57,7 @@ export default function UserstoryModal({ id, open, onClose }: Props) {
             onOk: async () => {
                 await deleteUserstory(id)
                 queryCache.setQueryData(
-                    ['milestones', { projectId }],
-                    (prevData: Milestone[]) =>
-                        prevData?.map((ms) => ({
-                            ...ms,
-                            user_stories: ms.user_stories.filter(
-                                (story) => story.id !== id
-                            ),
-                        }))
-                )
-                queryCache.setQueryData(
-                    ['backlog', { projectId }],
+                    ['userstories', { projectId }],
                     (prevData: UserStory[]) =>
                         prevData?.filter((story) => story.id !== id)
                 )
@@ -101,7 +91,7 @@ export default function UserstoryModal({ id, open, onClose }: Props) {
             assigned_users: assigneeId ? [assigneeId] : null,
             version: data.version,
         })
-        updateUserstoryCache(updatedStory, id, projectId as string)
+        updateUserstoryCache(updatedStory, id, projectId as string, queryCache)
     }
 
     const updateStatus = async (status: number) => {
@@ -109,7 +99,7 @@ export default function UserstoryModal({ id, open, onClose }: Props) {
             status,
             version: data.version,
         })
-        updateUserstoryCache(updatedStory, id, projectId as string)
+        updateUserstoryCache(updatedStory, id, projectId as string, queryCache)
     }
 
     return (

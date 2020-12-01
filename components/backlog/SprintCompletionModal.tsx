@@ -89,41 +89,33 @@ const SprintCompletionModal = ({ milestoneId }: Props) => {
                 })
             ) ?? []
         )
-        await updateMilestone(milestoneId, {
+        const updatedMilestone = await updateMilestone(milestoneId, {
             closed: true,
         })
         setLoading(false)
-        if (moveId === null) {
-            queryCache.setQueryData(
-                ['backlog', { projectId }],
-                (prevData: UserStory[]) => [...prevData, ...updatedStories]
-            )
-        } else {
-            queryCache.setQueryData(
-                ['milestones', { projectId }],
-                (prevData: Milestone[]) =>
-                    prevData
-                        ?.filter((ms) => ms.id !== milestoneId)
-                        .map((ms) =>
-                            ms.id === moveId
-                                ? {
-                                      ...ms,
-                                      user_stories: [
-                                          ...ms.user_stories,
-                                          updatedStories,
-                                      ],
-                                  }
-                                : ms
-                        )
-            )
-        }
-        queryCache.setQueryData(['tasks', { projectId }], (prevData: Task[]) =>
-            prevData?.map((task) => {
-                const found = updatedTasks.find(
-                    (updated) => updated.id === task.id
+        queryCache.setQueryData(
+            ['userstories', { projectId }],
+            (prevData: UserStory[]) =>
+                prevData.map(
+                    (us) =>
+                        updatedStories.find(
+                            (updatedUs) => updatedUs.id === us.id
+                        ) ?? us
                 )
-                return found ?? task
-            })
+        )
+        queryCache.setQueryData(['tasks', { projectId }], (prevData: Task[]) =>
+            prevData?.map(
+                (task) =>
+                    updatedTasks.find((updated) => updated.id === task.id) ??
+                    task
+            )
+        )
+        queryCache.setQueryData(
+            ['milestones', { projectId }],
+            (prevData: Milestone[]) =>
+                prevData?.map((ms) =>
+                    ms.id === milestoneId ? updatedMilestone : ms
+                )
         )
 
         handleClose()

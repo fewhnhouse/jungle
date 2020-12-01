@@ -80,8 +80,7 @@ export default function TaskModal({ id, open, onClose }: Props) {
     const handleConvert = async () => {
         await promoteToUserstory(id, projectId as string)
         queryCache.invalidateQueries(['tasks', { projectId }])
-        queryCache.invalidateQueries(['backlog', { projectId }])
-        queryCache.invalidateQueries(['milestones', { projectId }])
+        queryCache.invalidateQueries(['userstories', { projectId }])
         onClose()
     }
     const menu = (
@@ -110,7 +109,7 @@ export default function TaskModal({ id, open, onClose }: Props) {
             assigned_users: assigneeId ? [assigneeId] : null,
             version: data.version,
         })
-        updateTaskCache(updatedTask, id, projectId as string)
+        updateTaskCache(updatedTask, id, projectId as string, queryCache)
     }
 
     const updateStatus = async (status: number) => {
@@ -118,7 +117,7 @@ export default function TaskModal({ id, open, onClose }: Props) {
             status,
             version: data.version,
         })
-        updateTaskCache(updatedTask, id, projectId as string)
+        updateTaskCache(updatedTask, id, projectId as string, queryCache)
     }
 
     if (isError) return <div>Error</div>

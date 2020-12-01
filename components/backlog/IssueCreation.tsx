@@ -2,9 +2,9 @@ import { Button, Input, Select } from 'antd'
 import { BookOutlined, PlusOutlined, ProfileOutlined } from '@ant-design/icons'
 import styled from 'styled-components'
 import { useState } from 'react'
-import { createTask } from '../../taiga-api/tasks'
+import { createTask, Task } from '../../taiga-api/tasks'
 import { useRouter } from 'next/router'
-import { createUserstory } from '../../taiga-api/userstories'
+import { createUserstory, UserStory } from '../../taiga-api/userstories'
 import { useQueryCache } from 'react-query'
 
 const StyledUserStoryIcon = styled(BookOutlined)`
@@ -40,16 +40,28 @@ const IssueCreation = ({ milestone }: { milestone: number | null }) => {
         e.preventDefault()
         setSubject('')
         if (issueType === 'task') {
-            await createTask({ subject, milestone, project: projectId })
+            const createdTask = await createTask({
+                subject,
+                milestone,
+                project: projectId,
+            })
+            queryCache.setQueryData(
+                ['tasks', { projectId }],
+                (prevData: Task[]) =>
+                    prevData ? [...prevData, createdTask] : [createdTask]
+            )
         } else if (issueType === 'story') {
-            await createUserstory({ subject, milestone, project: projectId })
+            const createdStory = await createUserstory({
+                subject,
+                milestone,
+                project: projectId,
+            })
+            queryCache.setQueryData(
+                ['userstories', { projectId }],
+                (prevData: UserStory[]) =>
+                    prevData ? [...prevData, createdStory] : [createdStory]
+            )
         }
-        if (!milestone) {
-            queryCache.invalidateQueries(['backlog', { projectId }])
-        } else {
-            queryCache.invalidateQueries(['milestones', { projectId }])
-        }
-        queryCache.invalidateQueries(['tasks', { projectId, milestone }])
     }
 
     return (

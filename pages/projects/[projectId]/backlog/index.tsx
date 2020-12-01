@@ -2,7 +2,7 @@ import { DragDropContext, DropResult } from 'react-beautiful-dnd'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
 import Sprint from '../../../../components/backlog/Sprint'
-import { useQuery, useQueryCache } from 'react-query'
+import { QueryCache, useQuery, useQueryCache } from 'react-query'
 import SprintCreation from '../../../../components/backlog/SprintCreationModal'
 import IssueCreationModal from '../../../../components/backlog/IssueCreationModal'
 import {
@@ -10,16 +10,18 @@ import {
     getUserstories,
     updateUserstory,
 } from '../../../../taiga-api/userstories'
-import { getMilestones, Milestone } from '../../../../taiga-api/milestones'
+import { getMilestones } from '../../../../taiga-api/milestones'
 import { PageBody, PageHeader } from '../../../../components/Layout'
 import PageTitle from '../../../../components/PageTitle'
 import IssueList from '../../../../components/dnd/List'
 import IssueCreation from '../../../../components/backlog/IssueCreation'
 import { getTasks, Task, updateTask } from '../../../../taiga-api/tasks'
 import { Empty, Skeleton } from 'antd'
-import { getProject } from '../../../../taiga-api/projects'
-import { Fragment } from 'react'
+import { getProject, getProjects } from '../../../../taiga-api/projects'
+import { Fragment, useMemo } from 'react'
 import Head from 'next/head'
+import { dehydrate } from 'react-query/hydration'
+import { GetStaticProps } from 'next'
 
 const IssueContainer = styled.div`
     display: flex;
@@ -57,6 +59,55 @@ const Title = styled.h2`
     margin: 0;
 `
 
+export async function getStaticPaths() {
+    const projects = await getProjects()
+    return {
+        paths: projects
+            .filter((project) => !project.is_private)
+            .map((project) => ({
+                params: { projectId: project.id.toString() },
+            })),
+        fallback: true,
+    }
+}
+
+export const getStaticProps: GetStaticProps = async (context) => {
+    const queryCache = new QueryCache()
+
+    const projectId = context.params.projectId as string
+
+    await queryCache.prefetchQuery(
+        ['project', { projectId }],
+        (key, { projectId }) => getProject(projectId)
+    )
+
+    await queryCache.prefetchQuery(
+        ['milestones', { projectId }],
+        (key, { projectId }) =>
+            getMilestones({
+                closed: false,
+                projectId: projectId,
+            })
+    )
+
+    await queryCache.prefetchQuery(
+        ['tasks', { projectId }],
+        (key, { projectId }) => getTasks({ projectId })
+    )
+
+    await queryCache.prefetchQuery(
+        ['userstories', { projectId }],
+        (key, { projectId }) => getUserstories({ projectId })
+    )
+
+    return {
+        props: {
+            dehydratedState: dehydrate(queryCache),
+        },
+        revalidate: 10,
+    }
+}
+
 export default function Backlog() {
     const queryCache = useQueryCache()
 
@@ -67,28 +118,23 @@ export default function Backlog() {
         { enabled: projectId }
     )
 
-    const { data: backlogData = [], isLoading: isBacklogLoading } = useQuery(
-        ['backlog', { projectId }],
-        async (key, { projectId }) => {
-            const userstories = await getUserstories({
-                projectId,
-                milestoneIsNull: true,
-            })
-            const tasks = await getTasks({
-                projectId,
-            })
-            return [
-                ...userstories.filter((story) => !story.is_closed),
-                ...tasks.filter(
-                    (task) =>
-                        task.user_story === null &&
-                        task.milestone === null &&
-                        !task.is_closed
-                ),
-            ]
-        }
+    const { data: tasks, isLoading: isTasksLoading } = useQuery(
+        ['tasks', { projectId }],
+        (key, { projectId }) => getTasks({ projectId }),
+        { enabled: projectId }
     )
-    const { data: sprintsData = [], isLoading: isSprintsLoading } = useQuery(
+
+    const { data: userstories, isLoading: isStoriesLoading } = useQuery(
+        ['userstories', { projectId }],
+        (key, { projectId }) => getUserstories({ projectId }),
+        { enabled: projectId }
+    )
+
+    // console.log(tasks, userstories)
+
+    const isBacklogLoading = isTasksLoading && isStoriesLoading
+
+    const { data: milestones = [], isLoading: isMilestonesLoading } = useQuery(
         ['milestones', { projectId }],
         async (key, { projectId }) => {
             return getMilestones({
@@ -97,6 +143,16 @@ export default function Backlog() {
             })
         },
         { enabled: projectId }
+    )
+
+    const backlogData = useMemo(
+        () => [
+            ...(userstories
+                ? userstories?.filter((story) => story.milestone === null)
+                : []),
+            ...(tasks ? tasks?.filter((task) => task.milestone === null) : []),
+        ],
+        [userstories, tasks]
     )
 
     function onDragStart() {
@@ -123,108 +179,75 @@ export default function Backlog() {
             return
         }
 
-        const tasks = await getTasks({
-            projectId: projectId.toString(),
-            milestone:
-                source.droppableId === 'backlog' ? null : source.droppableId,
-        })
+        const issues: (UserStory | Task)[] = isStory ? userstories : tasks
 
-        const currentSprint = sprintsData.find(
-            (sprint) => sprint.id.toString() === source.droppableId
+        const currentIssue = issues.find(
+            (issue: Task | UserStory) =>
+                issue.id.toString() === actualDraggableId
         )
 
-        const currentIssue = (source.droppableId === 'backlog'
-            ? backlogData
-            : isStory
-            ? currentSprint.user_stories
-            : tasks
-        ).find((issue) => issue.id.toString() === actualDraggableId)
-        queryCache.setQueryData(
-            ['backlog', { projectId }],
-            (prevData: (UserStory | Task)[]) => {
-                if (source.droppableId === destination.droppableId) {
-                    return prevData
-                }
-                if (source.droppableId === 'backlog') {
-                    return prevData.filter((issue) => {
-                        const isTask = (issue as Task).user_story !== undefined
-                        if (isStory) {
-                            return (
-                                isTask ||
-                                issue.id.toString() !== actualDraggableId
-                            )
-                        } else {
-                            return (
-                                !isTask ||
-                                issue.id.toString() !== actualDraggableId
-                            )
-                        }
-                    })
-                } else if (destination.droppableId === 'backlog') {
-                    return [...prevData, currentIssue]
-                }
-                return prevData
-            }
-        )
-        if (isStory) {
-            queryCache.setQueryData(
-                ['milestones', { projectId }],
-                (prevData: Milestone[]) => {
-                    if (source.droppableId === destination.droppableId) {
-                        return prevData
-                    }
-                    return prevData.map((milestone) => {
-                        if (milestone.id.toString() === source.droppableId) {
-                            return {
-                                ...milestone,
-                                user_stories: milestone.user_stories.filter(
-                                    (story) => story.id !== currentIssue.id
-                                ),
-                            }
-                        } else if (
-                            milestone.id.toString() === destination.droppableId
-                        ) {
-                            return {
-                                ...milestone,
-                                user_stories: [
-                                    ...milestone.user_stories,
-                                    currentIssue,
-                                ],
-                            }
-                        }
-                        return milestone
-                    })
-                }
-            )
-        }
+        console.log(currentIssue, isStory)
 
-        const milestone =
+        const destinationId =
             destination.droppableId === 'backlog'
                 ? null
                 : parseInt(destination.droppableId, 10)
+
+        if (isStory) {
+            queryCache.setQueryData(
+                ['userstories', { projectId }],
+                (prevData: UserStory[]) => {
+                    console.log(prevData)
+                    return prevData?.map((userstory) =>
+                        userstory.id.toString() === actualDraggableId
+                            ? { ...userstory, milestone: destinationId }
+                            : userstory
+                    )
+                }
+            )
+        } else {
+            queryCache.setQueryData(
+                ['tasks', { projectId }],
+                (prevData: Task[]) =>
+                    prevData?.map((task) =>
+                        task.id.toString() === actualDraggableId
+                            ? { ...task, milestone: destinationId }
+                            : task
+                    )
+            )
+        }
+
         const order = destination.index
         const { id: issueId, version } = currentIssue
+
         if (isStory) {
-            await updateUserstory(issueId, {
-                milestone,
+            const updatedStory = await updateUserstory(issueId, {
+                milestone: destinationId,
                 sprint_order: order,
                 version,
             })
+            queryCache.setQueryData(
+                ['userstories', { projectId }],
+                (prevData: UserStory[]) =>
+                    prevData?.map((userstory) =>
+                        userstory.id === updatedStory.id
+                            ? updatedStory
+                            : userstory
+                    )
+            )
         } else {
-            await updateTask(issueId, { milestone, version })
-        }
-        queryCache.invalidateQueries(['backlog', { projectId }])
-        if (isStory) {
-            queryCache.invalidateQueries(['milestones', { projectId }])
-        } else {
-            queryCache.invalidateQueries(['tasks', { projectId, milestone }])
-            queryCache.invalidateQueries([
-                'tasks',
-                {
-                    projectId,
-                    milestone: parseInt(source.droppableId, 10),
-                },
-            ])
+            const updatedTask = await updateTask(issueId, {
+                milestone: destinationId,
+                task_order: order,
+                version,
+            })
+            queryCache.setQueryData(
+                ['tasks', { projectId }],
+                (prevData: Task[]) =>
+                    prevData?.map((task) =>
+                        task.id === updatedTask.id ? updatedTask : task
+                    )
+            )
         }
     }
 
@@ -266,13 +289,28 @@ export default function Backlog() {
                                 <SprintCreation />
                             </TitleContainer>
                             <ListContainer>
-                                <Skeleton active loading={isSprintsLoading}>
-                                    {sprintsData?.length &&
-                                        sprintsData
+                                <Skeleton active loading={isMilestonesLoading}>
+                                    {!!milestones?.length &&
+                                        milestones
                                             .filter((sprint) => !sprint.closed)
                                             .map((sprint) => (
                                                 <Fragment key={sprint.id}>
                                                     <Sprint
+                                                        userstories={userstories?.filter(
+                                                            (story) =>
+                                                                story.milestone ===
+                                                                sprint.id
+                                                        )}
+                                                        tasks={tasks.filter(
+                                                            (task) =>
+                                                                task.milestone ===
+                                                                sprint.id
+                                                        )}
+                                                        isLoading={
+                                                            isMilestonesLoading &&
+                                                            isStoriesLoading &&
+                                                            isTasksLoading
+                                                        }
                                                         key={sprint.id}
                                                         sprint={sprint}
                                                     />
@@ -281,7 +319,7 @@ export default function Backlog() {
                                                     />
                                                 </Fragment>
                                             ))}
-                                    {sprintsData?.length === 0 && (
+                                    {milestones?.length === 0 && (
                                         <Empty description="No Sprints exist for this Project. Create one to get started!" />
                                     )}
                                 </Skeleton>
