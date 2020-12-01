@@ -26,9 +26,7 @@ const StoryStatuses = () => {
     } = useQuery(
         ['userstoryStatuses', { projectId }],
         async (key, { projectId }) => {
-            return (await getUserstoryStatuses(projectId as string)).sort(
-                (a, b) => b.order - a.order
-            )
+            return await getUserstoryStatuses(projectId as string)
         },
         { enabled: projectId }
     )
@@ -45,14 +43,12 @@ const StoryStatuses = () => {
             queryCache.setQueryData(
                 ['userstoryStatuses', { projectId }],
                 (prevData: UserstoryStatus[]) => {
-                    return prevData
-                        ?.map((item) => {
-                            if (item.id === updatedStatus.id) {
-                                return updatedStatus
-                            }
-                            return item
-                        })
-                        .sort((a, b) => a.order - b.order)
+                    return prevData?.map((item) => {
+                        if (item.id === updatedStatus.id) {
+                            return updatedStatus
+                        }
+                        return item
+                    })
                 }
             )
         } catch (errInfo) {
@@ -67,11 +63,7 @@ const StoryStatuses = () => {
     return (
         <Skeleton loading={userstoryStatusesIsLoading} active>
             <h2>Userstory Statuses</h2>
-            <Table
-                bordered
-                dataSource={userstoryStatuses}
-                pagination={false}
-            >
+            <Table bordered dataSource={userstoryStatuses} pagination={false}>
                 <Column
                     title="Color"
                     dataIndex="color"
@@ -109,6 +101,7 @@ const StoryStatuses = () => {
                 <Column
                     title="Move"
                     dataIndex="order"
+                    defaultSortOrder="descend"
                     render={(order: number, record: UserstoryStatus, index) => (
                         <MoveCell
                             handleSave={handleSave}

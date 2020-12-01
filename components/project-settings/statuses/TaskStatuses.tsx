@@ -23,9 +23,7 @@ const TaskStatuses = () => {
     const { data: taskStatuses, isLoading: taskStatusesIsLoading } = useQuery(
         ['taskStatuses', { projectId }],
         async (key, { projectId }) => {
-            return (await getTaskStatuses(projectId as string)).sort(
-                (a, b) => b.order - a.order
-            )
+            return await getTaskStatuses(projectId as string)
         },
         { enabled: projectId }
     )
@@ -42,14 +40,12 @@ const TaskStatuses = () => {
             queryCache.setQueryData(
                 ['taskStatuses', { projectId }],
                 (prevData: TaskStatus[]) => {
-                    return prevData
-                        ?.map((item) => {
-                            if (item.id === updatedStatus.id) {
-                                return updatedStatus
-                            }
-                            return item
-                        })
-                        .sort((a, b) => a.order - b.order)
+                    return prevData?.map((item) => {
+                        if (item.id === updatedStatus.id) {
+                            return updatedStatus
+                        }
+                        return item
+                    })
                 }
             )
         } catch (errInfo) {
@@ -64,11 +60,7 @@ const TaskStatuses = () => {
     return (
         <Skeleton loading={taskStatusesIsLoading} active>
             <h2>Task Statuses</h2>
-            <Table
-                bordered
-                dataSource={taskStatuses}
-                pagination={false}
-            >
+            <Table bordered dataSource={taskStatuses} pagination={false}>
                 <Column
                     title="Color"
                     dataIndex="color"
@@ -106,6 +98,7 @@ const TaskStatuses = () => {
                 <Column
                     title="Move"
                     dataIndex="order"
+                    defaultSortOrder="descend"
                     render={(order: number, record: TaskStatus, index) => (
                         <MoveCell
                             handleSave={handleSave}

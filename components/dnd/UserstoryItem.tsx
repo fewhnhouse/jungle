@@ -144,11 +144,14 @@ function IssueItem({
     index,
 }: IssueItemProps) {
     const { projectId } = useRouter().query
-    const [expanded, setExpanded] = useQueryState<string|undefined>('openModal', undefined)
+    const [expanded, setExpanded] = useQueryState<string | undefined>(
+        'openModal',
+        undefined
+    )
     const handleClick = () => setExpanded(`story-${issue.id}`)
     const handleClose = () => setExpanded(undefined)
     const { data: pointsData } = useQuery(
-        'storypoints',
+        ['storypoints', { projectId }],
         async () => await getPoints(projectId as string)
     )
     const points =
