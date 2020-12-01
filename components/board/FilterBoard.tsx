@@ -1,4 +1,4 @@
-import { Form, Select, Tag } from 'antd'
+import { Form, Input, Select, Tag } from 'antd'
 import { Dispatch, memo, SetStateAction, useEffect } from 'react'
 import styled from 'styled-components'
 import { Milestone } from '../../taiga-api/milestones'
@@ -22,6 +22,8 @@ interface Props {
     assignee: number
     setAssignee: Dispatch<SetStateAction<number>>
     milestones: Milestone[]
+    search: string
+    setSearch: Dispatch<SetStateAction<string>>
 }
 
 const FilterBoard = ({
@@ -32,6 +34,8 @@ const FilterBoard = ({
     assignee,
     setAssignee,
     milestones,
+    search,
+    setSearch,
 }: Props) => {
     const today = new Date()
 
@@ -106,6 +110,12 @@ const FilterBoard = ({
                     />
                 </Item>
             )}
+            <Item label="Search">
+                <Input.Search
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                />
+            </Item>
         </Form>
     )
 }

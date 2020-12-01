@@ -150,7 +150,12 @@ export default function Backlog() {
             ...(userstories
                 ? userstories?.filter((story) => story.milestone === null)
                 : []),
-            ...(tasks ? tasks?.filter((task) => task.milestone === null) : []),
+            ...(tasks
+                ? tasks?.filter(
+                      (task) =>
+                          task.milestone === null && task.user_story === null
+                  )
+                : []),
         ],
         [userstories, tasks]
     )

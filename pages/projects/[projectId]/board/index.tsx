@@ -5,6 +5,7 @@ import { getFiltersData, getTasks, Task } from '../../../../taiga-api/tasks'
 import {
     getFiltersData as getStoryFiltersData,
     getUserstories,
+    UserStory,
 } from '../../../../taiga-api/userstories'
 import { PageBody, PageHeader } from '../../../../components/Layout'
 import PageTitle from '../../../../components/PageTitle'
@@ -35,7 +36,7 @@ export async function getStaticPaths() {
 
 export const getStaticProps: GetStaticProps = async (context) => {
     const queryCache = new QueryCache()
-    console.log("ssr")
+    console.log('ssr')
     const projectId = context.params.projectId as string
 
     await queryCache.prefetchQuery(
@@ -73,6 +74,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
 export default function BoardContainer() {
     const router = useRouter()
     const [groupBy, setGroupBy] = useQueryState<GroupBy>('groupBy', 'none')
+    const [search, setSearch] = useQueryState<string>('search', '')
     const [selectedSprint, setSelectedSprint] = useQueryState<number>(
         'sprint',
         -1
@@ -138,16 +140,13 @@ export default function BoardContainer() {
             }),
         { enabled: groupBy === 'subtask', refetchInterval: 5000 }
     )
-
-    const filteredTasks =
-        tasks?.filter((task) => milestoneIds?.includes(task.milestone)) ?? []
-
+    
     const orderedTasks: {
         storySubject: string
         tasks: Task[]
         storyId: number
     }[] =
-        filteredTasks?.reduce(
+        tasks?.reduce(
             (prev, curr) => {
                 if (!curr.user_story) {
                     return prev.map((p) =>
@@ -184,6 +183,10 @@ export default function BoardContainer() {
                       openMilestones?.flatMap((ms) => ms.user_stories) ?? [],
                   id: -1,
               }
+    const searchFilter = (issue: Task | UserStory) => {
+        const regex = new RegExp(search, 'i')
+        return regex.test(issue.subject) || regex.test(issue.id.toString())
+    }
 
     return (
         <ScrollSync>
@@ -222,6 +225,8 @@ export default function BoardContainer() {
                                 milestones={openMilestones.filter(
                                     (ms) => !ms.closed
                                 )}
+                                search={search}
+                                setSearch={setSearch}
                             />
                         )}
                     </Flex>
@@ -237,11 +242,14 @@ export default function BoardContainer() {
                                             milestoneIds={milestoneIds}
                                             title={orderedTask.storySubject}
                                             key={orderedTask.storyId}
-                                            tasks={orderedTask.tasks.filter(
-                                                (t) =>
-                                                    !assignee ||
-                                                    t.assigned_to === assignee
-                                            )}
+                                            tasks={orderedTask.tasks
+                                                ?.filter(searchFilter)
+                                                ?.filter(
+                                                    (t) =>
+                                                        !assignee ||
+                                                        t.assigned_to ===
+                                                            assignee
+                                                )}
                                             columns={sortedTaskStatuses}
                                         />
                                     )
@@ -250,11 +258,14 @@ export default function BoardContainer() {
                                 <StoryBoard
                                     title="Issues without Subtask"
                                     stories={
-                                        userstories?.filter(
-                                            (story) =>
-                                                story.tasks?.length === 0 &&
-                                                story.milestone === sprint.id
-                                        ) ?? []
+                                        userstories
+                                            ?.filter(searchFilter)
+                                            .filter(
+                                                (story) =>
+                                                    story.tasks?.length === 0 &&
+                                                    story.milestone ===
+                                                        sprint.id
+                                            ) ?? []
                                     }
                                     columns={sortedStoryStatuses ?? []}
                                 />
@@ -267,6 +278,7 @@ export default function BoardContainer() {
                                         title={`${ms?.name}`}
                                         stories={
                                             userstories
+                                                ?.filter(searchFilter)
                                                 ?.filter(
                                                     (story) =>
                                                         story.milestone ===
@@ -287,14 +299,16 @@ export default function BoardContainer() {
                                     hasHeader
                                     title={`${sprint?.name}`}
                                     stories={
-                                        userstories?.filter(
-                                            (story) =>
-                                                !assignee ||
-                                                (story.assigned_to ===
-                                                    assignee &&
-                                                    story.milestone ===
-                                                        sprint.id)
-                                        ) ?? []
+                                        userstories
+                                            ?.filter(searchFilter)
+                                            ?.filter(
+                                                (story) =>
+                                                    !assignee ||
+                                                    (story.assigned_to ===
+                                                        assignee &&
+                                                        story.milestone ===
+                                                            sprint.id)
+                                            ) ?? []
                                     }
                                     columns={sortedStoryStatuses ?? []}
                                 />
@@ -307,13 +321,15 @@ export default function BoardContainer() {
                                         key={member.id}
                                         title={`${member?.full_name}`}
                                         stories={
-                                            userstories?.filter(
-                                                (story) =>
-                                                    story.assigned_to ===
-                                                        member.id &&
-                                                    story.milestone ===
-                                                        sprint.id
-                                            ) ?? []
+                                            userstories
+                                                ?.filter(searchFilter)
+                                                ?.filter(
+                                                    (story) =>
+                                                        story.assigned_to ===
+                                                            member.id &&
+                                                        story.milestone ===
+                                                            sprint.id
+                                                ) ?? []
                                         }
                                         columns={sortedStoryStatuses ?? []}
                                     />
@@ -322,11 +338,15 @@ export default function BoardContainer() {
                                 <StoryBoard
                                     title="Unassigned"
                                     stories={
-                                        userstories?.filter(
-                                            (story) =>
-                                                story.assigned_to === null &&
-                                                story.milestone === sprint.id
-                                        ) ?? []
+                                        userstories
+                                            ?.filter(searchFilter)
+                                            ?.filter(
+                                                (story) =>
+                                                    story.assigned_to ===
+                                                        null &&
+                                                    story.milestone ===
+                                                        sprint.id
+                                            ) ?? []
                                     }
                                     columns={sortedStoryStatuses ?? []}
                                 />

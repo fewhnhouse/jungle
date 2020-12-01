@@ -28,7 +28,7 @@ function useQueryState<T>(key: string, initialValue?: T) {
     )
 
     return [
-        query[key] ? JSON.parse(query[key] as string) : initialValue,
+        query[key] ? (JSON.parse(query[key] as string) as T) : initialValue,
         setQueryState,
     ] as const
 }
