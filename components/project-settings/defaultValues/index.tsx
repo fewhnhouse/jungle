@@ -44,7 +44,7 @@ const DefaultValues = () => {
         { enabled: projectId }
     )
 
-    const handleSubmit = async (key: string, dataIndex: string) => (
+    const handleSubmit = (key: string, dataIndex: string) => async (
         values: unknown
     ) => {
         const id = values[dataIndex]
