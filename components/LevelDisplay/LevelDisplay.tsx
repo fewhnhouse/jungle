@@ -63,9 +63,7 @@ const LevelDisplay = () => {
             <Score>
                 {totalScore} / {totalLevelRange[currentLevel][1]} Points{' '}
                 <Tooltip
-                    title="Your Team Level is currently 5. Complete tasks, finish Sprints
-                and collaborate as a Team to gain experience towards the next
-                level!"
+                    title={`Your Team Level is currently ${currentLevel}. Complete tasks, finish Sprints and collaborate as a Team to gain experience towards the next level!`}
                 >
                     <InfoCircleOutlined />
                 </Tooltip>
