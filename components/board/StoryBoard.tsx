@@ -11,7 +11,7 @@ import { TaskStatus } from '../../taiga-api/tasks'
 import { useRouter } from 'next/router'
 import { memo } from 'react'
 import { updateUserstory, UserStory } from '../../taiga-api/userstories'
-import { queryCache } from 'react-query'
+import { useQueryCache } from 'react-query'
 import { Milestone } from '../../taiga-api/milestones'
 import { ScrollSyncPane } from 'react-scroll-sync'
 
@@ -42,6 +42,7 @@ const Board = ({
 }: Props) => {
     const router = useRouter()
     const { projectId } = router.query
+    const queryCache = useQueryCache()
 
     /* eslint-disable react/sort-comp */
 

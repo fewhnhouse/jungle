@@ -1,6 +1,6 @@
 import { Skeleton } from 'antd'
 import { useRouter } from 'next/router'
-import { queryCache, useQuery } from 'react-query'
+import { useQueryCache, useQuery } from 'react-query'
 import { getPoints } from '../../../taiga-api/points'
 import { getProject, updateProject } from '../../../taiga-api/projects'
 import { getTaskStatuses } from '../../../taiga-api/tasks'
@@ -9,6 +9,8 @@ import DefaultValueCard from './DefaultValueCard'
 
 const DefaultValues = () => {
     const { projectId } = useRouter().query
+    const queryCache = useQueryCache()
+
     const { data: project, isLoading } = useQuery(
         ['project', { projectId }],
         (_, { projectId }) => getProject(projectId),

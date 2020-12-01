@@ -1,7 +1,7 @@
 import { Select, Tag } from 'antd'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { queryCache, useQuery } from 'react-query'
+import { useQueryCache, useQuery } from 'react-query'
 import styled from 'styled-components'
 import { getTagColors, TagObject } from '../../taiga-api/projects'
 import { getTask, Task } from '../../taiga-api/tasks'
@@ -24,6 +24,7 @@ const CustomTagPicker = ({ id, type }: Props) => {
         [type, { id }],
         (key, { id }) => (type === 'task' ? getTask(id) : getUserstory(id)),
     )
+    const queryCache = useQueryCache()
 
     const mappedSelectedTags = data?.tags?.map((tag) => tag[0]) ?? []
     const [selected, setSelected] = useState(mappedSelectedTags)

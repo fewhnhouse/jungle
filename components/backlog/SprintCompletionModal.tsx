@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { queryCache, useQuery } from 'react-query'
+import { useQueryCache, useQuery } from 'react-query'
 import { Button, Divider, Form, Modal, Select, Typography } from 'antd'
 import Image from 'next/image'
 import Flex from '../Flex'
@@ -29,6 +29,7 @@ interface Props {
     milestoneId?: number
 }
 const SprintCompletionModal = ({ milestoneId }: Props) => {
+    const queryCache = useQueryCache()
     const [show, setShow] = useState(false)
     const [loading, setLoading] = useState(false)
     const [form] = Form.useForm()

@@ -7,7 +7,7 @@ import {
 } from 'react-beautiful-dnd'
 import styled from 'styled-components'
 import CustomCollapse from '../Collapse'
-import { queryCache } from 'react-query'
+import { useQueryCache } from 'react-query'
 import { TaskStatus, updateTask, Task } from '../../taiga-api/tasks'
 import { useRouter } from 'next/router'
 import { memo } from 'react'
@@ -43,6 +43,7 @@ const Board = ({
 }: Props) => {
     const router = useRouter()
     const { projectId } = router.query
+    const queryCache = useQueryCache()
 
     /* eslint-disable react/sort-comp */
 

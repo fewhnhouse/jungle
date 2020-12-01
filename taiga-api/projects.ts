@@ -45,6 +45,12 @@ export interface Role {
     slug: string
 }
 
+export interface Watcher {
+    id: number
+    username: string
+    full_name: string
+}
+
 export interface Project {
     anon_permissions: string[]
     blocked_code: number | null
@@ -199,11 +205,11 @@ export const unlike = (id: string) => {
 }
 
 export const fans = (id: string) => {
-    return authInstance.get(`/projects/${id}/fans`).then((res) => res.data)
+    return authInstance.get<Watcher[]>(`/projects/${id}/fans`).then((res) => res.data)
 }
 
 export const watchers = (id: string) => {
-    return authInstance.get(`/projects/${id}/watchers`).then((res) => res.data)
+    return authInstance.get<Watcher[]>(`/projects/${id}/watchers`).then((res) => res.data)
 }
 
 export const watch = (id: string) => {

@@ -1,7 +1,7 @@
 import { Button, Card, Checkbox, Form, Input, message, Skeleton } from 'antd'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { queryCache, useQuery } from 'react-query'
+import { useQueryCache, useQuery } from 'react-query'
 
 import styled from 'styled-components'
 import {
@@ -82,6 +82,7 @@ const StyledFormItem = styled(Form.Item)`
 const ProjectDetails = () => {
     const { query, replace } = useRouter()
     const { projectId } = query
+    const queryCache = useQueryCache()
 
     const { data, isLoading } = useQuery(
         ['project', { projectId }],

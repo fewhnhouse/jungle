@@ -22,7 +22,7 @@ import {
 } from 'antd'
 import Link from 'next/link'
 import { useEffect } from 'react'
-import { queryCache, useQuery } from 'react-query'
+import { useQueryCache, useQuery } from 'react-query'
 import styled from 'styled-components'
 import {
     getNotifications,
@@ -185,6 +185,7 @@ export default function Notifications() {
         () => getNotifications(true, 1),
         { refetchInterval: 5000 }
     )
+    const queryCache = useQueryCache()
 
     const prevData = usePrev(data)
 

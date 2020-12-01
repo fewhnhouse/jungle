@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { queryCache, useQuery } from 'react-query'
+import { useQueryCache, useQuery } from 'react-query'
 import { Button, Card, Checkbox, Form, Input, message, Skeleton } from 'antd'
 import styled from 'styled-components'
 import {
@@ -83,6 +83,7 @@ const StyledFormItem = styled(Form.Item)`
 
 const UserDetails = () => {
     const { data } = useQuery('me', () => getMe())
+    const queryCache = useQueryCache()
 
     useEffect(() => {
         if (data?.photo) {

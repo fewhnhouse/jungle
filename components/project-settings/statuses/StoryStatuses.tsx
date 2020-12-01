@@ -5,7 +5,7 @@ const { Column } = Table
 
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { queryCache, useQuery } from 'react-query'
+import { useQueryCache, useQuery } from 'react-query'
 
 import {
     getUserstoryStatuses,
@@ -19,6 +19,7 @@ import SwitchCell from '../../tablecells/SwitchCell'
 
 const StoryStatuses = () => {
     const { projectId } = useRouter().query
+    const queryCache = useQueryCache()
 
     const {
         data: userstoryStatuses,

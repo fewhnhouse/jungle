@@ -2,7 +2,7 @@ import { DragDropContext, DropResult } from 'react-beautiful-dnd'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
 import Sprint from '../../../../components/backlog/Sprint'
-import { useQuery, queryCache } from 'react-query'
+import { useQuery, useQueryCache } from 'react-query'
 import SprintCreation from '../../../../components/backlog/SprintCreationModal'
 import IssueCreationModal from '../../../../components/backlog/IssueCreationModal'
 import {
@@ -58,6 +58,8 @@ const Title = styled.h2`
 `
 
 export default function Backlog() {
+    const queryCache = useQueryCache()
+
     const { projectId } = useRouter().query
     const { data: project } = useQuery(
         ['project', { projectId }],

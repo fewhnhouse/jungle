@@ -107,7 +107,7 @@ const Project = () => {
     )
     // Get all tasks which are less than 24h old, related to tasks / userstories, unique and max of 10
     const recentTasks: Timeline[] = recentTaskFilter(timeline)
-
+        
     return (
         <div>
             <Head>

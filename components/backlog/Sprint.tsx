@@ -1,5 +1,5 @@
 import CustomCollapse from '../Collapse'
-import { queryCache, useQuery } from 'react-query'
+import { useQueryCache, useQuery } from 'react-query'
 import { deleteMilestone, Milestone } from '../../taiga-api/milestones'
 import IssueList from '../dnd/List'
 import { getTasks } from '../../taiga-api/tasks'
@@ -20,6 +20,8 @@ const StyledLink = styled.a`
 
 const Sprint = ({ sprint }: { sprint: Milestone }) => {
     const { query, push } = useRouter()
+    const queryCache = useQueryCache()
+
     const { projectId } = query
     const [editOpen, setEditOpen] = useState(false)
     const handleRemove = async () => {

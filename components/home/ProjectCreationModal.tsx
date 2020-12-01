@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import { addProject, Project } from '../../taiga-api/projects'
-import { queryCache } from 'react-query'
+import { useQueryCache } from 'react-query'
 import { Form, Input, Modal, Radio } from 'antd'
 import { Store } from 'antd/lib/form/interface'
 import { useState } from 'react'
@@ -12,6 +12,7 @@ interface Props {
 
 export default function ProjectCreationModal({ open, toggle }: Props) {
     const { push } = useRouter()
+    const queryCache = useQueryCache()
 
     const handleClose = () => toggle()
     const [isLoading, setIsLoading] = useState(false)

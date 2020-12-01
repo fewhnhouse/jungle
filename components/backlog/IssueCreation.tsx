@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { createTask } from '../../taiga-api/tasks'
 import { useRouter } from 'next/router'
 import { createUserstory } from '../../taiga-api/userstories'
-import { queryCache } from 'react-query'
+import { useQueryCache } from 'react-query'
 
 const StyledUserStoryIcon = styled(BookOutlined)`
     background: #2ecc71;
@@ -34,6 +34,7 @@ const IssueCreation = ({ milestone }: { milestone: number | null }) => {
     const [issueType, setIssueType] = useState<'task' | 'story'>('story')
     const [subject, setSubject] = useState('')
     const { projectId } = useRouter().query
+    const queryCache = useQueryCache()
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()

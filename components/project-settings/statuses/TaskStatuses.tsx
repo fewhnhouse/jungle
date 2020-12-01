@@ -5,7 +5,7 @@ const { Column } = Table
 
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { queryCache, useQuery } from 'react-query'
+import { useQueryCache, useQuery } from 'react-query'
 
 import {
     getTaskStatuses,
@@ -19,6 +19,7 @@ import SwitchCell from '../../tablecells/SwitchCell'
 
 const TaskStatuses = () => {
     const { projectId } = useRouter().query
+    const queryCache = useQueryCache()
 
     const { data: taskStatuses, isLoading: taskStatusesIsLoading } = useQuery(
         ['taskStatuses', { projectId }],

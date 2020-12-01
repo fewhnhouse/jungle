@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { queryCache, useQuery } from 'react-query'
+import { useQueryCache, useQuery } from 'react-query'
 import {
     deleteTask,
     getFiltersData,
@@ -38,6 +38,7 @@ const { confirm } = Modal
 
 export default function TaskModal({ id, open, onClose }: Props) {
     const { projectId } = useRouter().query
+    const queryCache = useQueryCache()
 
     const { isLoading, data, isError } = useQuery(
         ['task', { id }],

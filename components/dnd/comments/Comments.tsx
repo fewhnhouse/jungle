@@ -2,7 +2,7 @@ import { SendOutlined } from '@ant-design/icons'
 import { Avatar, Button, Form, Mentions, Skeleton } from 'antd'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { queryCache, useQuery } from 'react-query'
+import { useQueryCache, useQuery } from 'react-query'
 import styled from 'styled-components'
 import {
     getTaskHistory,
@@ -52,6 +52,7 @@ const Comments = ({
 }) => {
     const [form] = Form.useForm()
     const { projectId } = useRouter().query
+    const queryCache = useQueryCache()
 
     const { data: project, isLoading: isProjectLoading } = useQuery(
         ['project', { projectId }],

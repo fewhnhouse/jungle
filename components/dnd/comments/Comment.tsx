@@ -29,7 +29,7 @@ import {
     SaveOutlined,
 } from '@ant-design/icons'
 import { useState } from 'react'
-import { queryCache } from 'react-query'
+import { useQueryCache } from 'react-query'
 
 const StyledAvatar = styled(Avatar)`
     min-width: 30px;
@@ -90,6 +90,7 @@ const Comment = ({
     const [editedText, setEditedText] = useState(comment.comment)
     const date = new Date(comment.created_at)
     const editDate = new Date(comment.edit_comment_date)
+    const queryCache = useQueryCache()
 
     const handleDelete = async () => {
         queryCache.setQueryData(

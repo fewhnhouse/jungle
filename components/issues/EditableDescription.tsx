@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import Flex from '../Flex'
 import { Task, updateTask } from '../../taiga-api/tasks'
 import { updateUserstory, UserStory } from '../../taiga-api/userstories'
-import { queryCache } from 'react-query'
+import { useQueryCache } from 'react-query'
 import { useRouter } from 'next/router'
 import { updateTaskCache, updateUserstoryCache } from '../../updateCache'
 import useDebounce from '../../util/useDebounce'
@@ -43,6 +43,7 @@ export default function EditableDescription({
     const [description, setDescription] = useState(initialValue)
     const [focus, setFocus] = useState(false)
     const debouncedDescription = useDebounce(description, 500)
+    const queryCache = useQueryCache()
 
     useEffect(() => {
         if (debouncedDescription) {

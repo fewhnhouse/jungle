@@ -1,11 +1,13 @@
-import { queryCache, useQuery } from 'react-query'
+import { useQuery, useQueryCache } from 'react-query'
 import {
     fans,
     like,
     Project,
+    SingleProjectInterface,
     unlike,
     unwatch,
     watch,
+    Watcher,
     watchers,
 } from '../../taiga-api/projects'
 import {
@@ -18,6 +20,8 @@ import {
 import styled from 'styled-components'
 import { Badge, Button } from 'antd'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { getMe } from '../../taiga-api/users'
 
 export const ActionContainer = styled.div`
     margin: 6px 0px;
@@ -42,41 +46,89 @@ export const ActionContainer = styled.div`
 `
 
 const Actions = ({ project }: { project: Project }) => {
+    const { projectId } = useRouter().query
+    const { data: me } = useQuery('me', () => getMe())
+    const queryCache = useQueryCache()
     const { data: watchersData } = useQuery(
-        ['watchers', { projectId: project.id }],
+        ['watchers', { projectId }],
         (key, { projectId }) => watchers(projectId),
         {
-            enabled: !!project.id,
+            enabled: !!projectId,
         }
     )
 
     const { data: fansData } = useQuery(
-        ['fans', { projectId: project.id }],
+        ['fans', { projectId: projectId }],
         (key, { projectId }) => fans(projectId),
         {
-            enabled: !!project.id,
+            enabled: !!projectId,
         }
     )
 
     const handleWatch = async () => {
-        await (project?.is_watcher
-            ? unwatch(project.id.toString())
-            : watch(project.id.toString()))
-        queryCache.invalidateQueries(['watchers', { projectId: project.id }])
-        queryCache.invalidateQueries(['project', { projectId: project.id }])
+        const isWatcher = project?.is_watcher
+        queryCache.setQueryData(
+            ['watchers', { projectId }],
+            (prevData: Watcher[]) => {
+                if (isWatcher) {
+                    return (
+                        prevData?.filter((watcher) => watcher.id === me?.id) ??
+                        []
+                    )
+                } else {
+                    const newWatcher = {
+                        id: me?.id,
+                        username: me?.username,
+                        full_name: me?.full_name,
+                    }
+                    return prevData ? [...prevData, newWatcher] : [newWatcher]
+                }
+            }
+        )
+        queryCache.setQueryData(
+            ['project', { projectId }],
+            (prevProject: SingleProjectInterface) => ({
+                ...prevProject,
+                is_watcher: !project?.is_watcher,
+            })
+        )
+        await (isWatcher
+            ? unwatch(projectId.toString())
+            : watch(projectId.toString()))
     }
 
     const handleLike = async () => {
-        await (project?.is_fan
-            ? unlike(project.id.toString())
-            : like(project.id.toString()))
-        queryCache.invalidateQueries(['fans', { projectId: project.id }])
-        queryCache.invalidateQueries(['project', { projectId: project.id }])
+        const isFan = project?.is_fan
+        queryCache.setQueryData(
+            ['fans', { projectId }],
+            (prevData: Watcher[]) => {
+                if (isFan) {
+                    return prevData?.filter((fan) => fan.id === me?.id) ?? []
+                } else {
+                    const newFan = {
+                        id: me?.id,
+                        username: me?.username,
+                        full_name: me?.full_name,
+                    }
+                    return prevData ? [...prevData, newFan] : [newFan]
+                }
+            }
+        )
+        queryCache.setQueryData(
+            ['project', { projectId }],
+            (prevProject: SingleProjectInterface) => ({
+                ...prevProject,
+                is_fan: !project?.is_fan,
+            })
+        )
+        await (isFan
+            ? unlike(projectId.toString())
+            : like(projectId.toString()))
     }
     return (
         <>
             <ActionContainer>
-                <Link href={`/projects/${project.id}/settings`}>
+                <Link href={`/projects/${projectId}/settings`}>
                     <Button icon={<SettingOutlined />}>Settings</Button>
                 </Link>
             </ActionContainer>

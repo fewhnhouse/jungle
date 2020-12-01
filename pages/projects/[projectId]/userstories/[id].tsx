@@ -3,7 +3,7 @@ import { Button, Menu, Modal, Skeleton } from 'antd'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import ReactMarkdown from 'react-markdown'
-import { queryCache, useQuery } from 'react-query'
+import { useQueryCache, useQuery } from 'react-query'
 import styled from 'styled-components'
 import useMedia from 'use-media'
 import MultiStoryPointCascader from '../../../../components/dnd/MultiStorypointSelect'
@@ -54,6 +54,7 @@ const Label = styled.span`
 
 const UserstoryPage = () => {
     const { id, projectId } = useRouter().query
+    const queryCache = useQueryCache()
 
     const { isLoading, data, isError } = useQuery(
         ['userstory', { id }],
