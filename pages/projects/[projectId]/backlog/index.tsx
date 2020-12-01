@@ -290,7 +290,7 @@ export default function Backlog() {
                             </TitleContainer>
                             <ListContainer>
                                 <Skeleton active loading={isMilestonesLoading}>
-                                    {milestones?.length &&
+                                    {!!milestones?.length &&
                                         milestones
                                             .filter((sprint) => !sprint.closed)
                                             .map((sprint) => (

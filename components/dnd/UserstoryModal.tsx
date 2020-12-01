@@ -91,7 +91,7 @@ export default function UserstoryModal({ id, open, onClose }: Props) {
             assigned_users: assigneeId ? [assigneeId] : null,
             version: data.version,
         })
-        updateUserstoryCache(updatedStory, id, projectId as string)
+        updateUserstoryCache(updatedStory, id, projectId as string, queryCache)
     }
 
     const updateStatus = async (status: number) => {
@@ -99,7 +99,7 @@ export default function UserstoryModal({ id, open, onClose }: Props) {
             status,
             version: data.version,
         })
-        updateUserstoryCache(updatedStory, id, projectId as string)
+        updateUserstoryCache(updatedStory, id, projectId as string, queryCache)
     }
 
     return (

@@ -59,14 +59,24 @@ export default function EditableDescription({
                     version,
                     description,
                 }).then((updatedTask) => {
-                    updateTaskCache(updatedTask, id, projectId as string)
+                    updateTaskCache(
+                        updatedTask,
+                        id,
+                        projectId as string,
+                        queryCache
+                    )
                 })
             } else {
                 updateUserstory(id, {
                     version,
                     description,
                 }).then((updatedStory) => {
-                    updateUserstoryCache(updatedStory, id, projectId as string)
+                    updateUserstoryCache(
+                        updatedStory,
+                        id,
+                        projectId as string,
+                        queryCache
+                    )
                 })
             }
         }
