@@ -6,18 +6,17 @@ import { getUser, getUsers } from '../../../taiga-api/users'
 import PageTitle from '../../../components/PageTitle'
 import { PageBody, PageHeader } from '../../../components/Layout'
 import { QueryCache, useQuery } from 'react-query'
-import { Button } from 'antd'
+import { Button, Divider } from 'antd'
 import { SettingOutlined } from '@ant-design/icons'
 import Link from 'next/link'
 import { ActionContainer } from '../../../components/project/Actions'
 import LimitedActivity from '../../../components/activity/LimitedActivity'
-import { getUserTimeline, Timeline } from '../../../taiga-api/timelines'
-import { GetStaticProps, InferGetStaticPropsType } from 'next'
+import { getUserTimeline } from '../../../taiga-api/timelines'
+import { GetStaticProps } from 'next'
 import { useRouter } from 'next/router'
-import RecentTasks from '../../../components/your-work/LimitedYourWork'
-import { recentTaskFilter } from '../../../util/recentTaskFilter'
 import Head from 'next/head'
 import { dehydrate } from 'react-query/hydration'
+import { getProjects } from '../../../taiga-api/projects'
 
 const Container = styled.div`
     padding: ${({ theme }) => `${theme.spacing.huge} ${theme.spacing.crazy}`};
@@ -70,8 +69,13 @@ export const getStaticProps: GetStaticProps = async (context) => {
         await queryCache.prefetchQuery('timeline', () =>
             getUserTimeline(parseInt(context.params.id as string, 10))
         )
-        await queryCache.prefetchQuery('user', () =>
-            getUser(context.params.id as string)
+        await queryCache.prefetchQuery(
+            ['user', { userId: context.params.id }],
+            (_, { userId }) => getUser(userId as string)
+        )
+        await queryCache.prefetchQuery(
+            ['projects', { userId: context.params.id }],
+            () => getProjects({ member: context.params.id as string })
         )
     } catch (e) {
         console.error(e)
@@ -93,34 +97,34 @@ export async function getStaticPaths() {
     }
 }
 
-export default function Home({
-    publicProjects,
-    publicUserTimeline,
-    publicUser,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function Home() {
+    const { id } = useRouter().query
     const [isModalOpen, setIsModalOpen] = useState(false)
     const toggleModal = () => {
         setIsModalOpen((open) => !open)
     }
 
-    const { id } = useRouter().query
-
-    const { data: user = publicUser } = useQuery('user', () =>
-        getUser(id.toString())
+    const { data: projects } = useQuery(
+        ['projects', { userId: id }],
+        async (key, { userId }) => {
+            return getProjects({ member: userId })
+        }
     )
 
-    const { data: timeline = publicUserTimeline, isLoading } = useQuery(
+    const { data: user } = useQuery(['user', { userId: id }], (_, { userId }) =>
+        getUser(userId as string)
+    )
+
+    const { data: timeline, isLoading } = useQuery(
         ['timeline', { id }],
         (key, { id }) => getUserTimeline(id),
         { enabled: !!id }
     )
 
-    const recentTasks: Timeline[] = recentTaskFilter(timeline)
-
     return (
         <>
             <Head>
-                <title>{user?.username}</title>
+                <title>@{user?.username}</title>
                 <meta
                     name="viewport"
                     content="initial-scale=1.0, width=device-width"
@@ -131,9 +135,15 @@ export default function Home({
                     <HeaderContainer>
                         <TitleContainer>
                             <PageTitle
-                                avatarUrl={user?.big_photo ?? 'placeholder.png'}
+                                avatarUrl={user?.big_photo ?? '/placeholder.png'}
                                 title={user?.full_name ?? ''}
-                                description={user?.email}
+                                description={
+                                    <>
+                                        @{user?.username}
+                                        <Divider type="vertical" />
+                                        {user?.email}
+                                    </>
+                                }
                                 actions={
                                     <>
                                         <ActionContainer>
@@ -161,18 +171,13 @@ export default function Home({
             </PageHeader>
             <PageBody>
                 <Container>
-                    <Projects publicProjects={publicProjects} />
+                    <Projects projects={projects} />
                     <InnerContainer>
                         <LimitedActivity
-                            title="Your activity"
+                            title="Activity"
                             activity={timeline ?? []}
                             isLoading={isLoading}
-                            href={`/activity`}
-                        />
-                        <RecentTasks
-                            limit={5}
-                            title="Your work"
-                            timeline={recentTasks}
+                            href={`/users/${id}/activity`}
                         />
                     </InnerContainer>
                 </Container>

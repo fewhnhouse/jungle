@@ -5,7 +5,7 @@ import { Input } from 'antd'
 import { Task, updateTask } from '../../taiga-api/tasks'
 import { updateUserstory, UserStory } from '../../taiga-api/userstories'
 import { useRouter } from 'next/router'
-import { queryCache } from 'react-query'
+import { useQueryCache } from 'react-query'
 import { updateTaskCache, updateUserstoryCache } from '../../updateCache'
 import useDebounce from '../../util/useDebounce'
 
@@ -47,6 +47,7 @@ export default function EditableTitle({
     const [subject, setSubject] = useState(initialValue)
     const [focus, setFocus] = useState(false)
     const debouncedSubject = useDebounce(subject, 500)
+    const queryCache = useQueryCache()
 
     useEffect(() => {
         queryCache.setQueryData(

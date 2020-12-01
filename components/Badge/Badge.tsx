@@ -20,9 +20,10 @@ const IconContainer = styled(Flex)`
 `
 
 const BadgeShell = styled.button<{ $isHoverable }>`
-    border-radius: 8px;
-    border: 1px solid #333;
-    background: #eee;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 5px 10px 0px;
+    border-radius: 2px;
+    border: 1px solid rgb(240, 240, 240);
+    background: white;
     width: 120px;
     height: 140px;
     cursor: pointer;

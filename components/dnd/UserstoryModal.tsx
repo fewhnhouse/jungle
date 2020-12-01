@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { queryCache, useQuery } from 'react-query'
+import { useQueryCache, useQuery } from 'react-query'
 import AssigneeDropdown from '../issues/AssigneeDropdown'
 import StatusDropdown from '../issues/StatusDropdown'
 import {
@@ -36,6 +36,7 @@ interface Props {
 
 export default function UserstoryModal({ id, open, onClose }: Props) {
     const { projectId } = useRouter().query
+    const queryCache = useQueryCache()
     const { isLoading, data, isError } = useQuery(
         ['userstory', { id }],
         (key, { id }) => getUserstory(id),

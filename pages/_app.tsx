@@ -5,12 +5,11 @@ import Header from '../components/header/Header'
 import axios from 'axios'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import 'react-markdown-editor-lite/lib/index.css'
-// import 'antd/dist/antd.css'
-import { ReactQueryDevtools } from 'react-query-devtools'
+import 'antd/dist/antd.css'
 import AchievementWrapper from '../util/AchievementWrapper'
 import { Hydrate } from 'react-query/hydration'
 import { QueryCache, ReactQueryCacheProvider } from 'react-query'
+import { ReactQueryDevtools } from 'react-query-devtools'
 
 export interface Theme {
     colors: {
@@ -115,6 +114,7 @@ export default function App({ Component, pageProps }: AppProps) {
                         </AchievementWrapper>
                     </AppContainer>
                 </ThemeProvider>
+                <ReactQueryDevtools initialIsOpen />
             </Hydrate>
             <ReactQueryDevtools  />
         </ReactQueryCacheProvider>

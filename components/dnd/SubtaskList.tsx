@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { queryCache, useQuery } from 'react-query'
+import { useQueryCache, useQuery } from 'react-query'
 import { getTasks, createTask, Task, deleteTask } from '../../taiga-api/tasks'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
@@ -69,6 +69,7 @@ interface Props {
 const SubtaskList = ({ id }: Props) => {
     const { projectId } = useRouter().query
     const [form] = Form.useForm()
+    const queryCache = useQueryCache()
 
     const { isLoading: isTasksLoading, data: subtasks } = useQuery(
         ['subtasks', { id }],

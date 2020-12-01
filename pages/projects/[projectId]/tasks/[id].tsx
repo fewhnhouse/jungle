@@ -8,7 +8,7 @@ import { Button, Dropdown, Menu, Modal, Skeleton } from 'antd'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import ReactMarkdown from 'react-markdown'
-import { queryCache, useQuery } from 'react-query'
+import { useQueryCache, useQuery } from 'react-query'
 import styled from 'styled-components'
 import useMedia from 'use-media'
 import Flex from '../../../../components/Flex'
@@ -59,6 +59,7 @@ const Label = styled.span`
 
 const TaskPage = () => {
     const { id, projectId } = useRouter().query
+    const queryCache = useQueryCache()
 
     const { isLoading, data, isError } = useQuery<Task>(
         ['task', { id }],

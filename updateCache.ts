@@ -1,4 +1,4 @@
-import { queryCache } from 'react-query'
+import { QueryCache } from 'react-query'
 import { Milestone } from './taiga-api/milestones'
 import { Task } from './taiga-api/tasks'
 import { UserStory } from './taiga-api/userstories'
@@ -7,7 +7,8 @@ import { UserStory } from './taiga-api/userstories'
 export const updateUserstoryCache = (
     updatedStory: UserStory,
     id: number,
-    projectId: string
+    projectId: string,
+    queryCache: QueryCache
 ) => {
     queryCache.setQueryData(['userstory', { id }], () => updatedStory)
     queryCache.setQueryData(
@@ -20,7 +21,8 @@ export const updateUserstoryCache = (
 export const updateTaskCache = (
     updatedTask: Task,
     id: number,
-    projectId: string
+    projectId: string,
+    queryCache: QueryCache
 ) => {
     queryCache.setQueryData(['task', { id }], () => updatedTask)
     queryCache.setQueryData(['tasks', { projectId }], (prevData: Task[]) =>

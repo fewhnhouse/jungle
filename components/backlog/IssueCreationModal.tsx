@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { queryCache, useQuery } from 'react-query'
+import { useQueryCache, useQuery } from 'react-query'
 import {
     createUserstory,
     createUserstoryAttachment,
@@ -17,6 +17,7 @@ const IssueCreationModal = () => {
     const { projectId } = useRouter().query
     const [form] = Form.useForm()
     const [fileList, setFileList] = useState<RcFile[]>([])
+    const queryCache = useQueryCache()
 
     const { data } = useQuery(
         ['project', { projectId }],

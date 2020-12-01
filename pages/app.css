@@ -54,3 +54,7 @@ img {
     object-fit: cover !important;
     border-radius: 2px !important;
 }
+
+.chrome-picker {
+    box-shadow: none !important ;
+}

@@ -45,6 +45,12 @@ export interface Role {
     slug: string
 }
 
+export interface Watcher {
+    id: number
+    username: string
+    full_name: string
+}
+
 export interface Project {
     anon_permissions: string[]
     blocked_code: number | null
@@ -107,9 +113,16 @@ export interface Project {
     roles: Role[]
 }
 
-export const getProjects = () => {
+export const getProjects = (props?: { member?: string; order_by?: string }) => {
+    const params = new URLSearchParams()
+    if (props) {
+        const { member, order_by } = props
+        member && params.append('member', member)
+        order_by && params.append('order_by', order_by)
+    }
+
     return authInstance
-        .get<MultiProjectInterface[]>(`/projects`)
+        .get<MultiProjectInterface[]>(`/projects`, { params })
         .then((res) => res.data)
 }
 
@@ -192,11 +205,11 @@ export const unlike = (id: string) => {
 }
 
 export const fans = (id: string) => {
-    return authInstance.get(`/projects/${id}/fans`).then((res) => res.data)
+    return authInstance.get<Watcher[]>(`/projects/${id}/fans`).then((res) => res.data)
 }
 
 export const watchers = (id: string) => {
-    return authInstance.get(`/projects/${id}/watchers`).then((res) => res.data)
+    return authInstance.get<Watcher[]>(`/projects/${id}/watchers`).then((res) => res.data)
 }
 
 export const watch = (id: string) => {

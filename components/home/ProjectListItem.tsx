@@ -25,6 +25,7 @@ const StyledCard = styled(Card)`
     background: white;
     width: 100%;
     margin: ${({ theme }) => `${theme.spacing.medium}`};
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 5px 10px 0px;
 `
 
 const Body = styled.div`

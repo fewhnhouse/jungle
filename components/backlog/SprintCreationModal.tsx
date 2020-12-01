@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { queryCache, useQuery } from 'react-query'
+import { useQueryCache, useQuery } from 'react-query'
 import {
     createMilestone,
     getMilestones,
@@ -15,6 +15,7 @@ const SprintCreation = () => {
     const [show, setShow] = useState(false)
     const [form] = Form.useForm()
     const { projectId } = useRouter().query
+    const queryCache = useQueryCache()
 
     const { data: project } = useQuery(
         ['project', { projectId }],

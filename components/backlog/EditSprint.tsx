@@ -2,7 +2,7 @@ import { DatePicker, Form, Input, Modal } from 'antd'
 import { Store } from 'antd/lib/form/interface'
 import moment from 'moment'
 import { useRouter } from 'next/router'
-import { queryCache, useQuery } from 'react-query'
+import { useQuery, useQueryCache } from 'react-query'
 import {
     getMilestones,
     Milestone,
@@ -17,6 +17,7 @@ interface Props {
 const EditSprint = ({ open, sprint, onClose }: Props) => {
     const [form] = Form.useForm()
     const { projectId } = useRouter().query
+    const queryCache = useQueryCache()
 
     const { data: milestones } = useQuery(
         ['milestones', { projectId }],
