@@ -3,6 +3,7 @@ import { addProject, Project } from '../../taiga-api/projects'
 import { queryCache } from 'react-query'
 import { Form, Input, Modal, Radio } from 'antd'
 import { Store } from 'antd/lib/form/interface'
+import { useState } from 'react'
 
 interface Props {
     open: boolean
@@ -13,20 +14,28 @@ export default function ProjectCreationModal({ open, toggle }: Props) {
     const { push } = useRouter()
 
     const handleClose = () => toggle()
+    const [isLoading, setIsLoading] = useState(false)
     const [form] = Form.useForm()
 
     const handleSubmit = async (values: Store) => {
         const { name, description, visibility } = values
-        const project = await addProject({
-            name,
-            description,
-            is_private: visibility === 'private',
-        })
-        queryCache.setQueryData('projects', (prevData: Project[]) => [
-            ...prevData,
-            project,
-        ])
-        push(`/projects/${project.id}`)
+        setIsLoading(true)
+        try {
+            const project = await addProject({
+                name,
+                description,
+                is_private: visibility === 'private',
+            })
+            queryCache.setQueryData('projects', (prevData: Project[]) =>
+                prevData ? [...prevData, project] : [project]
+            )
+            push(`/projects/${project.id}`)
+            toggle()
+        } catch (e) {
+            console.error(e)
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     const handleFormSubmit = () => {
@@ -41,6 +50,7 @@ export default function ProjectCreationModal({ open, toggle }: Props) {
             title="Create Project"
             onCancel={handleClose}
             visible={open}
+            confirmLoading={isLoading}
             onOk={handleFormSubmit}
         >
             <Form
