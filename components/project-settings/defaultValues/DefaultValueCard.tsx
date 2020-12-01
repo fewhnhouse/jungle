@@ -20,10 +20,6 @@ const Footer = styled.div`
     background: #fafafa;
 `
 
-const CardContent = styled.div`
-    padding: 20px;
-`
-
 const StyledFormItem = styled(Form.Item)`
     padding: 20px;
 `

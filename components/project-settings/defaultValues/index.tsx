@@ -44,11 +44,13 @@ const DefaultValues = () => {
         { enabled: projectId }
     )
 
-    const handleSubmit = (key: string, dataIndex: string) => (
+    const handleSubmit = async (key: string, dataIndex: string) => (
         values: unknown
     ) => {
         const id = values[dataIndex]
-        const updatedProject = updateProject(projectId as string, { [key]: id })
+        const updatedProject = await updateProject(projectId as string, {
+            [key]: id,
+        })
         queryCache.setQueryData(
             ['project', { projectId }],
             () => updatedProject
