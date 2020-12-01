@@ -26,7 +26,9 @@ const StoryStatuses = () => {
     } = useQuery(
         ['userstoryStatuses', { projectId }],
         async (key, { projectId }) => {
-            return getUserstoryStatuses(projectId as string)
+            return (await getUserstoryStatuses(projectId as string)).sort(
+                (a, b) => b.order - a.order
+            )
         },
         { enabled: projectId }
     )
@@ -67,10 +69,7 @@ const StoryStatuses = () => {
             <h2>Userstory Statuses</h2>
             <Table
                 bordered
-                rowKey="order"
-                dataSource={userstoryStatuses?.sort(
-                    (a, b) => a.order - b.order
-                )}
+                dataSource={userstoryStatuses}
                 pagination={false}
             >
                 <Column

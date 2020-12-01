@@ -24,7 +24,7 @@ const TaskStatuses = () => {
         ['taskStatuses', { projectId }],
         async (key, { projectId }) => {
             return (await getTaskStatuses(projectId as string)).sort(
-                (a, b) => a.order - b.order
+                (a, b) => b.order - a.order
             )
         },
         { enabled: projectId }
@@ -66,7 +66,7 @@ const TaskStatuses = () => {
             <h2>Task Statuses</h2>
             <Table
                 bordered
-                dataSource={taskStatuses?.sort((a, b) => a.order - b.order)}
+                dataSource={taskStatuses}
                 pagination={false}
             >
                 <Column
