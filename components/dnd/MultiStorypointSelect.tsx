@@ -1,7 +1,7 @@
 import { Select } from 'antd'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { useQuery } from 'react-query'
+import { useQueryCache, useQuery } from 'react-query'
 import styled from 'styled-components'
 import { getProject } from '../../taiga-api/projects'
 import { updateUserstory, UserStory } from '../../taiga-api/userstories'
@@ -24,7 +24,7 @@ const MultiStoryPointCascader = ({ data }: { data: UserStory }) => {
     const { projectId } = useRouter().query
     const { version, points, id } = data
     const [selectedPoints, setSelectedPoints] = useState(points)
-
+    const queryCache = useQueryCache()
     const { data: project } = useQuery(
         ['project', { projectId }],
         (key, { projectId }) => getProject(projectId as string),
@@ -50,7 +50,7 @@ const MultiStoryPointCascader = ({ data }: { data: UserStory }) => {
             points: updatedPoints,
             version,
         })
-        updateUserstoryCache(updatedStory, id, projectId as string)
+        updateUserstoryCache(updatedStory, id, projectId as string, queryCache)
     }
 
     return (

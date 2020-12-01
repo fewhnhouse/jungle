@@ -74,7 +74,6 @@ const Badge = ({
                 </LevelContainer>
                 <div style={{ position: 'relative' }}>
                     <Image
-                        style={{ position: 'absolute', zIndex: 0 }}
                         src="/medal.svg"
                         width="80px"
                         height="80px"
