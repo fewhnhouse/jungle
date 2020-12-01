@@ -35,7 +35,7 @@ export async function getStaticPaths() {
 
 export const getStaticProps: GetStaticProps = async (context) => {
     const queryCache = new QueryCache()
-
+    console.log("ssr")
     const projectId = context.params.projectId as string
 
     await queryCache.prefetchQuery(

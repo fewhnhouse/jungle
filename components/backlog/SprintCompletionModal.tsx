@@ -89,7 +89,7 @@ const SprintCompletionModal = ({ milestoneId }: Props) => {
                 })
             ) ?? []
         )
-        await updateMilestone(milestoneId, {
+        const updatedMilestone = await updateMilestone(milestoneId, {
             closed: true,
         })
         setLoading(false)
@@ -109,6 +109,13 @@ const SprintCompletionModal = ({ milestoneId }: Props) => {
                     updatedTasks.find((updated) => updated.id === task.id) ??
                     task
             )
+        )
+        queryCache.setQueryData(
+            ['milestones', { projectId }],
+            (prevData: Milestone[]) =>
+                prevData?.map((ms) =>
+                    ms.id === milestoneId ? updatedMilestone : ms
+                )
         )
 
         handleClose()
