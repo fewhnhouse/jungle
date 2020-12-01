@@ -269,3 +269,9 @@ export const getUserstoryStatuses = (projectId: string) => {
         .get<UserstoryStatus[]>(`/userstory-statuses?project=${projectId}`)
         .then((res) => res.data)
 }
+
+export const updateUserstoryStatus = (id: number, data: any) => {
+    return authInstance
+        .patch<UserstoryStatus>(`/userstory-statuses/${id}`, data)
+        .then((res) => res.data)
+}

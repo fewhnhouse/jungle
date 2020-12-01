@@ -1,30 +1,29 @@
 import { Form, Input } from 'antd'
 import {
     TaskStatus,
-    updateTaskStatus,
 } from '../../taiga-api/tasks'
+import { UserstoryStatus } from '../../taiga-api/userstories'
 
 interface EditableCellProps {
     title: React.ReactNode
     dataIndex: string
-    record: TaskStatus
+    record: TaskStatus | UserstoryStatus
+    handleSave: (record: TaskStatus | UserstoryStatus, dataIndex: string, value: any) => void
 }
 
 const EditableInputCell: React.FC<EditableCellProps> = ({
     title,
     dataIndex,
     record,
+    handleSave,
     ...restProps
 }) => {
     const [form] = Form.useForm()
 
-    const handleSave = async () => {
+    const onSave = async () => {
         try {
             const values = await form.validateFields()
-
-            await updateTaskStatus(record.id, {
-                [dataIndex]: values[dataIndex],
-            })
+            handleSave(record, dataIndex, values[dataIndex])
         } catch (errInfo) {
             console.log('Save failed:', errInfo)
         }
@@ -34,7 +33,7 @@ const EditableInputCell: React.FC<EditableCellProps> = ({
         <td {...restProps}>
             <Form
                 form={form}
-                onFinish={handleSave}
+                onFinish={onSave}
                 initialValues={{ [dataIndex]: record[dataIndex] }}
             >
                 <Form.Item
@@ -48,8 +47,8 @@ const EditableInputCell: React.FC<EditableCellProps> = ({
                     ]}
                 >
                     <Input
-                        onPressEnter={handleSave}
-                        onBlur={handleSave}
+                        onPressEnter={onSave}
+                        onBlur={onSave}
                         bordered={false}
                     />
                 </Form.Item>

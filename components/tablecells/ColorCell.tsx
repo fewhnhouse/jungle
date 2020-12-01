@@ -1,25 +1,24 @@
 import { Popover, Tag } from 'antd'
 import { useState } from 'react'
 import { ChromePicker } from 'react-color'
-import { TaskStatus, updateTaskStatus } from '../../taiga-api/tasks'
+import { TaskStatus } from '../../taiga-api/tasks'
+import { UserstoryStatus } from '../../taiga-api/userstories'
 
 interface EditableColorCellProps {
     dataIndex: string
-    record: TaskStatus
+    record: TaskStatus | UserstoryStatus
+    handleSave: (record: TaskStatus | UserstoryStatus, dataIndex: string, value: any) => void
 }
 
 const EditableColorCell: React.FC<EditableColorCellProps> = ({
     dataIndex,
     record,
+    handleSave,
     ...restProps
 }) => {
     const [color, setColor] = useState(record[dataIndex])
-    const handleSave = async (color: string) => {
-        try {
-            await updateTaskStatus(record.id, { color })
-        } catch (errInfo) {
-            console.log('Save failed:', errInfo)
-        }
+    const onSave = async (color: string) => {
+        handleSave(record, dataIndex, color)
     }
 
     return (
@@ -31,7 +30,7 @@ const EditableColorCell: React.FC<EditableColorCellProps> = ({
                 content={
                     <ChromePicker
                         color={color}
-                        onChangeComplete={(color) => handleSave(color.hex)}
+                        onChangeComplete={(color) => onSave(color.hex)}
                         onChange={(color) => setColor(color.hex)}
                         style={{ boxShadow: 'none' }}
                     />

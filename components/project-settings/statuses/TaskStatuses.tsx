@@ -1,34 +1,23 @@
 /* eslint-disable react/display-name */
-import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons'
-import {
-    Table,
-    Tag,
-    Skeleton,
-    Input,
-    Form,
-    Button,
-    Popover,
-    Switch,
-} from 'antd'
+import { Table, Skeleton } from 'antd'
 
 const { Column } = Table
 
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { queryCache, useQuery } from 'react-query'
 
 import {
     getTaskStatuses,
     TaskStatus,
     updateTaskStatus,
-} from '../../taiga-api/tasks'
-import { getUserstoryStatuses } from '../../taiga-api/userstories'
-import EditableColorCell from '../tablecells/ColorCell'
-import EditableInputCell from '../tablecells/InputCell'
-import MoveCell from '../tablecells/MoveCell'
-import SwitchCell from '../tablecells/SwitchCell'
+} from '../../../taiga-api/tasks'
+import EditableColorCell from '../../tablecells/ColorCell'
+import EditableInputCell from '../../tablecells/InputCell'
+import MoveCell from '../../tablecells/MoveCell'
+import SwitchCell from '../../tablecells/SwitchCell'
 
-const Statuses = () => {
+const TaskStatuses = () => {
     const { projectId } = useRouter().query
 
     const { data: taskStatuses, isLoading: taskStatusesIsLoading } = useQuery(
@@ -41,26 +30,40 @@ const Statuses = () => {
         { enabled: projectId }
     )
 
+    const handleSave = async (
+        record: TaskStatus,
+        dataIndex: string,
+        value: unknown
+    ) => {
+        try {
+            const updatedStatus = await updateTaskStatus(record.id, {
+                [dataIndex]: value,
+            })
+            queryCache.setQueryData(
+                ['taskStatuses', { projectId }],
+                (prevData: TaskStatus[]) => {
+                    return prevData
+                        ?.map((item) => {
+                            if (item.id === updatedStatus.id) {
+                                return updatedStatus
+                            }
+                            return item
+                        })
+                        .sort((a, b) => a.order - b.order)
+                }
+            )
+        } catch (errInfo) {
+            console.log('Save failed:', errInfo)
+        }
+    }
+
     useEffect(() => {
         console.log(taskStatuses)
     }, [taskStatuses])
 
-    const {
-        data: userstoryStatuses,
-        isLoading: userstoryStatusesIsLoading,
-    } = useQuery(
-        ['userstoryStatuses', { projectId }],
-        async (key, { projectId }) => {
-            return getUserstoryStatuses(projectId as string)
-        },
-        { enabled: projectId }
-    )
-
     return (
-        <Skeleton
-            loading={taskStatusesIsLoading || userstoryStatusesIsLoading}
-            active
-        >
+        <Skeleton loading={taskStatusesIsLoading} active>
+            <h2>Task Statuses</h2>
             <Table
                 bordered
                 dataSource={taskStatuses?.sort((a, b) => a.order - b.order)}
@@ -70,7 +73,11 @@ const Statuses = () => {
                     title="Color"
                     dataIndex="color"
                     render={(color: string, record: TaskStatus) => (
-                        <EditableColorCell dataIndex="color" record={record} />
+                        <EditableColorCell
+                            handleSave={handleSave}
+                            dataIndex="color"
+                            record={record}
+                        />
                     )}
                 />
                 <Column
@@ -78,6 +85,7 @@ const Statuses = () => {
                     dataIndex="name"
                     render={(name: string, record: TaskStatus) => (
                         <EditableInputCell
+                            handleSave={handleSave}
                             dataIndex="name"
                             title="Name"
                             record={record}
@@ -88,7 +96,11 @@ const Statuses = () => {
                     title="Closed"
                     dataIndex="closed"
                     render={(closed: boolean, record: TaskStatus) => (
-                        <SwitchCell dataIndex="closed" record={record} />
+                        <SwitchCell
+                            handleSave={handleSave}
+                            dataIndex="closed"
+                            record={record}
+                        />
                     )}
                 />
                 <Column
@@ -96,6 +108,7 @@ const Statuses = () => {
                     dataIndex="order"
                     render={(order: number, record: TaskStatus, index) => (
                         <MoveCell
+                            handleSave={handleSave}
                             statusItems={taskStatuses}
                             index={index}
                             dataIndex="order"
@@ -108,4 +121,4 @@ const Statuses = () => {
     )
 }
 
-export default Statuses
+export default TaskStatuses

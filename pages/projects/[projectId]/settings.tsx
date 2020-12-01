@@ -8,7 +8,7 @@ import Settings from '../../../components/Settings'
 import { getProject } from '../../../taiga-api/projects'
 import styled from 'styled-components'
 import Head from 'next/head'
-import Statuses from '../../../components/project-settings/Statuses'
+import Statuses from '../../../components/project-settings/statuses/'
 
 const HeaderContainer = styled.div`
     margin: auto;
