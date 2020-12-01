@@ -32,12 +32,12 @@ const EditSprint = ({ open, sprint, onClose }: Props) => {
 
     const otherMilestones = milestones.filter((ms) => ms.id !== sprint.id)
     const handleSubmit = async (values: Store) => {
-        const startDate = values.date[0]
-        const endDate = values.date[1]
+        const startDate: moment.Moment = values.date[0]
+        const endDate: moment.Moment = values.date[1]
         const newMilestone = await updateMilestone(sprint.id, {
             name: values.name,
-            estimated_start: startDate._d.toISOString().split('T')[0],
-            estimated_finish: endDate._d.toISOString().split('T')[0],
+            estimated_start: startDate.toDate().toISOString().split('T')[0],
+            estimated_finish: endDate.toDate().toISOString().split('T')[0],
         })
         queryCache.setQueryData(
             ['milestones', { projectId }],
