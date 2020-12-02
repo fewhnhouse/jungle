@@ -7,7 +7,11 @@ import { useQueryCache } from 'react-query'
 import { useRouter } from 'next/router'
 import { updateTaskCache, updateUserstoryCache } from '../../updateCache'
 import useDebounce from '../../util/useDebounce'
-import { Input } from 'antd'
+import { Button, Form, Input } from 'antd'
+import dynamic from 'next/dynamic'
+import 'braft-editor/dist/index.css'
+
+const BraftEditor = dynamic(() => import('braft-editor'))
 
 const InputContainer = styled.div`
     display: flex;
@@ -81,10 +85,22 @@ export default function EditableDescription({
             }
         }
     }, [debouncedDescription, type])
+    const controls = [
+        'bold',
+        'italic',
+        'underline',
+        'text-color',
+        'separator',
+        'link',
+        'separator',
+        'media',
+    ]
+
+    const [form] = Form.useForm()
 
     return (
         <InputContainer>
-            <StyledTextArea
+            {/* <StyledTextArea
                 placeholder="Description..."
                 $focus={focus}
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
@@ -94,7 +110,12 @@ export default function EditableDescription({
                 onBlur={() => setFocus(false)}
                 bordered={focus}
                 autoSize={{ minRows: 4, maxRows: 8 }}
-            ></StyledTextArea>
+            ></StyledTextArea> */}
+            <BraftEditor
+                className="my-editor"
+                style={{ width: '100%', height: 300 }}
+                placeholder="Description..."
+            />
             <Flex style={{ marginTop: 5 }}>
                 <span>Your changes will automatically be saved.</span>
             </Flex>
