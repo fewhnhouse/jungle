@@ -84,7 +84,11 @@ const IssueCreation = ({ milestone }: { milestone: number | null }) => {
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
             />
-            <Button htmlType="submit" icon={<PlusOutlined />}></Button>
+            <Button
+                disabled={subject === ''}
+                htmlType="submit"
+                icon={<PlusOutlined />}
+            ></Button>
         </StyledForm>
     )
 }

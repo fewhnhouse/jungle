@@ -1,22 +1,21 @@
 import React from 'react'
 import styled from 'styled-components'
 import EditableTitle from '../issues/EditableTitle'
-import EditableDescription from '../issues/EditableDescription'
 import { useQuery } from 'react-query'
 import { getTask, Task } from '../../taiga-api/tasks'
 import TaskBreadcrumbs from '../issues/TaskBreadcrumbs'
 import StoryBreadcrumbs from '../issues/UserStoryBreadcrumbs'
-import { Avatar, Button, Divider, Dropdown, Modal, Skeleton } from 'antd'
+import { Button, Divider, Dropdown, Modal, Skeleton } from 'antd'
 import Flex from '../Flex'
-import {
-    BookOutlined,
-    CloseOutlined,
-    EllipsisOutlined,
-    ProfileOutlined,
-} from '@ant-design/icons'
+import { CloseOutlined, EllipsisOutlined } from '@ant-design/icons'
 import Comments from './comments/Comments'
 import { getUserstory, UserStory } from '../../taiga-api/userstories'
 import { ModalProps } from 'antd/lib/modal'
+import dynamic from 'next/dynamic'
+
+const EditableDescription = dynamic(() => import('../issues/EditableDescription'), {
+    ssr: false,
+})
 
 const StyledModal = styled(Modal)`
     .ant-modal-close {

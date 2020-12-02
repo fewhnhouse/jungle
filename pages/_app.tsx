@@ -10,6 +10,7 @@ import AchievementWrapper from '../util/AchievementWrapper'
 import { Hydrate } from 'react-query/hydration'
 import { QueryCache, ReactQueryCacheProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query-devtools'
+import 'braft-editor/dist/index.css'
 
 export interface Theme {
     colors: {
