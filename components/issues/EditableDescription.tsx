@@ -7,7 +7,6 @@ import { useQueryCache } from 'react-query'
 import { useRouter } from 'next/router'
 import { updateTaskCache, updateUserstoryCache } from '../../updateCache'
 import useDebounce from '../../util/useDebounce'
-import { Button, Form, Input } from 'antd'
 import dynamic from 'next/dynamic'
 import 'braft-editor/dist/index.css'
 
@@ -22,13 +21,6 @@ const InputContainer = styled.div`
     margin-bottom: ${({ theme }) => theme.spacing.small};
 `
 
-const StyledTextArea = styled.div`
-    font-size: 16px;
-    margin-left: 5px;
-    &:hover {
-        background: '#e9ecef';
-    }
-`
 
 const StyledBraftEditor = styled(BraftEditor)<{ $focus: boolean }>`
     border-radius: 2px;
@@ -95,28 +87,18 @@ export default function EditableDescription({
 
     return (
         <InputContainer>
-            {/* <StyledTextArea
-                placeholder="Description..."
-                $focus={focus}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                    setDescription(e.target.value)
-                }
-                onFocus={() => setFocus(true)}
-                onBlur={() => setFocus(false)}
-                bordered={focus}
-                autoSize={{ minRows: 4, maxRows: 8 }}
-            ></StyledTextArea> */}
             <StyledBraftEditor
                 $focus={focus}
                 language="en"
                 controlBarStyle={{
                     visibility: focus ? 'visible' : 'hidden',
-                    display: focus ? 'block' : 'none'
+                    display: focus ? 'block' : 'none',
                 }}
                 className="my-editor"
                 onFocus={() => setFocus(true)}
                 onBlur={() => setFocus(false)}
                 style={{ width: '100%', height: 300 }}
+                onChange={(editorState) => console.log(editorState)}
                 contentStyle={{ height: 300 }}
                 controls={[
                     'text-color',
