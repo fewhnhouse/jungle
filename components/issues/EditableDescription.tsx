@@ -10,8 +10,6 @@ import useDebounce from '../../util/useDebounce'
 import 'braft-editor/dist/index.css'
 import BraftEditor, { EditorState } from 'braft-editor'
 
-console.log(BraftEditor)
-
 const InputContainer = styled.div`
     display: flex;
     width: 100%;
