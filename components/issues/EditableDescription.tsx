@@ -22,9 +22,16 @@ const InputContainer = styled.div`
     margin-bottom: ${({ theme }) => theme.spacing.small};
 `
 
-const StyledTextArea = styled(Input.TextArea)<{ $focus }>`
+const StyledTextArea = styled.div`
     font-size: 16px;
     margin-left: 5px;
+    &:hover {
+        background: '#e9ecef';
+    }
+`
+
+const StyledBraftEditor = styled(BraftEditor)<{ $focus: boolean }>`
+    border-radius: 2px;
     &:hover {
         background: ${({ $focus }) => ($focus ? '' : '#e9ecef')};
     }
@@ -85,18 +92,6 @@ export default function EditableDescription({
             }
         }
     }, [debouncedDescription, type])
-    const controls = [
-        'bold',
-        'italic',
-        'underline',
-        'text-color',
-        'separator',
-        'link',
-        'separator',
-        'media',
-    ]
-
-    const [form] = Form.useForm()
 
     return (
         <InputContainer>
@@ -111,29 +106,32 @@ export default function EditableDescription({
                 bordered={focus}
                 autoSize={{ minRows: 4, maxRows: 8 }}
             ></StyledTextArea> */}
-            <BraftEditor
+            <StyledBraftEditor
+                $focus={focus}
+                language="en"
+                controlBarStyle={{
+                    visibility: focus ? 'visible' : 'hidden',
+                    display: focus ? 'block' : 'none'
+                }}
                 className="my-editor"
                 onFocus={() => setFocus(true)}
                 onBlur={() => setFocus(false)}
                 style={{ width: '100%', height: 300 }}
                 contentStyle={{ height: 300 }}
                 controls={[
-                    { title: 'Text Color', text: '', key: 'text-color' },
-                    { title: 'Bold', text: '', key: 'bold' },
-                    { title: 'Italic', text: '', key: 'italic' },
-                    { title: 'Underline', text: '', key: 'underline' },
-                    {
-                        title: 'Strike-Through',
-                        text: '',
-                        key: 'strike-through',
-                    },
+                    'text-color',
+                    'bold',
+                    'italic',
+                    'underline',
+                    'strike-through',
                     'separator',
-                    { title: 'Headings', text: '', key: 'headings' },
-                    { title: 'Blockquote', text: '', key: 'blockquote' },
-                    { title: 'Code', text: '', key: 'code' },
-                    { title: 'Link', text: '', key: 'link' },
-                    { title: 'Unordered List', text: '', key: 'list-ul' },
-                    { title: 'Ordered List', text: '', key: 'list-ol' },
+                    'headings',
+                    'blockquote',
+                    'code',
+                    'link',
+                    'list-ul',
+                    'list-ol',
+                    'table',
                 ]}
                 placeholder="Description..."
             />
