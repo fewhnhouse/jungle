@@ -11,7 +11,7 @@ import { Button, Form, Input } from 'antd'
 import dynamic from 'next/dynamic'
 import 'braft-editor/dist/index.css'
 
-const BraftEditor = dynamic(() => import('braft-editor'))
+const BraftEditor = dynamic(() => import('braft-editor'), { ssr: false })
 
 const InputContainer = styled.div`
     display: flex;
@@ -113,7 +113,28 @@ export default function EditableDescription({
             ></StyledTextArea> */}
             <BraftEditor
                 className="my-editor"
+                onFocus={() => setFocus(true)}
+                onBlur={() => setFocus(false)}
                 style={{ width: '100%', height: 300 }}
+                contentStyle={{ height: 300 }}
+                controls={[
+                    { title: 'Text Color', text: '', key: 'text-color' },
+                    { title: 'Bold', text: '', key: 'bold' },
+                    { title: 'Italic', text: '', key: 'italic' },
+                    { title: 'Underline', text: '', key: 'underline' },
+                    {
+                        title: 'Strike-Through',
+                        text: '',
+                        key: 'strike-through',
+                    },
+                    'separator',
+                    { title: 'Headings', text: '', key: 'headings' },
+                    { title: 'Blockquote', text: '', key: 'blockquote' },
+                    { title: 'Code', text: '', key: 'code' },
+                    { title: 'Link', text: '', key: 'link' },
+                    { title: 'Unordered List', text: '', key: 'list-ul' },
+                    { title: 'Ordered List', text: '', key: 'list-ol' },
+                ]}
                 placeholder="Description..."
             />
             <Flex style={{ marginTop: 5 }}>
