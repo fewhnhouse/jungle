@@ -17,10 +17,9 @@ const useNotifications = () => {
     >('default')
     // function to actually ask the permissions
     function handlePermission(permission) {
-        const isSupported = 'Notification' in window
         setPermission(permission)
         // make sure Browser stores the information
-        if (isSupported && !('permission' in Notification)) {
+        if (!('permission' in Notification)) {
             (Notification as any).permission = permission
         }
     }
