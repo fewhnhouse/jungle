@@ -7,7 +7,6 @@ import { useQueryCache } from 'react-query'
 import { useRouter } from 'next/router'
 import { updateTaskCache, updateUserstoryCache } from '../../updateCache'
 import useDebounce from '../../util/useDebounce'
-import dynamic from 'next/dynamic'
 import 'braft-editor/dist/index.css'
 import BraftEditor, { EditorState } from 'braft-editor'
 
@@ -50,7 +49,7 @@ export default function EditableDescription({
     const [focus, setFocus] = useState(false)
     const queryCache = useQueryCache()
 
-    const handleChange = (editorState: any) => {
+    const handleChange = (editorState: EditorState) => {
         setEditorState(editorState)
     }
 
@@ -58,7 +57,6 @@ export default function EditableDescription({
 
     useEffect(() => {
         const description = debouncedState.toHTML()
-        console.log(description, debouncedState)
         queryCache.setQueryData(
             [type, { id }],
             (prevData: UserStory | Task) => ({
