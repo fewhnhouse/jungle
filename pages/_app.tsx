@@ -1,7 +1,6 @@
 import { AppProps } from 'next/app'
 import styled, { ThemeProvider } from 'styled-components'
 import './app.css'
-import './antd.less'
 import Header from '../components/header/Header'
 import axios from 'axios'
 import { useEffect } from 'react'

@@ -2,45 +2,52 @@ const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin')
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
     enabled: process.env.ANALYZE === 'true',
 })
-const withSass = require('@zeit/next-sass')
-const withLess = require('@zeit/next-less')
+
+/* eslint-disable */
 const withCSS = require('@zeit/next-css')
+const withLess = require('@zeit/next-less')
+const lessToJS = require('less-vars-to-js')
+const fs = require('fs')
+const path = require('path')
 
-const isProd = process.env.NODE_ENV === 'production'
+// Where your antd-custom.less file lives
+const themeVariables = lessToJS(
+    fs.readFileSync(path.resolve(__dirname, './antd.less'), 'utf8')
+)
 
-// fix: prevents error when .less files are required by node
-if (typeof require !== 'undefined') {
-    require.extensions['.less'] = (file) => {}
-}
-
-const bundleConfig = withBundleAnalyzer({
-    webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-        // Note: we provide webpack above so you should not `require` it
-        // Perform customizations to webpack config
-        config.plugins.push(new AntdDayjsWebpackPlugin())
-
-        // Important: return the modified config
-        return config
-    },
-})
-
-module.exports = withCSS({
-    ...bundleConfig,
-    cssModules: true,
-    cssLoaderOptions: {
-        importLoaders: 1,
-        localIdentName: '[local]___[hash:base64:5]',
-    },
-    ...withLess(
-        withSass({
+module.exports = withBundleAnalyzer(
+    withCSS(
+        withLess({
             lessLoaderOptions: {
-                // modifyVars: {
-                //     'primary-color': '#1DA57A',
-                //     'link-color': '#1DA57A',
-                //     'border-radius-base': '2px',
-                // },
                 javascriptEnabled: true,
+                modifyVars: themeVariables, // make your antd custom effective
+            },
+            webpack: (config, { isServer }) => {
+                config.plugins.push(new AntdDayjsWebpackPlugin())
+                if (isServer) {
+                    const antStyles = /antd\/.*?\/style.*?/
+                    const origExternals = [...config.externals]
+                    config.externals = [
+                        (context, request, callback) => {
+                            if (request.match(antStyles)) return callback()
+                            if (typeof origExternals[0] === 'function') {
+                                origExternals[0](context, request, callback)
+                            } else {
+                                callback()
+                            }
+                        },
+                        ...(typeof origExternals[0] === 'function'
+                            ? []
+                            : origExternals),
+                    ]
+
+                    config.module.rules.unshift({
+                        test: antStyles,
+                        use: 'null-loader',
+                    })
+                }
+                return config
             },
         })
-    ),
-})
+    )
+)
