@@ -17,15 +17,17 @@ const useNotifications = () => {
     >('default')
     // function to actually ask the permissions
     function handlePermission(permission) {
+        const isSupported = 'Notification' in window
         setPermission(permission)
         // make sure Browser stores the information
-        if (!('permission' in Notification)) {
+        if (isSupported && !('permission' in Notification)) {
             (Notification as any).permission = permission
         }
     }
 
     useEffect(() => {
-        if ('permission' in Notification) {
+        const isSupported = 'Notification' in window
+        if (isSupported && 'permission' in Notification) {
             setPermission(Notification.permission)
         }
     }, [])
