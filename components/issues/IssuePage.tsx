@@ -6,9 +6,13 @@ import { ModalProps } from 'antd/lib/modal'
 import { useRouter } from 'next/router'
 import { Task } from '../../taiga-api/tasks'
 import { UserStory } from '../../taiga-api/userstories'
-import EditableDescription from './EditableDescription'
 import EditableTitle from './EditableTitle'
 import Comments from '../dnd/comments/Comments'
+import dynamic from 'next/dynamic'
+
+const EditableDescription = dynamic(() => import('./EditableDescription'), {
+    ssr: false,
+})
 
 const Main = styled.div`
     display: flex;

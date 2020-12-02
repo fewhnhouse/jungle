@@ -7,10 +7,10 @@ import { useQueryCache } from 'react-query'
 import { useRouter } from 'next/router'
 import { updateTaskCache, updateUserstoryCache } from '../../updateCache'
 import useDebounce from '../../util/useDebounce'
-import dynamic from 'next/dynamic'
 import 'braft-editor/dist/index.css'
+import BraftEditor, { EditorState } from 'braft-editor'
 
-const BraftEditor = dynamic(() => import('braft-editor'), { ssr: false })
+console.log(BraftEditor)
 
 const InputContainer = styled.div`
     display: flex;
@@ -20,7 +20,6 @@ const InputContainer = styled.div`
     align-items: flex-end;
     margin-bottom: ${({ theme }) => theme.spacing.small};
 `
-
 
 const StyledBraftEditor = styled(BraftEditor)<{ $focus: boolean }>`
     border-radius: 2px;
@@ -43,47 +42,54 @@ export default function EditableDescription({
     version,
 }: Props) {
     const { projectId } = useRouter().query
-    const [description, setDescription] = useState(initialValue)
+    const [editorState, setEditorState] = useState<EditorState>(
+        BraftEditor.createEditorState(initialValue)
+    )
+
     const [focus, setFocus] = useState(false)
-    const debouncedDescription = useDebounce(description, 500)
     const queryCache = useQueryCache()
 
+    const handleChange = (editorState: EditorState) => {
+        setEditorState(editorState)
+    }
+
+    const debouncedState: EditorState = useDebounce(editorState, 500)
+
     useEffect(() => {
-        if (debouncedDescription) {
-            queryCache.setQueryData(
-                [type, { id }],
-                (prevData: UserStory | Task) => ({
-                    ...prevData,
-                    description,
-                })
-            )
-            if (type === 'task') {
-                updateTask(id, {
-                    version,
-                    description,
-                }).then((updatedTask) => {
-                    updateTaskCache(
-                        updatedTask,
-                        id,
-                        projectId as string,
-                        queryCache
-                    )
-                })
-            } else {
-                updateUserstory(id, {
-                    version,
-                    description,
-                }).then((updatedStory) => {
-                    updateUserstoryCache(
-                        updatedStory,
-                        id,
-                        projectId as string,
-                        queryCache
-                    )
-                })
-            }
+        const description = debouncedState.toHTML()
+        queryCache.setQueryData(
+            [type, { id }],
+            (prevData: UserStory | Task) => ({
+                ...prevData,
+                description,
+            })
+        )
+        if (type === 'task') {
+            updateTask(id, {
+                version,
+                description,
+            }).then((updatedTask) => {
+                updateTaskCache(
+                    updatedTask,
+                    id,
+                    projectId as string,
+                    queryCache
+                )
+            })
+        } else {
+            updateUserstory(id, {
+                version,
+                description,
+            }).then((updatedStory) => {
+                updateUserstoryCache(
+                    updatedStory,
+                    id,
+                    projectId as string,
+                    queryCache
+                )
+            })
         }
-    }, [debouncedDescription, type])
+    }, [type, debouncedState])
 
     return (
         <InputContainer>
@@ -94,11 +100,12 @@ export default function EditableDescription({
                     visibility: focus ? 'visible' : 'hidden',
                     display: focus ? 'block' : 'none',
                 }}
+                value={editorState}
                 className="my-editor"
                 onFocus={() => setFocus(true)}
                 onBlur={() => setFocus(false)}
                 style={{ width: '100%', height: 300 }}
-                onChange={(editorState) => console.log(editorState)}
+                onChange={handleChange}
                 contentStyle={{ height: 300 }}
                 controls={[
                     'text-color',
