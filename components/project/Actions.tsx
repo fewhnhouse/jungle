@@ -22,6 +22,7 @@ import { Badge, Button } from 'antd'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { getMe } from '../../taiga-api/users'
+import useMedia from 'use-media'
 
 export const ActionContainer = styled.div`
     margin: 6px 0px;
@@ -42,6 +43,9 @@ export const ActionContainer = styled.div`
     }
     button {
         width: 110px;
+        @media (max-width: 480px) {
+            width: 60px;
+        }
     }
 `
 
@@ -56,6 +60,7 @@ const Actions = ({ project }: { project: Project }) => {
             enabled: !!projectId,
         }
     )
+    const isMobile = useMedia('screen and (max-width: 480px)')
 
     const { data: fansData } = useQuery(
         ['fans', { projectId: projectId }],
@@ -130,7 +135,9 @@ const Actions = ({ project }: { project: Project }) => {
         <>
             <ActionContainer>
                 <Link href={`/projects/${projectId}/settings`}>
-                    <Button icon={<SettingOutlined />}>Settings</Button>
+                    <Button icon={<SettingOutlined />}>
+                        {isMobile ? null : 'Settings'}
+                    </Button>
                 </Link>
             </ActionContainer>
 
@@ -150,7 +157,11 @@ const Actions = ({ project }: { project: Project }) => {
                             )
                         }
                     >
-                        {project?.is_watcher ? 'Watching' : 'Watch'}
+                        {isMobile
+                            ? null
+                            : project?.is_watcher
+                            ? 'Watching'
+                            : 'Watch'}
                     </Button>
                 </Badge>
             </ActionContainer>
@@ -166,7 +177,7 @@ const Actions = ({ project }: { project: Project }) => {
                             project?.is_fan ? <LikeFilled /> : <LikeOutlined />
                         }
                     >
-                        {project?.is_fan ? 'Liked' : 'Like'}
+                        {isMobile ? null : project?.is_fan ? 'Liked' : 'Like'}
                     </Button>
                 </Badge>
             </ActionContainer>
