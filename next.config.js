@@ -17,7 +17,7 @@ const themeVariables = lessToJS(
 
 module.exports = withBundleAnalyzer(
     withCSS({
-        cssModules:true,
+        // cssModules:true,
         ...withLess({
             lessLoaderOptions: {
                 javascriptEnabled: true,
