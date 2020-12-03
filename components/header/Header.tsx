@@ -98,7 +98,7 @@ export const WrappedLink = ({
 const Header = () => {
     const ref = useRef()
     const router = useRouter()
-    const isMobile = useMedia('screen and (max-width: 480px)')
+    const isMobile = useMedia('screen and (max-width: 600px)')
 
     const { pathname } = router
 

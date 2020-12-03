@@ -65,7 +65,7 @@ export default function Home() {
             </Head>
             <Container>
                 <StyledCard title="Into the Jungle">
-                    <Form.Item
+                    <Form
                         layout="vertical"
                         onFinish={handleLogin}
                         initialValues={{ remember: true }}
@@ -121,7 +121,7 @@ export default function Home() {
                                 Log In &rarr;
                             </Button>
                         </Form.Item>
-                    </Form.Item>
+                    </Form>
                 </StyledCard>
             </Container>
         </>
