@@ -44,7 +44,8 @@ export const ActionContainer = styled.div`
     button {
         width: 110px;
         @media (max-width: 480px) {
-            width: 60px;
+            width: unset;
+            padding: 0px 10px;
         }
     }
 `
