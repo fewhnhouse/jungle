@@ -8,7 +8,13 @@ import { useState, useRef } from 'react'
 import useMedia from 'use-media'
 import Tab from './Tab'
 import { Button, Input } from 'antd'
-import { AppstoreOutlined, BlockOutlined, HistoryOutlined, HomeOutlined } from '@ant-design/icons'
+import {
+    AppstoreOutlined,
+    BlockOutlined,
+    HistoryOutlined,
+    HomeOutlined,
+} from '@ant-design/icons'
+import MobileHeader from './MobileHeader'
 
 interface HeaderProps {
     landing: boolean
@@ -92,7 +98,7 @@ export const WrappedLink = ({
 const Header = () => {
     const ref = useRef()
     const router = useRouter()
-    const isTablet = useMedia('screen and (max-width: 720px)')
+    const isMobile = useMedia('screen and (max-width: 480px)')
 
     const { pathname } = router
 
@@ -105,9 +111,10 @@ const Header = () => {
 
     return (
         <StyledHeader ref={ref} landing={pathname === '/'} scrolled={y > 0}>
+            {isMobile && <MobileHeader />}
             {pathname === '/login' ? (
                 <h3></h3>
-            ) : pathname.includes('/') ? (
+            ) : pathname.includes('/') && !isMobile ? (
                 <Links>
                     <Tab href="/" icon={<HomeOutlined />} label="Home" />
                     <Tab
@@ -145,8 +152,12 @@ const Header = () => {
                         />
                     </InputContainer>
                 )}
-                <Notifications />
-                <Profile />
+                {!isMobile && (
+                    <>
+                        <Notifications />
+                        <Profile />
+                    </>
+                )}
             </Options>
         </StyledHeader>
     )
