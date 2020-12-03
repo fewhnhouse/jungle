@@ -135,7 +135,7 @@ export default function Home() {
                     <HeaderContainer>
                         <TitleContainer>
                             <PageTitle
-                                avatarUrl={user?.big_photo ?? '/placeholder.png'}
+                                avatarUrl={user?.big_photo ?? '/placeholder.webp'}
                                 title={user?.full_name ?? ''}
                                 description={
                                     <>

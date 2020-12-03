@@ -100,7 +100,7 @@ const ProjectDetails = () => {
 
     const [isPrivate, setIsPrivate] = useState(data?.is_private ?? false)
     const [confirmDeletion, setConfirmDeletion] = useState(false)
-    const [logo, setLogo] = useState('/placeholder.png')
+    const [logo, setLogo] = useState('/placeholder.webp')
 
     if (!data) {
         return <Skeleton paragraph={{ rows: 5 }} active />

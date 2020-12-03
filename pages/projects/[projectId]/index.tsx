@@ -129,7 +129,7 @@ const Project = () => {
                                     label: data?.name,
                                 },
                             ]}
-                            avatarUrl={data?.logo_big_url ?? '/placeholder.png'}
+                            avatarUrl={data?.logo_big_url ?? '/placeholder.webp'}
                             title={data?.name}
                             description={
                                 <Flex direction="column">

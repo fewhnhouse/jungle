@@ -10,7 +10,7 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons'
 const Container = styled.div`
     display: flex;
     background-color: rgb(51, 99, 209);
-    background-image: url(jungle.png);
+    background-image: url(jungle.webp);
     min-height: 100vh;
     width: 100%;
     background-size: cover;
