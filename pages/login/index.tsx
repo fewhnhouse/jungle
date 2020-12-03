@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import { User } from '../../taiga-api/users'
 import { Button, Card, Checkbox, Form, Input, message } from 'antd'
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
+import Head from 'next/head'
 
 const Container = styled.div`
     display: flex;
@@ -54,66 +55,75 @@ export default function Home() {
         }
     }
     return (
-        <Container>
-            <StyledCard title="Into the Jungle">
-                <Form
-                    layout="vertical"
-                    onFinish={handleLogin}
-                    initialValues={{ remember: true }}
-                >
+        <>
+            <Head>
+                <title>Login</title>
+                <meta
+                    name="viewport"
+                    content="initial-scale=1.0, width=device-width"
+                />
+            </Head>
+            <Container>
+                <StyledCard title="Into the Jungle">
                     <Form.Item
-                        name="username"
-                        label="Username"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Please input your username!',
-                            },
-                        ]}
+                        layout="vertical"
+                        onFinish={handleLogin}
+                        initialValues={{ remember: true }}
                     >
-                        <Input
-                            prefix={
-                                <UserOutlined className="site-form-item-icon" />
-                            }
-                            placeholder="Username"
-                        />
-                    </Form.Item>
-                    <Form.Item
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Please input your password!',
-                            },
-                        ]}
-                        name="password"
-                        label="Password"
-                    >
-                        <Input.Password
-                            prefix={
-                                <LockOutlined className="site-form-item-icon" />
-                            }
-                            placeholder="Password"
-                        />
-                    </Form.Item>
-                    <Form.Item>
                         <Form.Item
-                            name="remember"
-                            valuePropName="checked"
-                            noStyle
+                            name="username"
+                            label="Username"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please input your username!',
+                                },
+                            ]}
                         >
-                            <Checkbox>Remember me</Checkbox>
+                            <Input
+                                prefix={
+                                    <UserOutlined className="site-form-item-icon" />
+                                }
+                                placeholder="Username"
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please input your password!',
+                                },
+                            ]}
+                            name="password"
+                            label="Password"
+                        >
+                            <Input.Password
+                                prefix={
+                                    <LockOutlined className="site-form-item-icon" />
+                                }
+                                placeholder="Password"
+                            />
+                        </Form.Item>
+                        <Form.Item>
+                            <Form.Item
+                                name="remember"
+                                valuePropName="checked"
+                                noStyle
+                            >
+                                <Checkbox>Remember me</Checkbox>
+                            </Form.Item>
+
+                            <Link href="reset-password">Forgot password?</Link>
                         </Form.Item>
 
-                        <Link href="reset-password">Forgot password?</Link>
+                        <Form.Item>
+                            <Button htmlType="submit" type="primary">
+                                Log In &rarr;
+                            </Button>
+                        </Form.Item>
                     </Form.Item>
-
-                    <Form.Item>
-                        <Button htmlType="submit" type="primary">
-                            Log In &rarr;
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </StyledCard>
-        </Container>
+                </StyledCard>
+            </Container>
+        </>
     )
 }
