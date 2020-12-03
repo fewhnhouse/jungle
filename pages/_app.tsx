@@ -5,12 +5,11 @@ import Header from '../components/header/Header'
 import axios from 'axios'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-// import 'antd/dist/antd.css'
 import AchievementWrapper from '../util/AchievementWrapper'
 import { Hydrate } from 'react-query/hydration'
 import { QueryCache, ReactQueryCacheProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query-devtools'
-import 'braft-editor/dist/index.css'
+import '../antd.less' // includes antd style and our customization
 
 export interface Theme {
     colors: {
@@ -80,19 +79,6 @@ const AppContainer = styled.main`
 `
 
 axios.defaults.baseURL = process.env.NEXT_PUBLIC_TAIGA_API_URL
-
-/*
-const graphqlFetcher = (query) =>
-    fetch('/api/graphql', {
-        method: 'POST',
-        headers: {
-            'Content-type': 'application/json',
-        },
-        body: JSON.stringify({ query }),
-    })
-        .then((res) => res.json())
-        .then((json) => json.data)
-*/
 
 const queryCache = new QueryCache()
 

@@ -16,11 +16,12 @@ const themeVariables = lessToJS(
 )
 
 module.exports = withBundleAnalyzer(
-    withCSS(
-        withLess({
+    withCSS({
+        cssModules:true,
+        ...withLess({
             lessLoaderOptions: {
                 javascriptEnabled: true,
-                modifyVars: themeVariables, // make your antd custom effective
+                // modifyVars: themeVariables, // make your antd custom effective
             },
             webpack: (config, { isServer }) => {
                 config.plugins.push(new AntdDayjsWebpackPlugin())
@@ -48,6 +49,6 @@ module.exports = withBundleAnalyzer(
                 }
                 return config
             },
-        })
-    )
+        }),
+    })
 )
