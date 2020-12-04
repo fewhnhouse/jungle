@@ -219,7 +219,7 @@ const UserDetails = () => {
                                 <br /> It is optional, but strongly recommended.
                             </Description>
                             <AvatarWrapper>
-                                <Avatar src={logo} />
+                                <Avatar alt="Avatar" src={logo} />
                                 <UploadButton htmlFor="avatar-upload"></UploadButton>
                                 <FileInput
                                     onChange={handleAvatarChange}

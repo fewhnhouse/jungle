@@ -211,7 +211,7 @@ const ProjectDetails = () => {
                                 <br /> It is optional, but recommended.
                             </span>
                             <AvatarWrapper>
-                                <Avatar src={logo} />
+                                <Avatar alt="Avatar" src={logo} />
                                 <UploadButton htmlFor="avatar-upload"></UploadButton>
                                 <FileInput
                                     onChange={handleAvatarChange}

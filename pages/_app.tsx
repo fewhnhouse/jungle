@@ -10,6 +10,7 @@ import { Hydrate } from 'react-query/hydration'
 import { QueryCache, ReactQueryCacheProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query-devtools'
 import '../antd.less' // includes antd style and our customization
+import Head from 'next/head'
 
 export interface Theme {
     colors: {
@@ -94,6 +95,9 @@ export default function App({ Component, pageProps }: AppProps) {
         <ReactQueryCacheProvider queryCache={queryCache}>
             <Hydrate state={pageProps.dehydratedState}>
                 <ThemeProvider theme={theme}>
+                    <Head>
+                        <title>Jungle</title>
+                    </Head>
                     <Header />
                     <AppContainer>
                         <AchievementWrapper>
@@ -103,7 +107,7 @@ export default function App({ Component, pageProps }: AppProps) {
                 </ThemeProvider>
                 <ReactQueryDevtools initialIsOpen />
             </Hydrate>
-            <ReactQueryDevtools  />
+            <ReactQueryDevtools />
         </ReactQueryCacheProvider>
     )
 }

@@ -53,7 +53,7 @@ const PageTitle = ({
             justify="space-between"
         >
             <TitleContainer>
-                {avatarUrl && <Avatar src={avatarUrl} />}
+                {avatarUrl && <Avatar alt="Avatar" src={avatarUrl} />}
                 <Flex direction="column">
                     <Breadcrumb>
                         {breadcrumbs?.map(({ label, href }, index) => (

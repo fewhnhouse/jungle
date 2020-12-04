@@ -61,7 +61,7 @@ const ProjectName = styled.a`
 `
 
 const ProjectDescription = styled.span`
-    color: #777;
+    color: #666;
     min-height: 50px;
     display: block;
 `
@@ -172,7 +172,7 @@ export default function ProjectListItem({
                 </Link>
                 <ItemContainer>
                     <InfoContainer>
-                        <StyledImage src={avatar ?? '/placeholder.webp'} />
+                        <StyledImage alt="Project Avatar" src={avatar ?? '/placeholder.webp'} />
                         <TextContainer>
                             <Flex align="center">
                                 <Link href={`/projects/${id}`} passHref>
@@ -230,10 +230,10 @@ export default function ProjectListItem({
 
             <StyledFooter>
                 <Link passHref href={`/projects/${id}/backlog`}>
-                    <StyledButton id="dashboard">Backlog &rarr;</StyledButton>
+                    <StyledButton>Backlog &rarr;</StyledButton>
                 </Link>
                 <Link passHref href={`/projects/${id}/board`}>
-                    <StyledButton id="board">Board &rarr;</StyledButton>
+                    <StyledButton>Board &rarr;</StyledButton>
                 </Link>
             </StyledFooter>
         </StyledCard>
