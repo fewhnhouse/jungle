@@ -38,9 +38,7 @@ const SprintCreation = () => {
     const handleClose = () => setShow(false)
 
     const handleSubmit = async (values: Store) => {
-        const startDate = values.date[0]
-        const endDate = values.date[1]
-        console.log(startDate, endDate)
+        const [startDate, endDate] = values.date
         const newMilestone = await createMilestone({
             name: values.name,
             estimated_start: startDate.toISOString().split('T')[0],

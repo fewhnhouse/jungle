@@ -35,8 +35,8 @@ const EditSprint = ({ open, sprint, onClose }: Props) => {
         const [startDate, endDate]: [moment.Moment, moment.Moment] = values.date
         const newMilestone = await updateMilestone(sprint.id, {
             name: values.name,
-            estimated_start: startDate.toDate().toISOString().split('T')[0],
-            estimated_finish: endDate.toDate().toISOString().split('T')[0],
+            estimated_start: startDate.toISOString().split('T')[0],
+            estimated_finish: endDate.toISOString().split('T')[0],
         })
         queryCache.setQueryData(
             ['milestones', { projectId }],
