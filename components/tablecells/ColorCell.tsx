@@ -1,13 +1,11 @@
 import { Popover, Tag } from 'antd'
 import { useState } from 'react'
 import { ChromePicker } from 'react-color'
-import { TaskStatus } from '../../taiga-api/tasks'
-import { UserstoryStatus } from '../../taiga-api/userstories'
 
 interface EditableColorCellProps {
     dataIndex: string
-    record: TaskStatus | UserstoryStatus
-    handleSave: (record: TaskStatus | UserstoryStatus, dataIndex: string, value: any) => void
+    record: { [key: string]: unknown }
+    handleSave: (record: any, dataIndex: string, value: any) => void
 }
 
 const EditableColorCell: React.FC<EditableColorCellProps> = ({
@@ -16,7 +14,7 @@ const EditableColorCell: React.FC<EditableColorCellProps> = ({
     handleSave,
     ...restProps
 }) => {
-    const [color, setColor] = useState(record[dataIndex])
+    const [color, setColor] = useState(record[dataIndex] ?? '#ddd')
     const onSave = async (color: string) => {
         handleSave(record, dataIndex, color)
     }
@@ -36,7 +34,7 @@ const EditableColorCell: React.FC<EditableColorCellProps> = ({
                     />
                 }
             >
-                <Tag color={color}>{color}</Tag>
+                <Tag color={color as string}>{color}</Tag>
             </Popover>
         </td>
     )

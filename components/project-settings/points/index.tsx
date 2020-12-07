@@ -7,7 +7,7 @@ const { Column } = Table
 import { useRouter } from 'next/router'
 import { useQueryCache, useQuery } from 'react-query'
 import { deletePoint, getPoints, updatePoint } from '../../../taiga-api/points'
-import { Member, Point } from '../../../taiga-api/projects'
+import { Point } from '../../../taiga-api/projects'
 import Flex from '../../Flex'
 import EditableInputCell from '../../tablecells/InputCell'
 
@@ -67,7 +67,7 @@ const Points = () => {
                 <Column
                     title="Name"
                     dataIndex="name"
-                    render={(name: string, record: Member) => (
+                    render={(name: string, record: Point) => (
                         <EditableInputCell
                             record={record as any}
                             title="Name"
@@ -79,7 +79,7 @@ const Points = () => {
                 <Column
                     title="Value"
                     dataIndex="value"
-                    render={(name: string, record: Member) => (
+                    render={(name: string, record: Point) => (
                         <EditableInputCell
                             type="number"
                             record={record as any}
@@ -91,16 +91,12 @@ const Points = () => {
                 />
                 <Column
                     title="Action"
-                    render={(role: number, record: any) => (
+                    render={(role: number, record: Point) => (
                         <Popconfirm
                             title={`Are you sure you want to remove this point?`}
                             onConfirm={handleDelete(record.id)}
                         >
-                            <Button
-                                disabled={record.is_owner}
-                                danger
-                                icon={<DeleteOutlined />}
-                            />
+                            <Button danger icon={<DeleteOutlined />} />
                         </Popconfirm>
                     )}
                 />

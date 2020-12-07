@@ -12,6 +12,7 @@ import Statuses from '../../../components/project-settings/statuses/'
 import DefaultValues from '../../../components/project-settings/defaultValues'
 import Members from '../../../components/project-settings/members'
 import Points from '../../../components/project-settings/points'
+import Tags from '../../../components/project-settings/tags'
 import useMedia from 'use-media'
 import { Result } from 'antd'
 import Flex from '../../../components/Flex'
@@ -81,6 +82,7 @@ export default function ProjectSettings() {
                         {menuItemIndex === 1 && <DefaultValues />}
                         {menuItemIndex === 2 && <Statuses />}
                         {menuItemIndex === 3 && <Points />}
+                        {menuItemIndex === 5 && <Tags />}
                         {menuItemIndex === 6 && <Members />}
                     </Settings>
                 )}
