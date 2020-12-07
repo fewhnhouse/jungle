@@ -135,33 +135,15 @@ export default function Home() {
                     <HeaderContainer>
                         <TitleContainer>
                             <PageTitle
-                                avatarUrl={user?.big_photo ?? '/placeholder.webp'}
+                                avatarUrl={
+                                    user?.big_photo ?? '/placeholder.webp'
+                                }
                                 title={user?.full_name ?? ''}
                                 description={
                                     <>
                                         @{user?.username}
                                         <Divider type="vertical" />
                                         {user?.email}
-                                    </>
-                                }
-                                actions={
-                                    <>
-                                        <ActionContainer>
-                                            <Button onClick={toggleModal}>
-                                                New Project
-                                            </Button>
-                                        </ActionContainer>
-                                        <ActionContainer>
-                                            <Link
-                                                href={`/users/${user?.id}/settings`}
-                                            >
-                                                <Button
-                                                    icon={<SettingOutlined />}
-                                                >
-                                                    Settings
-                                                </Button>
-                                            </Link>
-                                        </ActionContainer>
                                     </>
                                 }
                             />
