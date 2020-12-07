@@ -2,7 +2,7 @@ import { Form, Input, Select, Tag } from 'antd'
 import { Dispatch, memo, SetStateAction, useEffect } from 'react'
 import styled from 'styled-components'
 import { Milestone } from '../../taiga-api/milestones'
-import AssigneeDropdown from '../issues/AssigneeDropdown'
+import MultiAssigneeDropdown from '../issues/MultiAssigneeDropdown'
 
 const { Option } = Select
 const { Item } = Form
@@ -104,7 +104,7 @@ const FilterBoard = ({
             </Item>
             {groupBy !== 'assignee' && (
                 <Item label="Assignee">
-                    <AssigneeDropdown
+                    <MultiAssigneeDropdown
                         value={assignees}
                         onChange={(id) => setAssignees(id)}
                     />

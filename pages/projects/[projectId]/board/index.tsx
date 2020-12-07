@@ -77,7 +77,7 @@ export default function BoardContainer() {
     const [selectedSprint, setSelectedSprint] = useQueryState<
         number | undefined
     >('sprint', undefined)
-    const [assignees, setAssignees] = useQueryState<number[]>('assignee')
+    const [assignees, setAssignees] = useQueryState<number[]>('assignee', [])
     const { projectId } = router.query
 
     const { data: project, isLoading } = useQuery(
@@ -172,6 +172,8 @@ export default function BoardContainer() {
             [{ storyId: null, storySubject: 'Tasks without Story', tasks: [] }]
         ) ?? []
 
+    console.log(orderedTasks)
+
     const openMilestones = milestones?.filter((ms) => !ms.closed)
     const sprint = openMilestones?.find((ms) => ms.id === selectedSprint)
     const searchFilter = (issue: Task | UserStory) => {
@@ -181,11 +183,18 @@ export default function BoardContainer() {
 
     const assigneeFilter = (assignees: number[] | null) => (
         issue: Task | UserStory
-    ) => !assignees || assignees.includes(issue.assigned_to)
+    ) => assignees.length === 0 || assignees.includes(issue.assigned_to)
 
     const sprintFilter = (milestone: { id: number }) => (
         issue: Task | UserStory
     ) => !milestone || issue.milestone === milestone.id
+
+    console.log(
+        orderedTasks.length &&
+            orderedTasks[0].tasks
+                ?.filter(searchFilter)
+                ?.filter(assigneeFilter(assignees))
+    )
 
     return (
         <ScrollSync>

@@ -9,7 +9,7 @@ import {
     Task,
     updateTask,
 } from '../../taiga-api/tasks'
-import AssigneeDropdown from '../issues/AssigneeDropdown'
+import SingleAssigneeDropdown from '../issues/SingleAssigneeDropdown'
 import StatusDropdown from '../issues/StatusDropdown'
 import { useRouter } from 'next/router'
 import { Menu, Modal, Skeleton } from 'antd'
@@ -134,7 +134,7 @@ export default function TaskModal({ id, open, onClose }: Props) {
                         onChange={updateStatus}
                     />
                     <Label>Assignee</Label>
-                    <AssigneeDropdown
+                    <SingleAssigneeDropdown
                         value={data?.assigned_to}
                         onChange={updateAssignee}
                     />

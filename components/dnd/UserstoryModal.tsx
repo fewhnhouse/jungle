@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useQueryCache, useQuery } from 'react-query'
-import AssigneeDropdown from '../issues/AssigneeDropdown'
+import SingleAssigneeDropdown from '../issues/SingleAssigneeDropdown'
 import StatusDropdown from '../issues/StatusDropdown'
 import {
     deleteUserstory,
@@ -18,9 +18,7 @@ import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import Uploader from '../issues/Uploader'
 import MultiStorypointSelect from './MultiStorypointSelect'
 import IssueModal from './IssueModal'
-import { Milestone } from '../../taiga-api/milestones'
 import { updateUserstoryCache } from '../../updateCache'
-import Flex from '../Flex'
 
 const { confirm } = Modal
 
@@ -114,7 +112,7 @@ export default function UserstoryModal({ id, open, onClose }: Props) {
                         onChange={updateStatus}
                     />
                     <Label>Assignee</Label>
-                    <AssigneeDropdown
+                    <SingleAssigneeDropdown
                         value={data?.assigned_to}
                         onChange={updateAssignee}
                     />

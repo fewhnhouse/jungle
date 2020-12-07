@@ -11,16 +11,12 @@ const StyledSelect = styled(Select)<{ fluid?: boolean }>`
 `
 
 interface Props {
-    onChange: (ids: number[]) => void
-    value: number[]
+    onChange: (id: number) => void
+    value: number
     fluid?: boolean
 }
 
-const StyledAvatar = styled(Avatar)`
-    margin-right: 5px;
-`
-
-const AssigneeDropdown = ({ onChange, value, fluid }: Props) => {
+const SingleAssigneeDropdown = ({ onChange, value, fluid }: Props) => {
     const { projectId } = useRouter().query
     const { data } = useQuery(
         ['project', { projectId }],
@@ -31,8 +27,6 @@ const AssigneeDropdown = ({ onChange, value, fluid }: Props) => {
     return (
         <StyledSelect
             allowClear
-            style={{ width: 160 }}
-            mode="multiple"
             placeholder="Assignee..."
             fluid={fluid}
             showSearch
@@ -56,4 +50,4 @@ const AssigneeDropdown = ({ onChange, value, fluid }: Props) => {
     )
 }
 
-export default AssigneeDropdown
+export default SingleAssigneeDropdown

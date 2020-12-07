@@ -8,7 +8,7 @@ import useMedia from 'use-media'
 import MultiStoryPointCascader from '../../../../components/dnd/MultiStorypointSelect'
 import SubtaskList from '../../../../components/dnd/SubtaskList'
 import Flex from '../../../../components/Flex'
-import AssigneeDropdown from '../../../../components/issues/AssigneeDropdown'
+import SingleAssigneeDropdown from '../../../../components/issues/SingleAssigneeDropdown'
 import IssuePage from '../../../../components/issues/IssuePage'
 import StatusDropdown from '../../../../components/issues/StatusDropdown'
 import CustomTagPicker from '../../../../components/issues/TagPicker'
@@ -155,7 +155,7 @@ const UserstoryPage = () => {
                                             onChange={updateStatus}
                                         />
                                         <Label>Assignee</Label>
-                                        <AssigneeDropdown
+                                        <SingleAssigneeDropdown
                                             value={data?.assigned_to}
                                             onChange={updateAssignee}
                                         />
