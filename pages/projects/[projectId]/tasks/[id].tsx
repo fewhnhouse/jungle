@@ -112,7 +112,7 @@ const TaskPage = () => {
     const updateAssignee = async (assigneeId: number) => {
         const updatedTask = await updateTask(parseInt(id as string, 10), {
             assigned_to: assigneeId,
-            assigned_users: [assigneeId],
+            assigned_users: assigneeId ? [assigneeId] : [],
             version: data.version,
         })
         queryCache.setQueryData(['task', { id }], () => updatedTask)

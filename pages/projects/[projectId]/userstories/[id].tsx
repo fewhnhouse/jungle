@@ -98,7 +98,7 @@ const UserstoryPage = () => {
     const updateAssignee = async (assigneeId: number) => {
         const updatedStory = await updateUserstory(parseInt(id as string, 10), {
             assigned_to: assigneeId,
-            assigned_users: [assigneeId],
+            assigned_users: assigneeId ? [assigneeId] : [],
             version: data.version,
         })
         queryCache.setQueryData(['userstory', { id }], () => updatedStory)

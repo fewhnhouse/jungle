@@ -103,7 +103,7 @@ export default function TaskModal({ id, open, onClose }: Props) {
     const updateAssignee = async (assigneeId?: number) => {
         const updatedTask = await updateTask(id, {
             assigned_to: assigneeId ?? null,
-            assigned_users: assigneeId ? [assigneeId] : null,
+            assigned_users: assigneeId ? [assigneeId] : [],
             version: data.version,
         })
         updateTaskCache(updatedTask, id, projectId as string, queryCache)

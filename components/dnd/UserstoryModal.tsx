@@ -83,7 +83,7 @@ export default function UserstoryModal({ id, open, onClose }: Props) {
     const updateAssignee = async (assigneeId?: number) => {
         const updatedStory = await updateUserstory(id, {
             assigned_to: assigneeId ?? null,
-            assigned_users: assigneeId ? [assigneeId] : null,
+            assigned_users: assigneeId ? [assigneeId] : [],
             version: data.version,
         })
         updateUserstoryCache(updatedStory, id, projectId as string, queryCache)
