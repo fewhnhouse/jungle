@@ -43,7 +43,7 @@ const Projects = () => {
             <PageHeader>
                 <PageTitle
                     title="Projects"
-                    description="All your projects are listed here."
+                    description="All your projects are listed here, aswell as publicly available projects."
                     actions={
                         <>
                             <Button onClick={toggleModal}>
