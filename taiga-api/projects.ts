@@ -1,5 +1,6 @@
 import { authInstance, publicInstance } from '../util/axiosInstance'
 import { Milestone } from './milestones'
+import { Role } from './roles'
 import { User } from './users'
 
 export interface Member {
@@ -33,16 +34,6 @@ export interface Point {
     order: number
     project_id: number
     value: null | number
-}
-
-export interface Role {
-    computable: boolean
-    id: number
-    name: string
-    order: number
-    permissions: string[]
-    project_id: number
-    slug: string
 }
 
 export interface Watcher {
@@ -205,11 +196,15 @@ export const unlike = (id: string) => {
 }
 
 export const fans = (id: string) => {
-    return authInstance.get<Watcher[]>(`/projects/${id}/fans`).then((res) => res.data)
+    return authInstance
+        .get<Watcher[]>(`/projects/${id}/fans`)
+        .then((res) => res.data)
 }
 
 export const watchers = (id: string) => {
-    return authInstance.get<Watcher[]>(`/projects/${id}/watchers`).then((res) => res.data)
+    return authInstance
+        .get<Watcher[]>(`/projects/${id}/watchers`)
+        .then((res) => res.data)
 }
 
 export const watch = (id: string) => {

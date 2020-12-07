@@ -1,34 +1,35 @@
 import { Switch } from 'antd'
 import { useEffect, useState } from 'react'
-import { TaskStatus } from '../../taiga-api/tasks'
-import { UserstoryStatus } from '../../taiga-api/userstories'
 
 interface SwitchCellProps {
     dataIndex: string
-    record: TaskStatus | UserstoryStatus
-    handleSave: (record: TaskStatus | UserstoryStatus, dataIndex: string, value: any) => void
+    record: unknown
+    disabled?: boolean
+    handleSave: (record: unknown, dataIndex: string, value: any) => void
 }
 
 const SwitchCell: React.FC<SwitchCellProps> = ({
     dataIndex,
     record,
+    disabled,
     handleSave,
     ...restProps
 }) => {
-    const [closed, setClosed] = useState(record[dataIndex])
+    const [checked, setChecked] = useState(record[dataIndex])
     const onSave = async () => {
-        handleSave(record, dataIndex, closed)
+        handleSave(record, dataIndex, checked)
     }
 
     useEffect(() => {
         onSave()
-    }, [closed])
+    }, [checked])
 
     return (
         <td {...restProps}>
             <Switch
-                checked={closed}
-                onChange={(checked) => setClosed(checked)}
+                disabled={disabled}
+                checked={checked}
+                onChange={(checked) => setChecked(checked)}
             />
         </td>
     )

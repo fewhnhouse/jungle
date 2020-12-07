@@ -10,6 +10,7 @@ import styled from 'styled-components'
 import Head from 'next/head'
 import Statuses from '../../../components/project-settings/statuses/'
 import DefaultValues from '../../../components/project-settings/defaultValues'
+import Members from '../../../components/project-settings/members'
 
 const HeaderContainer = styled.div`
     margin: auto;
@@ -67,6 +68,7 @@ export default function ProjectSettings() {
                     {menuItemIndex === 0 && <ProjectDetails />}
                     {menuItemIndex === 1 && <DefaultValues />}
                     {menuItemIndex === 2 && <Statuses />}
+                    {menuItemIndex === 7 && <Members />}
                 </Settings>
             </PageBody>
         </div>

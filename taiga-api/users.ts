@@ -99,3 +99,4 @@ export const changePasswordFromRecovery = () => {
         .post(`/users/change_password_from_recovery`)
         .then((res) => res.data)
 }
+
