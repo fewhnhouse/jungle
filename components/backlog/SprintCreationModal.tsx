@@ -142,7 +142,7 @@ const SprintCreation = () => {
                         name="date"
                         label="Duration"
                     >
-                        <DatePicker.RangePicker />
+                        <DatePicker.RangePicker format="YYYY-MM-DD" />
                     </Form.Item>
                 </Form>
             </Modal>

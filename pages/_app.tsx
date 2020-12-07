@@ -105,9 +105,8 @@ export default function App({ Component, pageProps }: AppProps) {
                         </AchievementWrapper>
                     </AppContainer>
                 </ThemeProvider>
-                <ReactQueryDevtools initialIsOpen />
+                {/* <ReactQueryDevtools initialIsOpen /> */}
             </Hydrate>
-            <ReactQueryDevtools />
         </ReactQueryCacheProvider>
     )
 }
