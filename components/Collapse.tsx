@@ -23,6 +23,8 @@ const StoryHeader = styled.div`
 
 const HeaderContainer = styled.div`
     display: flex;
+    flex: 1;
+    min-width: 0;
     flex-direction: column;
     align-items: flex-start;
     padding: ${({ theme }) => `${theme.spacing.small}`};
@@ -37,6 +39,7 @@ const Description = styled.span`
 `
 
 const InnerContainer = styled.div`
+    min-width: 0;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -45,6 +48,10 @@ const InnerContainer = styled.div`
 `
 
 const StoryTitle = styled.h3`
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     margin: 0;
 `
 
