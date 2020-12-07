@@ -1,21 +1,23 @@
 /* eslint-disable react/display-name */
-import { Table, Skeleton } from 'antd'
+import { DeleteOutlined } from '@ant-design/icons'
+import { Table, Skeleton, Popconfirm, Button } from 'antd'
 
 const { Column } = Table
 
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
 import { useQueryCache, useQuery } from 'react-query'
 
 import {
+    deleteTaskStatus,
     getTaskStatuses,
     TaskStatus,
     updateTaskStatus,
 } from '../../../taiga-api/tasks'
+import Flex from '../../Flex'
 import EditableColorCell from '../../tablecells/ColorCell'
 import EditableInputCell from '../../tablecells/InputCell'
-import MoveCell from '../../tablecells/MoveCell'
 import SwitchCell from '../../tablecells/SwitchCell'
+import StatusAddModal from './StatusAddModal'
 
 const TaskStatuses = () => {
     const { projectId } = useRouter().query
@@ -54,9 +56,22 @@ const TaskStatuses = () => {
         }
     }
 
+    const handleDelete = (id: number) => () => {
+        queryCache.setQueryData(
+            ['taskStatuses', { projectId }],
+            (prevData: TaskStatus[]) => {
+                return prevData?.filter((item) => item.id !== id)
+            }
+        )
+        deleteTaskStatus(id)
+    }
+
     return (
         <Skeleton loading={taskStatusesIsLoading} active>
-            <h2>Task Statuses</h2>
+            <Flex style={{ width: '100%' }} justify="space-between">
+                <h2>Task Statuses</h2>
+                <StatusAddModal type="task" />
+            </Flex>
             <Table bordered dataSource={taskStatuses} pagination={false}>
                 <Column
                     title="Color"
@@ -65,7 +80,7 @@ const TaskStatuses = () => {
                         <EditableColorCell
                             handleSave={handleSave}
                             dataIndex="color"
-                            record={record}
+                            record={record as any}
                         />
                     )}
                 />
@@ -77,7 +92,7 @@ const TaskStatuses = () => {
                             handleSave={handleSave}
                             dataIndex="name"
                             title="Name"
-                            record={record}
+                            record={record as any}
                         />
                     )}
                 />
@@ -93,17 +108,36 @@ const TaskStatuses = () => {
                     )}
                 />
                 <Column
-                    title="Move"
+                    title="Order"
                     dataIndex="order"
                     defaultSortOrder="descend"
+                    sortDirections={['descend']}
                     render={(order: number, record: TaskStatus, index) => (
-                        <MoveCell
-                            handleSave={handleSave}
-                            statusItems={taskStatuses}
-                            index={index}
+                        // <MoveCell
+                        //     handleSave={handleSave}
+                        //     statusItems={taskStatuses}
+                        //     index={index}
+                        //     dataIndex="order"
+                        //     record={record}
+                        // />
+                        <EditableInputCell
+                            type="number"
+                            record={record as any}
                             dataIndex="order"
-                            record={record}
+                            handleSave={handleSave}
+                            title="Order"
                         />
+                    )}
+                />
+                <Column
+                    title="Action"
+                    render={(role: number, record: TaskStatus) => (
+                        <Popconfirm
+                            title={`Are you sure you want to remove this point?`}
+                            onConfirm={handleDelete(record.id)}
+                        >
+                            <Button danger icon={<DeleteOutlined />} />
+                        </Popconfirm>
                     )}
                 />
             </Table>

@@ -282,3 +282,22 @@ export const updateTaskStatus = (id: number, data: any) => {
         .patch<TaskStatus>(`/task-statuses/${id}`, data)
         .then((res) => res.data)
 }
+
+export const createTaskStatus = (
+    projectId: number,
+    data: {
+        color?: string
+        name: string
+        order: number
+        is_archived?: boolean
+        is_closed: boolean
+    }
+) => {
+    return authInstance
+        .post<TaskStatus>(`/task-statuses`, { ...data, project: projectId })
+        .then((res) => res.data)
+}
+
+export const deleteTaskStatus = (id: number) => {
+    return authInstance.delete(`/task-statuses/${id}`).then((res) => res.data)
+}

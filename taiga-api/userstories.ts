@@ -275,3 +275,25 @@ export const updateUserstoryStatus = (id: number, data: any) => {
         .patch<UserstoryStatus>(`/userstory-statuses/${id}`, data)
         .then((res) => res.data)
 }
+
+export const createUserstoryStatus = (
+    projectId: number,
+    data: {
+        color?: string
+        name: string
+        order: number
+        is_archived?: boolean
+        is_closed: boolean
+    }
+) => {
+    return authInstance
+        .post<UserstoryStatus>(`/userstory-statuses`, {
+            project: projectId,
+            ...data,
+        })
+        .then((res) => res.data)
+}
+
+export const deleteUserstoryStatus = (id: number) => {
+    return authInstance.delete(`/userstory-statuses/${id}`).then((res) => res.data)
+}

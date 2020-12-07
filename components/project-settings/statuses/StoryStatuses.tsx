@@ -1,21 +1,23 @@
 /* eslint-disable react/display-name */
-import { Table, Skeleton } from 'antd'
+import { DeleteOutlined } from '@ant-design/icons'
+import { Table, Skeleton, Popconfirm, Button } from 'antd'
 
 const { Column } = Table
 
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
 import { useQueryCache, useQuery } from 'react-query'
 
 import {
+    deleteUserstoryStatus,
     getUserstoryStatuses,
     updateUserstoryStatus,
     UserstoryStatus,
 } from '../../../taiga-api/userstories'
+import Flex from '../../Flex'
 import EditableColorCell from '../../tablecells/ColorCell'
 import EditableInputCell from '../../tablecells/InputCell'
-import MoveCell from '../../tablecells/MoveCell'
 import SwitchCell from '../../tablecells/SwitchCell'
+import StatusAddModal from './StatusAddModal'
 
 const StoryStatuses = () => {
     const { projectId } = useRouter().query
@@ -56,10 +58,22 @@ const StoryStatuses = () => {
             console.log('Save failed:', errInfo)
         }
     }
+    const handleDelete = (id: number) => () => {
+        queryCache.setQueryData(
+            ['userstoryStatuses', { projectId }],
+            (prevData: UserstoryStatus[]) => {
+                return prevData?.filter((item) => item.id !== id)
+            }
+        )
+        deleteUserstoryStatus(id)
+    }
 
     return (
         <Skeleton loading={userstoryStatusesIsLoading} active>
-            <h2>Userstory Statuses</h2>
+            <Flex style={{ width: '100%' }} justify="space-between">
+                <h2>Userstory Statuses</h2>
+                <StatusAddModal type="userstory" />
+            </Flex>
             <Table bordered dataSource={userstoryStatuses} pagination={false}>
                 <Column
                     title="Color"
@@ -68,7 +82,7 @@ const StoryStatuses = () => {
                         <EditableColorCell
                             handleSave={handleSave}
                             dataIndex="color"
-                            record={record}
+                            record={record as any}
                         />
                     )}
                 />
@@ -80,7 +94,7 @@ const StoryStatuses = () => {
                             handleSave={handleSave}
                             dataIndex="name"
                             title="Name"
-                            record={record}
+                            record={record as any}
                         />
                     )}
                 />
@@ -96,17 +110,36 @@ const StoryStatuses = () => {
                     )}
                 />
                 <Column
-                    title="Move"
+                    title="Order"
                     dataIndex="order"
                     defaultSortOrder="descend"
+                    sortDirections={['descend']}
                     render={(order: number, record: UserstoryStatus, index) => (
-                        <MoveCell
-                            handleSave={handleSave}
-                            statusItems={userstoryStatuses}
-                            index={index}
+                        // <MoveCell
+                        //     handleSave={handleSave}
+                        //     statusItems={userstoryStatuses}
+                        //     index={index}
+                        //     dataIndex="order"
+                        //     record={record}
+                        // />
+                        <EditableInputCell
+                            type="number"
+                            record={record as any}
                             dataIndex="order"
-                            record={record}
+                            handleSave={handleSave}
+                            title="Order"
                         />
+                    )}
+                />
+                <Column
+                    title="Action"
+                    render={(role: number, record: UserstoryStatus) => (
+                        <Popconfirm
+                            title={`Are you sure you want to remove this point?`}
+                            onConfirm={handleDelete(record.id)}
+                        >
+                            <Button danger icon={<DeleteOutlined />} />
+                        </Popconfirm>
                     )}
                 />
             </Table>
