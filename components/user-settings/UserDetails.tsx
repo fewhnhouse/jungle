@@ -7,7 +7,6 @@ import {
     Form,
     Input,
     message,
-    notification,
     Skeleton,
 } from 'antd'
 import styled from 'styled-components'
@@ -142,7 +141,7 @@ const UserDetails = () => {
     const handleDeleteUser = () => {
         deleteUser(data?.id).then(() => {
             localStorage.clear()
-            notification.success('Account successfully deleted.')
+            message.success('Account successfully deleted.')
             push('/login')
         })
     }
