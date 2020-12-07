@@ -181,19 +181,19 @@ const AchievementWrapper = ({ children }: Props) => {
             description:
                 'Burn down a certain amount of story points to advance this achievement.',
         },
-        {
-            score: 1,
-            levelRange: [
-                [0, 1],
-                [1, 10],
-                [10, 50],
-                [50, 500],
-            ],
-            icon: <NumberOutlined />,
-            title: 'Even the Odds',
-            label: 'Dunno',
-            description: 'Dont know yet.',
-        },
+        // {
+        //     score: 1,
+        //     levelRange: [
+        //         [0, 1],
+        //         [1, 10],
+        //         [10, 50],
+        //         [50, 500],
+        //     ],
+        //     icon: <NumberOutlined />,
+        //     title: 'Even the Odds',
+        //     label: 'Dunno',
+        //     description: 'Dont know yet.',
+        // },
         {
             score: closedIssues,
             levelRange: [
