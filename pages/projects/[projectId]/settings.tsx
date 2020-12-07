@@ -16,6 +16,7 @@ import Tags from '../../../components/project-settings/tags'
 import useMedia from 'use-media'
 import { Result } from 'antd'
 import Flex from '../../../components/Flex'
+import CustomFields from '../../../components/project-settings/customFields'
 
 const HeaderContainer = styled.div`
     margin: auto;
@@ -82,6 +83,7 @@ export default function ProjectSettings() {
                         {menuItemIndex === 1 && <DefaultValues />}
                         {menuItemIndex === 2 && <Statuses />}
                         {menuItemIndex === 3 && <Points />}
+                        {menuItemIndex === 4 && <CustomFields />}
                         {menuItemIndex === 5 && <Tags />}
                         {menuItemIndex === 6 && <Members />}
                     </Settings>
