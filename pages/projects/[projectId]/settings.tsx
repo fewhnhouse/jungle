@@ -11,6 +11,7 @@ import Head from 'next/head'
 import Statuses from '../../../components/project-settings/statuses/'
 import DefaultValues from '../../../components/project-settings/defaultValues'
 import Members from '../../../components/project-settings/members'
+import Points from '../../../components/project-settings/points'
 import useMedia from 'use-media'
 import { Result } from 'antd'
 import Flex from '../../../components/Flex'
@@ -39,7 +40,6 @@ export default function ProjectSettings() {
         'Points',
         'Custom Fields',
         'Tags',
-        'Attributes',
         'Members',
         // 'Permissions',
         // 'Integrations',
@@ -80,7 +80,8 @@ export default function ProjectSettings() {
                         {menuItemIndex === 0 && <ProjectDetails />}
                         {menuItemIndex === 1 && <DefaultValues />}
                         {menuItemIndex === 2 && <Statuses />}
-                        {menuItemIndex === 7 && <Members />}
+                        {menuItemIndex === 3 && <Points />}
+                        {menuItemIndex === 6 && <Members />}
                     </Settings>
                 )}
             </PageBody>

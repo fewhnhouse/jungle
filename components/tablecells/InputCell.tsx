@@ -1,20 +1,22 @@
 import { Form, Input } from 'antd'
-import {
-    TaskStatus,
-} from '../../taiga-api/tasks'
-import { UserstoryStatus } from '../../taiga-api/userstories'
 
 interface EditableCellProps {
     title: React.ReactNode
     dataIndex: string
-    record: TaskStatus | UserstoryStatus
-    handleSave: (record: TaskStatus | UserstoryStatus, dataIndex: string, value: any) => void
+    record: { [key: string]: unknown }
+    type?: string
+    handleSave: (
+        record: any,
+        dataIndex: string,
+        value: any
+    ) => void
 }
 
 const EditableInputCell: React.FC<EditableCellProps> = ({
     title,
     dataIndex,
     record,
+    type,
     handleSave,
     ...restProps
 }) => {
@@ -47,6 +49,7 @@ const EditableInputCell: React.FC<EditableCellProps> = ({
                     ]}
                 >
                     <Input
+                        type={type}
                         onPressEnter={onSave}
                         onBlur={onSave}
                         bordered={false}

@@ -5,7 +5,6 @@ import { Table, Skeleton, Button, Popconfirm } from 'antd'
 const { Column } = Table
 
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
 import { useQueryCache, useQuery } from 'react-query'
 import {
     deleteMembership,
@@ -25,7 +24,6 @@ import MemberAddModal from './MemberAddModal'
 const Members = () => {
     const { projectId } = useRouter().query
     const queryCache = useQueryCache()
-    const [modalOpen, setModalOpen] = useState(false)
 
     const { data: memberships, isLoading } = useQuery(
         ['memberships', { projectId }],
@@ -78,7 +76,6 @@ const Members = () => {
         deleteMembership(id)
     }
 
-    const toggleModal = () => setModalOpen((open) => !open)
 
     return (
         <Skeleton loading={isLoading} active>
@@ -150,7 +147,11 @@ const Members = () => {
                             }?`}
                             onConfirm={handleDelete(record.id)}
                         >
-                            <Button danger icon={<DeleteOutlined />} />
+                            <Button
+                                disabled={record.is_owner}
+                                danger
+                                icon={<DeleteOutlined />}
+                            />
                         </Popconfirm>
                     )}
                 />

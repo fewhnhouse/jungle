@@ -38,7 +38,7 @@ export const updatePoint = (id: string, data: any) => {
         .then((res) => res.data)
 }
 
-export const deletePoint = (id: string) => {
+export const deletePoint = (id: number) => {
     return authInstance
         .delete<StoryPoint>(`/points/${id}`)
         .then((res) => res.data)
