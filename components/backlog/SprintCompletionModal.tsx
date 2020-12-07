@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useQueryCache, useQuery } from 'react-query'
 import { Button, Divider, Form, Modal, Select, Typography } from 'antd'
@@ -46,7 +46,7 @@ const SprintCompletionModal = ({ milestoneId }: Props) => {
         { enabled: projectId }
     )
 
-    const { data: tasks } = useQuery(
+    const { data: tasks, refetch: refetchTasks } = useQuery(
         ['tasks', { projectId, milestoneId }],
         (key, { projectId, milestoneId }) =>
             getTasks({
@@ -56,12 +56,19 @@ const SprintCompletionModal = ({ milestoneId }: Props) => {
         { enabled: milestoneId && projectId }
     )
 
-    const { data: stories } = useQuery(
+    const { data: stories, refetch: refetchUserstories } = useQuery(
         ['userstories', { projectId, milestoneId }],
         (key, { projectId, milestoneId }) =>
             getUserstories({ projectId, milestone: milestoneId.toString() }),
         { enabled: milestoneId && projectId }
     )
+
+    useEffect(() => {
+        if (show) {
+            refetchTasks()
+            refetchUserstories()
+        }
+    }, [show])
 
     const openTasks = tasks?.filter(
         (task) => !task.is_closed && task.user_story === null
