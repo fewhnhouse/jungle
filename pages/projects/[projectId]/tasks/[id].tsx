@@ -4,10 +4,9 @@ import {
     ExclamationCircleOutlined,
     UserOutlined,
 } from '@ant-design/icons'
-import { Button, Dropdown, Menu, Modal, Skeleton } from 'antd'
+import { Button, Modal, Skeleton } from 'antd'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import ReactMarkdown from 'react-markdown'
 import { useQueryCache, useQuery } from 'react-query'
 import styled from 'styled-components'
 import useMedia from 'use-media'
@@ -155,9 +154,6 @@ const TaskPage = () => {
                         },
                     ]}
                     title={data?.subject}
-                    description={
-                        <ReactMarkdown>{data?.description}</ReactMarkdown>
-                    }
                 />
             </PageHeader>
             <PageBody>

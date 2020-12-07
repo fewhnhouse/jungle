@@ -22,8 +22,9 @@ const InputContainer = styled.div`
 const StyledBraftEditor = styled(BraftEditor)<{ $focus: boolean }>`
     border-radius: 2px;
     &:hover {
-        background: ${({ $focus }) => ($focus ? '' : '#e9ecef')};
+        background-color: ${({ $focus }) => ($focus ? '' : '#e9ecef')};
     }
+    transition: background-color 0.2s ease-in-out;
 `
 
 interface Props {

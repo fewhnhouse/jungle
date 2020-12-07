@@ -25,8 +25,9 @@ const StyledInput = styled(Input)<{ $focus }>`
         font-size: 20px !important;
     }
     &:hover {
-        background: ${({ $focus }) => ($focus ? '' : '#e9ecef')};
+        background-color: ${({ $focus }) => ($focus ? '' : '#e9ecef')};
     }
+    transition: background-color 0.2s ease-in-out;
 `
 interface Props {
     initialValue: string

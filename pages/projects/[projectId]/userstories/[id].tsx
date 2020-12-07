@@ -1,8 +1,7 @@
 import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
-import { Button, Menu, Modal, Skeleton } from 'antd'
+import { Button, Modal, Skeleton } from 'antd'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import ReactMarkdown from 'react-markdown'
 import { useQueryCache, useQuery } from 'react-query'
 import styled from 'styled-components'
 import useMedia from 'use-media'
@@ -60,17 +59,17 @@ const UserstoryPage = () => {
     const { isLoading, data, isError } = useQuery(
         ['userstory', { id }],
         (key, { id }) => getUserstory(id),
-        { enabled: id }
+        { enabled: !!id }
     )
     const { data: project } = useQuery(
         ['project', { projectId }],
         (key, { projectId }) => getProject(projectId as string),
-        { enabled: projectId }
+        { enabled: !!projectId }
     )
     const { data: storyFilters } = useQuery(
         ['storyFilters', { projectId }],
         (key, { projectId }) => getFiltersData(projectId as string),
-        { enabled: projectId }
+        { enabled: !!projectId }
     )
 
     const handleDelete = () => {
@@ -142,9 +141,6 @@ const UserstoryPage = () => {
                         },
                     ]}
                     title={data?.subject}
-                    description={
-                        <ReactMarkdown>{data?.description}</ReactMarkdown>
-                    }
                 />
             </PageHeader>
             <PageBody>
