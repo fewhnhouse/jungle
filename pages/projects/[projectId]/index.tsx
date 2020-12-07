@@ -46,9 +46,12 @@ const StyledButton = styled(Button)`
 `
 
 const StyledAvatar = styled(Avatar)`
-    margin: 0px 10px;
+    margin: 0px 5px;
     &:first-child {
-        margin: 0px;
+        margin-left: 0px;
+    }
+    &:last-child {
+        margin-right: 0px;
     }
     box-sizing: border-box;
     transition: 0.2s all ease-in-out;
@@ -107,7 +110,7 @@ const Project = () => {
     )
     // Get all tasks which are less than 24h old, related to tasks / userstories, unique and max of 10
     const recentTasks: Timeline[] = recentTaskFilter(timeline)
-        
+
     return (
         <div>
             <Head>
@@ -129,7 +132,9 @@ const Project = () => {
                                     label: data?.name,
                                 },
                             ]}
-                            avatarUrl={data?.logo_big_url ?? '/placeholder.webp'}
+                            avatarUrl={
+                                data?.logo_big_url ?? '/placeholder.webp'
+                            }
                             title={data?.name}
                             description={
                                 <Flex direction="column">
