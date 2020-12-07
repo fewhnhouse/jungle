@@ -70,9 +70,6 @@ const Uploader = ({ data, action, type }: Props) => {
 
     const onChange = ({ file, fileList }) => {
         const { status } = file
-        if (status !== 'uploading') {
-            console.log(file, fileList)
-        }
         if (status === 'done') {
             message.success(`${file.name} file uploaded successfully.`)
         } else if (status === 'error') {

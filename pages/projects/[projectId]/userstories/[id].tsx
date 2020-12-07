@@ -86,9 +86,6 @@ const UserstoryPage = () => {
                         prevData?.filter((story) => story.id.toString() !== id)
                 )
             },
-            onCancel() {
-                console.log('Cancel')
-            },
         })
     }
 

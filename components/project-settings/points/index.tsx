@@ -46,7 +46,7 @@ const Points = () => {
                 }
             )
         } catch (errInfo) {
-            console.log('Save failed:', errInfo)
+            console.error('Save failed:', errInfo)
         }
     }
     const handleDelete = (id: number) => () => {

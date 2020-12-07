@@ -27,7 +27,7 @@ const EditableInputCell: React.FC<EditableCellProps> = ({
             const values = await form.validateFields()
             handleSave(record, dataIndex, values[dataIndex])
         } catch (errInfo) {
-            console.log('Save failed:', errInfo)
+            console.error('Save failed:', errInfo)
         }
     }
 

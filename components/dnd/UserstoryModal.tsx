@@ -63,9 +63,6 @@ export default function UserstoryModal({ id, open, onClose }: Props) {
                 )
                 onClose()
             },
-            onCancel() {
-                console.log('Cancel')
-            },
         })
     }
 

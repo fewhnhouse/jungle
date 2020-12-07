@@ -130,8 +130,6 @@ export default function Backlog() {
         { enabled: projectId }
     )
 
-    // console.log(tasks, userstories)
-
     const isBacklogLoading = isTasksLoading && isStoriesLoading
 
     const { data: milestones = [], isLoading: isMilestonesLoading } = useQuery(
@@ -191,8 +189,6 @@ export default function Backlog() {
                 issue.id.toString() === actualDraggableId
         )
 
-        console.log(currentIssue, isStory)
-
         const destinationId =
             destination.droppableId === 'backlog'
                 ? null
@@ -202,7 +198,6 @@ export default function Backlog() {
             queryCache.setQueryData(
                 ['userstories', { projectId }],
                 (prevData: UserStory[]) => {
-                    console.log(prevData)
                     return prevData?.map((userstory) =>
                         userstory.id.toString() === actualDraggableId
                             ? { ...userstory, milestone: destinationId }

@@ -91,9 +91,6 @@ const TaskPage = () => {
                 ])
                 queryCache.invalidateQueries(['tasks', { projectId }])
             },
-            onCancel() {
-                console.log('Cancel')
-            },
         })
     }
 

@@ -25,8 +25,6 @@ const Tags = () => {
         { enabled: projectId }
     )
 
-    console.log(tags)
-
     const handleSave = (prevRecord: Tag) => async (
         record: Tag,
         dataIndex: string,
@@ -40,7 +38,7 @@ const Tags = () => {
             })
             queryCache.invalidateQueries(['tags', { projectId }])
         } catch (errInfo) {
-            console.log('Save failed:', errInfo)
+            console.error('Save failed:', errInfo)
         }
     }
     const handleDelete = (tag: string) => () => {

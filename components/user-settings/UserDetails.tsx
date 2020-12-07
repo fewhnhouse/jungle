@@ -1,15 +1,26 @@
 import { useEffect, useState } from 'react'
 import { useQueryCache, useQuery } from 'react-query'
-import { Button, Card, Checkbox, Form, Input, message, Skeleton } from 'antd'
+import {
+    Button,
+    Card,
+    Checkbox,
+    Form,
+    Input,
+    message,
+    notification,
+    Skeleton,
+} from 'antd'
 import styled from 'styled-components'
 import {
     changeAvatar,
     changePassword,
+    deleteUser,
     getMe,
     updateUser,
     User,
 } from '../../taiga-api/users'
 import Flex from '../Flex'
+import { useRouter } from 'next/router'
 
 const StyledCard = styled(Card)`
     margin: 30px 0px;
@@ -84,6 +95,7 @@ const StyledFormItem = styled(Form.Item)`
 const UserDetails = () => {
     const { data } = useQuery('me', () => getMe())
     const queryCache = useQueryCache()
+    const { push } = useRouter()
 
     useEffect(() => {
         if (data?.photo) {
@@ -128,7 +140,11 @@ const UserDetails = () => {
     }
 
     const handleDeleteUser = () => {
-        console.log('delete')
+        deleteUser(data?.id).then(() => {
+            localStorage.clear()
+            notification.success('Account successfully deleted.')
+            push('/login')
+        })
     }
 
     return (

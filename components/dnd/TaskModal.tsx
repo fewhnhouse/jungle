@@ -71,9 +71,6 @@ export default function TaskModal({ id, open, onClose }: Props) {
                 )
                 onClose()
             },
-            onCancel() {
-                console.log('Cancel')
-            },
         })
     }
 

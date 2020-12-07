@@ -76,7 +76,6 @@ const Actions = ({ project }: { project: Project }) => {
         queryCache.setQueryData(
             ['watchers', { projectId }],
             (prevData: Watcher[]) => {
-                console.log(prevData, isWatcher)
                 if (isWatcher) {
                     return (
                         prevData?.filter((watcher) => watcher.id !== me?.id) ??
