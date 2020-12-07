@@ -192,7 +192,7 @@ export default function BoardContainer() {
         return regex.test(issue.subject) || regex.test(issue.id.toString())
     }
 
-    const assigneeFilter = (assignees: number[] | null) => (
+    const assigneeFilter = (assignees: number[]) => (
         issue: Task | UserStory
     ) =>
         !assignees ||
