@@ -12,7 +12,7 @@ import Link from 'next/link'
 import { ActionContainer } from '../components/project/Actions'
 import LimitedActivity from '../components/activity/LimitedActivity'
 import { getUserTimeline, Timeline } from '../taiga-api/timelines'
-import { GetStaticProps, InferGetStaticPropsType } from 'next'
+import { GetStaticProps } from 'next'
 import { getProjects } from '../taiga-api/projects'
 import { recentTaskFilter } from '../util/recentTaskFilter'
 import LimitedYourWork from '../components/your-work/LimitedYourWork'
@@ -67,7 +67,7 @@ const TitleContainer = styled.div`
     margin-right: ${({ theme }) => theme.spacing.medium};
 `
 
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getStaticProps: GetStaticProps = async () => {
     const queryCache = new QueryCache()
 
     await queryCache.prefetchQuery('projects', () => getProjects())
@@ -86,7 +86,7 @@ export default function Home() {
         setIsModalOpen((open) => !open)
     }
 
-    const { data: projects, error } = useQuery('projects', async () => {
+    const { data: projects } = useQuery('projects', async () => {
         return getProjects()
     })
 
