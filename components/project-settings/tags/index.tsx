@@ -6,7 +6,6 @@ const { Column } = Table
 
 import { useRouter } from 'next/router'
 import { useQueryCache, useQuery } from 'react-query'
-import { Member, Point } from '../../../taiga-api/projects'
 import { deleteTag, getTags, Tag, updateTag } from '../../../taiga-api/tags'
 import Flex from '../../Flex'
 import EditableColorCell from '../../tablecells/ColorCell'
@@ -34,23 +33,12 @@ const Tags = () => {
         value: unknown
     ) => {
         try {
-            const updatedTag = await updateTag(projectId as string, {
+            await updateTag(projectId as string, {
                 from_tag: prevRecord.name,
                 ...(dataIndex === 'name' ? { to_tag: value as string } : {}),
                 ...(dataIndex === 'color' ? { color: value as string } : {}),
             })
             queryCache.invalidateQueries(['tags', { projectId }])
-            // queryCache.setQueryData(
-            //     ['tags', { projectId }],
-            //     (prevData: Point[]) => {
-            //         return prevData?.map((item) => {
-            //             if (item.id === updatedTag.id) {
-            //                 return { ...item, ...updatedTag }
-            //             }
-            //             return item
-            //         })
-            //     }
-            // )
         } catch (errInfo) {
             console.log('Save failed:', errInfo)
         }
