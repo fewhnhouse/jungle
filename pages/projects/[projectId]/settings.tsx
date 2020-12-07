@@ -11,6 +11,9 @@ import Head from 'next/head'
 import Statuses from '../../../components/project-settings/statuses/'
 import DefaultValues from '../../../components/project-settings/defaultValues'
 import Members from '../../../components/project-settings/members'
+import useMedia from 'use-media'
+import { Result } from 'antd'
+import Flex from '../../../components/Flex'
 
 const HeaderContainer = styled.div`
     margin: auto;
@@ -20,7 +23,7 @@ const HeaderContainer = styled.div`
 export default function ProjectSettings() {
     const { projectId } = useRouter().query
     const [menuItemIndex, setMenuItemIndex] = useState(0)
-
+    const isMobile = useMedia('(max-width: 900px)')
     const { data: project } = useQuery(
         ['project', { projectId }],
         (key, { projectId }) => getProject(projectId as string),
@@ -41,6 +44,7 @@ export default function ProjectSettings() {
         // 'Permissions',
         // 'Integrations',
     ]
+
     return (
         <div>
             <Head>
@@ -60,16 +64,25 @@ export default function ProjectSettings() {
                 </HeaderContainer>
             </PageHeader>
             <PageBody>
-                <Settings
-                    onMenuItemClick={handleItemClick}
-                    menuItems={menuItems}
-                    menuIndex={menuItemIndex}
-                >
-                    {menuItemIndex === 0 && <ProjectDetails />}
-                    {menuItemIndex === 1 && <DefaultValues />}
-                    {menuItemIndex === 2 && <Statuses />}
-                    {menuItemIndex === 7 && <Members />}
-                </Settings>
+                {isMobile ? (
+                    <Flex fluid align="center" justify="center">
+                        <Result
+                            title="Settings are not supported on small screens yet."
+                            status="warning"
+                        />
+                    </Flex>
+                ) : (
+                    <Settings
+                        onMenuItemClick={handleItemClick}
+                        menuItems={menuItems}
+                        menuIndex={menuItemIndex}
+                    >
+                        {menuItemIndex === 0 && <ProjectDetails />}
+                        {menuItemIndex === 1 && <DefaultValues />}
+                        {menuItemIndex === 2 && <Statuses />}
+                        {menuItemIndex === 7 && <Members />}
+                    </Settings>
+                )}
             </PageBody>
         </div>
     )

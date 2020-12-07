@@ -1,12 +1,15 @@
+import { Result } from 'antd'
 import Head from 'next/head'
 import { useState } from 'react'
 import { useQuery } from 'react-query'
 import styled from 'styled-components'
+import useMedia from 'use-media'
+import Flex from '../../../components/Flex'
 import { PageBody, PageHeader } from '../../../components/Layout'
 import PageTitle from '../../../components/PageTitle'
 import Settings from '../../../components/Settings'
 import UserDetails from '../../../components/user-settings/UserDetails'
-import { getMe, getUser } from '../../../taiga-api/users'
+import { getMe } from '../../../taiga-api/users'
 
 const HeaderContainer = styled.div`
     margin: auto;
@@ -17,6 +20,7 @@ export default function ProjectSettings() {
     const [menuItemIndex, setMenuItemIndex] = useState(0)
 
     const handleItemClick = (index: number) => () => setMenuItemIndex(index)
+    const isMobile = useMedia('(max-width: 900px)')
 
     const { data: me } = useQuery('me', () => getMe())
 
@@ -47,13 +51,22 @@ export default function ProjectSettings() {
                 </HeaderContainer>
             </PageHeader>
             <PageBody>
-                <Settings
-                    onMenuItemClick={handleItemClick}
-                    menuItems={menuItems}
-                    menuIndex={menuItemIndex}
-                >
-                    {menuItemIndex === 0 && <UserDetails />}
-                </Settings>
+                {isMobile ? (
+                    <Flex fluid align="center" justify="center">
+                        <Result
+                            title="Settings are not supported on small screens yet."
+                            status="warning"
+                        />
+                    </Flex>
+                ) : (
+                    <Settings
+                        onMenuItemClick={handleItemClick}
+                        menuItems={menuItems}
+                        menuIndex={menuItemIndex}
+                    >
+                        {menuItemIndex === 0 && <UserDetails />}
+                    </Settings>
+                )}
             </PageBody>
         </div>
     )
