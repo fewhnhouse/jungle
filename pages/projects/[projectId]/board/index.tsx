@@ -194,7 +194,10 @@ export default function BoardContainer() {
 
     const assigneeFilter = (assignees: number[] | null) => (
         issue: Task | UserStory
-    ) => assignees.length === 0 || assignees.includes(issue.assigned_to)
+    ) =>
+        !assignees ||
+        assignees?.length === 0 ||
+        assignees?.includes(issue.assigned_to)
 
     const sprintFilter = (milestone: { id: number }) => (
         issue: Task | UserStory
@@ -311,7 +314,7 @@ export default function BoardContainer() {
                                                 ?.filter(hasMilestoneFilter)
                                                 ?.filter(searchFilter)
                                                 ?.filter(
-                                                    assigneeFilter(assignees)
+                                                    assigneeFilter([member.id])
                                                 )
                                                 ?.filter(
                                                     sprintFilter(sprint)
@@ -327,7 +330,7 @@ export default function BoardContainer() {
                                         userstories
                                             ?.filter(hasMilestoneFilter)
                                             ?.filter(searchFilter)
-                                            ?.filter(assigneeFilter(null))
+                                            ?.filter(assigneeFilter([]))
                                             ?.filter(sprintFilter(sprint)) ?? []
                                     }
                                     columns={sortedStoryStatuses ?? []}
