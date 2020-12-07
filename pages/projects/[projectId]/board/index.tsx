@@ -147,18 +147,24 @@ export default function BoardContainer() {
     }[] =
         tasks?.reduce(
             (prev, curr) => {
+                //T asks without userstory parent
                 if (!curr.user_story) {
                     return prev.map((p) =>
-                        !p.storyId ? { ...p, tasks: [...p.tasks, curr] } : p
+                        p.storyId === null
+                            ? { ...p, tasks: [...p.tasks, curr] }
+                            : p
                     )
                 }
+                // Tasks with userstory parent (existing)
                 if (prev.find((p) => p.storyId === curr.user_story)) {
                     return prev.map((p) =>
                         p.storyId === curr.user_story
                             ? { ...p, tasks: [...p.tasks, curr] }
                             : p
                     )
-                } else {
+                } 
+                // Tasks with userstory parent (new)
+                else {
                     return [
                         {
                             storyId: curr.user_story,
@@ -171,8 +177,6 @@ export default function BoardContainer() {
             },
             [{ storyId: null, storySubject: 'Tasks without Story', tasks: [] }]
         ) ?? []
-
-    console.log(orderedTasks)
 
     const openMilestones = milestones?.filter((ms) => !ms.closed)
     const sprint = openMilestones?.find((ms) => ms.id === selectedSprint)
@@ -188,13 +192,6 @@ export default function BoardContainer() {
     const sprintFilter = (milestone: { id: number }) => (
         issue: Task | UserStory
     ) => !milestone || issue.milestone === milestone.id
-
-    console.log(
-        orderedTasks.length &&
-            orderedTasks[0].tasks
-                ?.filter(searchFilter)
-                ?.filter(assigneeFilter(assignees))
-    )
 
     return (
         <ScrollSync>
