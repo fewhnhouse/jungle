@@ -1,6 +1,5 @@
-import { DatePicker, Form, Input, Modal } from 'antd'
+import { Form, Input, Modal } from 'antd'
 import { Store } from 'antd/lib/form/interface'
-import moment from 'moment'
 import { useRouter } from 'next/router'
 import { useQuery, useQueryCache } from 'react-query'
 import {
@@ -8,6 +7,12 @@ import {
     Milestone,
     updateMilestone,
 } from '../../taiga-api/milestones'
+import dayjs from 'dayjs'
+import DatePicker from '../DatePicker'
+import isBetween from 'dayjs/plugin/isBetween'
+import utc from 'dayjs/plugin/utc'
+dayjs.extend(isBetween)
+dayjs.extend(utc)
 
 interface Props {
     open: boolean
@@ -32,11 +37,11 @@ const EditSprint = ({ open, sprint, onClose }: Props) => {
 
     const otherMilestones = milestones.filter((ms) => ms.id !== sprint.id)
     const handleSubmit = async (values: Store) => {
-        const [startDate, endDate]: [moment.Moment, moment.Moment] = values.date
+        const [startDate, endDate]: [dayjs.Dayjs, dayjs.Dayjs] = values.date
         const newMilestone = await updateMilestone(sprint.id, {
             name: values.name,
-            estimated_start: startDate.toISOString().split('T')[0],
-            estimated_finish: endDate.toISOString().split('T')[0],
+            estimated_start: startDate.utc().toISOString().split('T')[0],
+            estimated_finish: endDate.utc().toISOString().split('T')[0],
         })
         queryCache.setQueryData(
             ['milestones', { projectId }],
@@ -67,8 +72,8 @@ const EditSprint = ({ open, sprint, onClose }: Props) => {
                 form={form}
                 initialValues={{
                     date: [
-                        moment(sprint.estimated_start),
-                        moment(sprint.estimated_finish),
+                        dayjs.utc(sprint.estimated_start),
+                        dayjs.utc(sprint.estimated_finish),
                     ],
                     name: `${sprint.name}`,
                 }}
@@ -100,10 +105,7 @@ const EditSprint = ({ open, sprint, onClose }: Props) => {
                     required
                     rules={[
                         () => ({
-                            validator(
-                                rule,
-                                value: [moment.Moment, moment.Moment]
-                            ) {
+                            validator(rule, value: [dayjs.Dayjs, dayjs.Dayjs]) {
                                 const startDate = value[0]
                                 const endDate = value[1]
                                 const isConflictingDate = otherMilestones

@@ -24,7 +24,7 @@ module.exports = withBundleAnalyzer(
                 // modifyVars: themeVariables, // make your antd custom effective
             },
             webpack: (config, { isServer }) => {
-                config.plugins.push(new AntdDayjsWebpackPlugin())
+                // config.plugins.push(new AntdDayjsWebpackPlugin())
                 if (isServer) {
                     const antStyles = /antd\/.*?\/style.*?/
                     const origExternals = [...config.externals]

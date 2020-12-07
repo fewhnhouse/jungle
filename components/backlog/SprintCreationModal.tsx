@@ -6,10 +6,15 @@ import {
     getMilestones,
     Milestone,
 } from '../../taiga-api/milestones'
-import { Button, DatePicker, Form, Input, Modal } from 'antd'
-import moment from 'moment'
+import { Button, Form, Input, Modal } from 'antd'
+import dayjs from 'dayjs'
 import { getProject } from '../../taiga-api/projects'
 import { Store } from 'antd/lib/form/interface'
+import DatePicker from '../DatePicker'
+import isBetween from 'dayjs/plugin/isBetween'
+import utc from 'dayjs/plugin/utc'
+dayjs.extend(isBetween)
+dayjs.extend(utc)
 
 const SprintCreation = () => {
     const [show, setShow] = useState(false)
@@ -38,11 +43,11 @@ const SprintCreation = () => {
     const handleClose = () => setShow(false)
 
     const handleSubmit = async (values: Store) => {
-        const [startDate, endDate] = values.date
+        const [startDate, endDate]: [dayjs.Dayjs, dayjs.Dayjs] = values.date
         const newMilestone = await createMilestone({
             name: values.name,
-            estimated_start: startDate.toISOString().split('T')[0],
-            estimated_finish: endDate.toISOString().split('T')[0],
+            estimated_start: startDate.utc().toISOString().split('T')[0],
+            estimated_finish: endDate.utc().toISOString().split('T')[0],
             project: projectId,
         })
         queryCache.setQueryData(
@@ -74,7 +79,7 @@ const SprintCreation = () => {
                     layout="vertical"
                     form={form}
                     initialValues={{
-                        date: [moment(), moment().add(14, 'days')],
+                        date: [dayjs.utc(), dayjs.utc().add(14, 'day')],
                         name: `${project?.name} Sprint ${
                             milestones?.length + 1
                         }`,
@@ -109,7 +114,7 @@ const SprintCreation = () => {
                             () => ({
                                 validator(
                                     rule,
-                                    value: [moment.Moment, moment.Moment]
+                                    value: [dayjs.Dayjs, dayjs.Dayjs]
                                 ) {
                                     const startDate = value[0]
                                     const endDate = value[1]
@@ -117,11 +122,11 @@ const SprintCreation = () => {
                                         ?.filter((ms) => !ms.closed)
                                         .some((milestone) => {
                                             return (
-                                                startDate.isBetween(
+                                                startDate.utc().isBetween(
                                                     milestone.estimated_start,
                                                     milestone.estimated_finish
                                                 ) ||
-                                                endDate.isBetween(
+                                                endDate.utc().isBetween(
                                                     milestone.estimated_start,
                                                     milestone.estimated_finish
                                                 )
