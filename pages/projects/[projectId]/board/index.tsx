@@ -145,50 +145,48 @@ export default function BoardContainer() {
         tasks: Task[]
         storyId: number
     }[] =
-        tasks
-            ?.filter((task) => task.milestone !== null)
-            .reduce(
-                (prev, curr) => {
-                    //T asks without userstory parent
-                    if (!curr.user_story) {
-                        return prev.map((p) =>
-                            p.storyId === null
-                                ? { ...p, tasks: [...p.tasks, curr] }
-                                : p
-                        )
-                    }
-                    // Tasks with userstory parent (existing)
-                    if (prev.find((p) => p.storyId === curr.user_story)) {
-                        return prev.map((p) =>
-                            p.storyId === curr.user_story
-                                ? { ...p, tasks: [...p.tasks, curr] }
-                                : p
-                        )
-                    }
-                    // Tasks with userstory parent (new)
-                    else {
-                        return [
-                            {
-                                storyId: curr.user_story,
-                                storySubject:
-                                    curr.user_story_extra_info.subject,
-                                tasks: [curr],
-                            },
-                            ...prev,
-                        ]
-                    }
+        tasks?.reduce(
+            (prev, curr) => {
+                //T asks without userstory parent
+                if (!curr.user_story) {
+                    return prev.map((p) =>
+                        p.storyId === null
+                            ? { ...p, tasks: [...p.tasks, curr] }
+                            : p
+                    )
+                }
+                // Tasks with userstory parent (existing)
+                if (prev.find((p) => p.storyId === curr.user_story)) {
+                    return prev.map((p) =>
+                        p.storyId === curr.user_story
+                            ? { ...p, tasks: [...p.tasks, curr] }
+                            : p
+                    )
+                }
+                // Tasks with userstory parent (new)
+                else {
+                    return [
+                        {
+                            storyId: curr.user_story,
+                            storySubject: curr.user_story_extra_info.subject,
+                            tasks: [curr],
+                        },
+                        ...prev,
+                    ]
+                }
+            },
+            [
+                {
+                    storyId: null,
+                    storySubject: 'Tasks without Story',
+                    tasks: [],
                 },
-                [
-                    {
-                        storyId: null,
-                        storySubject: 'Tasks without Story',
-                        tasks: [],
-                    },
-                ]
-            ) ?? []
+            ]
+        ) ?? []
 
     const openMilestones = milestones?.filter((ms) => !ms.closed)
     const sprint = openMilestones?.find((ms) => ms.id === selectedSprint)
+
     const searchFilter = (issue: Task | UserStory) => {
         const regex = new RegExp(search, 'i')
         return regex.test(issue.subject) || regex.test(issue.id.toString())
@@ -201,6 +199,9 @@ export default function BoardContainer() {
     const sprintFilter = (milestone: { id: number }) => (
         issue: Task | UserStory
     ) => !milestone || issue.milestone === milestone.id
+
+    const hasMilestoneFilter = (issue: Task | UserStory) =>
+        issue.milestone !== null
 
     return (
         <ScrollSync>
@@ -257,6 +258,7 @@ export default function BoardContainer() {
                                             title={orderedTask.storySubject}
                                             key={orderedTask.storyId}
                                             tasks={orderedTask.tasks
+                                                ?.filter(hasMilestoneFilter)
                                                 ?.filter(searchFilter)
                                                 ?.filter(
                                                     assigneeFilter(assignees)
@@ -273,6 +275,7 @@ export default function BoardContainer() {
                                         title={`${ms?.name}`}
                                         stories={
                                             userstories
+                                                ?.filter(hasMilestoneFilter)
                                                 ?.filter(searchFilter)
                                                 ?.filter(sprintFilter(ms))
                                                 ?.filter(
@@ -288,6 +291,7 @@ export default function BoardContainer() {
                                     title={`${sprint?.name ?? 'All'}`}
                                     stories={
                                         userstories
+                                            ?.filter(hasMilestoneFilter)
                                             ?.filter(searchFilter)
                                             ?.filter(assigneeFilter(assignees))
                                             ?.filter(sprintFilter(sprint)) ?? []
@@ -304,6 +308,7 @@ export default function BoardContainer() {
                                         title={`${member?.full_name}`}
                                         stories={
                                             userstories
+                                                ?.filter(hasMilestoneFilter)
                                                 ?.filter(searchFilter)
                                                 ?.filter(
                                                     assigneeFilter(assignees)
@@ -320,6 +325,7 @@ export default function BoardContainer() {
                                     title="Unassigned"
                                     stories={
                                         userstories
+                                            ?.filter(hasMilestoneFilter)
                                             ?.filter(searchFilter)
                                             ?.filter(assigneeFilter(null))
                                             ?.filter(sprintFilter(sprint)) ?? []
