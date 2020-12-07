@@ -144,7 +144,11 @@ export default function Home() {
             </PageHeader>
             <PageBody>
                 <Container>
-                    <Projects projects={projects} />
+                    <Projects
+                        projects={projects?.filter((project) =>
+                            project.members.includes(me?.id)
+                        ) ?? []}
+                    />
                     <InnerContainer>
                         <LimitedActivity
                             limit={5}
