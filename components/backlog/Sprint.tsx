@@ -41,6 +41,8 @@ const Sprint = ({
             (oldMilestones: Milestone[]) =>
                 oldMilestones.filter((m) => m.id !== sprint.id)
         )
+        queryCache.refetchQueries(['userstories', { projectId }])
+        queryCache.refetchQueries(['tasks', { projectId }])
         await deleteMilestone(sprint.id)
     }
 
