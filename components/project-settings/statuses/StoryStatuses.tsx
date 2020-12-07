@@ -100,11 +100,11 @@ const StoryStatuses = () => {
                 />
                 <Column
                     title="Closed"
-                    dataIndex="closed"
+                    dataIndex="is_closed"
                     render={(closed: boolean, record: UserstoryStatus) => (
                         <SwitchCell
                             handleSave={handleSave}
-                            dataIndex="closed"
+                            dataIndex="is_closed"
                             record={record}
                         />
                     )}

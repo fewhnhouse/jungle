@@ -98,11 +98,11 @@ const TaskStatuses = () => {
                 />
                 <Column
                     title="Closed"
-                    dataIndex="closed"
+                    dataIndex="is_closed"
                     render={(closed: boolean, record: TaskStatus) => (
                         <SwitchCell
                             handleSave={handleSave}
-                            dataIndex="closed"
+                            dataIndex="is_closed"
                             record={record}
                         />
                     )}
