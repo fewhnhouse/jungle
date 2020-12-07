@@ -145,38 +145,47 @@ export default function BoardContainer() {
         tasks: Task[]
         storyId: number
     }[] =
-        tasks?.reduce(
-            (prev, curr) => {
-                //T asks without userstory parent
-                if (!curr.user_story) {
-                    return prev.map((p) =>
-                        p.storyId === null
-                            ? { ...p, tasks: [...p.tasks, curr] }
-                            : p
-                    )
-                }
-                // Tasks with userstory parent (existing)
-                if (prev.find((p) => p.storyId === curr.user_story)) {
-                    return prev.map((p) =>
-                        p.storyId === curr.user_story
-                            ? { ...p, tasks: [...p.tasks, curr] }
-                            : p
-                    )
-                } 
-                // Tasks with userstory parent (new)
-                else {
-                    return [
-                        {
-                            storyId: curr.user_story,
-                            storySubject: curr.user_story_extra_info.subject,
-                            tasks: [curr],
-                        },
-                        ...prev,
-                    ]
-                }
-            },
-            [{ storyId: null, storySubject: 'Tasks without Story', tasks: [] }]
-        ) ?? []
+        tasks
+            ?.filter((task) => task.milestone !== null)
+            .reduce(
+                (prev, curr) => {
+                    //T asks without userstory parent
+                    if (!curr.user_story) {
+                        return prev.map((p) =>
+                            p.storyId === null
+                                ? { ...p, tasks: [...p.tasks, curr] }
+                                : p
+                        )
+                    }
+                    // Tasks with userstory parent (existing)
+                    if (prev.find((p) => p.storyId === curr.user_story)) {
+                        return prev.map((p) =>
+                            p.storyId === curr.user_story
+                                ? { ...p, tasks: [...p.tasks, curr] }
+                                : p
+                        )
+                    }
+                    // Tasks with userstory parent (new)
+                    else {
+                        return [
+                            {
+                                storyId: curr.user_story,
+                                storySubject:
+                                    curr.user_story_extra_info.subject,
+                                tasks: [curr],
+                            },
+                            ...prev,
+                        ]
+                    }
+                },
+                [
+                    {
+                        storyId: null,
+                        storySubject: 'Tasks without Story',
+                        tasks: [],
+                    },
+                ]
+            ) ?? []
 
     const openMilestones = milestones?.filter((ms) => !ms.closed)
     const sprint = openMilestones?.find((ms) => ms.id === selectedSprint)
