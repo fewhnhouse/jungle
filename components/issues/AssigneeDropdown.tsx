@@ -11,8 +11,8 @@ const StyledSelect = styled(Select)<{ fluid?: boolean }>`
 `
 
 interface Props {
-    onChange: (id: number) => void
-    value: number
+    onChange: (ids: number[]) => void
+    value: number[]
     fluid?: boolean
 }
 
@@ -31,6 +31,8 @@ const AssigneeDropdown = ({ onChange, value, fluid }: Props) => {
     return (
         <StyledSelect
             allowClear
+            style={{ width: 160 }}
+            mode="multiple"
             placeholder="Assignee..."
             fluid={fluid}
             showSearch
@@ -47,9 +49,6 @@ const AssigneeDropdown = ({ onChange, value, fluid }: Props) => {
                     key={member.id}
                     value={member.id}
                 >
-                    <StyledAvatar size="small" src={member.photo}>
-                        {member.full_name.charAt(0)}
-                    </StyledAvatar>
                     {member.full_name}
                 </Option>
             ))}

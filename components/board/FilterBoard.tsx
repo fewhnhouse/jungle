@@ -12,15 +12,15 @@ const DateDescription = styled.span`
     color: #ccc;
 `
 
-export type GroupBy = 'none' | 'epic' | 'subtask' | 'assignee' | 'sprint'
+export type GroupBy = 'none' | 'subtask' | 'assignee' | 'sprint'
 
 interface Props {
     groupBy: GroupBy
     setGroupBy: Dispatch<SetStateAction<GroupBy>>
     sprint: number
     setSprint: Dispatch<SetStateAction<number>>
-    assignee: number
-    setAssignee: Dispatch<SetStateAction<number>>
+    assignees: number[]
+    setAssignees: Dispatch<SetStateAction<number[]>>
     milestones: Milestone[]
     search: string
     setSearch: Dispatch<SetStateAction<string>>
@@ -31,8 +31,8 @@ const FilterBoard = ({
     setGroupBy,
     sprint,
     setSprint,
-    assignee,
-    setAssignee,
+    assignees,
+    setAssignees,
     milestones,
     search,
     setSearch,
@@ -40,7 +40,7 @@ const FilterBoard = ({
     const today = new Date()
 
     useEffect(() => {
-        if (sprint !== -1 && groupBy === 'sprint') {
+        if (!!sprint && groupBy === 'sprint') {
             setGroupBy('none')
         }
     }, [sprint, groupBy])
@@ -56,19 +56,19 @@ const FilterBoard = ({
                 >
                     <Option value="none">None</Option>
                     <Option value="assignee">Assignee</Option>
-                    <Option value="epic">Epic</Option>
+                    {/* <Option value="epic">Epic</Option> */}
                     <Option value="subtask">Subtask</Option>
-                    {sprint === -1 && <Option value="sprint">Sprint</Option>}
+                    {!sprint && <Option value="sprint">Sprint</Option>}
                 </Select>
             </Item>
             <Item label="Sprints">
                 <Select
+                    allowClear
                     value={sprint}
                     onChange={(value) => setSprint(value)}
                     style={{ width: 160 }}
                     placeholder="Select sprint..."
                 >
-                    <Option value={-1}>All</Option>
                     {milestones?.map((ms) => {
                         const start = new Date(ms.estimated_start)
                         const end = new Date(ms.estimated_finish)
@@ -105,8 +105,8 @@ const FilterBoard = ({
             {groupBy !== 'assignee' && (
                 <Item label="Assignee">
                     <AssigneeDropdown
-                        value={assignee}
-                        onChange={(id) => setAssignee(id)}
+                        value={assignees}
+                        onChange={(id) => setAssignees(id)}
                     />
                 </Item>
             )}

@@ -99,6 +99,8 @@ const Board = ({
         })
     }
 
+    console.log(stories)
+
     return stories.length ? (
         <>
             <CustomCollapse status="default" title={title}>
