@@ -231,7 +231,7 @@ export const getTaskAttachments = ({
     projectId && params.append('project', projectId.toString())
     taskId && params.append('object_id', taskId.toString())
     return authInstance
-        .get<Attachment[]>(`/tasks/attachments/`, { params })
+        .get<Attachment[]>(`/tasks/attachments`, { params })
         .then((res) => res.data)
 }
 
