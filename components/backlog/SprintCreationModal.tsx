@@ -12,9 +12,7 @@ import { getProject } from '../../taiga-api/projects'
 import { Store } from 'antd/lib/form/interface'
 import DatePicker from '../DatePicker'
 import isBetween from 'dayjs/plugin/isBetween'
-import utc from 'dayjs/plugin/utc'
 dayjs.extend(isBetween)
-dayjs.extend(utc)
 
 const SprintCreation = () => {
     const [show, setShow] = useState(false)
@@ -46,8 +44,8 @@ const SprintCreation = () => {
         const [startDate, endDate]: [dayjs.Dayjs, dayjs.Dayjs] = values.date
         const newMilestone = await createMilestone({
             name: values.name,
-            estimated_start: startDate.utc().toISOString().split('T')[0],
-            estimated_finish: endDate.utc().toISOString().split('T')[0],
+            estimated_start: startDate.toISOString().split('T')[0],
+            estimated_finish: endDate.toISOString().split('T')[0],
             project: projectId,
         })
         queryCache.setQueryData(
@@ -66,6 +64,21 @@ const SprintCreation = () => {
             handleSubmit(fields)
         })
     }
+
+    const disabledDate = (current) => {
+        const today = dayjs()
+        const tooEarly = current.isBefore(today)
+        const isConflicting = milestones?.find((ms) => {
+            return current.isBetween(
+                ms.estimated_start,
+                ms.estimated_finish,
+                'day',
+                '[]'
+            )
+        })
+
+        return tooEarly || isConflicting
+    }
     return (
         <>
             <Button onClick={handleOpen}>Create Sprint</Button>
@@ -79,7 +92,7 @@ const SprintCreation = () => {
                     layout="vertical"
                     form={form}
                     initialValues={{
-                        date: [dayjs.utc(), dayjs.utc().add(14, 'day')],
+                        date: [dayjs(), dayjs().add(14, 'day')],
                         name: `${project?.name} Sprint ${
                             milestones?.length + 1
                         }`,
@@ -122,13 +135,17 @@ const SprintCreation = () => {
                                         ?.filter((ms) => !ms.closed)
                                         .some((milestone) => {
                                             return (
-                                                startDate.utc().isBetween(
+                                                startDate.isBetween(
                                                     milestone.estimated_start,
-                                                    milestone.estimated_finish
+                                                    milestone.estimated_finish,
+                                                    'day',
+                                                    '[]'
                                                 ) ||
-                                                endDate.utc().isBetween(
+                                                endDate.isBetween(
                                                     milestone.estimated_start,
-                                                    milestone.estimated_finish
+                                                    milestone.estimated_finish,
+                                                    'day',
+                                                    '[]'
                                                 )
                                             )
                                         })
@@ -145,7 +162,10 @@ const SprintCreation = () => {
                         name="date"
                         label="Duration"
                     >
-                        <DatePicker.RangePicker format="YYYY-MM-DD" />
+                        <DatePicker.RangePicker
+                            disabledDate={disabledDate}
+                            format="YYYY-MM-DD"
+                        />
                     </Form.Item>
                 </Form>
             </Modal>
