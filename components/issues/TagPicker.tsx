@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useQueryCache, useQuery } from 'react-query'
 import styled from 'styled-components'
 import { getTagColors, TagObject } from '../../taiga-api/projects'
-import { getTask, Task } from '../../taiga-api/tasks'
+import { getTask, Task, updateTask } from '../../taiga-api/tasks'
 import {
     getUserstory,
     updateUserstory,
@@ -22,7 +22,7 @@ interface Props {
 const CustomTagPicker = ({ id, type }: Props) => {
     const { isLoading, data, isError } = useQuery<Task | UserStory>(
         [type, { id }],
-        (key, { id }) => (type === 'task' ? getTask(id) : getUserstory(id)),
+        (key, { id }) => (type === 'task' ? getTask(id) : getUserstory(id))
     )
     const queryCache = useQueryCache()
 
@@ -56,26 +56,52 @@ const CustomTagPicker = ({ id, type }: Props) => {
         )
         if (!newTag) {
             // no new tag was added.
-            const updatedStory = await updateUserstory(id, {
-                tags: existingTags.map((tag) => [tag.label, tag.color]),
-                version: data.version,
-            })
+            if (type === 'task') {
+                const updatedTask = await updateTask(id, {
+                    tags: existingTags.map((tag) => [tag.label, tag.color]),
+                    version: data.version,
+                })
+                queryCache.setQueryData(['task', { id }], () => updatedTask)
+            } else {
+                const updatedStory = await updateUserstory(id, {
+                    tags: existingTags.map((tag) => [tag.label, tag.color]),
+                    version: data.version,
+                })
+                queryCache.setQueryData(
+                    ['userstory', { id }],
+                    () => updatedStory
+                )
+            }
             setSelected(newTags)
-            queryCache.setQueryData(['userstory', { id }], () => updatedStory)
         } else {
             queryCache.setQueryData(
                 ['tags', { projectId }],
                 (prevData: TagObject) => ({ ...prevData, [newTag]: '' })
             )
-            const updatedStory = await updateUserstory(id, {
-                tags: [
-                    ...existingTags.map((tag) => [tag.label, tag.color]),
-                    [newTag, ''],
-                ],
-                version: data.version,
-            })
+            if (type === 'task') {
+                const updatedTask = await updateTask(id, {
+                    tags: [
+                        ...existingTags.map((tag) => [tag.label, tag.color]),
+                        [newTag, ''],
+                    ],
+                    version: data.version,
+                })
+                queryCache.setQueryData(['task', { id }], () => updatedTask)
+            } else {
+                const updatedStory = await updateUserstory(id, {
+                    tags: [
+                        ...existingTags.map((tag) => [tag.label, tag.color]),
+                        [newTag, ''],
+                    ],
+                    version: data.version,
+                })
+                setSelected(newTags)
+                queryCache.setQueryData(
+                    ['userstory', { id }],
+                    () => updatedStory
+                )
+            }
             setSelected(newTags)
-            queryCache.setQueryData(['userstory', { id }], () => updatedStory)
             // new tag was added
         }
         setIsUpdating(false)
