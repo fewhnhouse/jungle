@@ -10,9 +10,7 @@ import {
 import dayjs from 'dayjs'
 import DatePicker from '../DatePicker'
 import isBetween from 'dayjs/plugin/isBetween'
-import utc from 'dayjs/plugin/utc'
 dayjs.extend(isBetween)
-dayjs.extend(utc)
 
 interface Props {
     open: boolean
@@ -40,8 +38,8 @@ const EditSprint = ({ open, sprint, onClose }: Props) => {
         const [startDate, endDate]: [dayjs.Dayjs, dayjs.Dayjs] = values.date
         const newMilestone = await updateMilestone(sprint.id, {
             name: values.name,
-            estimated_start: startDate.utc().toISOString().split('T')[0],
-            estimated_finish: endDate.utc().toISOString().split('T')[0],
+            estimated_start: startDate.toISOString().split('T')[0],
+            estimated_finish: endDate.toISOString().split('T')[0],
         })
         queryCache.setQueryData(
             ['milestones', { projectId }],
@@ -60,6 +58,22 @@ const EditSprint = ({ open, sprint, onClose }: Props) => {
         })
     }
 
+    const disabledDate = (current) => {
+        const today = dayjs()
+        const tooEarly = current.isBefore(today)
+        const isConflicting = milestones?.find((ms) => {
+            if (ms.id === sprint.id) return false
+            return current.isBetween(
+                ms.estimated_start,
+                ms.estimated_finish,
+                'day',
+                '[]'
+            )
+        })
+
+        return tooEarly || isConflicting
+    }
+
     return (
         <Modal
             title="Edit Sprint"
@@ -72,8 +86,8 @@ const EditSprint = ({ open, sprint, onClose }: Props) => {
                 form={form}
                 initialValues={{
                     date: [
-                        dayjs.utc(sprint.estimated_start),
-                        dayjs.utc(sprint.estimated_finish),
+                        dayjs(sprint.estimated_start),
+                        dayjs(sprint.estimated_finish),
                     ],
                     name: `${sprint.name}`,
                 }}
@@ -135,7 +149,10 @@ const EditSprint = ({ open, sprint, onClose }: Props) => {
                     name="date"
                     label="Duration"
                 >
-                    <DatePicker.RangePicker format="YYYY-MM-DD" />
+                    <DatePicker.RangePicker
+                        disabledDate={disabledDate}
+                        format="YYYY-MM-DD"
+                    />
                 </Form.Item>
             </Form>
         </Modal>

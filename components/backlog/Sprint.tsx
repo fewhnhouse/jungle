@@ -9,7 +9,7 @@ import styled from 'styled-components'
 import SprintCompletionModal from './SprintCompletionModal'
 import { Skeleton } from 'antd'
 import { useState } from 'react'
-import EditSprint from './EditSprint'
+import EditSprint from './SprintEditModal'
 import { UserStory } from '../../taiga-api/userstories'
 
 const StyledLink = styled.a`
