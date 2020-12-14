@@ -115,7 +115,7 @@ const AchievementWrapper = ({ children }: Props) => {
 
     const subtasks =
         tasks?.reduce(
-            (prev, curr) => (prev + curr.user_story !== null ? 1 : 0),
+            (prev, curr) => prev + (curr.user_story !== null ? 1 : 0),
             0
         ) ?? -1
 
