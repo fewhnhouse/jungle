@@ -145,9 +145,7 @@ const getTitle = (notification: Notification) => {
                 <span>
                     Mentioned in comment of{' '}
                     <Link
-                        href={`/projects/${1}/tasks/${
-                            notification.data.obj?.id
-                        }`}
+                        href={`/projects/${notification.data.project.id}/tasks/${notification.data.obj?.id}`}
                     >
                         <a>
                             {notification.data.obj?.content_type}{' '}
