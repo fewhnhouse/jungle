@@ -37,19 +37,26 @@ export default function Home() {
         const { username, password, email, fullName, terms } = values
         try {
             setTimeout(async () => {
-                const { data } = await axios.post<User>('/auth', {
-                    username,
-                    password,
-                    type: 'normal',
-                })
+                try {
+                    const { data } = await axios.post<User>('/auth', {
+                        username,
+                        password,
+                        type: 'normal',
+                    })
 
-                const { id, auth_token, username: name, email } = data
-                localStorage.setItem(
-                    'user',
-                    JSON.stringify({ id, username: name, email })
-                )
-                localStorage.setItem('auth-token', auth_token)
-                push('/')
+                    const { id, auth_token, username: name, email } = data
+                    localStorage.setItem(
+                        'user',
+                        JSON.stringify({ id, username: name, email })
+                    )
+                    localStorage.setItem('auth-token', auth_token)
+                    push('/')
+                } catch (e) {
+                    message.error(
+                        'Login failed. Try logging in again with your credentials.'
+                    )
+                    push('/login')
+                }
             }, 2000)
 
             const { data } = await axios.post<User>('/auth/register', {
