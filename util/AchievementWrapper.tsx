@@ -71,7 +71,7 @@ const AchievementWrapper = ({ children }: Props) => {
     )
 
     const {
-        data: tasks = [],
+        data: tasks,
         isLoading: tasksLoading,
         isFetchedAfterMount: isTasksFetched,
     } = useQuery(
