@@ -10,7 +10,7 @@ import {
     UnlockOutlined,
 } from '@ant-design/icons'
 import { Avatar, Button, Card, Skeleton, Tooltip } from 'antd'
-import { getUser, User } from '../../taiga-api/users'
+import { getMe, getUser, User } from '../../taiga-api/users'
 import { getNameInitials } from '../../util/getNameInitials'
 import Flex from '../Flex'
 import { useQuery } from 'react-query'
@@ -146,7 +146,7 @@ export default function ProjectListItem({
     id,
     name,
     description,
-    members,
+    members = [],
     avatar,
     isPrivate,
     fans,
@@ -154,6 +154,7 @@ export default function ProjectListItem({
     isFan,
     isWatcher,
 }: Props) {
+    const { data: me } = useQuery('me', () => getMe())
     const { data: actualMembers, isLoading } = useQuery(
         ['actualMembers', { members }],
         (key, { members }) =>
@@ -167,12 +168,17 @@ export default function ProjectListItem({
     return (
         <StyledCard bordered bodyStyle={{ padding: 0 }}>
             <Body>
-                <Link href={`/projects/${id}/settings`} passHref>
-                    <SettingsButton icon={<SettingOutlined />} />
-                </Link>
+                {members.includes(me?.id) && (
+                    <Link href={`/projects/${id}/settings`} passHref>
+                        <SettingsButton icon={<SettingOutlined />} />
+                    </Link>
+                )}
                 <ItemContainer>
                     <InfoContainer>
-                        <StyledImage alt="Project Avatar" src={avatar ?? '/placeholder.webp'} />
+                        <StyledImage
+                            alt="Project Avatar"
+                            src={avatar ?? '/placeholder.webp'}
+                        />
                         <TextContainer>
                             <Flex align="center">
                                 <Link href={`/projects/${id}`} passHref>
