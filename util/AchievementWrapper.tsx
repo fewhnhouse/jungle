@@ -3,15 +3,18 @@ import {
     CommentOutlined,
     DashboardOutlined,
     FireOutlined,
-    NumberOutlined,
     RobotOutlined,
     TagsOutlined,
 } from '@ant-design/icons'
 import { notification } from 'antd'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { createContext, useEffect } from 'react'
 import { useQuery } from 'react-query'
+import Flex from '../components/Flex'
+import LevelDisplay from '../components/LevelDisplay/LevelDisplay'
 import { getMilestones } from '../taiga-api/milestones'
+import { getProject } from '../taiga-api/projects'
 import { getTasks } from '../taiga-api/tasks'
 import { getUserstories } from '../taiga-api/userstories'
 import usePrev from './usePrev'
@@ -46,6 +49,12 @@ interface Props {
 
 const AchievementWrapper = ({ children }: Props) => {
     const { projectId } = useRouter().query
+
+    const { data: project } = useQuery(
+        ['project', { projectId }],
+        (key, { projectId }) => getProject(projectId),
+        { enabled: projectId }
+    )
     const { data: sprints, isLoading: milestonesLoading } = useQuery(
         ['milestones', { projectId }],
         async (key, { projectId }) => {
@@ -211,6 +220,21 @@ const AchievementWrapper = ({ children }: Props) => {
     ] as Achievement[]
 
     const prevAchievements = usePrev(achievements)
+    const totalScore = achievements.reduce(
+        (prev, curr) => prev + getLevel(curr.levelRange, curr.score) * 10,
+        0
+    )
+
+    const totalLevelRange: [number, number][] = [
+        [0, 50],
+        [50, 200],
+        [200, 500],
+        [500, 1000],
+        [1000, 2000],
+        [2000, 5000],
+        [5000, 10000],
+        [10000, 200000],
+    ]
 
     useEffect(() => {
         if (projectId) {
@@ -228,7 +252,19 @@ const AchievementWrapper = ({ children }: Props) => {
                     if (newLevel > oldLevel) {
                         notification.open({
                             message: `${achievement.title} Level ${newLevel}`,
-                            description: `You leveled up your ${achievement.label} Achievement!`,
+                            description: (
+                                <Flex direction="column">
+                                    <span>
+                                        You leveled up your {achievement.label}{' '}
+                                        Achievement in {project?.name}!
+                                    </span>
+                                    <LevelDisplay
+                                        totalLevelRange={totalLevelRange}
+                                        totalScore={totalScore}
+                                        size="small"
+                                    />
+                                </Flex>
+                            ),
                             icon: achievement.icon,
                         })
                     }
@@ -237,25 +273,12 @@ const AchievementWrapper = ({ children }: Props) => {
         }
     }, [achievements, prevAchievements])
 
-    const totalScore = achievements.reduce(
-        (prev, curr) => prev + getLevel(curr.levelRange, curr.score) * 10,
-        0
-    )
     return (
         <AchievementContext.Provider
             value={{
                 achievements,
                 isLoading: milestonesLoading && tasksLoading && storiesLoading,
-                totalLevelRange: [
-                    [0, 50],
-                    [50, 200],
-                    [200, 500],
-                    [500, 1000],
-                    [1000, 2000],
-                    [2000, 5000],
-                    [5000, 10000],
-                    [10000, 200000],
-                ],
+                totalLevelRange,
                 totalScore,
             }}
         >
