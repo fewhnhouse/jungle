@@ -1,9 +1,9 @@
-import AchievementBadge, { getLevel } from '../Badge/Achievement'
+import AchievementBadge from '../Badge/Achievement'
 import styled from 'styled-components'
 import Flex from '../Flex'
 import useMedia from 'use-media'
 import { Skeleton } from 'antd'
-import { AchievementContext } from '../../util/AchievementWrapper'
+import { AchievementContext, getLevel } from '../../util/AchievementWrapper'
 import { useContext } from 'react'
 
 const AchievementContainer = styled(Flex)``

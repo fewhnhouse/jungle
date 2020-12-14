@@ -6,6 +6,7 @@ import { Modal, notification, Progress } from 'antd'
 import useMedia from 'use-media'
 import Badge from './Badge'
 import usePrev from '../../util/usePrev'
+import { getLevel } from '../../util/AchievementWrapper'
 
 const Description = styled.p`
     margin: 10px 0px;
@@ -45,14 +46,6 @@ interface AchievementBadgeProps {
     icon: React.ReactNode
 }
 
-export const getLevel = (levelRange: [number, number][], score: number) => {
-    return levelRange.findIndex((range, index) =>
-        index === levelRange.length - 1
-            ? true
-            : score >= range[0] && score < range[1]
-    )
-}
-
 const AchievementBadge = ({
     title,
     icon,
@@ -67,7 +60,7 @@ const AchievementBadge = ({
     const isMobile = useMedia('(max-width: 480px)')
 
     const level = getLevel(levelRange, score)
-
+    console.log(score, levelRange, title)
     const min = levelRange[level][0]
     const max = levelRange[level][1]
 

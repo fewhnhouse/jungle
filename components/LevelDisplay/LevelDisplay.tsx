@@ -2,8 +2,7 @@ import { InfoCircleOutlined } from '@ant-design/icons'
 import { Progress, Tooltip } from 'antd'
 import { useContext } from 'react'
 import styled from 'styled-components'
-import { AchievementContext } from '../../util/AchievementWrapper'
-import { getLevel } from '../Badge/Achievement'
+import { AchievementContext, getLevel } from '../../util/AchievementWrapper'
 import Flex from '../Flex'
 
 const LevelContainer = styled.div`

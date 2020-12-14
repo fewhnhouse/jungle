@@ -36,7 +36,7 @@ export interface Achievement {
 }
 
 export const getLevel = (levelRange: [number, number][], score: number) => {
-    if (score <= 0) return 0
+    if (!score || score <= 0) return 0
     return levelRange.findIndex((range, index) =>
         index === levelRange.length - 1
             ? true
