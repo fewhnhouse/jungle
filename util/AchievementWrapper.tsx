@@ -69,10 +69,7 @@ const AchievementWrapper = ({ children }: Props) => {
 
     const { data: tasks = [], isLoading: tasksLoading } = useQuery(
         ['tasks', { projectId }],
-        async (key, { projectId }) => {
-            const tasks = await getTasks({ projectId })
-            return tasks.filter((t) => t.user_story === null)
-        },
+        async (key, { projectId }) => getTasks({ projectId }),
         { enabled: projectId }
     )
 
@@ -84,6 +81,7 @@ const AchievementWrapper = ({ children }: Props) => {
 
     const closedSprints =
         sprints?.filter((sprint) => sprint.closed)?.length ?? -1
+
     const closedBugs =
         stories && tasks
             ? [...stories, ...tasks].filter(
@@ -114,13 +112,17 @@ const AchievementWrapper = ({ children }: Props) => {
             ) ?? -1
 
     const subtasks =
-        tasks?.reduce(
-            (prev, curr) => prev + (curr.user_story !== null ? 1 : 0),
-            0
-        ) ?? -1
+        tasks?.reduce((prev, curr) => {
+            return prev + (curr.user_story !== null ? 1 : 0)
+        }, 0) ?? -1
 
     const comments =
-        stories?.reduce((prev, curr) => prev + curr.total_comments, 0) ?? -1
+        stories && tasks
+            ? [...stories, ...tasks].reduce(
+                  (prev, curr) => prev + curr.total_comments,
+                  0
+              )
+            : -1
 
     const tags =
         stories && tasks
@@ -129,6 +131,7 @@ const AchievementWrapper = ({ children }: Props) => {
                   0
               )
             : -1
+
     const achievements = [
         {
             score: comments,
