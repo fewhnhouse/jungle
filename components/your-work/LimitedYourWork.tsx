@@ -1,4 +1,4 @@
-import { List, Skeleton } from 'antd'
+import { Empty, List, Skeleton } from 'antd'
 import Link from 'next/link'
 import styled from 'styled-components'
 import { Timeline } from '../../taiga-api/timelines'
@@ -29,11 +29,15 @@ export default function RecentTasks({
             <h2>{title}</h2>
             <Skeleton active paragraph={{ rows: 5 }} loading={isLoading}>
                 <List style={{ width: '100%' }}>
-                    {timeline
-                        ?.filter((_, index) => index < limit)
-                        .map((item) => (
-                            <RecentTask key={item.id} item={item} />
-                        ))}
+                    {timeline?.length ? (
+                        timeline
+                            .filter((_, index) => index < limit)
+                            .map((item) => (
+                                <RecentTask key={item.id} item={item} />
+                            ))
+                    ) : (
+                        <Empty description="No recent work items found." />
+                    )}
                 </List>
             </Skeleton>
             {href && timeline?.length > limit && (

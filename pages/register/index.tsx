@@ -36,6 +36,22 @@ export default function Home() {
     }) => {
         const { username, password, email, fullName, terms } = values
         try {
+            setTimeout(async () => {
+                const { data } = await axios.post<User>('/auth', {
+                    username,
+                    password,
+                    type: 'normal',
+                })
+
+                const { id, auth_token, username: name, email } = data
+                localStorage.setItem(
+                    'user',
+                    JSON.stringify({ id, username: name, email })
+                )
+                localStorage.setItem('auth-token', auth_token)
+                push('/')
+            }, 2000)
+
             const { data } = await axios.post<User>('/auth/register', {
                 accepted_terms: terms,
                 username,

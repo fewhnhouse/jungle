@@ -1,4 +1,4 @@
-import { List, Skeleton } from 'antd'
+import { Empty, List, Skeleton } from 'antd'
 import Link from 'next/link'
 import styled from 'styled-components'
 import { Timeline } from '../../taiga-api/timelines'
@@ -32,14 +32,18 @@ export default function LimitedActivity({
             <h2>{title}</h2>
             <Skeleton active paragraph={{ rows: 5 }} loading={isLoading}>
                 <List>
-                    {activity
-                        ?.filter((_, index) => index < limit)
-                        .map((activityItem) => (
-                            <ActivityListItem
-                                key={activityItem.id}
-                                activityItem={activityItem}
-                            ></ActivityListItem>
-                        ))}
+                    {activity?.length ? (
+                        activity
+                            .filter((_, index) => index < limit)
+                            .map((activityItem) => (
+                                <ActivityListItem
+                                    key={activityItem.id}
+                                    activityItem={activityItem}
+                                ></ActivityListItem>
+                            ))
+                    ) : (
+                        <Empty description="No activity yet." />
+                    )}
                 </List>
             </Skeleton>
 
