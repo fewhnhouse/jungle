@@ -1,11 +1,10 @@
 import styled from 'styled-components'
 import Flex from '../Flex'
 import { StarFilled } from '@ant-design/icons'
-import { useEffect, useState } from 'react'
-import { Modal, notification, Progress } from 'antd'
+import { useState } from 'react'
+import { Modal, Progress } from 'antd'
 import useMedia from 'use-media'
 import Badge from './Badge'
-import usePrev from '../../util/usePrev'
 import { getLevel } from '../../util/AchievementWrapper'
 
 const Description = styled.p`

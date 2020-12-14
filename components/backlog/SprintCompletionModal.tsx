@@ -47,7 +47,7 @@ const SprintCompletionModal = ({ milestoneId }: Props) => {
     )
 
     const { data: tasks, refetch: refetchTasks } = useQuery(
-        ['tasks', { projectId, milestoneId }],
+        ['milestoneTasks', { projectId, milestoneId }],
         (key, { projectId, milestoneId }) =>
             getTasks({
                 projectId,
@@ -57,7 +57,7 @@ const SprintCompletionModal = ({ milestoneId }: Props) => {
     )
 
     const { data: stories, refetch: refetchUserstories } = useQuery(
-        ['userstories', { projectId, milestoneId }],
+        ['milestoneStories', { projectId, milestoneId }],
         (key, { projectId, milestoneId }) =>
             getUserstories({ projectId, milestone: milestoneId.toString() }),
         { enabled: milestoneId && projectId }
