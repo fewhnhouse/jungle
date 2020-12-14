@@ -152,9 +152,9 @@ const AchievementWrapper = ({ children }: Props) => {
             score: comments,
             levelRange: [
                 [0, 1],
-                [2, 10],
-                [10, 50],
-                [50, 500],
+                [1, 10],
+                [10, 100],
+                [100, 500],
             ],
             icon: <CommentOutlined />,
             title: 'Author',
@@ -165,7 +165,7 @@ const AchievementWrapper = ({ children }: Props) => {
             score: closedSprints,
             levelRange: [
                 [0, 1],
-                [2, 5],
+                [1, 5],
                 [5, 20],
                 [20, 50],
             ],
@@ -178,7 +178,7 @@ const AchievementWrapper = ({ children }: Props) => {
             score: tags,
             levelRange: [
                 [0, 1],
-                [2, 10],
+                [1, 10],
                 [10, 50],
                 [50, 200],
             ],
@@ -191,7 +191,7 @@ const AchievementWrapper = ({ children }: Props) => {
             score: closedBugs,
             levelRange: [
                 [0, 1],
-                [2, 10],
+                [1, 10],
                 [10, 50],
                 [50, 200],
             ],
@@ -217,8 +217,8 @@ const AchievementWrapper = ({ children }: Props) => {
         {
             score: subtasks,
             levelRange: [
-                [0, 2],
-                [2, 20],
+                [0, 5],
+                [5, 20],
                 [20, 100],
                 [100, 500],
             ],

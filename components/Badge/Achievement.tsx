@@ -60,7 +60,6 @@ const AchievementBadge = ({
     const isMobile = useMedia('(max-width: 480px)')
 
     const level = getLevel(levelRange, score)
-    console.log(score, levelRange, title)
     const min = levelRange[level][0]
     const max = levelRange[level][1]
 
