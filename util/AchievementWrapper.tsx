@@ -55,7 +55,11 @@ const AchievementWrapper = ({ children }: Props) => {
         (key, { projectId }) => getProject(projectId),
         { enabled: projectId }
     )
-    const { data: sprints, isLoading: milestonesLoading } = useQuery(
+    const {
+        data: sprints,
+        isLoading: milestonesLoading,
+        isFetchedAfterMount: isMilestonesFetched,
+    } = useQuery(
         ['milestones', { projectId }],
         async (key, { projectId }) => {
             return getMilestones({
@@ -66,17 +70,28 @@ const AchievementWrapper = ({ children }: Props) => {
         { enabled: projectId }
     )
 
-    const { data: tasks = [], isLoading: tasksLoading } = useQuery(
+    const {
+        data: tasks = [],
+        isLoading: tasksLoading,
+        isFetchedAfterMount: isTasksFetched,
+    } = useQuery(
         ['tasks', { projectId }],
         async (key, { projectId }) => getTasks({ projectId }),
         { enabled: projectId }
     )
 
-    const { data: stories, isLoading: storiesLoading } = useQuery(
+    const {
+        data: stories,
+        isLoading: storiesLoading,
+        isFetchedAfterMount: isStoriesFetched,
+    } = useQuery(
         ['userstories', { projectId }],
         (key, { projectId }) => getUserstories({ projectId }),
         { enabled: projectId }
     )
+
+    const isLoading = milestonesLoading || tasksLoading || storiesLoading
+    const isFetched = isMilestonesFetched && isTasksFetched && isStoriesFetched
 
     const closedSprints =
         sprints?.filter((sprint) => sprint.closed)?.length ?? -1
@@ -135,8 +150,8 @@ const AchievementWrapper = ({ children }: Props) => {
         {
             score: comments,
             levelRange: [
-                [0, 1],
-                [1, 10],
+                [0, 2],
+                [2, 10],
                 [10, 50],
                 [50, 500],
             ],
@@ -148,8 +163,8 @@ const AchievementWrapper = ({ children }: Props) => {
         {
             score: closedSprints,
             levelRange: [
-                [0, 1],
-                [1, 5],
+                [0, 2],
+                [2, 5],
                 [5, 20],
                 [20, 50],
             ],
@@ -161,8 +176,8 @@ const AchievementWrapper = ({ children }: Props) => {
         {
             score: tags,
             levelRange: [
-                [0, 1],
-                [1, 10],
+                [0, 2],
+                [2, 10],
                 [10, 50],
                 [50, 200],
             ],
@@ -174,8 +189,8 @@ const AchievementWrapper = ({ children }: Props) => {
         {
             score: closedBugs,
             levelRange: [
-                [0, 1],
-                [1, 10],
+                [0, 2],
+                [2, 10],
                 [10, 50],
                 [50, 200],
             ],
@@ -201,8 +216,8 @@ const AchievementWrapper = ({ children }: Props) => {
         {
             score: subtasks,
             levelRange: [
-                [0, 1],
-                [1, 20],
+                [0, 2],
+                [2, 20],
                 [20, 100],
                 [100, 500],
             ],
@@ -246,10 +261,10 @@ const AchievementWrapper = ({ children }: Props) => {
     ]
 
     useEffect(() => {
-        if (projectId) {
+        if (projectId && isFetched) {
             achievements?.forEach((achievement, index) => {
                 const prevAchievement = prevAchievements[index]
-                if (prevAchievement.score >= 0) {
+                if (prevAchievement.score > 0) {
                     const oldLevel = getLevel(
                         prevAchievement.levelRange,
                         prevAchievement.score
@@ -259,29 +274,36 @@ const AchievementWrapper = ({ children }: Props) => {
                         achievement.score
                     )
                     if (newLevel > oldLevel) {
-                        // notification.open({
-                        //     message: `${achievement.title} Level ${newLevel}`,
-                        //     description: (
-                        //         <Flex direction="column">
-                        //             <span>
-                        //                 You leveled up your {achievement.label}{' '}
-                        //                 Achievement in {project?.name}!
-                        //             </span>
-                        //             <Divider
-                        //                 style={{ margin: '0px', marginTop: 5 }}
-                        //             >
-                        //                 Team Level
-                        //             </Divider>
+                        console.log(
+                            achievement.title,
+                            newLevel,
+                            oldLevel,
+                            prevAchievement.score,
+                            achievement.score
+                        )
+                        notification.open({
+                            message: `${achievement.title} Level ${newLevel}`,
+                            description: (
+                                <Flex direction="column">
+                                    <span>
+                                        You leveled up your {achievement.label}{' '}
+                                        Achievement in {project?.name}!
+                                    </span>
+                                    <Divider
+                                        style={{ margin: '0px', marginTop: 5 }}
+                                    >
+                                        Team Level
+                                    </Divider>
 
-                        //             <LevelDisplay
-                        //                 totalLevelRange={totalLevelRange}
-                        //                 totalScore={totalScore}
-                        //                 size="small"
-                        //             />
-                        //         </Flex>
-                        //     ),
-                        //     icon: achievement.icon,
-                        // })
+                                    <LevelDisplay
+                                        totalLevelRange={totalLevelRange}
+                                        totalScore={totalScore}
+                                        size="small"
+                                    />
+                                </Flex>
+                            ),
+                            icon: achievement.icon,
+                        })
                     }
                 }
             })
@@ -292,7 +314,7 @@ const AchievementWrapper = ({ children }: Props) => {
         <AchievementContext.Provider
             value={{
                 achievements,
-                isLoading: milestonesLoading && tasksLoading && storiesLoading,
+                isLoading: isLoading,
                 totalLevelRange,
                 totalScore,
             }}
