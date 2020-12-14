@@ -109,11 +109,7 @@ const AchievementBadge = ({
                         align="center"
                         direction={isMobile ? 'column' : 'row'}
                     >
-                        <Badge
-                            title={title}
-                            icon={icon}
-                            level={level}
-                        />
+                        <Badge title={title} icon={icon} level={level} />
                         <DescriptionContainer direction="column" align="center">
                             <Description>{description}</Description>
                             <Flex fluid align="center" direction="column">
@@ -147,7 +143,7 @@ const AchievementBadge = ({
                                     </CountStarContainer>
                                 </Flex>
                                 <h3>
-                                    {min} / {max} {label}
+                                    {score} / {max} {label}
                                 </h3>
                             </Flex>
                         </DescriptionContainer>
