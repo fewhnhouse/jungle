@@ -265,7 +265,7 @@ const AchievementWrapper = ({ children }: Props) => {
         if (projectId && isFetched) {
             achievements?.forEach((achievement, index) => {
                 const prevAchievement = prevAchievements[index]
-                if (prevAchievement.score > 0) {
+                if (prevAchievement.score >= 0) {
                     const oldLevel = getLevel(
                         prevAchievement.levelRange,
                         prevAchievement.score
@@ -275,13 +275,6 @@ const AchievementWrapper = ({ children }: Props) => {
                         achievement.score
                     )
                     if (newLevel > oldLevel) {
-                        console.log(
-                            achievement.title,
-                            newLevel,
-                            oldLevel,
-                            prevAchievement.score,
-                            achievement.score
-                        )
                         notification.open({
                             message: `${achievement.title} Level ${newLevel}`,
                             description: (
