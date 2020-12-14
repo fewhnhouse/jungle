@@ -68,22 +68,6 @@ const AchievementBadge = ({
 
     const level = getLevel(levelRange, score)
 
-    const prevScore = usePrev(score)
-
-    useEffect(() => {
-        if (!!prevScore && score > prevScore) {
-            const oldLevel = getLevel(levelRange, prevScore)
-            const newLevel = getLevel(levelRange, score)
-            if (newLevel > oldLevel) {
-                notification.open({
-                    message: `${title} Level ${level}`,
-                    description: `You leveled up your ${label} Achievement!`,
-                    icon,
-                })
-            }
-        }
-    }, [score, prevScore])
-
     const min = levelRange[level][0]
     const max = levelRange[level][1]
 
