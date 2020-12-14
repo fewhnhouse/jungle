@@ -37,8 +37,8 @@ const LevelIcon = styled.div<{ $size: 'normal' | 'small' }>`
 
 const Score = styled.h3``
 
-const Container = styled(Flex)`
-    margin: 20px 0px;
+const Container = styled(Flex)<{ $size: 'normal' | 'small' }>`
+    margin: ${({ $size }) => ($size === 'normal' ? '20px 0px' : '5px 0px')};
 `
 
 const LevelDisplay = ({
@@ -63,7 +63,7 @@ const LevelDisplay = ({
               100
             : 0
     return (
-        <Container fluid direction="column" align="center">
+        <Container $size={size} fluid direction="column" align="center">
             <LevelContainer>
                 <LevelIcon $size={size}>{currentLevel}</LevelIcon>
                 <Progress

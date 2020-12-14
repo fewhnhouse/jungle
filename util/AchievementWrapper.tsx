@@ -7,8 +7,7 @@ import {
     RobotOutlined,
     TagsOutlined,
 } from '@ant-design/icons'
-import { notification } from 'antd'
-import Link from 'next/link'
+import { Divider, notification } from 'antd'
 import { useRouter } from 'next/router'
 import { createContext, useEffect } from 'react'
 import { useQuery } from 'react-query'
@@ -268,6 +267,12 @@ const AchievementWrapper = ({ children }: Props) => {
                                         You leveled up your {achievement.label}{' '}
                                         Achievement in {project?.name}!
                                     </span>
+                                    <Divider
+                                        style={{ margin: '0px', marginTop: 5 }}
+                                    >
+                                        Team Level
+                                    </Divider>
+
                                     <LevelDisplay
                                         totalLevelRange={totalLevelRange}
                                         totalScore={totalScore}
