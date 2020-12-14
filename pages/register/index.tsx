@@ -36,29 +36,6 @@ export default function Home() {
     }) => {
         const { username, password, email, fullName, terms } = values
         try {
-            setTimeout(async () => {
-                try {
-                    const { data } = await axios.post<User>('/auth', {
-                        username,
-                        password,
-                        type: 'normal',
-                    })
-
-                    const { id, auth_token, username: name, email } = data
-                    localStorage.setItem(
-                        'user',
-                        JSON.stringify({ id, username: name, email })
-                    )
-                    localStorage.setItem('auth-token', auth_token)
-                    push('/')
-                } catch (e) {
-                    message.error(
-                        'Login failed. Try logging in again with your credentials.'
-                    )
-                    push('/login')
-                }
-            }, 2000)
-
             const { data } = await axios.post<User>('/auth/register', {
                 accepted_terms: terms,
                 username,
@@ -76,8 +53,9 @@ export default function Home() {
             )
             localStorage.setItem('auth-token', auth_token)
             push('/')
-        } catch (e) {
-            message.error('Register failed.')
+        } catch ({ response }) {
+            const error = response?.data?._error_message
+            message.error(`Register failed: ${error}`)
         }
     }
     return (

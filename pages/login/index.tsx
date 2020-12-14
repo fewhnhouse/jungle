@@ -47,8 +47,9 @@ export default function Home() {
             )
             localStorage.setItem('auth-token', auth_token)
             push('/')
-        } catch (e) {
-            message.error('Login failed.')
+        } catch ({ response }) {
+            const error = response?.data?._error_message
+            message.error(`Login failed: ${error}`)
         }
     }
     return (
