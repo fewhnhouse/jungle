@@ -87,6 +87,13 @@ const CustomTagPicker = ({ id, type }: Props) => {
                     version: data.version,
                 })
                 queryCache.setQueryData(['task', { id }], () => updatedTask)
+                queryCache.setQueryData(
+                    ['tasks', { projectId }],
+                    (prevData: Task[]) =>
+                        prevData?.map((task) =>
+                            task.id === updatedTask.id ? updatedTask : task
+                        )
+                )
             } else {
                 const updatedStory = await updateUserstory(id, {
                     tags: [
@@ -99,6 +106,13 @@ const CustomTagPicker = ({ id, type }: Props) => {
                 queryCache.setQueryData(
                     ['userstory', { id }],
                     () => updatedStory
+                )
+                queryCache.setQueryData(
+                    ['userstories', { projectId }],
+                    (prevData: UserStory[]) =>
+                        prevData?.map((story) =>
+                            story.id === updatedStory.id ? updatedStory : story
+                        )
                 )
             }
             setSelected(newTags)

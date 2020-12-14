@@ -10,8 +10,8 @@ import {
     TaigaHistory,
 } from '../../../taiga-api/history'
 import { getProject } from '../../../taiga-api/projects'
-import { updateTask } from '../../../taiga-api/tasks'
-import { updateUserstory } from '../../../taiga-api/userstories'
+import { Task, updateTask } from '../../../taiga-api/tasks'
+import { updateUserstory, UserStory } from '../../../taiga-api/userstories'
 import Flex from '../../Flex'
 import Comment from './Comment'
 
@@ -76,7 +76,7 @@ const Comments = ({
         form.resetFields()
         queryCache.setQueryData(
             ['comments', { id, type }],
-            (prevData: TaigaHistory[]) => [
+            (prevData: TaigaHistory[] = []) => [
                 ...prevData,
                 {
                     comment,
@@ -86,9 +86,23 @@ const Comments = ({
             ]
         )
         if (type === 'userstory') {
-            await updateUserstory(id, { comment, version })
+            const updatedStory = await updateUserstory(id, { comment, version })
+            queryCache.setQueryData(
+                ['userstories', { projectId }],
+                (prevData: UserStory[]) =>
+                    prevData?.map((story) =>
+                        story.id === updatedStory.id ? updatedStory : story
+                    )
+            )
         } else {
-            await updateTask(id, { comment, version })
+            const updatedTask = await updateTask(id, { comment, version })
+            queryCache.setQueryData(
+                ['tasks', { projectId }],
+                (prevData: Task[]) =>
+                    prevData?.map((task) =>
+                        task.id === updatedTask.id ? updatedTask : task
+                    )
+            )
         }
         queryCache.invalidateQueries(['comments', { id, type }])
     }

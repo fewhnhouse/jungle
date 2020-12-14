@@ -150,7 +150,7 @@ const AchievementWrapper = ({ children }: Props) => {
         {
             score: comments,
             levelRange: [
-                [0, 2],
+                [0, 1],
                 [2, 10],
                 [10, 50],
                 [50, 500],
@@ -163,7 +163,7 @@ const AchievementWrapper = ({ children }: Props) => {
         {
             score: closedSprints,
             levelRange: [
-                [0, 2],
+                [0, 1],
                 [2, 5],
                 [5, 20],
                 [20, 50],
@@ -176,7 +176,7 @@ const AchievementWrapper = ({ children }: Props) => {
         {
             score: tags,
             levelRange: [
-                [0, 2],
+                [0, 1],
                 [2, 10],
                 [10, 50],
                 [50, 200],
@@ -189,7 +189,7 @@ const AchievementWrapper = ({ children }: Props) => {
         {
             score: closedBugs,
             levelRange: [
-                [0, 2],
+                [0, 1],
                 [2, 10],
                 [10, 50],
                 [50, 200],

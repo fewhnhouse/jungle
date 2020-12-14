@@ -96,6 +96,10 @@ const SubtaskList = ({ id }: Props) => {
                     ['subtasks', { id }],
                     (prevData: Task[]) => [...prevData, newTask]
                 )
+                queryCache.setQueryData(
+                    ['tasks', { projectId }],
+                    (prevData: Task[]) => [...prevData, newTask]
+                )
             })
         })
     }
