@@ -55,7 +55,6 @@ const LevelDisplay = ({
     )
     totalLevelRange = totalLevelRange ?? ctxRange
     totalScore = totalScore ?? ctxScore
-    console.log(totalLevelRange, totalScore)
     const currentLevel = getLevel(totalLevelRange, totalScore)
     const percent =
         totalLevelRange.length > 1

@@ -19,14 +19,15 @@ const IconContainer = styled(Flex)`
     align-items: center;
 `
 
-const BadgeShell = styled.button<{ $isHoverable }>`
+const BadgeShell = styled.button<{ $isHoverable: boolean; $earned: boolean }>`
     box-shadow: rgba(0, 0, 0, 0.12) 0px 5px 10px 0px;
     border-radius: 2px;
     border: 1px solid rgb(240, 240, 240);
     background: white;
     width: 120px;
-    height: 140px;
+    height: 150px;
     cursor: pointer;
+    filter: ${({ $earned }) => ($earned ? '' : 'grayscale(100%)')};
     transition: transform 0.2s ease-in-out;
     ${({ $isHoverable }) =>
         $isHoverable &&
@@ -62,6 +63,7 @@ const Badge = ({
 }: BadgeProps & ModalProps) => {
     return (
         <BadgeShell
+            $earned={level > 0}
             disabled={!onClick}
             $isHoverable={isHoverable}
             onClick={onClick}
@@ -73,11 +75,7 @@ const Badge = ({
                     ))}
                 </LevelContainer>
                 <div style={{ position: 'relative' }}>
-                    <Image
-                        src="/medal.svg"
-                        width="80px"
-                        height="80px"
-                    />
+                    <Image src="/medal.svg" width="80px" height="80px" />
                     <IconContainer>{icon}</IconContainer>
                 </div>
                 <Title>{title}</Title>

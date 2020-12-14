@@ -3,6 +3,7 @@ import {
     CommentOutlined,
     DashboardOutlined,
     FireOutlined,
+    NumberOutlined,
     RobotOutlined,
     TagsOutlined,
 } from '@ant-design/icons'
@@ -99,19 +100,24 @@ const AchievementWrapper = ({ children }: Props) => {
             ? [...stories, ...tasks].filter((issue) => issue.is_closed).length
             : -1
 
-    const storyPoints = stories
-        ? [...stories]
-              .filter((story) => story.is_closed)
-              .reduce(
-                  (prev, curr) =>
-                      prev +
-                      Object.values(curr.points).reduce(
-                          (prev, curr) => prev + curr,
-                          0
-                      ),
-                  0
-              )
-        : -1
+    const storyPoints =
+        stories
+            ?.filter((story) => story.is_closed)
+            .reduce(
+                (prev, curr) =>
+                    prev +
+                    Object.values(curr.points).reduce(
+                        (prev, curr) => prev + curr,
+                        0
+                    ),
+                0
+            ) ?? -1
+
+    const subtasks =
+        tasks?.reduce(
+            (prev, curr) => (prev + curr.user_story !== null ? 1 : 0),
+            0
+        ) ?? -1
 
     const comments =
         stories?.reduce((prev, curr) => prev + curr.total_comments, 0) ?? -1
@@ -190,19 +196,20 @@ const AchievementWrapper = ({ children }: Props) => {
             description:
                 'Burn down a certain amount of story points to advance this achievement.',
         },
-        // {
-        //     score: 1,
-        //     levelRange: [
-        //         [0, 1],
-        //         [1, 10],
-        //         [10, 50],
-        //         [50, 500],
-        //     ],
-        //     icon: <NumberOutlined />,
-        //     title: 'Even the Odds',
-        //     label: 'Dunno',
-        //     description: 'Dont know yet.',
-        // },
+        {
+            score: subtasks,
+            levelRange: [
+                [0, 1],
+                [1, 20],
+                [20, 100],
+                [100, 500],
+            ],
+            icon: <NumberOutlined />,
+            title: 'Divide and Conquer',
+            label: 'Subtasks',
+            description:
+                'Create subtasks to further divide user stories to advance this achievement.',
+        },
         {
             score: closedIssues,
             levelRange: [
@@ -238,7 +245,7 @@ const AchievementWrapper = ({ children }: Props) => {
 
     useEffect(() => {
         if (projectId) {
-            achievements.forEach((achievement, index) => {
+            achievements?.forEach((achievement, index) => {
                 const prevAchievement = prevAchievements[index]
                 if (prevAchievement.score >= 0) {
                     const oldLevel = getLevel(

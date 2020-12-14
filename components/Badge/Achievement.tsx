@@ -86,9 +86,6 @@ const AchievementBadge = ({
 
     const min = levelRange[level][0]
     const max = levelRange[level][1]
-    if (level === 0) {
-        return null
-    }
 
     return (
         <>
@@ -112,7 +109,11 @@ const AchievementBadge = ({
                         align="center"
                         direction={isMobile ? 'column' : 'row'}
                     >
-                        <Badge title={title} icon={icon} level={level} />
+                        <Badge
+                            title={title}
+                            icon={icon}
+                            level={level}
+                        />
                         <DescriptionContainer direction="column" align="center">
                             <Description>{description}</Description>
                             <Flex fluid align="center" direction="column">

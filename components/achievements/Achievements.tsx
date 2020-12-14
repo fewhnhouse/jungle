@@ -1,4 +1,4 @@
-import AchievementBadge from '../Badge/Achievement'
+import AchievementBadge, { getLevel } from '../Badge/Achievement'
 import styled from 'styled-components'
 import Flex from '../Flex'
 import useMedia from 'use-media'
@@ -20,22 +20,35 @@ const Achievements = () => {
             align="center"
         >
             <Skeleton active loading={isLoading}>
-                {achievements.map(
-                    (
-                        { score, levelRange, icon, title, label, description },
-                        index
-                    ) => (
-                        <AchievementBadge
-                            key={index}
-                            description={description}
-                            score={score}
-                            levelRange={levelRange}
-                            icon={icon}
-                            title={title}
-                            label={label}
-                        />
-                    )
-                )}
+                {achievements
+                    .sort((a, b) => {
+                        const aLevel = getLevel(a.levelRange, a.score)
+                        const bLevel = getLevel(b.levelRange, b.score)
+                        return bLevel - aLevel
+                    })
+                    .map(
+                        (
+                            {
+                                score,
+                                levelRange,
+                                icon,
+                                title,
+                                label,
+                                description,
+                            },
+                            index
+                        ) => (
+                            <AchievementBadge
+                                key={index}
+                                description={description}
+                                score={score}
+                                levelRange={levelRange}
+                                icon={icon}
+                                title={title}
+                                label={label}
+                            />
+                        )
+                    )}
             </Skeleton>
         </AchievementContainer>
     )
