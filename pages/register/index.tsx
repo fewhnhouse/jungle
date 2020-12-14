@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 
 import { User } from '../../taiga-api/users'
 import { Button, Card, Checkbox, Form, Input, message } from 'antd'
-import { LockOutlined, UserOutlined } from '@ant-design/icons'
+import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons'
 import Head from 'next/head'
 
 const Container = styled.div`
@@ -30,31 +30,37 @@ export default function Home() {
     const handleLogin = async (values: {
         username: string
         password: string
-        remember: boolean
+        email: string
+        fullName: string
+        terms: boolean
     }) => {
-        const { username, password } = values
+        const { username, password, email, fullName, terms } = values
         try {
-            const { data } = await axios.post<User>('/auth', {
+            const { data } = await axios.post<User>('/auth/register', {
+                accepted_terms: terms,
                 username,
+                full_name: fullName,
                 password,
-                type: 'normal',
+                email,
+                fullName,
+                type: 'public',
             })
 
-            const { id, auth_token, username: name, email } = data
+            const { id, auth_token, username: name, email: mail } = data
             localStorage.setItem(
                 'user',
-                JSON.stringify({ id, username: name, email })
+                JSON.stringify({ id, username: name, email: mail })
             )
             localStorage.setItem('auth-token', auth_token)
             push('/')
         } catch (e) {
-            message.error('Login failed.')
+            message.error('Register failed.')
         }
     }
     return (
         <>
             <Head>
-                <title>Login</title>
+                <title>Register</title>
                 <meta
                     name="viewport"
                     content="initial-scale=1.0, width=device-width"
@@ -78,10 +84,39 @@ export default function Home() {
                             ]}
                         >
                             <Input
-                                prefix={
-                                    <UserOutlined className="site-form-item-icon" />
-                                }
+                                prefix={<UserOutlined />}
                                 placeholder="Username"
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            name="fullName"
+                            label="Full Name"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please input your full name!',
+                                },
+                            ]}
+                        >
+                            <Input
+                                prefix={<UserOutlined />}
+                                placeholder="Full Name"
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            name="email"
+                            label="Email"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please input your email!',
+                                },
+                            ]}
+                        >
+                            <Input
+                                type="email"
+                                prefix={<MailOutlined />}
+                                placeholder="Email"
                             />
                         </Form.Item>
                         <Form.Item
@@ -95,32 +130,38 @@ export default function Home() {
                             label="Password"
                         >
                             <Input.Password
-                                prefix={
-                                    <LockOutlined className="site-form-item-icon" />
-                                }
+                                prefix={<LockOutlined />}
                                 placeholder="Password"
                             />
                         </Form.Item>
-                        <Form.Item>
-                            <Form.Item
-                                name="remember"
-                                valuePropName="checked"
-                                noStyle
-                            >
-                                <Checkbox>Remember me</Checkbox>
-                            </Form.Item>
-
-                            <Link href="reset-password">Forgot password?</Link>
+                        <Form.Item
+                            name="terms"
+                            valuePropName="checked"
+                            rules={[
+                                {
+                                    validator: (_, value) =>
+                                        value
+                                            ? Promise.resolve()
+                                            : Promise.reject(
+                                                  'Please accept Terms and Conditions'
+                                              ),
+                                },
+                            ]}
+                        >
+                            <Checkbox>
+                                Accept{' '}
+                                <Link href="/terms">Terms and Conditions</Link>
+                            </Checkbox>
                         </Form.Item>
 
                         <Form.Item>
                             <Button htmlType="submit" type="primary">
-                                Log In &rarr;
+                                Register &rarr;
                             </Button>
                         </Form.Item>
                     </Form>
                     <span>
-                        Or <Link href="/register">register now!</Link>
+                        Or <Link href="/login">login now!</Link>
                     </span>
                 </StyledCard>
             </Container>
