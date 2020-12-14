@@ -259,29 +259,29 @@ const AchievementWrapper = ({ children }: Props) => {
                         achievement.score
                     )
                     if (newLevel > oldLevel) {
-                        notification.open({
-                            message: `${achievement.title} Level ${newLevel}`,
-                            description: (
-                                <Flex direction="column">
-                                    <span>
-                                        You leveled up your {achievement.label}{' '}
-                                        Achievement in {project?.name}!
-                                    </span>
-                                    <Divider
-                                        style={{ margin: '0px', marginTop: 5 }}
-                                    >
-                                        Team Level
-                                    </Divider>
+                        // notification.open({
+                        //     message: `${achievement.title} Level ${newLevel}`,
+                        //     description: (
+                        //         <Flex direction="column">
+                        //             <span>
+                        //                 You leveled up your {achievement.label}{' '}
+                        //                 Achievement in {project?.name}!
+                        //             </span>
+                        //             <Divider
+                        //                 style={{ margin: '0px', marginTop: 5 }}
+                        //             >
+                        //                 Team Level
+                        //             </Divider>
 
-                                    <LevelDisplay
-                                        totalLevelRange={totalLevelRange}
-                                        totalScore={totalScore}
-                                        size="small"
-                                    />
-                                </Flex>
-                            ),
-                            icon: achievement.icon,
-                        })
+                        //             <LevelDisplay
+                        //                 totalLevelRange={totalLevelRange}
+                        //                 totalScore={totalScore}
+                        //                 size="small"
+                        //             />
+                        //         </Flex>
+                        //     ),
+                        //     icon: achievement.icon,
+                        // })
                     }
                 }
             })
