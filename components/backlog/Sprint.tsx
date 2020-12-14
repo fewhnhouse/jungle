@@ -93,7 +93,10 @@ const Sprint = ({
                     issues={[
                         ...(userstories?.filter((story) => !story.is_closed) ??
                             []),
-                        ...(tasks?.filter((task) => !task.is_closed) ?? []),
+                        ...(tasks?.filter(
+                            (task) =>
+                                !task.is_closed && task.user_story === null
+                        ) ?? []),
                     ]}
                 />
             </CustomCollapse>
