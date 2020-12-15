@@ -119,10 +119,13 @@ const AchievementWrapper = ({ children }: Props) => {
             .reduce(
                 (prev, curr) =>
                     prev +
-                    Object.values(curr.points).reduce(
-                        (prev, curr) => prev + curr,
-                        0
-                    ),
+                    Object.values(curr.points).reduce((prev, curr) => {
+                        const point = project?.points.find(
+                            (point) => point.id === curr
+                        )
+
+                        return prev + (point.value ?? 0)
+                    }, 0),
                 0
             ) ?? -1
 
