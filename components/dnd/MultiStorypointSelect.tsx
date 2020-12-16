@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { useQueryCache, useQuery } from 'react-query'
 import styled from 'styled-components'
+import useMedia from 'use-media'
 import { getProject } from '../../taiga-api/projects'
 import { updateUserstory, UserStory } from '../../taiga-api/userstories'
 import { updateUserstoryCache } from '../../updateCache'
@@ -30,6 +31,7 @@ const MultiStoryPointCascader = ({ data }: { data: UserStory }) => {
         (key, { projectId }) => getProject(projectId as string),
         { enabled: projectId }
     )
+    const isMobile = useMedia('(max-width: 700px)')
 
     const roles =
         project?.roles
@@ -57,6 +59,7 @@ const MultiStoryPointCascader = ({ data }: { data: UserStory }) => {
         <Flex fluid direction="column">
             {roles.map((role) => (
                 <StyledSelect
+                    size={isMobile ? 'large' : 'middle'}
                     value={selectedPoints[role.value]}
                     key={role.value}
                     optionLabelProp="selected"

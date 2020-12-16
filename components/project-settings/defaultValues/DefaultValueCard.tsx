@@ -1,5 +1,6 @@
 import { Button, Card, Form, Select } from 'antd'
 import styled from 'styled-components'
+import useMedia from 'use-media'
 
 const StyledCard = styled(Card)`
     margin: 30px 0px;
@@ -33,6 +34,8 @@ const DefaultValueCard = ({
     name,
     options,
 }) => {
+    const isMobile = useMedia('(max-width: 700px)')
+
     return (
         <StyledCard bodyStyle={{ padding: 0 }} title={title}>
             <Form
@@ -41,7 +44,10 @@ const DefaultValueCard = ({
                 onFinish={handleSubmit}
             >
                 <StyledFormItem name={name}>
-                    <Select options={options} />
+                    <Select
+                        size={isMobile ? 'large' : 'middle'}
+                        options={options}
+                    />
                 </StyledFormItem>
                 <Footer>
                     <span>{description}</span>

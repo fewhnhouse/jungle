@@ -11,12 +11,14 @@ import {
     createUserstoryStatus,
     StoryStatus,
 } from '../../../taiga-api/userstories'
+import useMedia from 'use-media'
 
 const StatusAddModal = ({ type }: { type: 'task' | 'userstory' }) => {
     const [show, setShow] = useState(false)
     const { projectId } = useRouter().query
     const queryCache = useQueryCache()
     const [color, setColor] = useState('#ddd')
+    const isMobile = useMedia('(max-width: 700px)')
 
     const [form] = Form.useForm()
 
@@ -84,13 +86,16 @@ const StatusAddModal = ({ type }: { type: 'task' | 'userstory' }) => {
                         name="name"
                         label="Status Name"
                     >
-                        <Input />
+                        <Input size={isMobile ? 'large' : 'middle'} />
                     </Form.Item>
                     <Form.Item name="closed" label="Closed">
                         <Switch />
                     </Form.Item>
                     <Form.Item name="order" label="Order">
-                        <Input type="number" />
+                        <Input
+                            size={isMobile ? 'large' : 'middle'}
+                            type="number"
+                        />
                     </Form.Item>
 
                     <Form.Item name="color" label="Tag Color">

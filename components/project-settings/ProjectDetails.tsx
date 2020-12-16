@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useQueryCache, useQuery } from 'react-query'
 
 import styled from 'styled-components'
+import useMedia from 'use-media'
 import {
     changeLogo,
     deleteProject,
@@ -83,6 +84,7 @@ const ProjectDetails = () => {
     const { query, replace } = useRouter()
     const { projectId } = query
     const queryCache = useQueryCache()
+    const isMobile = useMedia('(max-width: 700px)')
 
     const { data, isLoading } = useQuery(
         ['project', { projectId }],
@@ -174,7 +176,7 @@ const ProjectDetails = () => {
                     onFinish={handleNameSubmit}
                 >
                     <StyledFormItem name="name">
-                        <Input />
+                        <Input size={isMobile ? 'large' : 'middle'} />
                     </StyledFormItem>
                     <Footer>
                         <span>Your Project name is visible to everyone.</span>
@@ -191,7 +193,10 @@ const ProjectDetails = () => {
                     onFinish={handleDescriptionSubmit}
                 >
                     <StyledFormItem name="description">
-                        <Input.TextArea rows={5} />
+                        <Input.TextArea
+                            size={isMobile ? 'large' : 'middle'}
+                            rows={5}
+                        />
                     </StyledFormItem>
                     <Footer>
                         <span>

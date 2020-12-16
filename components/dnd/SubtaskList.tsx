@@ -21,6 +21,7 @@ import {
     ProfileOutlined,
 } from '@ant-design/icons'
 import { Store } from 'antd/lib/form/interface'
+import useMedia from 'use-media'
 
 const TaskList = styled.ul`
     list-style: none;
@@ -70,6 +71,7 @@ const SubtaskList = ({ id }: Props) => {
     const { projectId } = useRouter().query
     const [form] = Form.useForm()
     const queryCache = useQueryCache()
+    const isMobile = useMedia('(max-width: 700px)')
 
     const { isLoading: isTasksLoading, data: subtasks } = useQuery(
         ['subtasks', { id }],
@@ -194,7 +196,10 @@ const SubtaskList = ({ id }: Props) => {
                                 },
                             ]}
                         >
-                            <StyledInput placeholder="Add Subtask..." />
+                            <StyledInput
+                                size={isMobile ? 'large' : 'middle'}
+                                placeholder="Add Subtask..."
+                            />
                         </StyledFormItem>
                         <Button
                             htmlType="submit"

@@ -4,6 +4,7 @@ import { useQueryCache } from 'react-query'
 import { Form, Input, Modal, Radio } from 'antd'
 import { Store } from 'antd/lib/form/interface'
 import { useState } from 'react'
+import useMedia from 'use-media'
 
 interface Props {
     open: boolean
@@ -17,6 +18,7 @@ export default function ProjectCreationModal({ open, toggle }: Props) {
     const handleClose = () => toggle()
     const [isLoading, setIsLoading] = useState(false)
     const [form] = Form.useForm()
+    const isMobile = useMedia('(max-width: 700px)')
 
     const handleSubmit = async (values: Store) => {
         const { name, description, visibility } = values
@@ -70,7 +72,7 @@ export default function ProjectCreationModal({ open, toggle }: Props) {
                         },
                     ]}
                 >
-                    <Input />
+                    <Input size={isMobile ? 'large' : 'middle'} />
                 </Form.Item>
                 <Form.Item
                     required
@@ -83,7 +85,7 @@ export default function ProjectCreationModal({ open, toggle }: Props) {
                     name="description"
                     label="Description"
                 >
-                    <Input.TextArea />
+                    <Input.TextArea size={isMobile ? 'large' : 'middle'} />
                 </Form.Item>
                 <Form.Item label="Visibility" name="visibility">
                     <Radio.Group>

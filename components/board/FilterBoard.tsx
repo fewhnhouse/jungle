@@ -1,6 +1,7 @@
 import { Form, Input, Select, Tag } from 'antd'
 import { Dispatch, memo, SetStateAction, useEffect } from 'react'
 import styled from 'styled-components'
+import useMedia from 'use-media'
 import { Milestone } from '../../taiga-api/milestones'
 import MultiAssigneeDropdown from '../issues/MultiAssigneeDropdown'
 
@@ -38,6 +39,7 @@ const FilterBoard = ({
     setSearch,
 }: Props) => {
     const today = new Date()
+    const isMobile = useMedia('(max-width: 700px)')
 
     useEffect(() => {
         if (!!sprint && groupBy === 'sprint') {
@@ -49,6 +51,7 @@ const FilterBoard = ({
         <Form layout="inline">
             <Item label="Group by">
                 <Select
+                    size={isMobile ? 'large' : 'middle'}
                     style={{ width: 120 }}
                     value={groupBy}
                     onChange={(value: GroupBy) => setGroupBy(value)}
@@ -63,6 +66,7 @@ const FilterBoard = ({
             </Item>
             <Item label="Sprints">
                 <Select
+                    size={isMobile ? 'large' : 'middle'}
                     allowClear
                     value={sprint}
                     onChange={(value) => setSprint(value)}
@@ -112,6 +116,7 @@ const FilterBoard = ({
             )}
             <Item label="Search">
                 <Input.Search
+                    size={isMobile ? 'large' : 'middle'}
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                 />

@@ -6,6 +6,7 @@ import { createTask, Task } from '../../taiga-api/tasks'
 import { useRouter } from 'next/router'
 import { createUserstory, UserStory } from '../../taiga-api/userstories'
 import { useQueryCache } from 'react-query'
+import useMedia from 'use-media'
 
 const StyledUserStoryIcon = styled(BookOutlined)`
     background: #2ecc71;
@@ -35,6 +36,7 @@ const IssueCreation = ({ milestone }: { milestone: number | null }) => {
     const [subject, setSubject] = useState('')
     const { projectId } = useRouter().query
     const queryCache = useQueryCache()
+    const isMobile = useMedia('(max-width: 700px)')
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -67,6 +69,7 @@ const IssueCreation = ({ milestone }: { milestone: number | null }) => {
     return (
         <StyledForm onSubmit={handleSubmit}>
             <Select
+                size={isMobile ? 'large' : 'middle'}
                 value={issueType}
                 onChange={(val) => setIssueType(val)}
                 style={{ width: 100 }}
@@ -80,6 +83,7 @@ const IssueCreation = ({ milestone }: { milestone: number | null }) => {
             </Select>
 
             <Input
+                size={isMobile ? 'large' : 'middle'}
                 placeholder={`Create ${issueType}...`}
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}

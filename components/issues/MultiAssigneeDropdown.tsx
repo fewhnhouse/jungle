@@ -1,8 +1,9 @@
 import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
 import { getProject } from '../../taiga-api/projects'
-import { Avatar, Select } from 'antd'
+import { Select } from 'antd'
 import styled from 'styled-components'
+import useMedia from 'use-media'
 
 const { Option } = Select
 
@@ -16,20 +17,22 @@ interface Props {
     fluid?: boolean
 }
 
-const StyledAvatar = styled(Avatar)`
-    margin-right: 5px;
-`
-
-const MultiAssigneeDropdown = ({ onChange, value, fluid }: Props) => {
+const MultiAssigneeDropdown = ({
+    onChange,
+    value,
+    fluid,
+}: Props) => {
     const { projectId } = useRouter().query
     const { data } = useQuery(
         ['project', { projectId }],
         (key, { projectId }) => getProject(projectId as string),
         { enabled: projectId }
     )
+    const isMobile = useMedia('(max-width: 700px)')
 
     return (
         <StyledSelect
+            size={isMobile ? 'large' : 'middle'}
             allowClear
             style={{ width: 160 }}
             mode="multiple"

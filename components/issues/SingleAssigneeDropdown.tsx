@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { getProject } from '../../taiga-api/projects'
 import { Avatar, Select } from 'antd'
 import styled from 'styled-components'
+import useMedia from 'use-media'
 
 const { Option } = Select
 
@@ -23,10 +24,12 @@ const SingleAssigneeDropdown = ({ onChange, value, fluid }: Props) => {
         (key, { projectId }) => getProject(projectId as string),
         { enabled: projectId }
     )
+    const isMobile = useMedia('(max-width: 700px)')
 
     return (
         <StyledSelect
             allowClear
+            size={isMobile ? 'large' : 'middle'}
             placeholder="Assignee..."
             fluid={fluid}
             showSearch

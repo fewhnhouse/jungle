@@ -9,12 +9,14 @@ import { PlusOutlined } from '@ant-design/icons'
 import { createPoint } from '../../../taiga-api/points'
 import { Point } from '../../../taiga-api/projects'
 import { createTag, Tag } from '../../../taiga-api/tags'
+import useMedia from 'use-media'
 
 const PointAddModal = () => {
     const [show, setShow] = useState(false)
     const { projectId } = useRouter().query
     const queryCache = useQueryCache()
     const [color, setColor] = useState('#ddd')
+    const isMobile = useMedia('(max-width: 700px)')
 
     const [form] = Form.useForm()
 
@@ -26,10 +28,10 @@ const PointAddModal = () => {
             color,
             tag: values.name,
         })
-        queryCache.setQueryData(
-            ['tags', { projectId }],
-            (prevData: Tag[]) => [...prevData, { color, name: values.name }]
-        )
+        queryCache.setQueryData(['tags', { projectId }], (prevData: Tag[]) => [
+            ...prevData,
+            { color, name: values.name },
+        ])
         handleClose()
     }
 
@@ -62,7 +64,7 @@ const PointAddModal = () => {
                         name="name"
                         label="Tag Name"
                     >
-                        <Input />
+                        <Input size={isMobile ? 'large' : 'middle'} />
                     </Form.Item>
 
                     <Form.Item name="color" label="Tag Color">

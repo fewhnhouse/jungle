@@ -7,12 +7,14 @@ import { Store } from 'antd/lib/form/interface'
 import { PlusOutlined } from '@ant-design/icons'
 import { getRoles } from '../../../taiga-api/roles'
 import { createMembership, Membership } from '../../../taiga-api/memberships'
+import useMedia from 'use-media'
 
 const MemberAddModal = () => {
     const [show, setShow] = useState(false)
     const [role, setRole] = useState<number | undefined>()
     const { projectId } = useRouter().query
     const queryCache = useQueryCache()
+    const isMobile = useMedia('(max-width: 700px)')
 
     const { data: roles } = useQuery(
         ['roles', { projectId }],
@@ -70,7 +72,7 @@ const MemberAddModal = () => {
                         name="email"
                         label="Email or Username"
                     >
-                        <Input />
+                        <Input size={isMobile ? 'large' : 'middle'} />
                     </Form.Item>
                     <Form.Item
                         rules={[
@@ -83,6 +85,7 @@ const MemberAddModal = () => {
                         label="Role"
                     >
                         <Select
+                            size={isMobile ? 'large' : 'middle'}
                             options={
                                 roles?.map((role) => ({
                                     value: role.id,
@@ -97,7 +100,7 @@ const MemberAddModal = () => {
                         name="description"
                         label="Invitation Text (optional)"
                     >
-                        <Input.TextArea />
+                        <Input.TextArea size={isMobile ? 'large' : 'middle'} />
                     </Form.Item>
                 </Form>
             </Modal>

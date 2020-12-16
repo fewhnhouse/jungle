@@ -11,6 +11,7 @@ import { Button, Form, Input, Modal, Select, Tag, Upload } from 'antd'
 import { createTask, createTaskAttachment, Task } from '../../taiga-api/tasks'
 import { Store } from 'antd/lib/form/interface'
 import { RcFile } from 'antd/lib/upload'
+import useMedia from 'use-media'
 
 const IssueCreationModal = () => {
     const [show, setShow] = useState(false)
@@ -18,6 +19,7 @@ const IssueCreationModal = () => {
     const [form] = Form.useForm()
     const [fileList, setFileList] = useState<RcFile[]>([])
     const queryCache = useQueryCache()
+    const isMobile = useMedia('(max-width: 700px)')
 
     const { data } = useQuery(
         ['project', { projectId }],
@@ -115,6 +117,7 @@ const IssueCreationModal = () => {
                 >
                     <Form.Item name="type" label="Issue Type">
                         <Select
+                            size={isMobile ? 'large' : 'middle'}
                             options={[
                                 { value: 'userstory', label: 'Userstory' },
                                 { value: 'task', label: 'Task' },
@@ -122,10 +125,11 @@ const IssueCreationModal = () => {
                         />
                     </Form.Item>
                     <Form.Item name="subject" label="Subject">
-                        <Input />
+                        <Input size={isMobile ? 'large' : 'middle'} />
                     </Form.Item>
                     <Form.Item name="assignee" label="Assignee">
                         <Select
+                            size={isMobile ? 'large' : 'middle'}
                             options={
                                 data?.members.map((member) => ({
                                     value: member.id,
@@ -136,6 +140,7 @@ const IssueCreationModal = () => {
                     </Form.Item>
                     <Form.Item name="tags" label="Tags">
                         <Select
+                            size={isMobile ? 'large' : 'middle'}
                             options={tagsArray}
                             tagRender={({ label }) => {
                                 return <Tag>{label}</Tag>
@@ -144,7 +149,7 @@ const IssueCreationModal = () => {
                         />
                     </Form.Item>
                     <Form.Item label="Description" name="description">
-                        <Input.TextArea />
+                        <Input.TextArea size={isMobile ? 'large' : 'middle'} />
                     </Form.Item>
                     <Form.Item label="Attachments" name="attachments">
                         <Upload.Dragger

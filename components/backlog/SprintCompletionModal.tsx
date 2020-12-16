@@ -16,6 +16,7 @@ import {
     Milestone,
     updateMilestone,
 } from '../../taiga-api/milestones'
+import useMedia from 'use-media'
 
 const ImgContainer = styled.div`
     margin-right: 10px;
@@ -34,6 +35,7 @@ const SprintCompletionModal = ({ milestoneId }: Props) => {
     const [loading, setLoading] = useState(false)
     const [form] = Form.useForm()
     const { projectId } = useRouter().query
+    const isMobile = useMedia('(max-width: 700px)')
 
     const { data: milestones } = useQuery(
         ['milestones', { projectId }],
@@ -176,7 +178,9 @@ const SprintCompletionModal = ({ milestoneId }: Props) => {
                                     form={form}
                                 >
                                     <Form.Item name="moveTo" required>
-                                        <StyledSelect>
+                                        <StyledSelect
+                                            size={isMobile ? 'large' : 'middle'}
+                                        >
                                             {milestones
                                                 ?.filter(
                                                     (ms) =>

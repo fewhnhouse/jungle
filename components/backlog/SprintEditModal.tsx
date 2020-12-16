@@ -10,6 +10,7 @@ import {
 import dayjs from 'dayjs'
 import DatePicker from '../DatePicker'
 import isBetween from 'dayjs/plugin/isBetween'
+import useMedia from 'use-media'
 dayjs.extend(isBetween)
 
 interface Props {
@@ -21,6 +22,7 @@ const EditSprint = ({ open, sprint, onClose }: Props) => {
     const [form] = Form.useForm()
     const { projectId } = useRouter().query
     const queryCache = useQueryCache()
+    const isMobile = useMedia('(max-width: 700px)')
 
     const { data: milestones } = useQuery(
         ['milestones', { projectId }],
@@ -113,7 +115,7 @@ const EditSprint = ({ open, sprint, onClose }: Props) => {
                     name="name"
                     label="Name"
                 >
-                    <Input />
+                    <Input size={isMobile ? 'large' : 'middle'} />
                 </Form.Item>
                 <Form.Item
                     required
@@ -150,6 +152,7 @@ const EditSprint = ({ open, sprint, onClose }: Props) => {
                     label="Duration"
                 >
                     <DatePicker.RangePicker
+                        size={isMobile ? 'large' : 'middle'}
                         disabledDate={disabledDate}
                         format="YYYY-MM-DD"
                     />

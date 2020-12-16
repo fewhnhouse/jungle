@@ -12,6 +12,7 @@ import { getProject } from '../../taiga-api/projects'
 import { Store } from 'antd/lib/form/interface'
 import DatePicker from '../DatePicker'
 import isBetween from 'dayjs/plugin/isBetween'
+import useMedia from 'use-media'
 dayjs.extend(isBetween)
 
 const SprintCreation = () => {
@@ -36,6 +37,7 @@ const SprintCreation = () => {
         },
         { enabled: projectId }
     )
+    const isMobile = useMedia('(max-width: 700px)')
 
     const handleOpen = () => setShow(true)
     const handleClose = () => setShow(false)
@@ -119,7 +121,7 @@ const SprintCreation = () => {
                         name="name"
                         label="Name"
                     >
-                        <Input />
+                        <Input size={isMobile ? 'large' : 'middle'} />
                     </Form.Item>
                     <Form.Item
                         required
@@ -163,6 +165,7 @@ const SprintCreation = () => {
                         label="Duration"
                     >
                         <DatePicker.RangePicker
+                            size={isMobile ? 'large' : 'middle'}
                             disabledDate={disabledDate}
                             format="YYYY-MM-DD"
                         />

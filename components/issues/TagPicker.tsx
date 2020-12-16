@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { useQueryCache, useQuery } from 'react-query'
 import styled from 'styled-components'
+import useMedia from 'use-media'
 import { getTagColors, TagObject } from '../../taiga-api/projects'
 import { getTask, Task, updateTask } from '../../taiga-api/tasks'
 import {
@@ -20,11 +21,11 @@ interface Props {
     type: 'task' | 'userstory'
 }
 const CustomTagPicker = ({ id, type }: Props) => {
-    const { isLoading, data, isError } = useQuery<Task | UserStory>(
-        [type, { id }],
-        (key, { id }) => (type === 'task' ? getTask(id) : getUserstory(id))
+    const { data } = useQuery<Task | UserStory>([type, { id }], (key, { id }) =>
+        type === 'task' ? getTask(id) : getUserstory(id)
     )
     const queryCache = useQueryCache()
+    const isMobile = useMedia('(max-width: 700px)')
 
     const mappedSelectedTags = data?.tags?.map((tag) => tag[0]) ?? []
     const [selected, setSelected] = useState(mappedSelectedTags)
@@ -123,6 +124,7 @@ const CustomTagPicker = ({ id, type }: Props) => {
     return (
         <StyledTagPicker
             mode="tags"
+            size={isMobile ? 'large' : 'middle'}
             value={selected}
             disabled={isUpdating}
             tagRender={({ label }) => {

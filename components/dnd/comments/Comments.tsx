@@ -1,9 +1,9 @@
 import { SendOutlined } from '@ant-design/icons'
 import { Avatar, Button, Form, Mentions, Skeleton } from 'antd'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
 import { useQueryCache, useQuery } from 'react-query'
 import styled from 'styled-components'
+import useMedia from 'use-media'
 import {
     getTaskHistory,
     getUserstoryHistory,
@@ -53,6 +53,7 @@ const Comments = ({
     const [form] = Form.useForm()
     const { projectId } = useRouter().query
     const queryCache = useQueryCache()
+    const isMobile = useMedia('(max-width: 700px)')
 
     const { data: project, isLoading: isProjectLoading } = useQuery(
         ['project', { projectId }],
@@ -136,7 +137,11 @@ const Comments = ({
                         rows={2}
                         loading={isProjectLoading}
                         placeholder="Type a comment..."
-                        style={{ flex: 1, marginRight: 10 }}
+                        style={{
+                            flex: 1,
+                            marginRight: 10,
+                            fontSize: isMobile ? 16 : 14,
+                        }}
                     >
                         {project?.members?.map((member) => (
                             <Mentions.Option
