@@ -24,7 +24,6 @@ const Main = styled.div`
         flex-direction: column;
     }
     overflow: auto;
-    height: 100%;
 `
 
 const Content = styled(Flex)`

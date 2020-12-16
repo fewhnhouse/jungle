@@ -10,7 +10,6 @@ import useDebounce from '../../util/useDebounce'
 import 'braft-editor/dist/index.css'
 import BraftEditor, { ControlType, EditorState } from 'braft-editor'
 import useMedia from 'use-media'
-import sanitizeHtml from 'sanitize-html'
 
 const InputContainer = styled.div`
     display: flex;
@@ -95,7 +94,7 @@ export default function EditableDescription({
 
     return (
         <InputContainer>
-            {!isMobile ? (
+            {
                 <>
                     <StyledBraftEditor
                         $focus={focus}
@@ -110,10 +109,12 @@ export default function EditableDescription({
                         onBlur={() => setFocus(false)}
                         style={{
                             width: '100%',
-                            height: 300,
+                            height: isMobile && !focus ? 150 : 300,
                         }}
                         onChange={handleChange}
-                        contentStyle={{ height: 300 }}
+                        contentStyle={{
+                            height: isMobile && !focus ? 150 : 300,
+                        }}
                         controls={[
                             'text-color',
                             'bold',
@@ -137,14 +138,7 @@ export default function EditableDescription({
                         <span>Your changes will automatically be saved.</span>
                     </Flex>
                 </>
-            ) : (
-                <div
-                    style={{ width: '100%', padding: '0px 11px' }}
-                    dangerouslySetInnerHTML={{
-                        __html: sanitizeHtml(initialValue),
-                    }}
-                />
-            )}
+            }
         </InputContainer>
     )
 }
