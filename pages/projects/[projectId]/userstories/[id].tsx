@@ -53,10 +53,11 @@ const Label = styled.span`
 `
 
 const UserstoryPage = () => {
-    const { id, projectId } = useRouter().query
+    const { push, query } = useRouter()
+    const { id, projectId } = query
     const queryCache = useQueryCache()
 
-    const { isLoading, data, isError } = useQuery(
+    const { isLoading, data } = useQuery(
         ['userstory', { id }],
         (key, { id }) => getUserstory(id),
         { enabled: !!id }
@@ -85,6 +86,7 @@ const UserstoryPage = () => {
                     (prevData: UserStory[]) =>
                         prevData?.filter((story) => story.id.toString() !== id)
                 )
+                push(`/projects/${projectId}`)
             },
         })
     }

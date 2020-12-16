@@ -57,7 +57,8 @@ const Label = styled.span`
 `
 
 const TaskPage = () => {
-    const { id, projectId } = useRouter().query
+    const { push, query } = useRouter()
+    const { id, projectId } = query
     const queryCache = useQueryCache()
 
     const { isLoading, data, isError } = useQuery<Task>(
@@ -90,6 +91,7 @@ const TaskPage = () => {
                     { projectId, milestone: data?.id },
                 ])
                 queryCache.invalidateQueries(['tasks', { projectId }])
+                push(`/projects/${projectId}`)
             },
         })
     }
