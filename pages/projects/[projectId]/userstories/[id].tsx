@@ -186,21 +186,32 @@ const UserstoryPage = () => {
                                 )}
                             </Skeleton>
                         }
-                        outerContent={
-                            <SubtaskList id={parseInt(id as string, 10)} />
-                        }
-                        innerContent={
-                            <Skeleton loading={isLoading} active>
-                                <Uploader
-                                    type="userstory"
-                                    action={`${process.env.NEXT_PUBLIC_TAIGA_API_URL}/userstories/attachments`}
-                                    data={{
-                                        object_id: data?.id,
-                                        project: data?.project,
-                                    }}
-                                />
-                            </Skeleton>
-                        }
+                        outerContent={[
+                            {
+                                label: 'Files',
+                                content: (
+                                    <Skeleton loading={isLoading} active>
+                                        <Uploader
+                                            type="userstory"
+                                            action={`${process.env.NEXT_PUBLIC_TAIGA_API_URL}/userstories/attachments`}
+                                            data={{
+                                                object_id: data?.id,
+                                                project: data?.project,
+                                            }}
+                                        />
+                                    </Skeleton>
+                                ),
+                            },
+                            {
+                                label: 'Subtasks',
+                                content: (
+                                    <SubtaskList
+                                        id={parseInt(id as string, 10)}
+                                    />
+                                ),
+                            },
+                        ]}
+                        innerContent={null}
                         data={data}
                     />
                 </Skeleton>

@@ -16,8 +16,10 @@ import Flex from '../../Flex'
 import Comment from './Comment'
 
 const CommentBox = styled(Flex)`
-    max-height: 200px;
-    overflow: auto;
+    @media (min-width: 700px) {
+        max-height: 200px;
+        overflow: auto;
+    }
 `
 
 const InputContainer = styled(Form)`
@@ -37,8 +39,10 @@ const ProfilePic = styled(Avatar)`
 
 const CommentContainer = styled(Flex)`
     width: 100%;
-    max-height: 200px;
-    overflow: auto;
+    @media (min-width: 700px) {
+        max-height: 200px;
+        overflow: auto;
+    }
 `
 
 const Comments = ({
@@ -112,24 +116,22 @@ const Comments = ({
         <Flex fluid direction="column">
             <CommentBox fluid direction="column">
                 {isLoading && <Skeleton active paragraph={{ rows: 5 }} />}
-                <CommentContainer direction="column">
-                    {data
-                        ?.sort(
-                            (a, b) =>
-                                new Date(a.created_at).getTime() -
-                                new Date(b.created_at).getTime()
+                {data
+                    ?.sort(
+                        (a, b) =>
+                            new Date(a.created_at).getTime() -
+                            new Date(b.created_at).getTime()
+                    )
+                    .map((comment) => {
+                        return (
+                            <Comment
+                                id={id}
+                                type={type}
+                                key={comment.id}
+                                comment={comment}
+                            />
                         )
-                        .map((comment) => {
-                            return (
-                                <Comment
-                                    id={id}
-                                    type={type}
-                                    key={comment.id}
-                                    comment={comment}
-                                />
-                            )
-                        })}
-                </CommentContainer>
+                    })}
             </CommentBox>
             <InputContainer form={form} layout="inline" onFinish={addComment}>
                 <Form.Item name="comment" style={{ flex: 1 }}>

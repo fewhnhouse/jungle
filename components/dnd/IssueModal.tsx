@@ -1,21 +1,27 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import EditableTitle from '../issues/EditableTitle'
 import { useQuery } from 'react-query'
 import { getTask, Task } from '../../taiga-api/tasks'
 import TaskBreadcrumbs from '../issues/TaskBreadcrumbs'
 import StoryBreadcrumbs from '../issues/UserStoryBreadcrumbs'
-import { Button, Divider, Dropdown, Modal, Skeleton } from 'antd'
+import { Button, Divider, Dropdown, Modal, Skeleton, Tabs } from 'antd'
 import Flex from '../Flex'
 import { CloseOutlined, EllipsisOutlined } from '@ant-design/icons'
 import Comments from './comments/Comments'
 import { getUserstory, UserStory } from '../../taiga-api/userstories'
 import { ModalProps } from 'antd/lib/modal'
 import dynamic from 'next/dynamic'
+import useMedia from 'use-media'
 
-const EditableDescription = dynamic(() => import('../issues/EditableDescription'), {
-    ssr: false,
-})
+const { TabPane } = Tabs
+
+const EditableDescription = dynamic(
+    () => import('../issues/EditableDescription'),
+    {
+        ssr: false,
+    }
+)
 
 const StyledModal = styled(Modal)`
     .ant-modal-close {
@@ -58,7 +64,7 @@ interface Props extends ModalProps {
     id: number
     type: 'userstory' | 'task'
     innerContent?: React.ReactNode
-    outerContent?: React.ReactNode
+    outerContent?: { label: string; content: React.ReactNode }[]
     sidebar?: React.ReactNode
     actions: any
 }
@@ -78,8 +84,37 @@ export default function IssueModal({
         (key, { id }) => (type === 'task' ? getTask(id) : getUserstory(id)),
         { enabled: open }
     )
+    const [tab, setTab] = useState('general')
+    const isMobile = useMedia('(max-width: 700px)')
+
+    const handleTabChange = (tab: string) => setTab(tab)
 
     if (isError) return <div>Error</div>
+
+    const main = (
+        <Main>
+            <Content direction="column" justify="flex-start">
+                <Flex align="center" style={{ width: '100%' }}>
+                    <EditableTitle
+                        id={data?.id}
+                        version={data?.version}
+                        milestone={data?.milestone}
+                        type={type}
+                        initialValue={data?.subject}
+                    />
+                </Flex>
+                <EditableDescription
+                    id={data?.id}
+                    version={data?.version}
+                    milestone={data?.milestone}
+                    type={type}
+                    initialValue={data?.description}
+                />
+                {innerContent}
+            </Content>
+            <Sidebar>{sidebar}</Sidebar>
+        </Main>
+    )
 
     return (
         <StyledModal
@@ -120,32 +155,54 @@ export default function IssueModal({
         >
             <Skeleton active paragraph={{ rows: 5 }} loading={isLoading}>
                 <Flex direction="column">
-                    <Main>
-                        <Content direction="column" justify="flex-start">
-                            <Flex align="center" style={{ width: '100%' }}>
-                                <EditableTitle
-                                    id={data?.id}
-                                    version={data?.version}
-                                    milestone={data?.milestone}
+                    {isMobile && (
+                        <Tabs
+                            style={{
+                                width: '100%',
+                                minHeight: 400,
+                            }}
+                            defaultActiveKey={tab}
+                            onChange={handleTabChange}
+                        >
+                            <TabPane tab="General" key="general">
+                                {main}
+                            </TabPane>
+                            {outerContent.map((content, index) => (
+                                <TabPane
+                                    tab={content.label}
+                                    key={`outercontent-${index}`}
+                                >
+                                    {content.content}
+                                </TabPane>
+                            ))}
+
+                            <TabPane tab="Comments" key="comments">
+                                <Comments
                                     type={type}
-                                    initialValue={data?.subject}
+                                    id={id}
+                                    version={data?.version}
                                 />
-                            </Flex>
-                            <EditableDescription
-                                id={data?.id}
-                                version={data?.version}
-                                milestone={data?.milestone}
+                            </TabPane>
+                        </Tabs>
+                    )}
+
+                    {!isMobile && (
+                        <>
+                            {main}
+                            {outerContent.map((content) => (
+                                <>
+                                    <Divider />
+                                    {content.content}
+                                </>
+                            ))}
+                            <Divider />
+                            <Comments
                                 type={type}
-                                initialValue={data?.description}
+                                id={id}
+                                version={data?.version}
                             />
-                            {innerContent}
-                        </Content>
-                        <Sidebar>{sidebar}</Sidebar>
-                    </Main>
-                    <Divider />
-                    {outerContent}
-                    <Divider />
-                    <Comments type={type} id={id} version={data?.version} />
+                        </>
+                    )}
                 </Flex>
             </Skeleton>
         </StyledModal>

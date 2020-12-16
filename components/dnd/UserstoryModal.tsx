@@ -123,23 +123,27 @@ export default function UserstoryModal({ id, open, onClose }: Props) {
                 </Skeleton>
             }
             innerContent={null}
-            outerContent={
-                <>
-                    <Skeleton loading={isLoading} active>
-                        <Uploader
-                            type="userstory"
-                            action={`${process.env.NEXT_PUBLIC_TAIGA_API_URL}/userstories/attachments`}
-                            data={{
-                                object_id: data?.id,
-                                project: data?.project,
-                            }}
-                        />
-                    </Skeleton>
-                    <Divider />
-
-                    <SubtaskList id={id} />
-                </>
-            }
+            outerContent={[
+                {
+                    label: 'Files',
+                    content: (
+                        <Skeleton loading={isLoading} active>
+                            <Uploader
+                                type="userstory"
+                                action={`${process.env.NEXT_PUBLIC_TAIGA_API_URL}/userstories/attachments`}
+                                data={{
+                                    object_id: data?.id,
+                                    project: data?.project,
+                                }}
+                            />
+                        </Skeleton>
+                    ),
+                },
+                {
+                    label: 'Subtasks',
+                    content: <SubtaskList id={id} />,
+                },
+            ]}
             actions={menu}
         />
     )

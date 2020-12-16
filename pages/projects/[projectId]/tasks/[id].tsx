@@ -201,18 +201,23 @@ const TaskPage = () => {
                                 </BtnContainer>
                             </Skeleton>
                         }
-                        outerContent={
-                            <Skeleton loading={isLoading} active>
-                                <Uploader
-                                    action={`${process.env.NEXT_PUBLIC_TAIGA_API_URL}/tasks/attachments`}
-                                    type="task"
-                                    data={{
-                                        object_id: data?.id,
-                                        project: data?.project,
-                                    }}
-                                />
-                            </Skeleton>
-                        }
+                        outerContent={[
+                            {
+                                label: 'Files',
+                                content: (
+                                    <Skeleton loading={isLoading} active>
+                                        <Uploader
+                                            action={`${process.env.NEXT_PUBLIC_TAIGA_API_URL}/tasks/attachments`}
+                                            type="task"
+                                            data={{
+                                                object_id: data?.id,
+                                                project: data?.project,
+                                            }}
+                                        />
+                                    </Skeleton>
+                                ),
+                            },
+                        ]}
                         data={data}
                     />
                 </Skeleton>

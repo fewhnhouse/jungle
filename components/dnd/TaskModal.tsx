@@ -142,18 +142,23 @@ export default function TaskModal({ id, open, onClose }: Props) {
                     <CustomTagPicker type="task" id={id} />
                 </Skeleton>
             }
-            outerContent={
-                <Skeleton loading={isLoading} active>
-                    <Uploader
-                        type="task"
-                        action={`${process.env.NEXT_PUBLIC_TAIGA_API_URL}/tasks/attachments`}
-                        data={{
-                            object_id: data?.id,
-                            project: data?.project,
-                        }}
-                    />
-                </Skeleton>
-            }
+            outerContent={[
+                {
+                    label: 'Files',
+                    content: (
+                        <Skeleton loading={isLoading} active>
+                            <Uploader
+                                type="task"
+                                action={`${process.env.NEXT_PUBLIC_TAIGA_API_URL}/tasks/attachments`}
+                                data={{
+                                    object_id: data?.id,
+                                    project: data?.project,
+                                }}
+                            />
+                        </Skeleton>
+                    ),
+                },
+            ]}
             actions={menu}
         />
     )
