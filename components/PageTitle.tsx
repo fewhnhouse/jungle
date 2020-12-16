@@ -68,7 +68,7 @@ const PageTitle = ({
                     <Description>{description}</Description>
                 </Flex>
             </TitleContainer>
-            {isMobile && <Divider />}
+            {!!actions && isMobile && <Divider />}
             <Flex direction={isMobile ? 'row' : 'column'}>{actions}</Flex>
         </Flex>
     )
