@@ -6,7 +6,9 @@ import { Skeleton } from 'antd'
 import { AchievementContext, getLevel } from '../../util/AchievementWrapper'
 import { useContext } from 'react'
 
-const AchievementContainer = styled(Flex)``
+const AchievementContainer = styled(Flex)`
+    overflow: auto;
+`
 
 const Achievements = () => {
     const isMobile = useMedia('(max-width: 700px)')
@@ -14,9 +16,8 @@ const Achievements = () => {
 
     return (
         <AchievementContainer
-            wrap
             direction="row"
-            justify={isMobile ? 'center' : 'flex-start'}
+            justify="flex-start"
             align="center"
         >
             <Skeleton active loading={isLoading}>

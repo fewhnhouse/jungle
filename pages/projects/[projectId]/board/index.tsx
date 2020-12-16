@@ -11,7 +11,7 @@ import { PageBody, PageHeader } from '../../../../components/Layout'
 import PageTitle from '../../../../components/PageTitle'
 import TaskBoard from '../../../../components/board/TaskBoard'
 import StoryBoard from '../../../../components/board/StoryBoard'
-import { Empty, Skeleton } from 'antd'
+import { Button, Empty, Skeleton } from 'antd'
 import Flex from '../../../../components/Flex'
 import { getProject, getProjects } from '../../../../taiga-api/projects'
 import FilterBoard, { GroupBy } from '../../../../components/board/FilterBoard'
@@ -21,6 +21,9 @@ import { ScrollSync } from 'react-scroll-sync'
 import Head from 'next/head'
 import { GetStaticProps } from 'next'
 import { dehydrate } from 'react-query/hydration'
+import { FilterOutlined } from '@ant-design/icons'
+import useMedia from 'use-media'
+import { useState } from 'react'
 
 export async function getStaticPaths() {
     const projects = await getProjects()
@@ -79,6 +82,8 @@ export default function BoardContainer() {
     >('sprint', undefined)
     const [assignees, setAssignees] = useQueryState<number[]>('assignee', [])
     const { projectId } = router.query
+    const isMobile = useMedia('(max-width: 700px)')
+    const [filterOpen, setFilterOpen] = useState(!isMobile)
 
     const { data: project, isLoading } = useQuery(
         ['project', { projectId }],
@@ -187,14 +192,13 @@ export default function BoardContainer() {
     const openMilestones = milestones?.filter((ms) => !ms.closed)
     const sprint = openMilestones?.find((ms) => ms.id === selectedSprint)
 
+    const toggleFilters = () => setFilterOpen((open) => !open)
     const searchFilter = (issue: Task | UserStory) => {
         const regex = new RegExp(search, 'i')
         return regex.test(issue.subject) || regex.test(issue.id.toString())
     }
 
-    const assigneeFilter = (assignees: number[]) => (
-        issue: Task | UserStory
-    ) =>
+    const assigneeFilter = (assignees: number[]) => (issue: Task | UserStory) =>
         !assignees ||
         assignees?.length === 0 ||
         assignees?.includes(issue.assigned_to)
@@ -230,10 +234,24 @@ export default function BoardContainer() {
                             },
                         ]}
                         title="Board"
+                        actions={
+                            isMobile && (
+                                <Button
+                                    type={filterOpen ? 'primary' : 'default'}
+                                    icon={<FilterOutlined />}
+                                    onClick={toggleFilters}
+                                >
+                                    {filterOpen
+                                        ? 'Hide Filters'
+                                        : 'Show Filters'}
+                                </Button>
+                            )
+                        }
                     />
                     <Flex>
                         {!!openMilestones?.length && (
                             <FilterBoard
+                                isOpen={filterOpen || !isMobile}
                                 groupBy={groupBy}
                                 setGroupBy={setGroupBy}
                                 assignees={assignees}

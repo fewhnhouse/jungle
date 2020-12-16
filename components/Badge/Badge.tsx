@@ -24,7 +24,10 @@ const BadgeShell = styled.button<{ $isHoverable: boolean; $earned: boolean }>`
     border-radius: 2px;
     border: 1px solid rgb(240, 240, 240);
     background: white;
+    flex: 1;
     width: 120px;
+    min-width: 120px;
+    max-width: 120px;
     height: 150px;
     cursor: pointer;
     filter: ${({ $earned }) => ($earned ? '' : 'grayscale(100%)')};

@@ -34,7 +34,7 @@ const MultiAssigneeDropdown = ({
         <StyledSelect
             size={isMobile ? 'large' : 'middle'}
             allowClear
-            style={{ width: 160 }}
+            style={{ minWidth: 160 }}
             mode="multiple"
             placeholder="Assignee..."
             fluid={fluid}

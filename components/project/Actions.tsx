@@ -135,9 +135,7 @@ const Actions = ({ project }: { project: Project }) => {
         <>
             <ActionContainer>
                 <Link href={`/projects/${projectId}/settings`}>
-                    <Button icon={<SettingOutlined />}>
-                        {isMobile ? null : 'Settings'}
-                    </Button>
+                    <Button icon={<SettingOutlined />}>{'Settings'}</Button>
                 </Link>
             </ActionContainer>
 
@@ -157,11 +155,7 @@ const Actions = ({ project }: { project: Project }) => {
                             )
                         }
                     >
-                        {isMobile
-                            ? null
-                            : project?.is_watcher
-                            ? 'Watching'
-                            : 'Watch'}
+                        {project?.is_watcher ? 'Watching' : 'Watch'}
                     </Button>
                 </Badge>
             </ActionContainer>
@@ -177,7 +171,7 @@ const Actions = ({ project }: { project: Project }) => {
                             project?.is_fan ? <LikeFilled /> : <LikeOutlined />
                         }
                     >
-                        {isMobile ? null : project?.is_fan ? 'Liked' : 'Like'}
+                        {project?.is_fan ? 'Liked' : 'Like'}
                     </Button>
                 </Badge>
             </ActionContainer>

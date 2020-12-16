@@ -1,4 +1,4 @@
-import { Breadcrumb } from 'antd'
+import { Breadcrumb, Divider } from 'antd'
 import Link from 'next/link'
 import styled from 'styled-components'
 import useMedia from 'use-media'
@@ -68,6 +68,7 @@ const PageTitle = ({
                     <Description>{description}</Description>
                 </Flex>
             </TitleContainer>
+            {isMobile && <Divider />}
             <Flex direction={isMobile ? 'row' : 'column'}>{actions}</Flex>
         </Flex>
     )
