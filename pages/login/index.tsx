@@ -7,6 +7,7 @@ import { User } from '../../taiga-api/users'
 import { Button, Card, Checkbox, Form, Input, message } from 'antd'
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import Head from 'next/head'
+import useMedia from 'use-media'
 
 const Container = styled.div`
     display: flex;
@@ -26,6 +27,7 @@ const StyledCard = styled(Card)`
 
 export default function Home() {
     const { push } = useRouter()
+    const isMobile = useMedia('(max-width: 700px)')
 
     const handleLogin = async (values: {
         username: string
@@ -79,6 +81,7 @@ export default function Home() {
                             ]}
                         >
                             <Input
+                                size={isMobile ? 'large' : 'middle'}
                                 prefix={
                                     <UserOutlined className="site-form-item-icon" />
                                 }
@@ -96,6 +99,7 @@ export default function Home() {
                             label="Password"
                         >
                             <Input.Password
+                                size={isMobile ? 'large' : 'middle'}
                                 prefix={
                                     <LockOutlined className="site-form-item-icon" />
                                 }
@@ -115,7 +119,11 @@ export default function Home() {
                         </Form.Item>
 
                         <Form.Item>
-                            <Button htmlType="submit" type="primary">
+                            <Button
+                                size={isMobile ? 'large' : 'middle'}
+                                htmlType="submit"
+                                type="primary"
+                            >
                                 Log In &rarr;
                             </Button>
                         </Form.Item>
