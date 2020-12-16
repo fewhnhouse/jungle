@@ -168,6 +168,7 @@ const Comments = ({
                     </Mentions>
                 </Form.Item>
                 <Button
+                    size={isMobile ? 'large' : 'middle'}
                     icon={<SendOutlined />}
                     htmlType="submit"
                     type="primary"

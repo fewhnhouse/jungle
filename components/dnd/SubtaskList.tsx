@@ -23,11 +23,8 @@ import {
 import { Store } from 'antd/lib/form/interface'
 import useMedia from 'use-media'
 
-const TaskList = styled.ul`
-    list-style: none;
+const TaskList = styled.div`
     width: 100%;
-    padding: 0;
-    margin: 0;
 `
 
 const StyledInput = styled(Input)`
@@ -44,19 +41,28 @@ const StyledForm = styled(Form)`
     width: 100%;
     display: flex;
     justify-content: space-between;
-    margin-top: 10px;
 `
 
 const Meta = styled(List.Item.Meta)`
     align-items: center;
 `
 
+const StyledList = styled(List)`
+    margin-bottom: 5px !important;
+`
+
 const Item = styled(List.Item)`
-    padding: 8px 0px !important;
+    &:hover {
+        background: #eee;
+    }
+    border-radius: 2px;
+    cursor: pointer;
 `
 
 const TitleBlock = styled.span`
     white-space: nowrap;
+    font-size: 16px;
+    font-weight: 400;
     overflow: hidden;
     text-overflow: ellipsis;
     margin: 0;
@@ -68,7 +74,8 @@ interface Props {
 }
 
 const SubtaskList = ({ id }: Props) => {
-    const { projectId } = useRouter().query
+    const { push, query } = useRouter()
+    const { projectId } = query
     const [form] = Form.useForm()
     const queryCache = useQueryCache()
     const isMobile = useMedia('(max-width: 700px)')
@@ -106,6 +113,9 @@ const SubtaskList = ({ id }: Props) => {
         })
     }
 
+    const navigate = (id: number) => () =>
+        push(`/projects/${projectId}/tasks/${id}`)
+
     const handleDelete = (id: number) => async () => {
         await deleteTask(id)
         queryCache.invalidateQueries(['subtasks', { id }])
@@ -117,18 +127,34 @@ const SubtaskList = ({ id }: Props) => {
                 <Skeleton active paragraph={{ rows: 2 }} />
             ) : (
                 <>
-                    <List style={{ width: '100%' }} size="small">
+                    <StyledList size="small">
                         {subtasks?.map((task) => (
                             <Item
+                                onClick={navigate(task.id)}
                                 key={task.id}
                                 actions={[
+                                    task.assigned_to_extra_info && (
+                                        <Tag key="assignedtag">
+                                            {
+                                                task.assigned_to_extra_info
+                                                    .full_name_display
+                                            }
+                                        </Tag>
+                                    ),
+                                    <Tag key="statustag">
+                                        {task.status_extra_info.name}
+                                    </Tag>,
+                                    <Tag key="idtag">
+                                        ID-
+                                        {task.id}
+                                    </Tag>,
                                     <Link
                                         key="link"
                                         href={`/projects/${projectId}/tasks/${task.id}`}
                                         passHref
                                     >
                                         <Button
-                                            size="small"
+                                            size={isMobile ? 'middle' : 'small'}
                                             icon={<LinkOutlined />}
                                         />
                                     </Link>,
@@ -138,7 +164,7 @@ const SubtaskList = ({ id }: Props) => {
                                         onConfirm={handleDelete(task.id)}
                                     >
                                         <Button
-                                            size="small"
+                                            size={isMobile ? 'middle' : 'small'}
                                             danger
                                             icon={<DeleteOutlined />}
                                         />
@@ -158,30 +184,10 @@ const SubtaskList = ({ id }: Props) => {
                                     title={
                                         <TitleBlock>{task.subject}</TitleBlock>
                                     }
-                                    description={
-                                        <>
-                                            {task.assigned_to_extra_info && (
-                                                <Tag>
-                                                    {
-                                                        task
-                                                            .assigned_to_extra_info
-                                                            .full_name_display
-                                                    }
-                                                </Tag>
-                                            )}
-                                            <Tag>
-                                                {task.status_extra_info.name}
-                                            </Tag>
-                                            <Tag>
-                                                ID-
-                                                {task.id}
-                                            </Tag>
-                                        </>
-                                    }
                                 />
                             </Item>
                         ))}
-                    </List>
+                    </StyledList>
                     <StyledForm
                         form={form}
                         initialValues={{ name: '' }}
@@ -202,6 +208,7 @@ const SubtaskList = ({ id }: Props) => {
                             />
                         </StyledFormItem>
                         <Button
+                            size={isMobile ? 'large' : 'middle'}
                             htmlType="submit"
                             type="primary"
                             icon={<PlusOutlined />}
