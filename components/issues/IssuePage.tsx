@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import styled from 'styled-components'
 import { Divider, Tabs } from 'antd'
 import Flex from '../Flex'
@@ -120,11 +120,11 @@ export default function IssuePage({
             {!isMobile && (
                 <>
                     {main}
-                    {outerContent.map((content) => (
-                        <>
+                    {outerContent.map((content, index) => (
+                        <Fragment key={index}>
                             <Divider />
                             {content.content}
-                        </>
+                        </Fragment>
                     ))}
                     <Divider />
                     <Comments

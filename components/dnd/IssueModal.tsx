@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import styled from 'styled-components'
 import EditableTitle from '../issues/EditableTitle'
 import { useQuery } from 'react-query'
@@ -189,11 +189,11 @@ export default function IssueModal({
                     {!isMobile && (
                         <>
                             {main}
-                            {outerContent.map((content) => (
-                                <>
+                            {outerContent.map((content, index) => (
+                                <Fragment key={index}>
                                     <Divider />
                                     {content.content}
-                                </>
+                                </Fragment>
                             ))}
                             <Divider />
                             <Comments

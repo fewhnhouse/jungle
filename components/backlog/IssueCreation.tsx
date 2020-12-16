@@ -89,6 +89,7 @@ const IssueCreation = ({ milestone }: { milestone: number | null }) => {
                 onChange={(e) => setSubject(e.target.value)}
             />
             <Button
+                size={isMobile ? 'large' : 'middle'}
                 disabled={subject === ''}
                 htmlType="submit"
                 icon={<PlusOutlined />}
