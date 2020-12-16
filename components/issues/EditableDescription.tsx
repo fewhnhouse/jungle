@@ -8,7 +8,8 @@ import { useRouter } from 'next/router'
 import { updateTaskCache, updateUserstoryCache } from '../../updateCache'
 import useDebounce from '../../util/useDebounce'
 import 'braft-editor/dist/index.css'
-import BraftEditor, { EditorState } from 'braft-editor'
+import BraftEditor, { ControlType, EditorState } from 'braft-editor'
+import useMedia from 'use-media'
 
 const InputContainer = styled.div`
     display: flex;
@@ -44,6 +45,7 @@ export default function EditableDescription({
     const [editorState, setEditorState] = useState<EditorState>(
         BraftEditor.createEditorState(initialValue)
     )
+    const isMobile = useMedia('(max-width: 700px)')
 
     const [focus, setFocus] = useState(false)
     const queryCache = useQueryCache()
@@ -116,10 +118,10 @@ export default function EditableDescription({
                     'underline',
                     'strike-through',
                     'separator',
-                    // 'headings',
+                    ...(isMobile ? [] : (['headings'] as ControlType[])),
                     'blockquote',
                     'code',
-                    'link',
+                    ...(isMobile ? [] : (['link'] as ControlType[])),
                     'list-ul',
                     'list-ol',
                     'table',
