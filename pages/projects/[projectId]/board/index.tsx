@@ -83,7 +83,7 @@ export default function BoardContainer() {
     const [assignees, setAssignees] = useQueryState<number[]>('assignee', [])
     const { projectId } = router.query
     const isMobile = useMedia('(max-width: 700px)')
-    const [filterOpen, setFilterOpen] = useState(!isMobile)
+    const [filterOpen, setFilterOpen] = useState(false)
 
     const { data: project, isLoading } = useQuery(
         ['project', { projectId }],

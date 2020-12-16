@@ -51,9 +51,9 @@ const FilterBoard = ({
     }, [sprint, groupBy])
 
     return (
-        <Collapse isOpened={isOpen}>
+        <Collapse style={{ width: '100%' }} isOpened={isOpen}>
             <Form layout={isMobile ? 'vertical' : 'inline'}>
-                <Item label="Group by">
+                <Item style={{ marginTop: 5 }} label="Group by">
                     <Select
                         size={isMobile ? 'large' : 'middle'}
                         style={{ minWidth: 120 }}
@@ -68,7 +68,7 @@ const FilterBoard = ({
                         {!sprint && <Option value="sprint">Sprint</Option>}
                     </Select>
                 </Item>
-                <Item label="Sprints">
+                <Item style={{ marginTop: 5 }} label="Sprints">
                     <Select
                         size={isMobile ? 'large' : 'middle'}
                         allowClear
@@ -111,14 +111,14 @@ const FilterBoard = ({
                     </Select>
                 </Item>
                 {groupBy !== 'assignee' && (
-                    <Item label="Assignee">
+                    <Item style={{ marginTop: 5 }} label="Assignee">
                         <MultiAssigneeDropdown
                             value={assignees}
                             onChange={(id) => setAssignees(id)}
                         />
                     </Item>
                 )}
-                <Item label="Search">
+                <Item style={{ marginTop: 5 }} label="Search">
                     <Input.Search
                         size={isMobile ? 'large' : 'middle'}
                         value={search}
