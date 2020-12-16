@@ -26,7 +26,13 @@ export const AchievementContext = createContext({
     totalScore: 0,
 })
 
+interface LocalAchievement {
+    id: number
+    level: number
+}
+
 export interface Achievement {
+    id: number
     score: number
     levelRange: [number, number][]
     icon: React.ReactNode
@@ -119,13 +125,15 @@ const AchievementWrapper = ({ children }: Props) => {
             .reduce(
                 (prev, curr) =>
                     prev +
-                    Object.values(curr.points).reduce((prev, curr) => {
-                        const point = project?.points.find(
-                            (point) => point.id === curr
-                        )
-
-                        return prev + (point.value ?? 0)
-                    }, 0),
+                    Object.values(curr.points).reduce(
+                        (prevPoint, currPoint) => {
+                            const point = project?.points.find(
+                                (point) => point.id === currPoint
+                            )
+                            return prevPoint + (point.value ?? 0)
+                        },
+                        0
+                    ),
                 0
             ) ?? -1
 
@@ -152,6 +160,7 @@ const AchievementWrapper = ({ children }: Props) => {
 
     const achievements = [
         {
+            id: 1,
             score: comments,
             levelRange: [
                 [0, 1],
@@ -165,6 +174,7 @@ const AchievementWrapper = ({ children }: Props) => {
             description: 'Comment on issues to advance this achievement.',
         },
         {
+            id: 2,
             score: closedSprints,
             levelRange: [
                 [0, 1],
@@ -178,6 +188,7 @@ const AchievementWrapper = ({ children }: Props) => {
             description: 'Close sprints to advance this achievement.',
         },
         {
+            id: 3,
             score: tags,
             levelRange: [
                 [0, 1],
@@ -191,6 +202,7 @@ const AchievementWrapper = ({ children }: Props) => {
             description: 'Tag your issues to advance this achievement.',
         },
         {
+            id: 4,
             score: closedBugs,
             levelRange: [
                 [0, 1],
@@ -204,6 +216,7 @@ const AchievementWrapper = ({ children }: Props) => {
             description: 'Close bugs to advance this achievement.',
         },
         {
+            id: 5,
             score: storyPoints,
             levelRange: [
                 [0, 10],
@@ -218,6 +231,7 @@ const AchievementWrapper = ({ children }: Props) => {
                 'Burn down a certain amount of story points to advance this achievement.',
         },
         {
+            id: 6,
             score: subtasks,
             levelRange: [
                 [0, 5],
@@ -232,6 +246,7 @@ const AchievementWrapper = ({ children }: Props) => {
                 'Create subtasks to further divide user stories to advance this achievement.',
         },
         {
+            id: 7,
             score: closedIssues,
             levelRange: [
                 [0, 10],
@@ -277,30 +292,68 @@ const AchievementWrapper = ({ children }: Props) => {
                         achievement.levelRange,
                         achievement.score
                     )
-                    if (newLevel > oldLevel) {
-                        notification.open({
-                            message: `${achievement.title} Level ${newLevel}`,
-                            description: (
-                                <Flex direction="column">
-                                    <span>
-                                        You leveled up your {achievement.label}{' '}
-                                        Achievement in {project?.name}!
-                                    </span>
-                                    <Divider
-                                        style={{ margin: '0px', marginTop: 5 }}
-                                    >
-                                        Team Level
-                                    </Divider>
+                    try {
+                        const existingAchievements: LocalAchievement[] =
+                            JSON.parse(localStorage.getItem('achievements')) ??
+                            []
+                        const existingAchievement = existingAchievements?.find(
+                            (existing) => existing.id === achievement.id
+                        )
+                        const isExisting =
+                            existingAchievement &&
+                            newLevel <= existingAchievement?.level
+                        if (newLevel > oldLevel && !isExisting) {
+                            localStorage.setItem(
+                                'achievements',
+                                JSON.stringify(
+                                    existingAchievement
+                                        ? existingAchievements.map((existing) =>
+                                              existing.id === achievement.id
+                                                  ? {
+                                                        id: existing.id,
+                                                        level: newLevel,
+                                                    }
+                                                  : existing
+                                          )
+                                        : [
+                                              ...existingAchievements,
+                                              {
+                                                  id: achievement.id,
+                                                  level: newLevel,
+                                              },
+                                          ]
+                                )
+                            )
+                            notification.open({
+                                message: `${achievement.title} Level ${newLevel}`,
+                                description: (
+                                    <Flex direction="column">
+                                        <span>
+                                            You leveled up your{' '}
+                                            {achievement.label} Achievement in{' '}
+                                            {project?.name}!
+                                        </span>
+                                        <Divider
+                                            style={{
+                                                margin: '0px',
+                                                marginTop: 5,
+                                            }}
+                                        >
+                                            Team Level
+                                        </Divider>
 
-                                    <LevelDisplay
-                                        totalLevelRange={totalLevelRange}
-                                        totalScore={totalScore}
-                                        size="small"
-                                    />
-                                </Flex>
-                            ),
-                            icon: achievement.icon,
-                        })
+                                        <LevelDisplay
+                                            totalLevelRange={totalLevelRange}
+                                            totalScore={totalScore}
+                                            size="small"
+                                        />
+                                    </Flex>
+                                ),
+                                icon: achievement.icon,
+                            })
+                        }
+                    } catch (err) {
+                        console.error(err)
                     }
                 }
             })
