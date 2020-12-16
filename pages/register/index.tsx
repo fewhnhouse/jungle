@@ -55,7 +55,7 @@ export default function Home() {
             push('/')
         } catch ({ response }) {
             const error = response?.data?._error_message
-            message.error(`Register failed: ${error}`)
+            message.error(`Register failed${error ? `: ${error}` : '.'}`)
         }
     }
     return (

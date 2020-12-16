@@ -49,7 +49,7 @@ export default function Home() {
             push('/')
         } catch ({ response }) {
             const error = response?.data?._error_message
-            message.error(`Login failed: ${error}`)
+            message.error(`Login failed${error ? `: ${error}` : '.'}`)
         }
     }
     return (
