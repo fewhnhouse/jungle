@@ -9,7 +9,6 @@ import { updateTaskCache, updateUserstoryCache } from '../../updateCache'
 import useDebounce from '../../util/useDebounce'
 import 'braft-editor/dist/index.css'
 import BraftEditor, { EditorState } from 'braft-editor'
-import useMedia from 'use-media'
 
 const InputContainer = styled.div`
     display: flex;
@@ -45,7 +44,6 @@ export default function EditableDescription({
     const [editorState, setEditorState] = useState<EditorState>(
         BraftEditor.createEditorState(initialValue)
     )
-    const isMobile = useMedia('(max-width: 700px)')
 
     const [focus, setFocus] = useState(false)
     const queryCache = useQueryCache()
@@ -107,10 +105,10 @@ export default function EditableDescription({
                 onBlur={() => setFocus(false)}
                 style={{
                     width: '100%',
-                    height: isMobile && !focus ? 150 : 300,
+                    height: 300,
                 }}
                 onChange={handleChange}
-                contentStyle={{ height: isMobile && !focus ? 150 : 300 }}
+                contentStyle={{ height: 300 }}
                 controls={[
                     'text-color',
                     'bold',
