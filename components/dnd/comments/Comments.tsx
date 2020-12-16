@@ -22,10 +22,10 @@ const CommentBox = styled(Flex)`
     }
 `
 
-const InputContainer = styled(Form)`
+const InputContainer = styled(Form)<{ $hasComments?: boolean }>`
     width: 100%;
     display: flex;
-    margin-top: 10px;
+    margin-top: ${({ $hasComments }) => ($hasComments ? '10px' : '0px')};
 `
 
 const FullName = styled.span`
@@ -35,14 +35,6 @@ const FullName = styled.span`
 
 const ProfilePic = styled(Avatar)`
     margin-right: 5px;
-`
-
-const CommentContainer = styled(Flex)`
-    width: 100%;
-    @media (min-width: 700px) {
-        max-height: 200px;
-        overflow: auto;
-    }
 `
 
 const Comments = ({
@@ -133,7 +125,12 @@ const Comments = ({
                         )
                     })}
             </CommentBox>
-            <InputContainer form={form} layout="inline" onFinish={addComment}>
+            <InputContainer
+                $hasComments={data?.length !== 0}
+                form={form}
+                layout="inline"
+                onFinish={addComment}
+            >
                 <Form.Item name="comment" style={{ flex: 1 }}>
                     <Mentions
                         rows={2}
