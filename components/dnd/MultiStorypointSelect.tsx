@@ -12,7 +12,7 @@ const { Option } = Select
 
 const StyledSelect = styled(Select)`
     width: 100%;
-    margin: 5px 0px;
+    margin: 5px 0px !important;
     &:first-child {
         margin-top: 0;
     }
