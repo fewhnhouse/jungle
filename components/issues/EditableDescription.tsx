@@ -10,6 +10,7 @@ import useDebounce from '../../util/useDebounce'
 import 'braft-editor/dist/index.css'
 import BraftEditor, { ControlType, EditorState } from 'braft-editor'
 import useMedia from 'use-media'
+import sanitizeHtml from 'sanitize-html'
 
 const InputContainer = styled.div`
     display: flex;
@@ -94,43 +95,56 @@ export default function EditableDescription({
 
     return (
         <InputContainer>
-            <StyledBraftEditor
-                $focus={focus}
-                language="en"
-                controlBarStyle={{
-                    visibility: focus ? 'visible' : 'hidden',
-                    display: focus ? 'block' : 'none',
-                }}
-                value={editorState}
-                className="my-editor"
-                onFocus={() => setFocus(true)}
-                onBlur={() => setFocus(false)}
-                style={{
-                    width: '100%',
-                    height: 300,
-                }}
-                onChange={handleChange}
-                contentStyle={{ height: 300 }}
-                controls={[
-                    'text-color',
-                    'bold',
-                    'italic',
-                    'underline',
-                    'strike-through',
-                    'separator',
-                    ...(isMobile ? [] : (['headings'] as ControlType[])),
-                    'blockquote',
-                    'code',
-                    ...(isMobile ? [] : (['link'] as ControlType[])),
-                    'list-ul',
-                    'list-ol',
-                    'table',
-                ]}
-                placeholder="Description..."
-            />
-            <Flex style={{ marginTop: 5 }}>
-                <span>Your changes will automatically be saved.</span>
-            </Flex>
+            {!isMobile ? (
+                <>
+                    <StyledBraftEditor
+                        $focus={focus}
+                        language="en"
+                        controlBarStyle={{
+                            visibility: focus ? 'visible' : 'hidden',
+                            display: focus ? 'block' : 'none',
+                        }}
+                        value={editorState}
+                        className="my-editor"
+                        onFocus={() => setFocus(true)}
+                        onBlur={() => setFocus(false)}
+                        style={{
+                            width: '100%',
+                            height: 300,
+                        }}
+                        onChange={handleChange}
+                        contentStyle={{ height: 300 }}
+                        controls={[
+                            'text-color',
+                            'bold',
+                            'italic',
+                            'underline',
+                            'strike-through',
+                            'separator',
+                            ...(isMobile
+                                ? []
+                                : (['headings'] as ControlType[])),
+                            'blockquote',
+                            'code',
+                            ...(isMobile ? [] : (['link'] as ControlType[])),
+                            'list-ul',
+                            'list-ol',
+                            'table',
+                        ]}
+                        placeholder="Description..."
+                    />
+                    <Flex style={{ marginTop: 5 }}>
+                        <span>Your changes will automatically be saved.</span>
+                    </Flex>
+                </>
+            ) : (
+                <div
+                    style={{ width: '100%', padding: '0px 11px' }}
+                    dangerouslySetInnerHTML={{
+                        __html: sanitizeHtml(initialValue),
+                    }}
+                />
+            )}
         </InputContainer>
     )
 }
