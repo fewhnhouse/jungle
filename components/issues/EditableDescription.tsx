@@ -116,7 +116,7 @@ export default function EditableDescription({
                     'underline',
                     'strike-through',
                     'separator',
-                    'headings',
+                    // 'headings',
                     'blockquote',
                     'code',
                     'link',
