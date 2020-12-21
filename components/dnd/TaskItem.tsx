@@ -61,9 +61,7 @@ const Container = styled.div<IContainerProps>`
     }
 
     &:focus {
-        outline: none;
         border-color: '#95a5a6';
-        box-shadow: none;
     }
 
     /* flexbox */

@@ -1,11 +1,6 @@
-import ProjectListItem from './ProjectListItem'
+import ProjectCard from './ProjectCard'
 import styled from 'styled-components'
-import { useQuery } from 'react-query'
-import {
-    getProjects,
-    MultiProjectInterface,
-    Project,
-} from '../../taiga-api/projects'
+import { MultiProjectInterface } from '../../taiga-api/projects'
 import Link from 'next/link'
 import Flex from '../Flex'
 
@@ -51,7 +46,7 @@ export default function Projects({
                             is_fan,
                             is_watcher,
                         }) => (
-                            <ProjectListItem
+                            <ProjectCard
                                 members={members}
                                 avatar={logo_small_url}
                                 key={id}

@@ -2,7 +2,7 @@ import { PageBody, PageHeader } from '../../components/Layout'
 import PageTitle from '../../components/PageTitle'
 import { QueryCache, useQuery } from 'react-query'
 import { getProjects } from '../../taiga-api/projects'
-import ProjectListItem from '../../components/home/ProjectListItem'
+import ProjectCard from '../../components/home/ProjectCard'
 import Flex from '../../components/Flex'
 import { Button, Skeleton } from 'antd'
 import ProjectCreationModal from '../../components/home/ProjectCreationModal'
@@ -11,7 +11,7 @@ import Head from 'next/head'
 import { GetStaticProps } from 'next'
 import { dehydrate } from 'react-query/hydration'
 
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getStaticProps: GetStaticProps = async () => {
     const queryCache = new QueryCache()
 
     await queryCache.prefetchQuery(['projects'], () => getProjects())
@@ -69,7 +69,7 @@ const Projects = () => {
                             is_fan,
                             is_watcher,
                         }) => (
-                            <ProjectListItem
+                            <ProjectCard
                                 members={members}
                                 avatar={logo_small_url}
                                 key={id}

@@ -142,7 +142,7 @@ interface Props {
     isFan?: boolean
     isWatcher?: boolean
 }
-export default function ProjectListItem({
+export default function ProjectCard({
     id,
     name,
     description,
