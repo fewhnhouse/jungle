@@ -10,12 +10,11 @@ import {
     UnlockOutlined,
 } from '@ant-design/icons'
 import { Avatar, Button, Card, Skeleton, Tooltip } from 'antd'
-import { getMe, getUser, User } from '../../taiga-api/users'
-import { getNameInitials } from '../../util/getNameInitials'
+import { getMe, getUser } from '../../taiga-api/users'
 import Flex from '../Flex'
 import { useQuery } from 'react-query'
-import Image from 'next/image'
 import MemberButton from '../MemberButton'
+import { Member } from '../../taiga-api/projects'
 
 const StyledButton = styled(Button)`
     margin: 0px 4px;
@@ -109,14 +108,6 @@ const MembersContainer = styled.div`
     margin: ${({ theme }) => `${theme.spacing.mini}`} 0px;
 `
 
-const StyledAvatar = styled(Avatar)`
-    margin: 0px 2px;
-    transition: box-shadow 0.3s ease-in-out;
-    cursor: pointer;
-    &:hover {
-        box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 5px 0px;
-    }
-`
 
 const BadgeContainer = styled.div`
     width: 100%;
@@ -221,8 +212,8 @@ export default function ProjectCard({
                     </BadgeContainer>
                     <MembersContainer>
                         {isLoading && <Skeleton.Avatar active />}
-                        {actualMembers?.map((member: User) => (
-                            <MemberButton member={member} />
+                        {actualMembers?.map((member: Member) => (
+                            <MemberButton key={member.id} member={member} />
                         ))}
                     </MembersContainer>
                 </ItemContainer>
