@@ -120,8 +120,10 @@ const Uploader = ({ data, action, type }: Props) => {
                 </StyledFlex>
             </Upload.Dragger>
             <Flex>
-                <List style={{ width: '100%' }}>
-                    {attachments.map((attachment) => (
+                <List
+                    style={{ width: '100%' }}
+                    dataSource={attachments ?? []}
+                    renderItem={(attachment) => (
                         <List.Item
                             key={attachment.uid}
                             actions={[
@@ -168,8 +170,8 @@ const Uploader = ({ data, action, type }: Props) => {
                                 }
                             />
                         </List.Item>
-                    ))}
-                </List>
+                    )}
+                ></List>
             </Flex>
         </UploadSection>
     )

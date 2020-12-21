@@ -30,11 +30,13 @@ const YourWork = ({
             </PageHeader>
             <PageBody>
                 <Skeleton loading={isLoading} active paragraph={{ rows: 5 }}>
-                    <List style={{ width: '100%' }}>
-                        {timeline?.map((item) => (
+                    <List
+                        dataSource={timeline ?? []}
+                        style={{ width: '100%' }}
+                        renderItem={(item) => (
                             <YourWorkItem key={item.id} item={item} />
-                        ))}
-                    </List>
+                        )}
+                    />
                 </Skeleton>
             </PageBody>
         </div>

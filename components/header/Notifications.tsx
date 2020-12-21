@@ -254,26 +254,26 @@ export default function Notifications() {
                                 projects?.length
                             } Project${projects?.length > 1 ? 's' : ''}.`}
                         </Typography.Text>
-                        <List style={{ width: '100%' }}>
-                            {data?.objects?.map(
-                                (notification: Notification) => (
-                                    <List.Item key={notification.id}>
-                                        <List.Item.Meta
-                                            avatar={
-                                                <Avatar
-                                                    shape="square"
-                                                    icon={getIcon(notification)}
-                                                />
-                                            }
-                                            title={getTitle(notification)}
-                                            description={getDescription(
-                                                notification
-                                            )}
-                                        />
-                                    </List.Item>
-                                )
+                        <List
+                            dataSource={data?.objects ?? []}
+                            renderItem={(notification: Notification) => (
+                                <List.Item key={notification.id}>
+                                    <List.Item.Meta
+                                        avatar={
+                                            <Avatar
+                                                shape="square"
+                                                icon={getIcon(notification)}
+                                            />
+                                        }
+                                        title={getTitle(notification)}
+                                        description={getDescription(
+                                            notification
+                                        )}
+                                    />
+                                </List.Item>
                             )}
-                        </List>
+                            style={{ width: '100%' }}
+                        />
                     </Flex>
                 )}
             </Skeleton>

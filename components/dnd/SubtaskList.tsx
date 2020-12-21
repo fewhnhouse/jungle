@@ -127,8 +127,9 @@ const SubtaskList = ({ id }: Props) => {
                 <Skeleton active paragraph={{ rows: 2 }} />
             ) : (
                 <>
-                    <StyledList size="small">
-                        {subtasks?.map((task) => (
+                    <StyledList
+                        dataSource={subtasks ?? []}
+                        renderItem={(task: Task) => (
                             <Item
                                 onClick={navigate(task.id)}
                                 key={task.id}
@@ -186,8 +187,8 @@ const SubtaskList = ({ id }: Props) => {
                                     }
                                 />
                             </Item>
-                        ))}
-                    </StyledList>
+                        )}
+                    />
                     <StyledForm
                         form={form}
                         initialValues={{ name: '' }}

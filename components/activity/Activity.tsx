@@ -1,4 +1,4 @@
-import { List, Skeleton } from 'antd'
+import { Empty, List, Skeleton } from 'antd'
 import { Timeline } from '../../taiga-api/timelines'
 import ActivityListItem from './ActivityListItem'
 import { PageBody, PageHeader } from '../Layout'
@@ -29,15 +29,18 @@ export default function Activity({
             </PageHeader>
             <PageBody>
                 <Skeleton loading={isLoading} active paragraph={{ rows: 5 }}>
-                    <List>
-                        {activity
-                            ?.filter((_, index) => index < 10)
-                            .map((activityItem) => (
-                                <ActivityListItem
-                                    key={activityItem.id}
-                                    activityItem={activityItem}
-                                ></ActivityListItem>
-                            )) ?? null}
+                    <List
+                        dataSource={activity ?? []}
+                        renderItem={(item) => (
+                            <ActivityListItem
+                                key={item.id}
+                                activityItem={item}
+                            />
+                        )}
+                    >
+                        {!activity?.length && (
+                            <Empty description="No activity yet." />
+                        )}
                     </List>
                 </Skeleton>
             </PageBody>

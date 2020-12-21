@@ -28,14 +28,16 @@ export default function RecentTasks({
         <Container>
             <h2>{title}</h2>
             <Skeleton active paragraph={{ rows: 5 }} loading={isLoading}>
-                <List style={{ width: '100%' }}>
-                    {timeline?.length ? (
-                        timeline
-                            .filter((_, index) => index < limit)
-                            .map((item) => (
-                                <RecentTask key={item.id} item={item} />
-                            ))
-                    ) : (
+                <List
+                    style={{ width: '100%' }}
+                    dataSource={
+                        timeline?.filter((_, index) => index < limit) ?? []
+                    }
+                    renderItem={(item) => (
+                        <RecentTask key={item.id} item={item} />
+                    )}
+                >
+                    {!timeline?.length && (
                         <Empty description="No recent work items found." />
                     )}
                 </List>

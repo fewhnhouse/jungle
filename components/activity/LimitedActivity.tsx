@@ -31,17 +31,15 @@ export default function LimitedActivity({
         <Container>
             <h2>{title}</h2>
             <Skeleton active paragraph={{ rows: 5 }} loading={isLoading}>
-                <List>
-                    {activity?.length ? (
-                        activity
-                            .filter((_, index) => index < limit)
-                            .map((activityItem) => (
-                                <ActivityListItem
-                                    key={activityItem.id}
-                                    activityItem={activityItem}
-                                ></ActivityListItem>
-                            ))
-                    ) : (
+                <List
+                    dataSource={
+                        activity?.filter((_, index) => index < limit) ?? []
+                    }
+                    renderItem={(item) => (
+                        <ActivityListItem key={item.id} activityItem={item} />
+                    )}
+                >
+                    {!activity?.length && (
                         <Empty description="No activity yet." />
                     )}
                 </List>
