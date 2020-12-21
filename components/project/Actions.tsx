@@ -141,7 +141,7 @@ const Actions = ({ project }: { project: Project }) => {
 
             <ActionContainer>
                 <Badge
-                    style={{ backgroundColor: '#1890FF' }}
+                    style={{ backgroundColor: '#4470d8' }}
                     count={watchersData?.length ?? 0}
                 >
                     <Button
@@ -161,7 +161,7 @@ const Actions = ({ project }: { project: Project }) => {
             </ActionContainer>
             <ActionContainer>
                 <Badge
-                    style={{ backgroundColor: '#1890FF' }}
+                    style={{ backgroundColor: '#4470d8' }}
                     count={fansData?.length ?? 0}
                 >
                     <Button
