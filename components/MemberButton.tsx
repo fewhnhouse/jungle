@@ -2,7 +2,7 @@ import { Button } from 'antd'
 import Image from 'next/image'
 import Link from 'next/link'
 import styled from 'styled-components'
-import { User } from '../taiga-api/users'
+import { Member } from '../taiga-api/projects'
 import { getNameInitials } from '../util/getNameInitials'
 
 const StyledButton = styled(Button)`
@@ -22,12 +22,17 @@ const StyledButton = styled(Button)`
     }
 `
 
-export default function MemberButton({ member }: { member: User }) {
+export default function MemberButton({ member }: { member: Member }) {
     return (
         <Link passHref href={`/users/${member.id}`} key={member.id}>
             <StyledButton type="primary" shape="circle">
                 {member?.photo && (
-                    <Image src={member.photo} width={30} height={30} />
+                    <Image
+                        alt={member.full_name}
+                        src={member.photo}
+                        width={30}
+                        height={30}
+                    />
                 )}
                 {!member?.photo && getNameInitials(member.full_name)}
             </StyledButton>

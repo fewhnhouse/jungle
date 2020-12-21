@@ -46,7 +46,12 @@ export default function Profile() {
         <Dropdown trigger={['click']} overlay={menu}>
             <StyledButton type="primary" shape="circle">
                 {data?.photo && (
-                    <Image src={data.photo} width={30} height={30} />
+                    <Image
+                        alt={data.full_name}
+                        src={data.photo}
+                        width={30}
+                        height={30}
+                    />
                 )}
                 {!data?.photo && getNameInitials(data?.full_name)}
             </StyledButton>

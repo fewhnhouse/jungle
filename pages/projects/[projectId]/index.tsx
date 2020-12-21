@@ -7,7 +7,7 @@ import { QueryCache, useQuery } from 'react-query'
 import { getProject, getProjects } from '../../../taiga-api/projects'
 import { getProjectTimeline, Timeline } from '../../../taiga-api/timelines'
 import Flex from '../../../components/Flex'
-import { Avatar, Button } from 'antd'
+import { Button } from 'antd'
 import LevelDisplay from '../../../components/LevelDisplay/LevelDisplay'
 import Actions from '../../../components/project/Actions'
 import Achievements from '../../../components/achievements/Achievements'
@@ -43,22 +43,6 @@ const StyledButton = styled(Button)`
     margin: 0px 2.5px;
     &:last-child {
         margin-right: 0px;
-    }
-`
-
-const StyledAvatar = styled(Avatar)`
-    margin: 0px 5px;
-    &:first-child {
-        margin-left: 0px;
-    }
-    &:last-child {
-        margin-right: 0px;
-    }
-    box-sizing: border-box;
-    transition: 0.2s all ease-in-out;
-    cursor: pointer;
-    &:hover {
-        box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.3);
     }
 `
 
@@ -142,7 +126,10 @@ const Project = () => {
                                     <p>{data?.description}</p>
                                     <Flex>
                                         {data?.members.map((member) => (
-                                            <MemberButton member={member} />
+                                            <MemberButton
+                                                key={member.id}
+                                                member={member}
+                                            />
                                         ))}
                                     </Flex>
                                 </Flex>
