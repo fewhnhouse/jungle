@@ -11,7 +11,7 @@ import useMedia from 'use-media'
 
 const Container = styled.div`
     display: flex;
-    background-color: rgb(51, 99, 209);
+    background-color: #e6f7ff;
     background-image: url(jungle.webp);
     min-height: 100vh;
     width: 100%;
