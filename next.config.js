@@ -23,6 +23,9 @@ module.exports = withBundleAnalyzer(
                 javascriptEnabled: true,
                 // modifyVars: themeVariables, // make your antd custom effective
             },
+            images: {
+                domains: ['motius.taiga.apps.moti.us'],
+            },
             webpack: (config, { isServer }) => {
                 // config.plugins.push(new AntdDayjsWebpackPlugin())
                 if (isServer) {

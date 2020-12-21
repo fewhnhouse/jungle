@@ -18,6 +18,7 @@ import LimitedYourWork from '../../../components/your-work/LimitedYourWork'
 import Head from 'next/head'
 import { GetStaticProps } from 'next'
 import { dehydrate } from 'react-query/hydration'
+import MemberButton from '../../../components/MemberButton'
 
 const StyledFlex = styled(Flex)`
     margin-top: 20px;
@@ -141,26 +142,7 @@ const Project = () => {
                                     <p>{data?.description}</p>
                                     <Flex>
                                         {data?.members.map((member) => (
-                                            <Link
-                                                key={member.id}
-                                                href={`/users/${member.id}`}
-                                                passHref
-                                            >
-                                                <StyledAvatar
-                                                    size="large"
-                                                    key={member.id}
-                                                    src={member.photo}
-                                                >
-                                                    {member.full_name
-                                                        .split(' ')
-                                                        .reduce(
-                                                            (prev, curr) =>
-                                                                prev +
-                                                                curr.charAt(0),
-                                                            ''
-                                                        )}
-                                                </StyledAvatar>
-                                            </Link>
+                                            <MemberButton member={member} />
                                         ))}
                                     </Flex>
                                 </Flex>

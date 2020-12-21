@@ -14,6 +14,8 @@ import { getMe, getUser, User } from '../../taiga-api/users'
 import { getNameInitials } from '../../util/getNameInitials'
 import Flex from '../Flex'
 import { useQuery } from 'react-query'
+import Image from 'next/image'
+import MemberButton from '../MemberButton'
 
 const StyledButton = styled(Button)`
     margin: 0px 4px;
@@ -220,15 +222,7 @@ export default function ProjectCard({
                     <MembersContainer>
                         {isLoading && <Skeleton.Avatar active />}
                         {actualMembers?.map((member: User) => (
-                            <Link
-                                passHref
-                                href={`/users/${member.id}`}
-                                key={member.id}
-                            >
-                                <StyledAvatar src={member.photo}>
-                                    {getNameInitials(member.full_name)}
-                                </StyledAvatar>
-                            </Link>
+                            <MemberButton member={member} />
                         ))}
                     </MembersContainer>
                 </ItemContainer>
