@@ -34,7 +34,11 @@ const LevelIcon = styled.div<{ $size: 'normal' | 'small' }>`
     }
 `
 
-const Score = styled.h3``
+const Score = styled.span`
+    margin: 0;
+    font-weight: 300;
+    font-size: 16px;
+`
 
 const Container = styled(Flex)<{ $size: 'normal' | 'small' }>`
     margin: ${({ $size }) => ($size === 'normal' ? '20px 0px' : '5px 0px')};
