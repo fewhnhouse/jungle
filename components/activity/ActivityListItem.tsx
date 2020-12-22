@@ -60,7 +60,9 @@ export default function ActivityListItem({ activityItem }: Props) {
                     <Description>
                         <Link href={`/user/${user?.id}`}>{user.name}</Link>{' '}
                         {type === TimelineType.Change ? 'updated' : 'created'}{' '}
-                        <Link href={`/${source}/${affectedItem?.id}`}>
+                        <Link
+                            href={`projects/${activityItem?.data?.project}/${source}/${affectedItem?.id}`}
+                        >
                             {getItemName()}
                         </Link>
                         .
