@@ -109,12 +109,15 @@ const Header = () => {
 
     const { y } = useScrollPosition()
 
+    if (pathname === '/login' || pathname === '/register') {
+        return null
+    }
+
     return (
         <StyledHeader ref={ref} landing={pathname === '/'} scrolled={y > 0}>
-            {isMobile && <MobileHeader />}
-            {pathname === '/login' ? (
-                <h3></h3>
-            ) : pathname.includes('/') && !isMobile ? (
+            {isMobile ? (
+                <MobileHeader />
+            ) : (
                 <Links>
                     <Tab href="/" icon={<HomeOutlined />} label="Home" />
                     <Tab
@@ -133,7 +136,7 @@ const Header = () => {
                         label="Your Work"
                     />
                 </Links>
-            ) : null}
+            )}
 
             <Options>
                 {false && (
