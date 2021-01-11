@@ -13,7 +13,7 @@ const Avatar = styled.img`
     min-width: 100px;
     height: 100px;
     min-height: 100px;
-    border-radius: 50%;
+    border-radius: 50% !important;
     margin-right: 30px;
     @media (max-width: 480px) {
         width: 50px;
