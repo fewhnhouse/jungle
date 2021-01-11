@@ -11,6 +11,9 @@ const StyledButton = styled(Button)`
     width: 32px;
     height: 32px;
     padding: 0;
+    img {
+        border-radius: 50% !important;
+    }
     transition: box-shadow 0.2s ease-in-out;
     &:hover {
         box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.3);

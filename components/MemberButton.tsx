@@ -10,6 +10,9 @@ const StyledButton = styled(Button)`
     width: 32px;
     padding: 0;
     height: 32px;
+    img {
+        border-radius: 50% !important;
+    }
     transition: box-shadow 0.2s ease-in-out;
     &:first-child {
         margin-left: 0px;
