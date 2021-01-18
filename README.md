@@ -1,44 +1,17 @@
-[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/fewhnhouse/next-graphql)
+This is the repository for Jungle - the Agile Project Management Tool with focus on simplicity and speed.
 
-# API routes with GraphQL server
+# General
 
-Next.js ships with [API routes](https://github.com/vercel/next.js#api-routes), which provide an easy solution to build your own `API`. This example shows their usage alongside [apollo-server-micro](https://github.com/apollographql/apollo-server/tree/master/packages/apollo-server-micro) to provide simple GraphQL server consumed by Next.js app.
+This application is built with Next.JS and React. For simple deplyoment, please visit [Vercel](https://vercel.com).
 
-## Deploy your own
+# Installation
 
-Deploy the example using [Vercel](https://vercel.com):
+To install the dependencies and run the project locally, simply run `npm install`. You must have **Node.js** installed.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/vercel/next.js/tree/canary/examples/api-routes-graphql)
+# Run
 
-## How to use
+To run the project, simply type `npm run dev`. You can build the project with `npm run build`. More scripts are available in `package.json`.
 
-### Using `create-next-app`
+# Environment
 
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init) or [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) to bootstrap the example:
-
-```bash
-npx create-next-app --example api-routes-graphql api-routes-graphql-app
-# or
-yarn create next-app --example api-routes-graphql api-routes-graphql-app
-```
-
-### Download manually
-
-Download the example:
-
-```bash
-curl https://codeload.github.com/vercel/next.js/tar.gz/canary | tar -xz --strip=2 next.js-canary/examples/api-routes-graphql
-cd api-routes-graphql
-```
-
-Install it and run:
-
-```bash
-npm install
-npm run dev
-# or
-yarn
-yarn dev
-```
-
-Deploy it to the cloud with [Vercel](https://vercel.com/import?filter=next.js&utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+In order for this project to work, it needs to be connected with a running instance of [Taiga Backend](https://github.com/taigaio/taiga-back). To connect the application, define the `NEXT_PUBLIC_TAIGA_API_URL` variable in your `.env` file. An example is given in `.env.example`.

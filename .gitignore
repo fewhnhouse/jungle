@@ -31,3 +31,6 @@ yarn-error.log*
 
 # local cert files
 /certs
+
+# env files
+.env
