@@ -11,8 +11,9 @@ import useMedia from 'use-media'
 
 const Container = styled.div`
     display: flex;
-    background-color: linear-gradient(to bottom, #57c1eb 0%, #246fa8 100%);
-    background-image: url(jungle.webp);
+    background: #9be2fe; /* fallback */
+    background-image: url(jungle.webp); /* fallback */
+    background-image: url(jungle.webp), linear-gradient(to bottom, #9be2fe 0%,#67d1fb 100%);
     min-height: 100vh;
     width: 100%;
     background-size: cover;
