@@ -1,4 +1,5 @@
 This is the repository for Jungle - the Agile Project Management Tool with focus on simplicity and speed.
+This project is built on top of the [Taiga Backend](https://github.com/taigaio/taiga-back) and provides a simplified, yet faster and more modern interface.
 
 # General
 
